@@ -1,0 +1,162 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml"
+        xmlns:o="http://omnifaces.org/ui"
+        >
+    <ui:define name="title">#{lang['mn.stock.utilities.lookup.invoice.used']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmLookupInvoiceUsed">
+            <p:outputPanel styleClass="Container100">
+                <div class="ContainerIndent">
+                    <p:messages id="messages" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel id="pnLookupInvoiceUsed" styleClass="Container100">
+                    <p:outputPanel id="pnInvoiceUsed" styleClass="ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="panelInvoiceUsed"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.stock.limit.information.search']}"/>
+                        <div class="Container100 panelInvoiceUsed">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive33">
+                                    <div class="Container50 Responsive50 mg-left-15 pd-top-7" >
+                                        <p:outputLabel for="serial" value="#{lang['lookup.invoice.used.serial.label']}" styleClass="lb-sentinel">
+                                        </p:outputLabel>
+                                        <p:outputLabel value="*" style="color: red"/>
+                                    </div>
+                                    <div class="Container50 Responsive50 ui-fluid">
+                                        <p:autoComplete
+                                                id="serial"
+                                                value="#{lookupInvoiceUsedController.selectserial}"
+                                                completeMethod="#{lookupInvoiceUsedController.searchSerial}"
+                                                onfocus="this.setSelectionRange(0, this.value.length)"
+                                                var="item"
+                                                itemValue="#{item}"
+                                                itemLabel="#{item.label}"
+                                                maxlength="50"
+                                                cacheTimeout="2"
+                                                required="false"
+                                                scrollHeight="#{lang['common.autocomplete.length']}"
+                                                queryDelay="1000"
+                                                forceSelection="true"
+                                        >
+                                            <o:converter converterId="omnifaces.ListConverter"
+                                                         list="#{lookupInvoiceUsedController.listserial}"/>
+                                            <p:column headerText="#{lang['lookup.invoice.serial.label']}">
+                                                <p:outputLabel value="#{item.serial}"/>
+                                            </p:column>
+                                            <p:column headerText="#{lang['lookup.invoice.used.name.label']}">
+                                                <p:outputLabel value="#{item.name}"/>
+                                            </p:column>
+                                            <p:ajax event="itemSelect"
+                                                    listener="#{lookupInvoiceUsedController.onSelectItem}"
+                                                    update="msg"
+                                                   />
+                                        </p:autoComplete>
+                                        <p:focus for="serial"/>
+                                        <p:message id="msg" for="serial" />
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive33">
+                                    <div class="Container30 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel for="startDate"
+                                                   value="#{lang['lookup.invoice.used.from.date.label']}" styleClass="lb-sentinel"/>
+                                        <p:outputLabel value="*" style="color: red"/>
+                                        </div>
+                                    <div class="Container70 Responsive50 ui-fluid">
+                                    <p:calendar
+                                            id="startDate"
+                                            pattern="dd/MM/yyyy"
+                                            value="#{lookupInvoiceUsedController.fromDate}"
+                                            navigator="true"
+                                            converterMessage="#{lang['lookup.invoice.used.date.label.require.message']}"
+                                            >
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </p:calendar>
+                                    <p:message for="startDate"/>
+                                        </div>
+                                </div>
+                                <div class="Container33 Responsive33">
+                                    <div class="Container30 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel for="endDate"
+                                                   value="#{lang['lookup.invoice.used.to.date.label']}" styleClass="lb-sentinel"/>
+                                        <p:outputLabel value="*" style="color: red"/>
+                                        </div>
+                                    <div class="Container70 Responsive50 ui-fluid " >
+                                    <p:calendar
+                                            id="endDate"
+                                            pattern="dd/MM/yyyy"
+                                            value="#{lookupInvoiceUsedController.toDate}"
+                                            navigator="true"
+                                            converterMessage="#{lang['lookup.invoice.used.date.label.require.message']}"
+                                            >
+                                        <f:convertDateTime  pattern="dd/MM/yyyy" />
+                                    </p:calendar>
+                                    <p:message for="endDate"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container100 TexAlCenter mg-top-5">
+                                    <p:commandButton
+                                            value="#{lang['lookup.invoice.used.search']}"
+                                            process="pnInvoiceUsed"
+                                            update="@form,pnInvoiceUsedResult,frmLookupInvoiceUsed"
+                                            actionListener="#{lookupInvoiceUsedController.searchInvoiceUsed}"
+                                         />
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <p:outputPanel id="pnInvoiceUsedResult" styleClass="ContainerIndent">
+
+                        <cbs:panel classForToggle="panelInvoiceUsedResult"
+                                   toggle="true"
+                                   titleHeader="#{lang['lookup.invoice.used.result']}"/>
+                        <div class="Container100 panelInvoiceUsedResult">
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        var="data"
+                                        value="#{lookupInvoiceUsedController.lookupInvoiceUsedDTOs}"
+                                        resizableColumns="true"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}"
+                                        rowIndexVar="index"
+                                        tableStyle="width:100%"
+                                       >
+                                    <p:column headerText="#{lang['lookup.invoice.used.result.numbers']}"
+                                              style="width: 10%; color: black">
+                                              #{index+1}
+                                    </p:column>
+                                    <p:column headerText="#{lang['lookup.invoice.used.result.from.invoice']}"
+                                              style="width: 45%;">
+                                        <h:outputLink id="fromInvoiceTrack" value="#">
+                                            <p:outputLabel>#{data.fromInvoice}</p:outputLabel>
+                                        </h:outputLink>
+                                        <p:tooltip for="fromInvoiceTrack"
+                                                   value="#{data.fromInvoice}"
+                                                   trackMouse="true"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['lookup.invoice.used.result.to.invoice']}"
+                                              style="width: 45%;">
+                                        <h:outputLink id="toInvoiceTrack" value="#">
+                                            <p:outputLabel>#{data.toInvoice}</p:outputLabel>
+                                        </h:outputLink>
+                                        <p:tooltip for="toInvoiceTrack"
+                                                   value="#{data.toInvoice}"
+                                                   trackMouse="true"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

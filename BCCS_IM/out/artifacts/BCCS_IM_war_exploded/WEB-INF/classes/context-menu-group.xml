@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContextMenu>
+    <!--1-->
+    <group>
+        <id>changeTechnology</id>
+        <item id="changeTechnology_wiredRequestManagement"/>
+        <item id="changeTechnology_paymentStore"/>
+        <item id="changeTechnology_changeDeployAddress"/>
+    </group>
+
+    <group>
+        <id>blockOpenFix</id>
+        <item id="blockOpenFix_wiredRequestManagement"/>
+        <item id="blockOpenFix_paymentStore"/>
+
+    </group>
+
+    <group>
+        <id>changeVasWired</id>
+        <item id="changeVasWired_wiredRequestManagement"/>
+        <item id="changeVasWired_paymentStore"/>
+
+    </group>
+
+    <group>
+        <id>changeEquip</id>
+        <item id="changeEquip_wiredRequestManagement"/>
+        <item id="changeEquip_paymentStore"/>
+
+    </group>
+
+    <group>
+        <id>changeDeployAddress</id>
+        <item id="changeDeployAddress_wiredRequestManagement"/>
+        <item id="changeDeployAddress_paymentStore"/>
+        <item id="changeDeployAddress_changeTechnology"/>
+        <item id="changeDeployAddress_productBasicService"/>
+        <item id="changeDeployAddress_productLineService"/>
+
+
+    </group>
+
+    <group>
+        <id>productLineService</id>
+        <item id="productLineService_wiredRequestManagement"/>
+        <item id="productLineService_paymentStore"/>
+        <item id="productLineService_changeDeployAddress"/>
+
+    </group>
+
+    <group>
+        <id>productBasicService</id>
+        <item id="productBasicService_wiredRequestManagement"/>
+        <item id="productBasicService_paymentStore"/>
+        <item id="productBasicService_changeDeployAddress"/>
+    </group>
+
+
+    <group>
+        <id>changeSimNew_aprovalChangeSim</id>
+        <name>Doi sim - duyet ho so doi sim</name>
+        <item id="changeSimNew_aprovalChangeSim"/>
+    </group>
+
+    <group>
+        <id>changeSimNew</id>
+        <name>Doi sim</name>
+        <item id="changeSimNew_blockOpenSub"/>
+        <item id="changeSimNew_repairSim"/>
+        <item id="changeSimNew_paymentStore"/>
+    </group>
+
+    <group>
+        <id>changeSimNew_editInfoCus</id>
+        <name>Doi sim - thay doi thong tin khach hang</name>
+        <item id="changeSimNew_editInfoCus"/>
+    </group>
+
+
+    <group>
+        <id>blockOpenFix_changeSimNew</id>
+        <item id="blockOpenFix_changeSimNew"/>
+    </group>
+
+    <group>
+        <id>blockOpenSub_changeSimNew</id>
+        <name>Chan mo di dong - doi sim</name>
+        <item id="blockOpenSub_changeSimNew"/>
+        <item id="blockOpenSub_terminateMobile"/>
+        <item id="blockOpenSub_changeVas"/>
+        <item id="blockOpenSub_mobilePromotionPos"/>
+        <item id="blockOpenSub_changeProductMobile"/>
+        <item id="blockOpenSub_changeDepositLimit"/>
+        <item id="blockOpenSub_changeZoneHomePhone"/>
+        <item id="blockOpenSub_changeToPRE"/>
+        <item id="blockOpenSub_changeToPOS"/>
+        <item id="blockOpenSub_paymentStore"/>
+
+    </group>
+
+    <group>
+        <id>deleteInfoCust_isdn</id>
+        <name>Xoa thong tin khach hang</name>
+        <item id="deleteInfoCust_changeSimNew"/>
+        <item id="deleteInfoCust_terminateMobile"/>
+        <item id="deleteInfoCust_editInfoCus"/>
+        <item id="deleteInfoCust_changeVas"/>
+    </group>
+
+    <group>
+        <id>deleteInfoCust_name</id>
+        <name>Xoa thong tin khach hang</name>
+        <item id="deleteInfoCust_changeSimNew"/>
+        <item id="deleteInfoCust_terminateMobile"/>
+        <item id="deleteInfoCust_editInfoCus"/>
+        <item id="deleteInfoCust_changeVas"/>
+    </group>
+
+    <group>
+        <id>blockOpenSub_editInfoCus</id>
+        <name>Chan mo di dong - thay doi thong tin khach hang</name>
+        <item id="blockOpenSub_editInfoCus"/>
+    </group>
+
+
+    <group>
+        <id>terminateMobile</id>
+        <item id="terminateMobile_blockOpenSub"/>
+        <item id="terminateMobile_paymentStore"/>
+        <item id="terminateMobile_changeDepositLimit"/>
+        <item id="terminateMobile_familyManagement"/>
+        <item id="terminateMobile_corporateManagement"/>
+
+    </group>
+
+
+
+    <group>
+        <id>changZoneHomePhone_blockOpenSub</id>
+        <item id="changZoneHomePhone_blockOpenSub"/>
+        <item id="changZoneHomePhone_paymentStore"/>
+    </group>
+
+
+    <group>
+        <id>editInfoCus_paymentStore</id>
+        <item id="editInfoCus_paymentStore"/>
+    </group>
+
+    <group>
+        <id>editInfoCus_changeSimNew</id>
+        <item id="editInfoCus_changeSimNew"/>
+        <item id="editInfoCus_blockOpenSub"/>
+    </group>
+
+    <group>
+        <id>mobilePromotionPos</id>
+        <item id="mobilePromotionPos_blockOpenSub"/>
+        <item id="mobilePromotionPos_editInfoCus"/>
+
+    </group>
+
+
+    <group>
+        <id>changeProductMobile</id>
+        <item id="changeProductMobile_blockOpenSub"/>
+        <item id="changeProductMobile_editInfoCus"/>
+    </group>
+
+    <group>
+        <id>changeDepositLimit</id>
+        <item id="changeDepositLimit_blockOpenSub"/>
+        <item id="changeDepositLimit_paymentStore"/>
+        <item id="changeDepositLimit_terminateMobile"/>
+    </group>
+
+    <group>
+        <id>changeToPRE_blockOpenSub</id>
+        <name>Chuyen sang tra truoc</name>
+        <item id="changeToPRE_blockOpenSub"/>
+        <item id="changeToPRE_paymentStore"/>
+        <item id="changeToPRE_terminateMobile"/>
+
+    </group>
+
+    <group>
+        <id>changeToPRE_editInfoCus</id>
+        <item id="changeToPRE_editInfoCus"/>
+    </group>
+
+
+    <group>
+        <id>changeToPOS_blockOpenSub</id>
+        <name>Chuyen sang tra sau</name>
+        <item id="changeToPOS_blockOpenSub"/>
+        <item id="changeToPOS_paymentStore"/>
+        <item id="changeToPOS_terminateMobile"/>
+    </group>
+
+    <group>
+        <id>changeToPOS_editInfoCus</id>
+        <item id="changeToPOS_editInfoCus"/>
+    </group>
+
+    <group>
+        <id>changeVas_blockOpenSub</id>
+        <name>Doi GTGT- mo chan thue bao</name>
+        <item id="changeVas_blockOpenSub"/>
+        <item id="changeVas_editInfoCus"/>
+        <item id="changeVas_changeDepositLimit"/>
+
+    </group>
+
+
+    <group>
+        <id>changeIpStatic</id>
+        <name>Quan ly IP</name>
+        <item id="changeIpStatic_blockOpenFix"/>
+        <item id="changeIpStatic_paymentStore"/>
+
+    </group>
+
+    <group>
+        <id>resetPassword</id>
+        <name>Thay doi mat khau</name>
+        <item id="resetPassword_blockOpenFix"/>
+        <item id="resetPassword_paymentStore"/>
+
+    </group>
+
+    <group>
+        <id>wiredDepositLimit</id>
+        <name>Dat coc han muc co dinh</name>
+        <item id="wiredDepositLimit_paymentStore"/>
+        <item id="wiredDepositLimit_wiredRequestManagement"/>
+
+    </group>
+
+    <group>
+        <id>promotionFixedScreen</id>
+        <name>Doi khuyen mai</name>
+        <item id="promotionFixedScreen_paymentStore"/>
+        <item id="promotionFixedScreen_wiredRequestManagement"/>
+    </group>
+
+
+    <group>
+        <id>changeSubType</id>
+        <name>Doi loai thue bao</name>
+        <item id="promotionFixedScreen_paymentStore"/>
+        <item id="promotionFixedScreen_wiredRequestManagement"/>
+    </group>
+
+</ContextMenu>

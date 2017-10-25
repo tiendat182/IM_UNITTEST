@@ -1,0 +1,661 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.underlying.createOrderImport']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.underlying.createOrderImport']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmImportOrder">
+            <p:focus for="@form"/>
+            <p:outputPanel styleClass="Container" id="pnInfoImportOrder">
+                <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                    <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel styleClass="Container"
+                               rendered="#{!underImportOrderController.infoOrderDetail and !underImportOrderController.infoRejectDetail}">
+                    <p:focus for="frmImportOrder"/>
+                    <!--Start vung thong tin lenh xuat-->
+                    <p:outputPanel id="pnInfoExportOrderSearch" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelSearchTransaction" toggle="true"
+                                   titleHeader="#{lang['create.note.export.info.search']}"/>
+
+                        <div class="Container panelSearchTransaction" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['code.transaction']}" for="codeImportTxt"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                        <p:inputText id="codeImportTxt"
+                                                     placeholder="#{lang['code.transaction.placeholder']}"
+                                                     onblur="this.value=this.value.trim()"
+                                                     value="#{underImportOrderController.forSearch.actionCode}"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['common.status']}" styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                        <p:selectOneMenu itemLabelEscaped="true" id="cbxStatus" filter="true"
+                                                         filterMatchMode="contains"
+                                                         value="#{underImportOrderController.forSearch.stockTransStatus}">
+                                            <f:selectItem itemValue=""
+                                                          itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                            <f:selectItems value="#{underImportOrderController.optionSetValueDTOsList}"
+                                                           var="optionSetValueDTOsList"
+                                                           itemLabel="#{optionSetValueDTOsList.name}"
+                                                           itemValue="#{optionSetValueDTOsList.value}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <cbs:inputShop value="#{underImportOrderController.shopInfoTagExport}"
+                                                   idComponent="ipExportShop"
+                                                   methodName="doExportShop"
+                                                   update="@this"
+                                                   limit="#{underImportOrderController.limitAutoComplete}"
+                                                   label="#{lang['export.order.stock']}"
+                                                   require="false"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-7"
+                                                   classDivInput="Container60 Responsive50 ui-fluid pd-top-7"
+                                                   requiredMessage="#{lang['export.order.stock.require.msg']}"
+                                                   placeholder="#{lang['export.order.stock.placehoder']}"
+                                            >
+                                    </cbs:inputShop>
+
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive">
+                                    <cbs:inputShop value="#{underImportOrderController.shopInfoTagReceive}"
+                                                   idComponent="ipReceiveShop"
+                                                   methodName="doReceiveShop"
+                                                   update="@this"
+                                                   limit="#{underImportOrderController.limitAutoComplete}"
+                                                   label="#{lang['create.note.warehouse.import']}"
+                                                   require="false"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-7"
+                                                   classDivInput="Container60 Responsive50 ui-fluid pd-top-7"
+                                                   requiredMessage="#{lang['export.order.stock.require.msg']}"
+                                                   placeholder="#{lang['export.order.stock.receive.product']}"
+                                            >
+                                    </cbs:inputShop>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['create.note.from.date']}" for="fromDate"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                        <p:calendar id="fromDate"
+                                                    value="#{underImportOrderController.forSearch.startDate}"
+                                                    placeholder="#{lang['create.note.from.date.placeholder']}"
+                                                    converterMessage="#{lang['mn.stock.from.date.not.format']}"
+                                                    required="true"
+                                                    requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['create.note.to.date']}" for="toDate"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                        <p:calendar id="toDate"
+                                                    value="#{underImportOrderController.forSearch.endDate}"
+                                                    required="true"
+                                                    converterMessage="#{lang['mn.stock.from.date.not.format']}"
+                                                    placeholder="#{lang['create.note.to.date.placeholder']}"
+                                                    requiredMessage="#{lang['mn.stock.to.date.not.blank']}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="Container TexAlCenter mg-top-0">
+                                <p:commandButton value="#{lang['create.note.search']}"
+                                                 process="@([id$=pnInfoExportOrderSearch])"
+                                                 action="#{underImportOrderController.doSearchStockTrans}"
+                                                 update="@form"/>
+                                <p:commandButton value="#{lang['common.reset']}" process="@this" styleClass="mg-left-5"
+                                                 resetValues="true"
+                                                 action="#{underImportOrderController.init}"
+                                                 update="@form"/>
+
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin lenh xuat-->
+                    <!--Start vung danh sach lenh xuat-->
+                    <p:outputPanel id="pnLstExportOrder" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelListOrderExport" toggle="true"
+                                   titleHeader="#{lang['export.stock.list.export.note']}"/>
+
+                        <div class="Container panelListOrderExport" style="margin-bottom: 10px;margin-top: 10px;">
+                            <p:dataTable
+                                    id="lstOrderExport"
+                                    value="#{underImportOrderController.vStockTransDTOList}"
+                                    var="stockTrans"
+                                    rowKey="#{stockTrans.stockTransID}"
+                                    resizableColumns="true"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.empty.records']}"
+                                    >
+                                <p:column styleClass="col-left" sortBy="#{stockTrans.actionCode}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['create.note.code.stock']}"
+                                                      title="#{lang['create.note.code.stock']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockTrans.actionCode}" title="#{stockTrans.actionCode}"/>
+                                </p:column>
+                                <p:column sortBy="#{stockTrans.createDateTime}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['create.note.create.date']}"
+                                                      title="#{lang['create.note.create.date']}"/>
+                                    </f:facet>
+                                    <h:outputText escape="true" value="#{stockTrans.createDateTime}"
+                                                  styleClass="lb-sentinel-bold" title="#{stockTrans.createDateTime}">
+                                        <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column sortBy="#{stockTrans.fromOwnerName}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['create.note.warehouse.export']}"
+                                                      title="#{lang['create.note.warehouse.export']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockTrans.fromOwnerName}"
+                                                   title="#{stockTrans.fromOwnerName}"/>
+                                </p:column>
+                                <p:column sortBy="#{stockTrans.toOwnerName}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['create.note.warehouse.import']}"
+                                                      title="#{lang['create.note.warehouse.import']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockTrans.toOwnerName}" title="#{stockTrans.toOwnerName}"/>
+                                </p:column>
+                                <p:column sortBy="#{stockTrans.reasonName}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['create.note.reason.export']}"
+                                                      title="#{lang['create.note.reason.export']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockTrans.reasonName}" title="#{stockTrans.reasonName}"/>
+                                </p:column>
+                                <p:column sortBy="#{stockTrans.statusName}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['common.status']}"
+                                                      title="#{lang['common.status']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockTrans.statusName}" title="#{stockTrans.statusName}"/>
+                                </p:column>
+                                <p:column sortBy="#{stockTrans.note}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['create.note.note']}"
+                                                      title="#{lang['create.note.note']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockTrans.note}" title="#{stockTrans.note}"/>
+                                </p:column>
+                                <p:column style="text-align: center">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['create.note.effect']}"
+                                                      title="#{lang['create.note.effect']}"/>
+                                    </f:facet>
+                                    <p:commandLink styleClass="fa icon-zoom-in Fs16 blue"
+                                                   style="text-decoration: none!important;" resetValues="true"
+                                                   update="@form" process="@this" title="#{lang['common.view.detail']}"
+                                                   disabled="#{stockTrans.stockTransStatus != '3'}"
+                                                   actionListener="#{underImportOrderController.showInfoOrderDetail(stockTrans.actionID)}"/>
+                                    <p:commandLink styleClass="fa icon-cancel-circled-outline Fs16 "
+                                                   style="text-decoration: none!important;" resetValues="true"
+                                                   update="@form" process="@this"
+                                                   title="#{lang['mn.stock.oder.import.reject']}"
+                                                   disabled="#{stockTrans.stockTransStatus != '3'}"
+                                                   actionListener="#{underImportOrderController.showInfoRejectDetail(stockTrans.actionID)}"/>
+                                </p:column>
+
+                            </p:dataTable>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung ds lenh xuat-->
+                </p:outputPanel>
+
+                <p:outputPanel id="pnlViewDetailUnderExportNote" styleClass="Container"
+                               rendered="#{underImportOrderController.infoOrderDetail}">
+                    <!--Start vung thong tin view phieu xuat-->
+                    <cbs:inputOrderStock id="exportStocksabc" title="#{lang['export.order.view.export.field']}"
+                                         methodNameOffice="receiveWriteOffice"
+                                         lblActionCode="#{lang['export.order.code.field']}"
+                                         value="#{underImportOrderController.orderStockTag}" mode="2"
+                                         styleClassDiv="mg-top-0"/>
+                    <!--End vung thong tin view phieu xuat-->
+
+                    <!--Start vung thong tin chi tiet hang hoa-->
+                    <div class="Container">
+                        <cbs:inputListProduct idComponent="inputListProduct" id="listProduct"
+                                              value="#{underImportOrderController.listProductTag}" idMessage="msgExport"
+                                              updateCheckSerial="@([id$=dlgDetailSerial]), @([id$=msgExport])"
+                                              onCompleteCheckSerial="if(!args.validationFailed){PF('dlgDetailSerial').show()}"/>
+                    </div>
+                    <!--End vung thong tin chi tiet hang hoa-->
+
+                    <!--Start vung thong tin input lenh nhap-->
+                    <p:outputPanel id="panelInfoOrderImport" styleClass="ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="panelInfoOrderImport" toggle="true"
+                                   titleHeader="#{lang['list.order.import.infomation.order']}"/>
+
+                        <div class="Container pnlInfoNoteImport">
+                            <div class="ContainerIndent mg-top-10">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                        <p:outputLabel for="codeImportOderTxt" styleClass="lb-sentinel"
+                                                       value="#{lang['import.order.code']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <p:inputText placeholder="#{lang['code.import.note.placeholder']}"
+                                                     value="#{underImportOrderController.transInputDTO.actionCode}"
+                                                     id="codeImportOderTxt" required="true"
+                                                     requiredMessage="#{lang['export.order.transCode.require.msg']}"
+                                                     maxlength="50"
+                                                     onblur="this.value=this.value.trim()"
+                                                     validatorMessage="#{lang['export.order.transCode.error.format.msg']}"/>
+                                        <pe:keyFilter for="codeImportOderTxt" regEx="/[0-9a-zA-Z_-]{1,50}/i"/>
+                                        <p:message for="codeImportOderTxt"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['list.order.import.people.arrive']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <h:outputText escape="true" styleClass="mg-left-5"
+                                                      value="#{underImportOrderController.transInputDTO.createUser}"
+                                                />
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['date.create.order']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <h:outputText escape="true"
+                                                      value="#{underImportOrderController.transInputDTO.createDatetime}">
+                                            <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p:outputPanel id="pnlViewRegionStock" styleClass="Container">
+                                <div class="ContainerIndent mg-top-0">
+                                    <p:outputPanel styleClass="Container33 Responsive" rendered="#{underImportOrderController.shopVTT}">
+                                        <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                            <p:outputLabel for="idThreeProvinceOderImport" styleClass="lb-sentinel"
+                                                           value="#{lang['import.order.stock.three.province']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                            <p:selectOneMenu id="idThreeProvinceOderImport"
+                                                             value="#{underImportOrderController.transInputDTO.regionStockId}"
+                                                             disabled="#{underImportOrderController.shopTranfer}">
+
+                                                <f:selectItem itemValue="0"
+                                                              itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                                <f:selectItems
+                                                        value="#{underImportOrderController.orderStockTag.lsRegionShop}"
+                                                        var="regionShop"
+                                                        itemLabelEscaped="true"
+                                                        itemLabel="#{regionShop.shopCode}-#{regionShop.name}"
+                                                        itemValue="#{regionShop.shopId}"/>
+                                            </p:selectOneMenu>
+                                            <p:message for="idThreeProvinceOderImport"/>
+                                        </div>
+                                    </p:outputPanel>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                            <p:outputLabel for="checkboxShopTranfer" styleClass="lb-sentinel"
+                                                           value="#{lang['mn.tranfer.order']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:selectBooleanCheckbox id="checkboxShopTranfer" styleClass="mg-left-5"
+                                                                     value="#{underImportOrderController.shopTranfer}">
+                                                <p:ajax event="change"
+                                                        update="@([id$=idThreeProvinceOderImport]), @([id$=pnlViewRegionStock])"
+                                                        process="@this"
+                                                        listener="#{underImportOrderController.changeShopTranfer()}"/>
+                                            </p:selectBooleanCheckbox>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <p:outputPanel styleClass="Container" rendered="#{underImportOrderController.shopTranfer}">
+                                            <cbs:inputShop value="#{underImportOrderController.shopInfoTagTranfer}"
+                                                           idComponent="ipTranferShop" id="idTransferShop"
+                                                           methodName="doTranferShop"
+                                                           update="@this"
+                                                           limit="#{underImportOrderController.limitAutoComplete}"
+                                                           label="#{lang['tranfer.order.stock']}"
+                                                           require="#{underImportOrderController.shopTranfer}"
+                                                           classDivLabel="Container40 mg-left-15 Responsive50 pd-top-7"
+                                                           classDivInput="Container60 Responsive50 ui-fluid"
+                                                           requiredMessage="#{lang['tranfer.order.stock.require.msg']}"
+                                                           placeholder="#{lang['tranfer.order.stock.placehoder']}"
+                                                    >
+                                            </cbs:inputShop>
+                                        </p:outputPanel>
+                                    </div>
+                                </div>
+                            </p:outputPanel>
+
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel for="cbxReasonImport" styleClass="lb-sentinel"
+                                                       value="#{lang['list.order.import.reason.import']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu itemLabelEscaped="true" id="cbxReasonImport" filter="true"
+                                                         filterMatchMode="contains"
+                                                         value="#{underImportOrderController.transInputDTO.reasonId}"
+                                                         required="true"
+                                                         requiredMessage="#{lang['mn.stock.import.reason.not.blank']}">
+                                            <f:selectItem itemValue=""
+                                                          itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                            <f:selectItems value="#{underImportOrderController.importReasonDTOsList}"
+                                                           var="importReasonDTOsList"
+                                                           itemLabel="#{importReasonDTOsList.reasonName}"
+                                                           itemValue="#{importReasonDTOsList.reasonId}"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="cbxReasonImport"/>
+                                    </div>
+
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 ui-fluid Responsive50 mg-left-15">
+                                        <p:outputLabel for="importNoteTxt" styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.note']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText style="width: 100%" id="importNoteTxt"
+                                                     value="#{underImportOrderController.transInputDTO.note}"
+                                                     maxlength="500"
+                                                     onblur="this.value=this.value.trim()"
+                                                     placeholder="#{lang['export.order.note.placehoder']}"/>
+                                        <p:message for="importNoteTxt"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                        <p:outputLabel for="checkboxVoffice" styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.write.office']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectBooleanCheckbox id="checkboxVoffice"
+                                                                 value="#{underImportOrderController.writeOffice}">
+                                            <p:ajax event="change" update="@([id$=pnlInfoVOffice])" process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <c:if test="#{underImportOrderController.roleCheckShowAutoOrderNote}">
+                                <div class="ContainerIndent">
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 mg-left-15 Responsive50">
+                                            <p:outputLabel styleClass="lb-sentinel" for="autoNote" value="#{lang['export.order.and.note.auto']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:selectBooleanCheckbox id="autoNote" styleClass="mg-left-5" value="#{underImportOrderController.autoCreateNoteFile}">
+                                                <p:ajax event="change" process="@this"
+                                                        listener="#{underImportOrderController.doChangeAutoOrderNotefile()}"/>
+                                            </p:selectBooleanCheckbox>
+                                        </div>
+
+                                    </div>
+                                    <div class="Container66 Responsive"></div>
+                                </div>
+                            </c:if>
+
+                        </div>
+
+                    </p:outputPanel>
+                    <!--End vung thong tin input lenh nhap-->
+
+                    <!--Start vung thong tin phieu xuat-->
+                    <p:outputPanel id="pnlInfoExportNote" styleClass="Container">
+                        <p:outputPanel styleClass="ContainerIndent mg-top-0" rendered="#{underImportOrderController.showAutoOrderNote}">
+                            <cbs:panel classForToggle="pnViewExportField" toggle="true" titleHeader="#{lang['export.order.view.export.field']}"/>
+                            <div class="ContainerIndent pnViewExportField">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                        <p:outputLabel for="ipExportCodeField"
+                                                       value="#{lang['export.order.code.field']}"
+                                                       rendered="#{!underImportOrderController.shopVTT}"/>
+                                        <p:outputLabel value="#{lang['export.order.code.field']}"
+                                                       rendered="#{underImportOrderController.shopVTT}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 #{underImportOrderController.shopVTT ? 'mg-left-15 pd-top-4' : 'ui-fluid'} ">
+                                        <p:outputLabel value="#{underImportOrderController.actionCodeNote}"
+                                                       styleClass="lb-sentinel-bold break-all"
+                                                       rendered="#{underImportOrderController.shopVTT}"/>
+                                        <p:inputText placeholder="#{lang['export.order.code.field.placehoder']}"
+                                                     value="#{underImportOrderController.actionCodeNote}"
+                                                     id="ipExportCodeField" required="true" maxlength="50"
+                                                     requiredMessage="#{lang['export.order.transCode.require.msg']}"
+                                                     validatorMessage="#{lang['export.order.transCode.error.format.msg']}"
+                                                     rendered="#{!underImportOrderController.shopVTT}"/>
+                                        <pe:keyFilter for="ipExportCodeField" regEx="/[0-9a-zA-Z_-]{1,50}/i"
+                                                      preventPaste="false"/>
+                                        <p:message for="ipExportCodeField"/>
+                                    </div>
+                                </div>
+                                <div class="Container66 Responsive"></div>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <!--End vung thong tin phieu xuat-->
+
+                    <!--Start vung thong tin VOffice-->
+                    <p:outputPanel id="pnlInfoVOffice" styleClass="Container">
+                        <p:outputPanel rendered="#{underImportOrderController.writeOffice}">
+                            <cbs:inputSignOffice idComponent="writeOffice"
+                                                 value="#{underImportOrderController.signOfficeTag}"
+                                                 title="#{lang['export.order.view.office']}"/>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <!--End vung thong tin VOffice-->
+
+                    <!--Start Vung data button-->
+                    <p:outputPanel id="pnlDataButton" styleClass="Container">
+                        <div class="ContainerIndent TexAlCenter">
+                            <cbs:confirmDialog
+                                    idComponent="cfmCreate"
+                                    valueButton="#{!underImportOrderController.showAutoOrderNote ? lang['list.order.import.create.order.import'] : lang['staff.import.note.create']}(F8)"
+                                    headerConfirm="#{lang['stock.import.order.confirm.cancel']}"
+                                    messageConfirm="#{lang['stock.import.order.confirm.cancel.msg']}"
+                                    actionOK="#{underImportOrderController.doCreateImportOrder}"
+                                    resetValueButton="false"
+                                    process="@form"
+                                    updateArea="@form"
+                                    updateOK="@form"
+                                    styleButton="text-decoration: none;font-size: 16px!important"
+                                    focusCancel="false"
+                                    oncompleteOK=""
+                                    disableButton="#{underImportOrderController.disableBtnImport}"
+                                    isButton="true">
+                            </cbs:confirmDialog>
+                            <p:commandButton value="#{lang['list.order.import.print.BBBG']}"
+                                             ajax="false"
+                                             process="@this"
+                                             update="@form"
+                                             immediate="true"
+                                             styleClass="mg-left-5">
+                                <p:fileDownload value="#{underImportOrderController.exportHandOverReport()}"/>
+                            </p:commandButton>
+                            <p:commandButton value="#{lang['list.order.import.print.order.import']}"
+                                             disabled="#{!underImportOrderController.disableBtnImport}"
+                                             process="@this"
+                                             update="@form"
+                                             immediate="true"
+                                             ajax="false"
+                                             styleClass="mg-left-5">
+                                <p:fileDownload value="#{underImportOrderController.doPrintStockTransDetail()}"/>
+                            </p:commandButton>
+                            <p:commandButton value="#{lang['staff.import.note.print']}"
+                                             disabled="#{!underImportOrderController.disableBtnImport}"
+                                             rendered="#{underImportOrderController.showAutoOrderNote}"
+                                             process="@this"
+                                             update="@form"
+                                             immediate="true"
+                                             ajax="false"
+                                             styleClass="mg-left-5">
+                                <p:fileDownload value="#{underImportOrderController.doPrintStockTransDetailNote()}"/>
+                            </p:commandButton>
+                            <p:commandButton value="#{lang['common.back.page']}" process="@this"
+                                             actionListener="#{underImportOrderController.doBackPage}" immediate="true"
+                                             styleClass="mg-left-5" update="@form"/>
+                        </div>
+                    </p:outputPanel>
+                    <!--End Vung data button-->
+                </p:outputPanel>
+
+                <p:outputPanel id="pnlViewDetailImportOrderReject" styleClass="Container"
+                               rendered="#{underImportOrderController.infoRejectDetail}">
+                    <!--Start vung thong tin view phieu xuat-->
+                    <cbs:inputOrderStock id="exportStocksReject" title="#{lang['export.order.view.export.field']}"
+                                         methodNameOffice="receiveWriteOffice"
+                                         lblActionCode="#{lang['export.order.code.field']}"
+                                         value="#{underImportOrderController.orderStockTag}" mode="2"
+                                         styleClassDiv="mg-top-0"/>
+                    <!--End vung thong tin view phieu xuat-->
+
+                    <!--Start vung thong tin chi tiet hang hoa-->
+                    <div class="Container">
+                        <cbs:inputListProduct idComponent="inputListProduct" id="listProductReject"
+                                              value="#{underImportOrderController.listProductTag}" idMessage="msgExport"
+                                              updateCheckSerial="@([id$=dlgDetailSerial]), @([id$=msgExport])"
+                                              onCompleteCheckSerial="if(!args.validationFailed){PF('dlgDetailSerial').show()}"/>
+                    </div>
+                    <!--End vung thong tin chi tiet hang hoa-->
+
+                    <!--Start vung thong tin input tu choi-->
+                    <p:outputPanel id="panelInfoOrderReject" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInfoOrderReject" toggle="true"
+                                   titleHeader="#{lang['list.order.import.infomation.order.reject']}"/>
+
+                        <div class="Container pnlInfoNoteImport">
+                            <div class="ContainerIndent mg-top-10">
+                                <div class="Container50 Responsive">
+                                    <div class="Container40 Responsive mg-left-15 pd-top-7">
+                                        <p:outputLabel for="cbxReasonImport" styleClass="lb-sentinel"
+                                                       value="#{lang['list.order.import.reason.reject']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu itemLabelEscaped="true" id="cbxReasonRejectImport"
+                                                         filter="true"
+                                                         filterMatchMode="contains"
+                                                         value="#{underImportOrderController.transInputDTO.reasonId}"
+                                                         required="true"
+                                                         requiredMessage="#{lang['mn.stock.import.reason.not.blank']}">
+                                            <f:selectItem itemValue=""
+                                                          itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                            <f:selectItems value="#{underImportOrderController.importReasonDTOsList}"
+                                                           var="importReasonDTOsList"
+                                                           itemLabel="#{importReasonDTOsList.reasonName}"
+                                                           itemValue="#{importReasonDTOsList.reasonId}"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="cbxReasonRejectImport"/>
+                                    </div>
+                                </div>
+                                <div class="Container50 Responsive">
+                                    <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['date.create.order.reject']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <h:outputText escape="true"
+                                                      value="#{underImportOrderController.transInputDTO.createDatetime}">
+                                            <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                        </h:outputText>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="ContainerIndent mg-top-10">
+                                <div class="Container50 Responsive">
+                                    <div class="Container40 ui-fluid Responsive mg-left-15">
+                                        <p:outputLabel for="importNoteRejectTxt" styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.note']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:inputText style="width: 100%" id="importNoteRejectTxt"
+                                                     value="#{underImportOrderController.transInputDTO.note}"
+                                                     maxlength="500"
+                                                     onblur="this.value=this.value.trim()"
+                                                     placeholder="#{lang['export.order.note.placehoder']}"/>
+                                        <p:message for="importNoteTxt"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </p:outputPanel>
+                    <!--End vung thong tin input tu choi-->
+
+                    <!--Start Vung data button-->
+                    <p:outputPanel id="pnlDataButtonReject" styleClass="Container">
+                        <div class="ContainerIndent TexAlCenter">
+                            <cbs:confirmDialog
+                                    idComponent="cfmCreate"
+                                    valueButton="#{lang['mn.stock.oder.import.reject']}"
+                                    headerConfirm="#{lang['stock.import.order.confirm.reject']}"
+                                    messageConfirm="#{lang['stock.import.order.confirm.reject.msg']}"
+                                    actionOK="#{underImportOrderController.doRejectImportOrder}"
+                                    resetValueButton="false"
+                                    process="@this, @form"
+                                    updateArea="@form"
+                                    updateOK="@form"
+                                    styleButton="text-decoration: none;font-size: 16px!important"
+                                    focusCancel="false"
+                                    oncompleteOK=""
+                                    disableButton="#{underImportOrderController.disableBtnImport}"
+                                    isButton="true">
+                            </cbs:confirmDialog>
+                            <p:commandButton value="#{lang['common.back.page']}" process="@this"
+                                             actionListener="#{underImportOrderController.doBackPage}" immediate="true"
+                                             styleClass="mg-left-5" update="@form"/>
+                        </div>
+                    </p:outputPanel>
+                    <!--End Vung data button-->
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailSerial"
+                  widgetVar="dlgDetailSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <ui:include src="../../../../../resources/tags/dlgDetailSerial.xhtml">
+                <ui:param name="controller" value="#{underImportOrderController.listProductTag}"/>
+                <ui:param name="idComponent" value="inputListProduct"/>
+            </ui:include>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

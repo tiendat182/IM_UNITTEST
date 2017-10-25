@@ -1,0 +1,28 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.list.import.apn.ip']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmImportApn">
+            <p:tabView id="numberTabView" dynamic="true" tabindex="#{importApnController.tabIndex}">
+                <p:tab id="defineSpaceTab" title="#{lang['mn.tab.import.apn']}">
+                    <!--vung nhap thong tin APN-->
+                    <cbs:importAPN/>
+                </p:tab>
+                <p:tab id="openSpaceTab" title="#{lang['mn.tab.import.apnip']}">
+                    <!--vung nhap thong tin APN_IP-->
+                    <cbs:importAPNIP/>
+                </p:tab>
+                <p:tab id="openSpaceTabFile" title="#{lang['mn.tab.import.apnip.by.file']}">
+                    <!--vung nhap thong tin APN_IP-->
+                    <cbs:importAPNIPByFile/>
+                </p:tab>
+            </p:tabView>
+        </h:form>
+    </ui:define>
+</ui:composition>

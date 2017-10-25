@@ -1,0 +1,733 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.partner.create.underlying']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.partner.create.underlying']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmPartnerImportStock" styleClass="Container">
+            <p:outputPanel styleClass="Container" id="pnlPartnerImportStock">
+                <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                    <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel styleClass="Container" id="pnUnderlying">
+                    <p:outputPanel styleClass="Container" rendered="#{partnerCreateUnderlyingController.stateView == 0}">
+                        <!--Start vung thong tin tim kiem-->
+                        <p:outputPanel id="partnerSearchPanel" styleClass="ContainerIndent">
+                            <cbs:panel classForToggle="panelSearchTransaction" toggle="true" titleHeader="#{lang['create.note.export.info.search']}"/>
+                            <div class="Container panelSearchTransaction" style="margin-bottom: 10px;margin-top: 10px;">
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel value="#{lang['mn.stock.branch.contract.code']}"
+                                                           for="codeImportTxt" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                            <p:inputText id="codeImportTxt" onblur="this.value=this.value.trim()"
+                                                         placeholder="#{lang['code.transaction.placeholder']}"
+                                                         value="#{partnerCreateUnderlyingController.parnerContractSearch.contractCode}"/>
+                                            <pe:keyFilter for="codeImportTxt" regEx="/[0-9a-zA-Z_]{1,20}/i"
+                                                          preventPaste="false"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel value="#{lang['create.note.from.date']}" for="fromDate"
+                                                           styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                            <p:calendar id="fromDate"
+                                                        value="#{partnerCreateUnderlyingController.parnerContractSearch.fromDate}"
+                                                        placeholder="#{lang['create.note.from.date.placeholder']}"
+                                                        required="true"
+                                                        converterMessage="#{lang['mn.stock.from.date.not.format']}"
+                                                        requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel value="#{lang['create.note.to.date']}" for="toDate"
+                                                           styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                            <p:calendar id="toDate"
+                                                        value="#{partnerCreateUnderlyingController.parnerContractSearch.toDate}"
+                                                        required="true"
+                                                        placeholder="#{lang['create.note.to.date.placeholder']}"
+                                                        converterMessage="#{lang['mn.stock.from.date.not.format']}"
+                                                        requiredMessage="#{lang['mn.stock.to.date.not.blank']}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="Container TexAlCenter mg-top-0">
+                                    <!--<p:commandLink
+                                                   styleClass="fa icon-zoom-in Fs16 blue" style="text-decoration: none!important;"
+                                                   process="@this" resetValues="true"
+                                                   action="#{partnerCreateUnderlyingController.showInfoNextDetail('HD_04052016', 'HD_04052016')}"
+                                                   update="@form"/>-->
+                                    <p:commandButton value="#{lang['create.note.search']}"
+                                                     process="@([id$=partnerSearchPanel])"
+                                                     action="#{partnerCreateUnderlyingController.doSearchPartnerContract}"
+                                                     update="@form"/>
+                                    <p:commandButton value="#{lang['common.reset']}" process="@this"
+                                                     styleClass="mg-left-5"
+                                                     resetValues="true"
+                                                     action="#{partnerCreateUnderlyingController.doReset}"
+                                                     update="@([id$=partnerSearchPanel])"/>
+
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                        <!--End vung thong tin tim kiem-->
+                        <!--Start vung danh sach phieu xuat-->
+                        <p:outputPanel id="pnLstExportOrder" styleClass="ContainerIndent">
+                            <cbs:panel classForToggle="panelListOrderExport" toggle="true" titleHeader="#{lang['list.order.import.infomation.order']}"/>
+
+                            <div class="Container panelListOrderExport" style="margin-bottom: 10px;margin-top: 10px;">
+                                <p:dataTable
+                                        rowIndexVar="index"
+                                        value="#{partnerCreateUnderlyingController.lsPartnerContractDto}"
+                                        var="partnerContract"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}"
+                                        >
+                                    <p:column styleClass="col-left" sortBy="#{partnerContract.contractCode}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.branch.contract.code']}" title="#{lang['mn.stock.branch.contract.code']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{partnerContract.contractCode}" title="#{partnerContract.contractCode}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{partnerContract.cntSignDate}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.partner.date.contract']}" title="#{lang['mn.stock.partner.date.contract']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{partnerContract.cntSignDate}" title="#{partnerContract.cntSignDate}">
+                                            <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column sortBy="#{partnerContract.currencyCode}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.branch.type.exchange']}" title="#{lang['mn.stock.branch.type.exchange']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{partnerContract.currencyCode}" title="#{partnerContract.currencyCode}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{partnerContract.partnerName}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['name.partner']}" title="#{lang['name.partner']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{partnerContract.partnerName}" title="#{partnerContract.partnerName}"/>
+                                    </p:column>
+                                    <p:column style="text-align: center">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['create.note.detail']}" title="#{lang['create.note.detail']}"/>
+                                        </f:facet>
+                                        <p:commandLink styleClass="fa icon-zoom-in Fs16 blue" style="text-decoration: none!important;"
+                                                       update="@form" process="@this" title="#{lang['common.view.detail']}"
+                                                       actionListener="#{partnerCreateUnderlyingController.showInfoOrderDetail(partnerContract.contractCode)}"/>
+                                    </p:column>
+
+                                </p:dataTable>
+                            </div>
+                        </p:outputPanel>
+                        <!--End vung ds phieu xuat-->
+                    </p:outputPanel>
+                    <p:outputPanel styleClass="Container" rendered="#{partnerCreateUnderlyingController.stateView == 1}">
+                        <p:outputPanel id="partnerChooseState" styleClass="ContainerIndent">
+                            <cbs:panel classForToggle="pnStateView" toggle="true" titleHeader="#{lang['partner.create.underlying.state.view.title']}"/>
+                            <div class="Container pnStateView" style="margin-bottom: 10px;margin-top: 10px;">
+                                <div class="Container TexAlCenter">
+                                    <p:dataTable
+                                            rowIndexVar="index"
+                                            value="#{partnerCreateUnderlyingController.lsSortPartnerShipment}"
+                                            var="detail"
+                                            reflow="false"
+                                            resizableColumns="true"
+                                            paginator="#{lang['common.paging.paginator']}"
+                                            rows="#{lang['common.paging.rows.default']}"
+                                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                            emptyMessage="#{lang['common.empty.records']}">
+                                        <p:column styleClass="col-left pd-top-6" sortBy="#{detail.shipmentCode}" style="width: 25%;">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['mn.stock.partner.code.package']}" title="#{lang['mn.stock.partner.code.package']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{detail.shipmentCode}" title="#{detail.shipmentCode}"/>
+                                        </p:column>
+                                        <p:column styleClass="col-left" sortBy="#{detail.reportKCSCode}" style="width: 25%;">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['partner.create.underlying.report.ktts.code']}" title="#{lang['partner.create.underlying.report.ktts.code']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{detail.reportKCSCode}" title="#{detail.reportKCSCode}" />
+                                        </p:column>
+                                        <p:column sortBy="#{detail.partnerName}" style="width: 20%;">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['mn.stock.partner.text']}" title="#{lang['mn.stock.partner.text']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{detail.partnerName}" title="#{detail.partnerName}" />
+                                        </p:column>
+                                        <p:column styleClass="col-right " style="width: 10%;">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['partner.create.underlying.state.check']}" title="#{lang['partner.create.underlying.state.check']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{detail.nameApprove}" title="#{detail.nameApprove}" />
+                                        </p:column>
+                                        <p:column styleClass="col-right " style="width: 10%;">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['stock.rescue.warranty.create.status.kcs']}" title="#{lang['stock.rescue.warranty.create.status.kcs']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{detail.reportKCSName}" title="#{detail.reportKCSName}" />
+                                        </p:column>
+                                        <p:column styleClass="col-right " style="width: 10%;">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['stock.rescue.warranty.create.status.bccsStatus']}" title="#{lang['stock.rescue.warranty.create.status.bccsStatus']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{detail.statusBccsName}" title="#{detail.statusBccsName}" />
+                                        </p:column>
+                                        <p:column styleClass="col-right " style="width: 10%;">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['create.note.detail']}" title="#{lang['create.note.detail']}"/>
+                                            </f:facet>
+                                            <p:commandLink rendered="#{detail.showDetailBccs}"
+                                                           styleClass="fa icon-zoom-in Fs16 blue" style="text-decoration: none!important;"
+                                                             process="@this" resetValues="true"
+                                                             action="#{partnerCreateUnderlyingController.showInfoNextDetail(detail.shipmentCode, detail.reportKCSStatus)}"
+                                                             update="@form"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                                <div class="ContainerIndent TexAlCenter">
+                                    <p:commandButton value="#{lang['common.back.page']}" resetValues="true"
+                                                     process="@this" styleClass="mg-left-5"
+                                                     action="#{partnerCreateUnderlyingController.doBackPageTop}"
+                                                     update="@form"/>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <p:outputPanel styleClass="Container" rendered="#{partnerCreateUnderlyingController.stateView == 2}">
+                        <p:outputPanel id="pnlInforPartner" styleClass="ContainerIndent mg-top-0">
+                            <cbs:panel classForToggle="pnlInforPartner" titleHeader="#{lang['export.order.view.export']}"/>
+                            <div class="pnlInforPartner Container paddingTopBottom10">
+                                <div class="ContainerIndent  mg-top-0">
+                                    <div class="Container33 Responsive">
+                                        <cbs:inputShop value="#{partnerCreateUnderlyingController.shopInfoTag}"
+                                                       idComponent="inputStore"
+                                                       methodName="receiveShop"
+                                                       clearMethodName="clearShop"
+                                                       update="@this"
+                                                       label="#{lang['create.note.warehouse.import']}"
+                                                       placeholder="#{lang['create.note.warehouse.import.placeholder']}"
+                                                       classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                       classDivInput="Container60 Responsive50 ui-fluid"
+                                                       require="true"
+                                                       requiredMessage="#{lang['mn.stock.partner.warehouse.not.emty']}"
+                                                       forceSelection="false"
+                                                       limit="#{partnerCreateUnderlyingController.limitAutoComplete}">
+
+                                        </cbs:inputShop>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['import.order.code']}" for="txtCodeNote" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:inputText id="txtCodeNote" required="true"
+                                                         maxlength="50" onblur="this.value=this.value.trim()"
+                                                         placeholder="#{lang['import.order.code.placehoder']}"
+                                                         value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.actionCode}"
+                                                         requiredMessage="#{lang['code.import.note.not.blank']}"
+                                                         validatorMessage="#{lang['mn.stock.agency.retrieve.code.format.msg']}"/>
+                                            <p:message for="txtCodeNote" style="font-size: 11px!important;"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['date.enter']}" for="txtDateInputRegion"
+                                                           styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                            <p:outputLabel id="txtDateInputRegion"
+                                                           value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.createDate}"
+                                                           title="#{partnerCreateUnderlyingController.importPartnerRequestDTO.createDate}"
+                                                           readonly="true">
+                                                <f:convertDateTime type="date"
+                                                                   pattern="#{lang['common.datetime.format']}"/>
+                                            </p:outputLabel>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ContainerIndent  mg-top-0">
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['mn.stock.partner.text']}" for="cbxPartner" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:selectOneMenu id="cbxPartner"
+                                                             required="true"
+                                                             styleClass="Wid100"
+                                                             filter="true" filterMatchMode="contains"
+                                                             value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.partnerId}"
+                                                             requiredMessage="#{lang['mn.stock.branch.partner.msg.require']}">
+                                                <f:selectItem itemValue="" itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                                <f:selectItems value="#{partnerCreateUnderlyingController.lstPartnerDTOs}"
+                                                               var="item"
+                                                               itemLabelEscaped="true"
+                                                               itemValue="#{item.partnerId}"
+                                                               itemLabel="#{item.partnerName}"/>
+                                            </p:selectOneMenu>
+                                            <p:message for="cbxPartner"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['agency.deposit.reason']}" styleClass="lb-sentinel" for="cbxReason"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:selectOneMenu id="cbxReason"
+                                                             required="true"
+                                                             itemLabelEscaped="true"
+                                                             requiredMessage="#{lang['stock.rescueInformation.require.stockTrans.reason']}"
+                                                             value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.reasonId}">
+                                                <f:selectItem itemValue="" itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                                <f:selectItems value="#{partnerCreateUnderlyingController.lsReasonDTO}"
+                                                               var="item"
+                                                               itemLabelEscaped="true"
+                                                               itemValue="#{item.reasonId}"
+                                                               itemLabel="#{item.reasonName}"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['export.order.write.office']}"
+                                                           for="chkWriteVoffice"
+                                                           styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                            <p:selectBooleanCheckbox id="chkWriteVoffice" styleClass="mg-left-5"
+                                                                     value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.signVoffice}">
+                                                <p:ajax event="change" process="@this"
+                                                        update="@([id$=pnlInfoVOffice])"/>
+                                            </p:selectBooleanCheckbox>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </p:outputPanel>
+                        <!--Start vung thong tin VOffice-->
+                        <p:outputPanel id="pnlInfoVOffice" styleClass="Container">
+                            <p:outputPanel styleClass="Container" rendered="#{partnerCreateUnderlyingController.importPartnerRequestDTO.signVoffice}">
+                                <cbs:inputSignOffice id="writeOffice" idComponent="idWriteOffice" title="#{lang['export.order.view.office']}"
+                                                     value="#{partnerCreateUnderlyingController.writeOfficeTag}"/>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                        <!--End vung thong tin VOffice-->
+                        <!--start vung thong tin hop dong-->
+                        <p:outputPanel id="pnlInforContract" styleClass="ContainerIndent mg-top-0">
+                            <cbs:panel classForToggle="pnlInforContract" titleHeader="#{lang['mn.stock.partner.infor.contract']}"/>
+                            <div class="Container pnlInforContract paddingTopBottom10">
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['mn.stock.branch.contract.code']}"
+                                                            styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                            <p:outputLabel value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.contractCode}"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['mn.stock.branch.sign.contract.date']}" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                            <p:outputLabel value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.contractDate}">
+                                                <f:convertDateTime type="date"  pattern="#{lang['common.datetime.format']}"/>
+                                            </p:outputLabel>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['mn.stock.branch.PO.code']}"
+                                                           for="txtPoCode" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:inputText id="txtPoCode"
+                                                         onblur="this.value = this.value.trim()"
+                                                         placeholder="#{lang['mn.stock.branch.PO.code.placeholder']}"
+                                                         maxlength="100"
+                                                         value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.poCode}"/>
+                                            <pe:keyFilter for="txtPoCode" regEx="/[0-9a-zA-Z_-]{1,50}/i"
+                                                          preventPaste="false"/>
+                                            <p:message for="txtPoCode"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ContainerIndent">
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['mn.stock.branch.sign.po.date']}"
+                                                           for="txtSignPoDate" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:calendar id="txtSignPoDate"
+                                                        mask="true"
+                                                        pattern="#{lang['common.datetime.format']}"
+                                                        converterMessage="#{lang['invalid.date.message']}"
+                                                        validatorMessage="#{lang['request.date.validate.message']}"
+                                                        placeholder="#{lang['common.datetime.format']}"
+                                                        required="false"
+                                                        requiredMessage="#{lang['mn.stock.branch.sign.po.date.msg.require']}"
+                                                        value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.poDate}">
+                                                <f:convertDateTime type="date"
+                                                                   pattern="#{lang['common.datetime.format']}"/>
+                                            </p:calendar>
+                                            <p:message for="txtSignPoDate"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['mn.stock.branch.place.tran.model']}"
+                                                           for="txtTransModelPlace" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:inputText id="txtTransModelPlace"
+                                                         onblur="this.value = this.value.trim()"
+                                                         maxlength="500"
+                                                         value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.deliveryLocation}"
+                                                         placeholder="#{lang['mn.stock.branch.place.tran.model.placeholder']}"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['mn.stock.branch.import.request.date']}"
+                                                           for="txtImportRequestDate" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:calendar id="txtImportRequestDate"
+                                                        mask="true"
+                                                        pattern="#{lang['common.datetime.format']}"
+                                                        converterMessage="#{lang['invalid.date.message']}"
+                                                        validatorMessage="#{lang['request.date.validate.message']}"
+                                                        placeholder="#{lang['common.datetime.format']}"
+                                                        required="false"
+                                                        requiredMessage="#{lang['mn.stock.branch.import.request.date.msg.require']}"
+                                                        value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.requestDate}">
+                                                <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                            </p:calendar>
+                                            <p:message for="txtImportRequestDate"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ContainerIndent">
+
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['mn.stock.branch.date.stock']}" for="txtContractImportDate" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:calendar id="txtContractImportDate"
+                                                        mask="true"
+                                                        pattern="#{lang['common.datetime.format']}"
+                                                        converterMessage="#{lang['invalid.date.message']}"
+                                                        validatorMessage="#{lang['request.date.validate.message']}"
+                                                        placeholder="#{lang['common.datetime.format']}"
+                                                        required="true"
+                                                        requiredMessage="#{lang['mn.stock.branch.stock.date.msg.require']}"
+                                                        value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.importDate}">
+                                                <f:convertDateTime type="date"
+                                                                   pattern="#{lang['common.datetime.format']}"/>
+                                            </p:calendar>
+                                            <p:message for="txtContractImportDate"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['mn.stock.branch.type.exchange']}" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                            <p:outputLabel value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.currencyType}" />
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['mn.stock.partner.code.package']}" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 pd-top-4">
+                                            <p:outputLabel value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.codePackage}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['mn.stock.partner.date.save.product']}" for="txtDateExp" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:calendar id="txtDateExp" required="true"
+                                                        mask="true"
+                                                        pattern="#{lang['common.datetime.format']}"
+                                                        converterMessage="#{lang['invalid.date.message']}"
+                                                        validatorMessage="#{lang['request.date.validate.message']}"
+                                                        placeholder="#{lang['common.datetime.format']}"
+                                                        requiredMessage="#{lang['mn.stock.partner.date.save.product.require']}"
+                                                        value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.endDate}">
+                                                <f:convertDateTime type="date"
+                                                                   pattern="#{lang['common.datetime.format']}"/>
+                                            </p:calendar>
+                                            <p:message for="txtDateExp"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['mn.stock.partner.dateKCS']}" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 pd-top-4">
+                                            <p:outputLabel value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.dateKCS}" >
+                                                <f:convertDateTime type="date"  pattern="#{lang['common.datetime.format']}"/>
+                                            </p:outputLabel>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive" >
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['export.order.logicstics']}" for="logistic" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 pd-top-4">
+                                            <p:selectBooleanCheckbox value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.logistic}" id="logistic">
+                                                <p:ajax event="change" process="@this" update="@([id$=pnListProduct])" />
+                                            </p:selectBooleanCheckbox>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                        <!--end vung thong tin hop dong-->
+                        <!--start vung thong tin hang hoa-->
+                        <p:outputPanel id="pnListProduct" styleClass="ContainerIndent mg-top-0">
+                            <cbs:panel classForToggle="pnViewOffice" titleHeader="#{lang['export.order.view.list.product']}" toggle="true"/>
+                            <div class="Container100 pnViewOffice" style="margin-bottom: 10px;margin-top: 10px;">
+                                <div class="Container100 ui-fluid">
+                                    <p:dataTable
+                                            id="tblLsProduct"
+                                            sortMode="single"
+                                            reflow="false"
+                                            emptyMessage="#{lang['common.empty.records']}"
+                                            styleClass="Width100" value="#{partnerCreateUnderlyingController.importPartnerRequestDTO.lsProductOfferDto}"
+                                            rowIndexVar="index" var="productOffer">
+                                        <p:column styleClass="col-left pd-top-6" sortBy="#{productOffer.productOfferTypeId}">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['export.order.type.product']}" title="#{lang['export.order.type.product']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{productOffer.productOfferTypeIdName}" title="#{productOffer.productOfferTypeIdName}" />
+                                        </p:column>
+                                        <p:column styleClass="col-left" sortBy="#{productOffer.name}">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['export.order.name.product']}" title="#{lang['export.order.name.product']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{productOffer.name}" title="#{productOffer.name}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['mn.stock.track.status.stock']}" title="#{lang['mn.stock.track.status.stock']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{productOffer.stateIdName}" />
+                                        </p:column>
+                                        <p:column styleClass="col-right ">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['common.number.HD']}" title="#{lang['common.number.HD']}"/>
+                                            </f:facet>
+                                            <h:outputText escape="true" value="#{productOffer.quantity}" styleClass="lb-sentinel-bold" converter="currencyFormat"  />
+                                        </p:column>
+                                        <p:column styleClass="col-right ">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['common.number.kcs']}" title="#{lang['common.number.kcs']}"/>
+                                            </f:facet>
+                                            <pe:inputNumber value="#{productOffer.strQuantityKcs}" decimalPlaces="0" maxValue="9999999999"
+                                                            id="quantity" styleClass="Wid100 TexAlRight">
+                                                <p:ajax event="blur" process="@this" update="@([id$=tblLsProduct]),@([id$=msgSearch])"
+                                                        listener="#{partnerCreateUnderlyingController.doChangeQuantity(index)}"  ></p:ajax>
+                                            </pe:inputNumber>
+                                            <pe:keyFilter for="quantity" regEx="/[0-9]+/i" preventPaste="true"/>
+                                        </p:column>
+                                        <p:column styleClass="col-right">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['import.partner.simType']}" title="#{lang['import.partner.simType']}"/>
+                                            </f:facet>
+                                            <p:selectOneMenu filter="true" rendered="#{productOffer.isExistSim}"
+                                                             filterMatchMode="contains"
+                                                             itemLabelEscaped="true"
+                                                             value="#{productOffer.prodOfferSimId}">
+                                                <f:selectItems value="#{productOffer.lsProdOfferSim}"
+                                                               var="item"
+                                                               itemLabelEscaped="true"
+                                                               itemValue="#{item.productOfferingId}"
+                                                               itemLabel="#{item.name}"/>
+                                                <p:ajax event="change" process="@this" />
+                                            </p:selectOneMenu>
+                                        </p:column>
+                                        <p:column styleClass="col-right ">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['mn.stock.branch.price.for.bill']}" title="#{lang['mn.stock.branch.price.for.bill']}"/>
+                                            </f:facet>
+                                            <h:outputText escape="true" value="#{productOffer.price}" styleClass="lb-sentinel-bold" converter="currencyFormat"  />
+                                        </p:column>
+
+                                        <p:column styleClass="col-right ">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['create.note.detail.serial']}" title="#{lang['create.note.detail.serial']}"/>
+                                            </f:facet>
+                                            <p:commandLink process="@this" update="@([id$=dlgPartnerInputSerial]),@([id$=msgSearch])"
+                                                           actionListener="#{partnerCreateUnderlyingController.doOpenDlgInputSerial(index)}"
+                                                           oncomplete="if(!args.validationFailed){PF('dlgPartnerInputSerial').show()}"
+                                                           value="#{lang['mn.stock.input.serial']}"
+                                                           rendered="#{!partnerCreateUnderlyingController.importPartnerRequestDTO.logistic and productOffer.showInputSerial}"/>
+                                            <p:commandLink process="@this" update="@([id$=dlgSerialView]),@([id$=msgSearch])"
+                                                           actionListener="#{partnerCreateUnderlyingController.doViewSeial(index)}"
+                                                           oncomplete="if(!args.validationFailed){PF('dlgSerialView').show()}"
+                                                           value="#{lang['create.note.detail.serial']}"
+                                                           rendered="#{!partnerCreateUnderlyingController.importPartnerRequestDTO.logistic and productOffer.showViewSerial}"/>
+                                        </p:column>
+
+                                        <!--PF('dlgDetailSerial').show()-->
+
+                                    </p:dataTable>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                        <!--end vung thong tin hang hoa-->
+                        <p:outputPanel styleClass="Container TexAlCenter" id="pnlCallAction">
+                            <!--<p:commandButton value="#{lang['list.order.import.create.order.import']}" process="@form" update="@form"-->
+                                             <!--action="#{partnerCreateUnderlyingController.doCreateUnderlyingPartner}"/>-->
+                            <cbs:confirmDialog
+                                    idComponent="createOrder"
+                                    id="createOrder"
+                                    valueButton="#{lang['list.order.import.create.order.import']}"
+                                    headerConfirm="#{lang['partner.create.underlying.header']}"
+                                    messageConfirm="#{lang['partner.create.underlying.confirm.msg']}"
+                                    actionOK="#{partnerCreateUnderlyingController.doCreateUnderlyingPartner}"
+                                    disableButton="#{partnerCreateUnderlyingController.disableCreateParner}"
+                                    resetValueButton="false"
+                                    process="@form"
+                                    updateArea="@form"
+                                    updateOK="@form"
+                                    actionValidate="#{partnerCreateUnderlyingController.doValidateCreateNote}"
+                                    focusCancel="false"
+                                    oncompleteOK=""
+                                    isButton="true"
+                                    />
+                            <p:commandButton styleClass="mg-left-5" value="#{lang['list.order.import.print.order.import']}" disabled="true"/>
+                            <p:commandButton styleClass="mg-left-5" value="#{lang['common.reset']}" process="@this"
+                                             disableButton="#{partnerCreateUnderlyingController.disableCreateParner}"
+                                             action="#{partnerCreateUnderlyingController.showInfoNextDetail(partnerCreateUnderlyingController.shipmentWsDTOSelected.shipmentCode,
+                                             partnerCreateUnderlyingController.shipmentWsDTOSelected.reportKCSStatus)}" update="@form"/>
+                            <p:commandButton styleClass="mg-left-5" process="@this" update="@form" actionListener="#{partnerCreateUnderlyingController.doBackPageTop}"
+                                             resetValues="true" value="#{lang['common.back.page']}"/>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="top"
+                  id="dlgPartnerInputSerial"
+                  widgetVar="dlgPartnerInputSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <ui:include src="dlgPartnerInputSerial.xhtml" />
+        </p:dialog>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  onShow="setFocusByClass('btnCloseView')"
+                  position="center"
+                  id="dlgSerialView"
+                  widgetVar="dlgSerialView"
+                  header="#{cc.attrs.lbListSeriDetail}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <h:form>
+                <p:outputPanel styleClass="ContainerIndent" id="pnViewListSerial">
+                    <div class="Container100 lstDataExport">
+                        <p:dataTable
+                                rendered="#{partnerCreateUnderlyingController.prodOfferDTOSelected.impType eq 1}"
+                                value="#{partnerCreateUnderlyingController.prodOfferDTOSelected.lstParam}"
+                                var="serial"
+                                resizableColumns="true"
+                                paginator="false"
+                                scrollable="true"
+                                scrollHeight="200"
+                                emptyMessage="#{lang['common.empty.records']}">
+                            <p:column styleClass="col-left" sortBy="#{serial}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.stock.utilities.look.serial.lb']}" title="#{lang['mn.stock.utilities.look.serial.lb']}"/>
+                                </f:facet>
+                                <h:outputText escape="true" value="#{serial}" title="#{serial}"/>
+                            </p:column>
+                        </p:dataTable>
+                        <p:dataTable
+                                rendered="#{partnerCreateUnderlyingController.prodOfferDTOSelected.impType eq 2}"
+                                value="#{partnerCreateUnderlyingController.prodOfferDTOSelected.listStockTransSerialDTOs}"
+                                var="serialDetail"
+                                resizableColumns="true"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.empty.records']}">
+                            <p:column styleClass="col-left" sortBy="#{cc.attrs.lbFromSeri}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.stock.fromSerial']}" title="#{lang['mn.stock.fromSerial']}"/>
+                                </f:facet>
+                                <h:outputText escape="true" value="#{serialDetail.fromSerial}"
+                                              title="#{serialDetail.fromSerial}"/>
+                            </p:column>
+                            <p:column styleClass="col-left" sortBy="#{serialDetail.toSerial}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.stock.ToSerial']}" title="#{lang['mn.stock.ToSerial']}"/>
+                                </f:facet>
+                                <h:outputText escape="true" value="#{serialDetail.toSerial}"
+                                              title="#{serialDetail.toSerial}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </p:outputPanel>
+
+                <div class="ContainerIndent TexAlCenter">
+                    <p:commandButton value="#{lang['notification.close']}"
+                                     immediate="true"
+                                     styleClass="btnCloseView"
+                                     oncomplete="PF('dlgSerialView').hide()"/>
+                </div>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

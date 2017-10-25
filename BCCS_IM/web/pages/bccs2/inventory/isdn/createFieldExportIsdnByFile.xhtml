@@ -1,0 +1,187 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.isdn.manage.create.field.export.isdn.by.file']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmCreateField">
+            <p:outputPanel styleClass="container100">
+                <p:outputPanel id="pnUnderCreate">
+                    <!--Start vung chon file lap lenh xuat so-->
+                    <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                        <p:messages id="msgs" showDetail="true" showSummary="false" closable="true"/>
+                    </div>
+                    <p:outputPanel id="pnCreateField" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelCreateField"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.isdn.manage.create.field.export.isdn.by.file']}"/>
+
+                        <div class="Container100 panelCreateField" style="margin-bottom: 10px;margin-top: 10px;">
+
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7" style="margin-top: 20px">
+                                        <p:outputLabel styleClass="lb-sentinel" for="fileAttach"
+                                                       value="#{lang['attach.file']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid" style="margin-top: 20px">
+                                        <p:inputText id="outputAttachFile"
+                                                     styleClass="outputAttachFile"
+                                                     maxlength="100"
+                                                     placeholder="#{lang['search.number.range.input.fileName']}"
+                                                     value="#{createFieldExportIsdnByFileController.attachFileName}"
+                                                     readonly="true"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container50 mg-left-15 pd-top-7">
+                                        <p:fileUpload id="fileAttach"
+                                                      requiredMessage="mn.stock.status.isdn.update.file.noselect"
+                                                      update="@form"
+                                                      dragDropSupport="true" required="true" mode="advanced"
+                                                      auto="true"
+                                                      process="@this"
+                                                      value="#{createFieldExportIsdnByFileController.uploadedFile}"
+                                                      fileUploadListener="#{createFieldExportIsdnByFileController.fileUploadAction}">
+                                        </p:fileUpload>
+                                    </div>
+                                    <div id="divDownloadFile" class="Container50 ui-fluid" style="margin-top: 25px">
+                                        <p:commandLink
+                                                id="downloadTemplateBtn"
+                                                value="#{lang['mn.stock.status.isdn.update.status.file_template']}"
+                                                rendered="#{!createFieldExportIsdnByFileController.hasFileError}"
+                                                title="#{lang['create.note.download.file.title']}"
+                                                ajax="false"
+                                                immediate="true"
+                                                style="text-decoration: none!important;">
+                                            <p:fileDownload value="#{createFieldExportIsdnByFileController.downloadFileTemplate()}"/>
+                                        </p:commandLink>
+                                        <p:commandLink
+                                            id="downloadErrBtn"
+                                            value="#{lang['mn.stock.status.isdn.update.status.file_error']}"
+                                            rendered="#{createFieldExportIsdnByFileController.hasFileError}"
+                                            title="#{lang['create.note.download.file.title']}"
+                                            ajax="false"
+                                            immediate="true"
+                                            style="text-decoration: none!important;">
+                                        <p:fileDownload value="#{createFieldExportIsdnByFileController.downloadFileError()}"/>
+                                    </p:commandLink>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive TexAlCenterss">
+                                    <div class="Container100 pd-top-7">
+                                        <p:commandButton
+                                                value="#{lang['see.previous']}"
+                                                process="@form"
+                                                disabled="#{!createFieldExportIsdnByFileController.selectedFile}"
+                                                actionListener="#{createFieldExportIsdnByFileController.previewField}"
+                                                update="@form"/>
+                                        <p:commandButton styleClass="mg-left-5"
+                                                         value="#{lang['export.order.btn.submit']}"
+                                                         process="@form"
+                                                         disabled="#{!createFieldExportIsdnByFileController.previewOrder}"
+                                                         actionListener="#{createFieldExportIsdnByFileController.createField}"
+                                                         update="@form"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung chon file lap lenh xuat so-->
+
+                    <!--Start vung ds lenh xuat-->
+                    <p:outputPanel id="pnLstField" styleClass="ContainerIndent"
+                                   rendered="true">
+                        <cbs:panel classForToggle="panelListField"
+                                   toggle="true"
+                                   titleHeader="#{lang['create.note.list.order.export']}"/>
+
+                        <div class="Container100 panelListField" style="margin-bottom: 10px;margin-top: 5px;">
+
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        id="lstListNeedDelete"
+                                        var="item"
+                                        rowKey="#{item.rowKey}"
+                                        rowIndexVar="index"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage=""
+                                        value="#{createFieldExportIsdnByFileController.fieldExportFileDTOs}">
+                                    <p:column headerText="#{lang['common.stt']}" style="width: 10%">
+                                        <p:outputLabel value="#{index + 1}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['export.order.code']}"
+                                              style="width: 15%"
+                                              sortBy="#{item.actionCode}">
+                                        <p:outputLabel value="#{item.actionCode}"
+                                                       title="#{item.actionCode}"
+                                                       style="text-align: left"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['create.order.file.code.export.warehouse']}"
+                                              style="width: 15%"
+                                              styleClass="TexAlCenter"
+                                              sortBy="#{item.fromOwnerCode}">
+                                        <p:outputLabel value="#{item.fromOwnerCode}"
+                                                       title="#{item.fromOwnerCode}"
+                                                       style="text-align: left"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['create.order.file.code.import.warehouse']}"
+                                              style="width: 15%"
+                                              styleClass="TexAlCenter"
+                                              sortBy="#{item.toOwnerCode}">
+                                        <p:outputLabel value="#{item.toOwnerCode}"
+                                                       title="#{item.toOwnerCode}"
+                                                       style="text-align: left"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.utilities.code.stock']}"
+                                              style="width: 15%"
+                                              styleClass="TexAlCenter"
+                                              sortBy="#{(item.productOfferCode)}">
+                                        <p:outputLabel value="#{(item.productOfferCode)}"
+                                                       title="#{(item.productOfferCode)}"></p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.number']}"
+                                              style="width: 15%"
+                                              styleClass="TexAlRight"
+                                              sortBy="#{item.quantity}">
+                                        <p:outputLabel value="#{(item.quantity)}"
+                                                       title="#{(item.quantity)}"></p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['export.order.note']}"
+                                              style="width: 15%"
+                                              styleClass="TexAlCenter"
+                                              sortBy="#{(item.note)}">
+                                        <p:outputLabel value="#{(item.note)}"
+                                                       title="#{(item.note)}"></p:outputLabel>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                        <!--<div class="Container100 TexAlCenter mg-top-0" id="fDelete">-->
+                        <!--<p:commandButton-->
+                        <!--id="btnDelete"-->
+                        <!--rendered="#{createFieldExportIsdnByFileController.enableDelete}"-->
+                        <!--value="#{lang['button.delete.digital']}"-->
+                        <!--style="margin-bottom: 10px"-->
+                        <!--update="@this, @([id$=frmDelete])"-->
+                        <!--actionListener="#{createFieldExportIsdnByFileController.deleteNumber}"/>-->
+
+                        <!--</div>-->
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,444 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:o="http://omnifaces.org/ui">
+<composite:interface>
+    <composite:attribute name="idComponent" shortDescription="id component cua doi tuong " required="true"/>
+    <composite:attribute name="titleView" shortDescription="title " required="true"/>
+    <composite:attribute name="titleDetail" shortDescription="title " required="true"/>
+    <composite:attribute name="value" shortDescription="Doi tuong chua ket qua tra ve"
+                         required="true" type="com.viettel.bccs.inventory.tag.AssignIsdnTagNameable"/>
+    <composite:attribute name="styleClassDiv" shortDescription="ten mehtod" default="ContainerIndent"/>
+</composite:interface>
+<composite:implementation>
+    <p:outputPanel id="frm#{cc.attrs.idComponent}">
+        <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+            <p:messages id="assignModelMsgs" showDetail="true" showSummary="false" closable="true"/>
+        </div>
+        <p:outputPanel id="pnlEnterFile#{cc.attrs.idComponent}" styleClass="#{cc.attrs.styleClassDiv}">
+            <cbs:panel classForToggle="panelInforFile#{cc.attrs.idComponent}"
+                       toggle="true" titleHeader="#{cc.attrs.titleDetail}"/>
+
+            <div class="Container100 panelInforFile#{cc.attrs.idComponent}"
+                 style="margin-bottom: 10px;margin-top: 10px;">
+                <p:outputPanel id="renderTypeService#{cc.attrs.idComponent}" styleClass="Container100">
+                    <p:outputPanel rendered="#{cc.attrs.value.renderedFromFile}">
+
+                        <div class="#{cc.attrs.styleClassDiv} mg-top-0">
+                            <div class="Container50 Responsive50">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.type.service']}"
+                                                   for="assignModelServiceTypeFile#{cc.attrs.idComponent}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:selectOneMenu id="assignModelServiceTypeFile#{cc.attrs.idComponent}"
+                                                     required="true"
+                                                     requiredMessage="#{lang['mn.stock.status.service.noselect']}"
+                                                     value="#{cc.attrs.value.searchStockNumberDTO.serviceType}">
+                                        <f:selectItems
+                                                value="#{cc.attrs.value.optionSetValueDTOs}"
+                                                var="item"
+                                                itemValue="#{item.value}"
+                                                itemLabel="#{item.name}"
+                                                itemLabelEscaped="true"
+                                                />
+                                    </p:selectOneMenu>
+                                    <p:message for="assignModelServiceTypeFile#{cc.attrs.idComponent}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div id="pnlUpload#{cc.attrs.idComponent}">
+                                <div class="Container100">
+                                    <div class="Container50" style="margin-top: 10px!important;">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           for="fileAttach#{cc.attrs.idComponent}"
+                                                           value="#{lang['attach.file']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:inputText id="fileName"
+                                                         styleClass="outputAttachFile"
+                                                         maxlength="100"
+                                                         placeholder="#{lang['search.number.range.input.fileName']}"
+                                                         value="#{cc.attrs.value.fileName}"
+                                                         title="#{cc.attrs.value.fileName}"
+                                                         readonly="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container15 Responsive mg-left-50">
+                                        <p:fileUpload id="fileAttach#{cc.attrs.idComponent}"
+                                                      invalidFileMessage="#{lang['mn.stock.limit.importFile.msg.format']}"
+                                                      requiredMessage="#{lang['mn.stock.limit.attachFile.msg.require']}"
+                                                      invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                      fileLimitMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                      update="@([id$=pnlUpload#{cc.attrs.idComponent}]),@([id$=fileName]), @([id$=assignModelMsgs])"
+                                                      dragDropSupport="true" required="true" mode="advanced"
+                                                      auto="true"
+                                                      allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                                      sizeLimit="5242880"
+                                                      value="#{cc.attrs.value.uploadedFile}"
+                                                      fileUploadListener="#{cc.attrs.value.fileUploadAction}">
+                                        </p:fileUpload>
+                                    </div>
+                                </div>
+                                <div class="Container100 mg-top-0 mg-left-15 pd-top-7">
+                                    <p:outputPanel id="pnlDownload">
+                                        <p:commandLink value="#{lang['create.note.download.file']}"
+                                                       rendered="#{!cc.attrs.value.hasFileError}"
+                                                       title="#{lang['create.note.download.file.title']}"
+                                                       ajax="false"
+                                                       immediate="true"
+                                                       style="text-decoration: none!important;">
+                                            <p:fileDownload
+                                                    value="#{cc.attrs.value.downloadFileTemplate()}"/>
+                                        </p:commandLink>
+                                        <p:commandLink
+                                                id="bthDownloadError"
+                                                value="#{lang['mn.stock.status.isdn.update.status.file_error']}"
+                                                rendered="#{cc.attrs.value.hasFileError}"
+                                                title="#{lang['create.note.download.file.title']}"
+                                                ajax="false"
+                                                immediate="true"
+                                                style="text-decoration: none!important;">
+                                            <p:fileDownload
+                                                    value="#{cc.attrs.value.downloadFileError()}"/>
+                                        </p:commandLink>
+                                    </p:outputPanel>
+                                </div>
+
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!-- nhap theo dai-->
+                    <p:outputPanel rendered="#{!cc.attrs.value.renderedFromFile}">
+                        <div class="#{cc.attrs.styleClassDiv} mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.type.service']}"
+                                                   for="assignModelServiceType#{cc.attrs.idComponent}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:selectOneMenu id="assignModelServiceType#{cc.attrs.idComponent}"
+                                                     required="true"
+                                                     requiredMessage="#{lang['mn.stock.status.service.noselect']}"
+                                                     value="#{cc.attrs.value.searchStockNumberDTO.serviceType}">
+                                        <f:selectItems
+                                                value="#{cc.attrs.value.optionSetValueDTOs}"
+                                                var="item"
+                                                itemValue="#{item.value}"
+                                                itemLabel="#{item.name}"
+                                                itemLabelEscaped="true"
+                                                />
+                                        <p:ajax event="change" process="@this" update="@([id$=pnlProduct]), @([id$=pnlProductOld])"
+                                                listener="#{cc.attrs.value.changeServiceType}"
+                                                />
+                                    </p:selectOneMenu>
+                                    <p:message for="assignModelServiceType#{cc.attrs.idComponent}"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['from.number']}"
+                                                   for="fromNumberTxt"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:inputText id="fromNumberTxt"
+                                                 styleClass="fromNumberTxt"
+                                                 required="true"
+                                                 maxlength="11"
+                                                 requiredMessage="#{lang['start.range.require']}"
+                                                 placeholder="#{lang['start.range.placeholder']}"
+                                                 value="#{cc.attrs.value.searchStockNumberDTO.startRange}">
+                                        <p:ajax event="change" process="@this"
+                                                listener="#{cc.attrs.value.onChangeStartRange}"
+                                                update="@this"/>
+                                        <pe:keyFilter for="fromNumberTxt"
+                                                      mask="num" preventPaste="false"/>
+                                    </p:inputText>
+                                    <p:message for="fromNumberTxt"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['to.number']}"
+                                                   for="toNumberTxt"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:inputText id="toNumberTxt"
+                                                 styleClass="toNumberTxt"
+                                                 required="true"
+                                                 maxlength="11"
+                                                 requiredMessage="#{lang['end.range.require']}"
+                                                 placeholder="#{lang['end.range.placeholder']}"
+                                                 value="#{cc.attrs.value.searchStockNumberDTO.endRange}">
+                                        <p:ajax event="change" process="@this"
+                                                listener="#{cc.attrs.value.onChangeEndRange}"
+                                                update="@this"/>
+                                        <pe:keyFilter for="toNumberTxt"
+                                                      mask="num" preventPaste="false"/>
+                                    </p:inputText>
+                                    <p:message for="toNumberTxt"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="#{cc.attrs.styleClassDiv} mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['search.number.range.product.old']}"
+                                                   for="productOfferTotalOld"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:outputPanel id="pnlProductOld"
+                                                   styleClass="#{cc.attrs.classDivInput} ui-fluid ui-relative">
+                                        <p:autoComplete id="productOfferTotalOld"
+                                                        value="#{cc.attrs.value.productOfferingTotalDTO}"
+                                                        forceSelection="true"
+                                                        completeMethod="#{cc.attrs.value.doChangeOffering}"
+                                                        placeholder="#{lang['export.order.stock.inputText.old']}"
+                                                        onfocus="this.setSelectionRange(0, this.value.length)"
+                                                        var="productOfferingTotalDTO"
+                                                        maxResults="#{cc.attrs.value.limitAutoComplete}"
+                                                        itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                        itemValue="#{productOfferingTotalDTO}"
+                                                        styleClass=" autoCpl"
+                                                        maxlength="100" scrollHeight="300">
+                                            <f:attribute name="index" value="#{index}"/>
+                                            <o:converter converterId="productOfferingConverter"
+                                                         list="#{cc.attrs.value.lsProductOfferingTotalDTO}"/>
+                                            <p:column headerText="#{lang['common.lb.code']}"><h:outputText escape="true"
+                                                                                                           value="#{productOfferingTotalDTO.code}"/></p:column>
+                                            <p:column headerText="#{lang['common.lb.name']}"><h:outputText escape="true"
+                                                                                                           value="#{productOfferingTotalDTO.name}"/></p:column>
+                                            <p:ajax event="query" global="false"/>
+                                        </p:autoComplete>
+                                        <p:commandLink id="btnClearOld"
+                                                       rendered="true"
+                                                       styleClass="ui-link-right"
+                                                       update="productOfferTotalOld"
+                                                       actionListener="#{cc.attrs.value.clearProductOld}"
+                                                       process="@this">
+                                            <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                        </p:commandLink>
+                                    </p:outputPanel>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <!--<div class="Container40 Responsive50 mg-left-15 pd-top-7">-->
+                                    <!--<p:outputLabel styleClass="lb-sentinel"-->
+                                                   <!--value="#{lang['search.number.range.product.new']}"-->
+                                                   <!--for="productOfferTotalNew"/>-->
+                                <!--</div>-->
+                                <!--<div class="Container60 Responsive50 ui-fluid">-->
+                                    <!--<p:outputPanel id="pnlProduct"-->
+                                                   <!--styleClass="#{cc.attrs.classDivInput} ui-fluid ui-relative">-->
+                                        <!--<p:autoComplete id="productOfferTotalNew"-->
+                                                        <!--value="#{cc.attrs.value.productOfferingTotalNewDTO}"-->
+                                                        <!--forceSelection="true"-->
+                                                        <!--completeMethod="#{cc.attrs.value.doChangeOfferingNew}"-->
+                                                        <!--placeholder="#{lang['export.order.stock.inputText.new']}"-->
+                                                        <!--onfocus="this.setSelectionRange(0, this.value.length)"-->
+                                                        <!--var="productOfferingTotalNewDTO"-->
+                                                        <!--maxResults="#{cc.attrs.value.limitAutoComplete}"-->
+                                                        <!--itemLabel="#{productOfferingTotalNewDTO.itemLabel}"-->
+                                                        <!--itemValue="#{productOfferingTotalNewDTO}"-->
+                                                        <!--styleClass=" autoCpl"-->
+                                                        <!--required="true"-->
+                                                        <!--requiredMessage="#{lang['search.number.range.validate.require.productNewId']}"-->
+                                                        <!--maxlength="100" scrollHeight="300">-->
+                                            <!--<f:attribute name="index" value="#{index}"/>-->
+                                            <!--<o:converter converterId="productOfferingConverter"-->
+                                                         <!--list="#{cc.attrs.value.lsProductOfferingTotalNewDTO}"/>-->
+                                            <!--<p:column headerText="#{lang['common.lb.code']}"><h:outputText escape="true"-->
+                                                                                                           <!--value="#{productOfferingTotalNewDTO.code}"/></p:column>-->
+                                            <!--<p:column headerText="#{lang['common.lb.name']}"><h:outputText escape="true"-->
+                                                                                                           <!--value="#{productOfferingTotalNewDTO.name}"/></p:column>-->
+                                            <!--<p:ajax event="query" global="false"/>-->
+                                        <!--</p:autoComplete>-->
+                                        <!--<p:commandLink id="btnClearNew"-->
+                                                       <!--rendered="true"-->
+                                                       <!--styleClass="ui-link-right"-->
+                                                       <!--update="productOfferTotalNew"-->
+                                                       <!--actionListener="#{cc.attrs.value.clearProductNew}"-->
+                                                       <!--process="@this">-->
+                                            <!--<span class="ui-icon ui-c fa icon-ccw Fs12"/>-->
+                                        <!--</p:commandLink>-->
+                                        <!--<p:message for="productOfferTotalNew"/>-->
+                                    <!--</p:outputPanel>-->
+                                <!--</div>-->
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container100 ui-fluid ui-relative">
+                                    <cbs:inputShop value="#{cc.attrs.value.shopInfoTag}"
+                                                   idComponent="inputStore#{cc.attrs.idComponent}"
+                                                   methodName="receiveShop"
+                                                   update="@this"
+                                                   label="#{lang['stock.get.digital']}"
+                                                   placeholder="#{lang['search.number.range.shop.placehoder']}"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                   classDivInput="Container60 Responsive50 ui-fluid"
+                                                   forceSelection="false"
+                                                   clearMethodName="clearCurrentShop"
+                                                   require="false">
+                                    </cbs:inputShop>
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+
+                <div class="Container100 TexAlCenter mg-top-0">
+                    <p:commandButton value="#{lang['create.list']}"
+                                     process="@this, @([id$=frm#{cc.attrs.idComponent}])"
+                                     resetValues="true"
+                                     actionListener="#{assigningModelForIsdnController.previewModel(cc.attrs.value.renderedFromFile)}"
+                                     update="@this,@([id$=frm#{cc.attrs.idComponent}])"/>
+                    <p:commandButton value="#{lang['common.reset']}"
+                                     actionListener="#{assigningModelForIsdnController.doReset}"
+                                     process="@this"
+                                     resetValues="true"
+                                     update="@form" validateClient="true" styleClass="mg-left-5"/>
+                </div>
+            </div>
+        </p:outputPanel>
+        <p:outputPanel id="pnlListRange" styleClass="ContainerIndent">
+            <cbs:panel classForToggle="panelListOrderExport"
+                       toggle="true"
+                       titleHeader="#{lang['list.need.assigning.type.product']}"/>
+
+            <div class="Container100 panelListOrderExport">
+                <div class="Container TexAlLeft">
+                    <!--<p:commandLink rendered="#{cc.attrs.value.renderedFromFile}" value="#{lang['mn.stock.status.update']}"-->
+                                   <!--resetValues="true"-->
+                                   <!--actionListener="#{assigningModelForIsdnController.doConfirmModelUpdate}"-->
+                                   <!--update="assignModelMsgs, @([id$=dlgAssignModel]), @([id$=labelService])"-->
+                                   <!--styleClass="fa icon-plus Fs14 blue md-link"-->
+                                   <!--oncomplete="if(!args.validationFailed){PF('dlgAssignModel').show();}"-->
+                                   <!--process="@this, @([id$=tblListRange])">-->
+                    <!--</p:commandLink>-->
+
+                    <p:outputPanel rendered="#{cc.attrs.value.renderedFromFile}">
+                        <cbs:confirmDialog
+                                idComponent="btnUpdateStatus"
+                                valueButton="#{lang['mn.stock.status.update']}"
+                                headerConfirm="#{lang['mn.stock.utilities.update.model']}"
+                                messageConfirm="#{lang['mn.stock.utilities.update.model.file.confim']}"
+                                actionOK="#{assigningModelForIsdnController.doUpdateModelFromFile}"
+                                resetValueButton="false"
+                                process="@this, @([id$=tblListRange])"
+                                updateArea="@([id$=assignModelMsgs])"
+                                updateOK="@form, @([id$=assignModelMsgs])"
+                                actionValidate="#{assigningModelForIsdnController.doConfirmModelUpdate}"
+                                focusCancel="false"
+                                isButton="false"
+                                styleClassButton="fa icon-plus Fs14 blue md-link"
+                                />
+                    </p:outputPanel>
+
+                    <p:commandLink rendered="#{!cc.attrs.value.renderedFromFile}" value="#{lang['mn.stock.status.update']}"
+                                   resetValues="true"
+                                   actionListener="#{assigningModelForIsdnController.doConfirmModelUpdate}"
+                                   update="assignModelMsgs, @([id$=dlgAssignModel]), @([id$=labelService])"
+                                   styleClass="fa icon-plus Fs14 blue md-link"
+                                   oncomplete="if(!args.validationFailed){PF('dlgAssignModel').show();}"
+                                   process="@this, @([id$=tblListRange])">
+                    </p:commandLink>
+
+
+                </div>
+
+                <div class="ContainerIndent">
+                    <p:dataTable
+                            id="tblListRange"
+                            paginator="#{lang['common.paging.paginator']}"
+                            rows="#{lang['common.paging.rows.default']}"
+                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                            emptyMessage="#{lang['common.empty.records']}"
+                            value="#{assigningModelForIsdnController.listRangeGrant}"
+                            selection="#{assigningModelForIsdnController.listRangeGrantSelected}"
+                            rowIndexVar="index"
+                            rowKey="#{item.rowKey}"
+                            var="item">
+
+                        <p:column selectionMode="multiple" style="width:5%; text-align:center"/>
+                        <p:column headerText="#{lang['mn.stock.utilities.code.ware.house']}"
+                                   sortBy="#{item.shopCode}" width="10%">
+                            <p:outputLabel value="#{item.shopCode}" title="#{item.shopCode}"/>
+                        </p:column>
+                        <p:column headerText="#{lang['mn.stock.name']}" sortBy="#{item.shopName}" width="15%">
+                            <p:outputLabel value="#{item.shopName}" title="#{item.shopName}"/>
+                        </p:column>
+                        <p:column headerText="#{lang['mn.stock.type.service']}"  width="12%"
+                                  sortBy="#{assigningModelForIsdnController.getTelecomServiceName(item.telecomService)}">
+                            <p:outputLabel
+                                    value="#{assigningModelForIsdnController.getTelecomServiceName(item.telecomService)}"
+                                    title="#{assigningModelForIsdnController.getTelecomServiceName(item.telecomService)}"/>
+                        </p:column>
+                        <p:column headerText="#{lang['from.number']}"
+                                  sortBy="#{item.fromISDN}" width="12%">
+                            <h:outputLabel value="#{item.fromISDN}"
+                                           title="#{item.fromISDN}"
+                                           styleClass="lb-sentinel-bold"
+                                           converter="currencyFormat">
+                            </h:outputLabel>
+                        </p:column>
+                        <p:column headerText="#{lang['to.number']}"
+                                  sortBy="#{item.toISDN}" width="12%">
+                            <h:outputLabel value="#{item.toISDN}"
+                                           title="#{item.toISDN}"
+                                           styleClass="lb-sentinel-bold"
+                                           converter="currencyFormat">
+                            </h:outputLabel>
+                        </p:column>
+                        <p:column headerText="#{lang['common.number']}" style="width: 12%; text-align:right"
+                                  sortBy="#{item.total}">
+                            <h:outputLabel value="#{item.total}"
+                                           title="#{item.total}"
+                                           styleClass="lb-sentinel-bold"
+                                           converter="currencyFormat">
+                            </h:outputLabel>
+                        </p:column>
+                        <p:column headerText="#{lang['mn.stock.utilities.code.stock.old']}"
+                                  styleClass="col-left"
+                                  sortBy="#{item.productCodeOld}" width="18%">
+                            <p:outputLabel value="#{item.productCodeOld}" title="#{item.productCodeOld}"/>
+                        </p:column>
+                        <p:column rendered="#{cc.attrs.value.renderedFromFile}" headerText="#{lang['mn.stock.utilities.code.stock.new']}"
+                                  styleClass="col-left"
+                                  sortBy="#{item.productCodeNew}" width="16%">
+                            <p:outputLabel value="#{item.productCodeNew}" title="#{item.productCodeNew}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+    <p:dialog width="40%"
+              appendTo="@(body)"
+              closable="true"
+              dynamic="false"
+              id="dlgAssignModel"
+              minWidth="900"
+              widgetVar="dlgAssignModel"
+              closeOnEscape="true"
+              position="center"
+              header="#{lang['mn.stock.utilities.update.model']}"
+              resizable="false"
+              maximizable="true"
+              modal="true"
+              styleClass="sale">
+        <ui:include src="dlgAssignModel.xhtml"/>
+    </p:dialog>
+</composite:implementation>
+</html>

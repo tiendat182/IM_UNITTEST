@@ -1,0 +1,396 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mm.stock.balance.approve']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmApproveStockBalanceRequest">
+            <p:focus for="@form"/>
+            <p:outputPanel styleClass="Container100" id="pnlApproveStockBalanceRequest">
+                <p:focus for="inputShopID"/>
+
+                <div class="ContainerIndent">
+                    <p:messages id="msgContainer" showSummary="false" showDetail="true"
+                                closable="true"/>
+                </div>
+                <div class="ContainerIndent">
+                    <cbs:panel classForToggle="pnlInfoSearch" titleHeader="#{lang['create.note.export.info.search']}"
+                               toggle="true"></cbs:panel>
+                    <p:outputPanel styleClass="Container100 pnlInfoSearch" id="pnlInfoSearch">
+                        <div class="Container100">
+                            <div class="Container33 Responsive">
+                                <cbs:inputShop
+                                        value="#{approveBalanceRequestController.shopInfoTag}"
+                                        idComponent="inputStore"
+                                        id="inputShopID"
+                                        methodName="doSelectShop"
+                                        clearMethodName="doClearShop"
+                                        update="@this"
+                                        label="#{lang['mn.stock.utilities.unit.code']}"
+                                        require="false"
+                                        forceSelection="false"
+                                        placeholder="#{lang['mn.stock.utilities.unit.code.placehoder']}"
+                                        classDivLabel="Container40 Responsive50 mg-left-15 pd-top-4"
+                                        classDivInput="Container60 Responsive50 ui-fluid"
+                                        requiredMessage="#{lang['stock.check.report.require.shop']}"
+                                        oncomplete="">
+                                </cbs:inputShop>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['mn.balance.stock.request.type']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:selectOneMenu
+                                            value="#{approveBalanceRequestController.stockBalanceRequestDTO.type}">
+                                        <f:selectItem noSelectionOption="true"
+                                                      itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                        <f:selectItem itemValue="1"
+                                                      itemLabel="#{lang['mm.stock.balance.type1']}"/>
+                                        <f:selectItem itemValue="2"
+                                                      itemLabel="#{lang['mm.stock.balance.type2']}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['common.status']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:selectOneMenu
+                                            value="#{approveBalanceRequestController.stockBalanceRequestDTO.status}">
+                                        <f:selectItem noSelectionOption="true"
+                                                      itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                        <f:selectItem itemValue="0"
+                                                      itemLabel="#{lang['mm.stock.balance.status0']}"/>
+                                        <f:selectItem itemValue="1"
+                                                      itemLabel="#{lang['mm.stock.balance.status1']}"/>
+                                        <f:selectItem itemValue="2"
+                                                      itemLabel="#{lang['mm.stock.balance.status2']}"/>
+                                        <f:selectItem itemValue="3"
+                                                      itemLabel="#{lang['mm.stock.balance.status3']}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Container100">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['create.note.from.date']}"
+                                                   for="fromDate"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:calendar
+                                            mask="true"
+                                            pattern="#{lang['common.datetime.format']}"
+                                            converterMessage="#{lang['invalid.date.message']}"
+                                            validatorMessage="#{lang['start.date.validate.message']}"
+                                            value="#{approveBalanceRequestController.stockBalanceRequestDTO.fromDate}"
+                                            placeholder="#{lang['common.datetime.format']}"
+                                            required="true"
+                                            requiredMessage="#{lang['mn.stock.from.date.not.blank']}"
+                                            id="fromDate">
+                                        <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                    </p:calendar>
+                                    <p:message for="fromDate"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50  mg-left-15 pd-top-4">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['create.note.to.date']}"
+                                                   for="toDate"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:calendar
+                                            mask="true"
+                                            pattern="#{lang['common.datetime.format']}"
+                                            converterMessage="#{lang['invalid.date.message']}"
+                                            validatorMessage="#{lang['end.date.validate.message']}"
+                                            value="#{approveBalanceRequestController.stockBalanceRequestDTO.toDate}"
+                                            placeholder="#{lang['common.datetime.format']}"
+                                            required="true"
+                                            requiredMessage="#{lang['mn.stock.to.date.not.blank']}"
+                                            id="toDate">
+                                        <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                    </p:calendar>
+                                    <p:message for="toDate"/>
+                                    <p:remoteCommand update="@form" immediate="true" name="updateControls"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive"/>
+                        </div>
+                        <div class="Container100 TexAlCenter pd-top-10">
+                            <p:commandButton value="#{lang['common.button.search']}"
+                                             process="@this, @([id$=pnlInfoSearch])"
+                                             update="@form"
+                                             actionListener="#{approveBalanceRequestController.doSearchStockBalanceRequest()}"/>
+                            <p:commandButton value="#{lang['common.reset']}" styleClass="mg-left-5"
+                                             process="@this" update="@form"
+                                             actionListener="#{approveBalanceRequestController.init()}"/>
+                        </div>
+                    </p:outputPanel>
+                </div>
+
+                <p:outputPanel styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="pnlListData"
+                               titleHeader="#{lang['mm.stock.balance.listRequest']}"
+                               toggle="true"></cbs:panel>
+                    <p:outputPanel styleClass="Container100 pnlListData" id="pnlListData">
+                        <p:dataTable
+                                id="tblListData"
+                                var="balance"
+                                rowKey=""
+                                resizableColumns="true"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.search.not.record.found']}"
+                                value="#{approveBalanceRequestController.listStockBalanceRequestDTO}">
+                            <p:column sortBy="#{balance.requestCode}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.liquidate.propose.code']}"
+                                            title="#{lang['mn.stock.liquidate.propose.code']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{balance.requestCode}"
+                                        title="#{balance.requestCode}"/>
+                            </p:column>
+                            <p:column sortBy="#{balance.ownerId}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.balance.stock.request.shop']}"
+                                            title="#{lang['mn.balance.stock.request.shop']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{approveBalanceRequestController.getOwnerCode(balance.ownerId, 1)}"
+                                        title="#{approveBalanceRequestController.getOwnerCode(balance.ownerId, 1)}"/>
+                            </p:column>
+                            <p:column sortBy="#{balance.type}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.balance.stock.request.type']}"
+                                            title="#{lang['mn.balance.stock.request.type']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{approveBalanceRequestController.getDisplayName('mm.stock.balance.type',balance.type)}"
+                                        title="#{approveBalanceRequestController.getDisplayName('mm.stock.balance.type',balance.type)}"/>
+                            </p:column>
+                            <p:column sortBy="#{balance.createDatetime}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.liquidate.order.day']}"
+                                            title="#{lang['mn.stock.liquidate.order.day']}"/>
+                                </f:facet>
+                                <h:outputLabel
+                                        value="#{balance.createDatetime}" styleClass="lb-sentinel-bold"
+                                        title="#{approveBalanceRequestController.formatDateTime(balance.createDatetime)}">
+                                    <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                </h:outputLabel>
+                            </p:column>
+                            <p:column sortBy="#{balance.createUser}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['export.order.create.whom']}"
+                                            title="#{lang['export.order.create.whom']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{balance.createUser}"
+                                        title="#{balance.createUser}"/>
+                            </p:column>
+                            <p:column sortBy="#{balance.status}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['common.status']}"
+                                            title="#{lang['common.status']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{approveBalanceRequestController.getDisplayName('mm.stock.balance.status',balance.status)}"
+                                        title="#{approveBalanceRequestController.getDisplayName('mm.stock.balance.status',balance.status)}"/>
+                            </p:column>
+                            <p:column styleClass="TexAlCenter" style="width: 10%">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['create.note.effect']}"
+                                            title="#{lang['create.note.effect']}"/>
+                                </f:facet>
+                                <cbs:confirmDialog
+                                        idComponent="btnApprove"
+                                        disableButton="#{!(balance.status eq 0)}"
+                                        titleButton="#{lang['stock.balance.approve']}"
+                                        valueButton=""
+                                        headerConfirm="#{lang['stock.balance.approve']}"
+                                        messageConfirm="#{approveBalanceRequestController.getConfirmMessage('APPROVE')}"
+                                        actionOK="#{approveBalanceRequestController.onApporve(1)}"
+                                        actionValidate="#{approveBalanceRequestController.onSelect(balance)}"
+                                        resetValueButton="true"
+                                        styleClassButton="fa icon-ok Fs14  black mg-left-5"
+                                        process="@this, @form"
+                                        updateArea="@form"
+                                        updateOK="@form"
+                                        isButton="false"
+                                        focusCancel="false"/>
+                                <cbs:confirmDialog
+                                        idComponent="btnCancel"
+                                        disableButton="#{!(balance.status eq 0)}"
+                                        titleButton="#{lang['stock.balance.reject']}"
+                                        valueButton=""
+                                        headerConfirm="#{lang['stock.balance.reject']}"
+                                        messageConfirm="#{approveBalanceRequestController.getConfirmMessage('REJECT')}"
+                                        actionOK="#{approveBalanceRequestController.onApporve(2)}"
+                                        actionValidate="#{approveBalanceRequestController.onSelect(balance)}"
+                                        resetValueButton="true"
+                                        styleClassButton="fa icon-cancel Fs14  black mg-left-5"
+                                        process="@this, @form"
+                                        updateArea="@form"
+                                        updateOK="@form"
+                                        isButton="false"
+                                        focusCancel="false"/>
+                                <p:commandLink styleClass="fa icon-zoom-out Fs14  black mg-left-5"
+                                               style="text-decoration: none!important; color:red!important;"
+                                               title="#{lang['import.partner.zoom.out']}"
+                                               action="#{approveBalanceRequestController.onDetail(null)}"
+                                               rendered="#{!(!approveBalanceRequestController.showDetail || !(balance.stockRequestId eq approveBalanceRequestController.selectedStockBalanceRequestDTO.stockRequestId))}"
+                                               process="@this"
+                                               update="@form"/>
+                                <p:commandLink styleClass="fa icon-zoom-in Fs14 black mg-left-5"
+                                               style="text-decoration: none!important;"
+                                               title="#{lang['import.partner.zoom.in']}"
+                                               rendered="#{!approveBalanceRequestController.showDetail || !(balance.stockRequestId eq approveBalanceRequestController.selectedStockBalanceRequestDTO.stockRequestId)}"
+                                               action="#{approveBalanceRequestController.onDetail(balance)}"
+                                               process="@this"
+                                               update="@form"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ContainerIndent" rendered="#{approveBalanceRequestController.showDetail}">
+                    <cbs:panel classForToggle="pnlListDetail" titleHeader="#{lang['mm.stock.balance.detailRequest']}"
+                               toggle="true"></cbs:panel>
+                    <p:outputPanel styleClass="Container100 pnlListDetail" id="pnlListDetail">
+                        <p:dataTable
+                                id="tblDetail"
+                                var="detail"
+                                rowKey=""
+                                resizableColumns="true"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.search.not.record.found']}"
+                                value="#{approveBalanceRequestController.listStockBalanceDetailDTO}">
+                            <p:column sortBy="#{detail.prodOfferName}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['agent.sale.table.productOffering.name']}"
+                                            title="#{lang['agent.sale.table.productOffering.name']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{detail.prodOfferName}"
+                                        title="#{detail.prodOfferName}"/>
+                            </p:column>
+                            <p:column sortBy="#{detail.quantityBccs}" styleClass="TexAlRight">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.balance.stock.request.amount.BCCS']}"
+                                            title="#{lang['mn.balance.stock.request.amount.BCCS']}"/>
+                                </f:facet>
+                                <h:outputLabel converter="currencyFormat" styleClass="lb-sentinel-bold"
+                                               value="#{detail.quantityBccs}"
+                                               title="#{approveBalanceRequestController.formatNumber(detail.quantityBccs)}"/>
+                            </p:column>
+                            <p:column sortBy="#{detail.quantityReal}" styleClass="TexAlRight">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.balance.stock.request.amount.inspect']}"
+                                            title="#{lang['mn.balance.stock.request.amount.inspect']}"/>
+                                </f:facet>
+                                <h:outputLabel converter="currencyFormat" styleClass="lb-sentinel-bold"
+                                               value="#{detail.quantityReal}"
+                                               title="#{approveBalanceRequestController.formatNumber(detail.quantityReal)}"/>
+                            </p:column>
+                            <p:column sortBy="#{detail.quantityErp}" styleClass="TexAlRight">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.balance.stock.request.amount.finance']}"
+                                            title="#{lang['mn.balance.stock.request.amount.finance']}"/>
+                                </f:facet>
+                                <h:outputLabel converter="currencyFormat" styleClass="lb-sentinel-bold"
+                                               value="#{detail.quantityErp}"
+                                               title="#{approveBalanceRequestController.formatNumber(detail.quantityErp)}"/>
+                            </p:column>
+                            <p:column sortBy="#{detail.quantity}" styleClass="TexAlRight">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.balance.stock.request.amount.request']}"
+                                            title="#{lang['mn.balance.stock.request.amount.request']}"/>
+                                </f:facet>
+                                <h:outputLabel converter="currencyFormat" styleClass="lb-sentinel-bold"
+                                               value="#{detail.quantity}"
+                                               title="#{approveBalanceRequestController.formatNumber(detail.quantity)}"/>
+                            </p:column>
+                            <p:column styleClass="TexAlRight">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['create.note.detail.serial']}"
+                                            title="#{lang['create.note.detail.serial']}"/>
+                                </f:facet>
+                                <p:commandLink value="#{lang['create.note.detail']}"
+                                               rendered="#{detail.checkSerial eq '1'}"
+                                               update="dlgDetailSerial, @([id$=msgContainer])"
+                                               action="#{approveBalanceRequestController.onDetailSerial(detail)}"
+                                               oncomplete="if(!args.validationFailed){PF('dlgDetailSerial').show();}"
+                                               process="@this"/>
+                            </p:column>
+                        </p:dataTable>
+                        <p:outputPanel styleClass="Container100 TexAlCenter">
+                            <p:commandButton value="#{lang['stock.balance.download.note']}"
+                                             rendered="#{approveBalanceRequestController.showDetail}"
+                                             process="@this"
+                                             update="@([id$=msgContainer])"
+                                             immediate="true"
+                                             ajax="false">
+                                <p:fileDownload value="#{approveBalanceRequestController.getAttachFile()}"/>
+                            </p:commandButton>
+                            <p:commandButton value="#{lang['stock.balance.download.attach']}"
+                                             styleClass="mg-left-5"
+                                             immediate="true"
+                                             process="@this"
+                                             update="@([id$=msgContainer])"
+                                             rendered="#{approveBalanceRequestController.showDetail}"
+                                             ajax="false">
+                                <p:fileDownload value="#{approveBalanceRequestController.getSerialAttachFile()}"/>
+                            </p:commandButton>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  widgetVar="dlgDetailSerial"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="70%">
+            <ui:include src="balanceDetailSerial.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,249 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['quota.establish']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmEstablishQuota">
+            <p:outputPanel id="quotaEstablish" styleClass="Container100">
+                <div class="ContainerIndent mg-top-0">
+                    <p:messages id="msgform" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+
+                <!--Start vung thong tin cau hinh thoi gian KM-->
+                <p:outputPanel id="quotaEstablishInput" styleClass="Container100">
+                    <div class="ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="quotaEstablishInput"
+                                   titleHeader="#{lang['quota.establish']}"/>
+
+                        <div class="Container100 quotaEstablishInput" style="margin-bottom: 10px;margin-top: 0px;">
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="quotalevel"
+                                                       value="#{lang['quota.establish.level']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="quotalevel"
+                                                         value="#{establishQuotaController.forSearchDTO.debitLevel}"
+                                                         disabled="false">
+                                            <f:selectItem itemValue=""
+                                                          itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                            <f:selectItems value="#{establishQuotaController.optionSetValueDTOslevel}"
+                                                           var="optionSetValueDTOslevel"
+                                                           itemLabel="#{optionSetValueDTOslevel.name}"
+                                                           itemValue="#{optionSetValueDTOslevel.value}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="quotatype"
+                                                       value="#{lang['quota.establish.type']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="quotatype"
+                                                         value="#{establishQuotaController.forSearchDTO.debitDayType}"
+                                                         disabled="false">
+                                            <f:selectItem itemValue=""
+                                                          itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                            <f:selectItems value="#{establishQuotaController.optionSetValueDTOstype}"
+                                                           var="optionSetValueDTOstype"
+                                                           itemLabel="#{optionSetValueDTOstype.name}"
+                                                           itemValue="#{optionSetValueDTOstype.value}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['quota.establish.value']}"
+                                                       for="quotavalue"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="quotavalue"
+                                                     value="#{establishQuotaController.forSearchDTO.debitAmount}"
+                                                     placeholder="#{lang['quota.estabilsh.value.input']}"
+                                                     disabled="false"
+                                                     maxlength="19"/>
+                                        <pe:keyFilter for="quotavalue" regEx="/[\d]/"/>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="ContainerIndent TexAlCenter">
+                                <p:outputPanel styleClass="Container100">
+                                    <p:commandButton value="#{lang['range.time.promotion.btn.search']}"
+                                                     action="#{establishQuotaController.search()}"
+                                                     update="@form"/>
+                                    <p:commandButton value="#{lang['common.reset']}" styleClass="mg-left-5"
+                                                     resetValues="true"
+                                                     action="#{establishQuotaController.resetFrom()}"
+                                                     update="@([id$=frmAddQuota]),@([id$=quotaEstablish])"
+                                                     process="@this"/>
+                                </p:outputPanel>
+
+                            </div>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <!--End vung thong tin view cau hinh thoi gian KM-->
+
+                <!--Start vung thong tin view khoang thoi gian KM-->
+                <p:outputPanel id="pnlestablishQuotaview" styleClass="Container100">
+                    <div class="ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="rangeTimePromotionview"
+                                   titleHeader="#{lang['quota.establish.list']}"/>
+
+                        <div class="rangeTimePromotionview ContainerIndent">
+                            <div class="Container TexAlLeft">
+                                <p:commandLink title="#{lang['common.add']}"
+                                               oncomplete="PF('dlgEstablishQuota').show()"
+                                               update="@([id$=frmAddQuota]),@([id$=quotaEstablish])"
+                                               process="@this"
+                                               action="#{establishQuotaController.clearCache()}"
+                                               resetValues="true"
+                                               styleClass="fa icon-plus Fs14 blue md-link mg-left-5">
+                                    <h:outputText value="#{lang['common.add']}"/>
+                                </p:commandLink>
+                                <cbs:confirmDialog
+                                        idComponent="btnDeleteAll"
+                                        valueButton="#{lang['common.delete']}"
+                                        headerConfirm="#{lang['range.time.promotion.day.header.confirm']}"
+                                        messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                        actionValidate="#{establishQuotaController.validateListDelete()}"
+                                        actionOK="#{establishQuotaController.delete()}"
+                                        resetValueButton="false"
+                                        process="@([id$=tblLsProduct]),@this"
+                                        updateOK="@([id$=frmEstablishQuota])"
+                                        styleClassButton="fa icon-trash Fs14 blue"
+                                        styleButton="text-decoration: none;font-size: 14px!important;padding-top: 4px;"
+                                        focusCancel="true"
+                                        oncompleteOK=""
+                                        isButton="false"
+                                        titleButton="#{lang['common.delete']}"/>
+                            </div>
+                            <div class="Container">
+                                <p:dataTable styleClass="Width100"
+                                             value="#{establishQuotaController.lstDebitLevelDTO}"
+                                             id="tblLsProduct"
+                                             var="item"
+                                             rowKey="#{item.id}"
+                                             rowIndexVar="index"
+                                             resizableColumns="true"
+                                             paginator="#{lang['common.paging.paginator']}"
+                                             rows="#{lang['common.paging.rows.default']}"
+                                             rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                             paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                             paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                             paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                             currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                             emptyMessage="#{lang['common.emty.records']}"
+                                             editable="true" editMode="cell"
+                                             selection="#{establishQuotaController.selectionlstDebitLevelDTO}">
+                                    <p:column selectionMode="multiple" styleClass="width5 TexAlCenter"/>
+
+                                    <p:column headerText="#{lang['quota.establish.level']}" style="width: 20%;"
+                                              sortBy="#{item.debitLevel}"
+                                              styleClass="col-left">
+                                        <p:outputLabel value="#{item.debitLevel}"/>
+                                    </p:column>
+
+                                    <p:column headerText="#{lang['quota.establish.type']}" style="width: 30%;"
+                                              sortBy="#{item.debitDayType}"
+                                              styleClass="col-left">
+                                        <p:outputLabel value="#{item.debitDayType}"/>
+                                    </p:column>
+
+                                    <p:column headerText="#{lang['quota.establish.status']}" style="width: 15%;"
+                                              sortBy="#{item.status}"
+                                              styleClass="col-left">
+                                        <p:outputLabel value="#{lang['range.time.promotion.status.enable']}"
+                                                       rendered="#{item.status==1}"/>
+                                        <p:outputLabel value="#{lang['range.time.promotion.status.disable']}"
+                                                       rendered="#{item.status!=1}"/>
+                                    </p:column>
+
+                                    <p:column headerText="#{lang['quota.establish.value']}" style="width: 20%;"
+                                              sortBy="#{item.debitAmount}"
+                                              styleClass="col-right">
+                                        <p:outputLabel value="#{item.debitAmount}">
+                                            <f:convertNumber pattern="###,###"/>
+                                        </p:outputLabel>
+                                    </p:column>
+
+                                    <p:column headerText="#{lang['common.edit.delete']}" style="width: 10%;"
+                                              styleClass="col-center">
+                                        <p:commandLink styleClass="fa  icon-edit Fs14 blue "
+                                                       style="text-decoration: none;font-size: 16px!important;padding-top: 4px;float: none;"
+                                                       oncomplete="PF('dlgEstablishQuotaEdit').show();"
+                                                       disabled="#{item.status == '0'}"
+                                                       title="#{lang['common.edit']}"
+                                                       update="@([id$=frmEditQuota])"
+                                                       action="#{establishQuotaController.changeSelect(item)}"
+                                                       process="@this"/>
+                                        <cbs:confirmDialog
+                                                idComponent="btnConfirm2"
+                                                disableButton="#{item.status == '0'}"
+                                                valueButton=""
+                                                titleButton="#{lang['common.delete']}"
+                                                headerConfirm="#{lang['range.time.promotion.day.header.confirm']}"
+                                                messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                                actionOK="#{establishQuotaController.delete()}"
+                                                resetValueButton="false"
+                                                process="@this"
+                                                updateArea="@([id$=frmEstablishQuota])"
+                                                updateOK="@([id$=frmEstablishQuota])"
+                                                actionValidate="#{establishQuotaController.selectitemDelete(item)}"
+                                                styleClassButton="fa icon-trash Fs14 blue"
+                                                styleButton="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                                focusCancel="true"
+                                                oncompleteOK=""
+                                                isButton="false"
+                                                />
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <!--End vung thong tin view khoang thoi gian KM-->
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgEstablishQuota"
+                  widgetVar="dlgEstablishQuota"
+                  header="#{lang['quota.establish.title.add']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="500">
+            <ui:include src="dlgEstablishQuota.xhtml"/>
+        </p:dialog>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgEstablishQuotaEdit"
+                  widgetVar="dlgEstablishQuotaEdit"
+                  header="#{lang['quota.establish.title.edit']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="500">
+            <ui:include src="dlgEstablishQuotaEdit.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

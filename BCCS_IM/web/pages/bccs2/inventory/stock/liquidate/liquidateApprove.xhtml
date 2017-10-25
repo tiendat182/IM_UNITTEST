@@ -1,0 +1,385 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.liquidate.approve']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.liquidate.approve']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmLiquidateApprove" enctype="multipart/form-data">
+            <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                <p:messages id="msgLiquidateApprove" showDetail="true" showSummary="false" closable="true"/>
+            </div>
+            <!--Start vung thong tin tim kiem-->
+            <p:outputPanel id="pnlInfoPropose" styleClass="ContainerIndent">
+                <!--<p:focus for="txtProposeCode"/>-->
+                <cbs:panel classForToggle="panelInfoPropose" toggle="true"
+                           titleHeader="#{lang['information.search']}"/>
+
+                <div class="Container100 panelInfoPropose" style="margin-bottom: 10px;margin-top: 10px;">
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50  mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.liquidate.approve.propose.code']}"
+                                               for="txtProposeCode" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="txtProposeCode"
+                                             maxlength="50"
+                                             onblur="this.value = this.value.trim()"
+                                             placeholder="#{lang['mn.stock.liquidate.approve.propose.code.placeholder']}"
+                                             value="#{liquidateApproveController.requestLiquidateDTO.requestCode}"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <cbs:inputShop value="#{liquidateApproveController.shopProposeTag}"
+                                           idComponent="ipProposeStock"
+                                           methodName="doProposeStock"
+                                           clearMethodName="clearStock"
+                                           update="@this"
+                                           forceSelection="false"
+                                           require="false"
+                                           limit="#{liquidateApproveController.limitAutoComplete}"
+                                           label="#{lang['mn.stock.liquidate.approve.stock']}"
+                                           classDivLabel="Container40 mg-left-15 Responsive50 pd-top-7"
+                                           classDivInput="Container60 Responsive50 ui-fluid"
+                                           placeholder="#{lang['mn.stock.liquidate.approve.stock.placeholder']}"
+                                           oncomplete="">
+                            </cbs:inputShop>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['common.status']}" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu id="cbxStatus" itemLabelEscaped="true"
+                                                 value="#{liquidateApproveController.requestLiquidateDTO.status}">
+                                    <f:selectItem itemValue=""
+                                                  itemLabel="#{lang['mn.stock.liquidate.approve.stock.status.default']}"/>
+                                    <f:selectItem itemValue="0"
+                                                  itemLabel="#{lang['mn.stock.liquidate.approve.stock.status0']}"/>
+                                    <f:selectItem itemValue="1"
+                                                  itemLabel="#{lang['mn.stock.liquidate.approve.stock.status1']}"/>
+                                    <f:selectItem itemValue="2"
+                                                  itemLabel="#{lang['mn.stock.liquidate.approve.stock.status2']}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.from.date']}" styleClass="lb-sentinel"
+                                               for="fromDate"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar id="fromDate"
+                                            mask="true"
+                                            pattern="#{lang['common.datetime.format']}"
+                                            converterMessage="#{lang['invalid.date.message']}"
+                                            validatorMessage="#{lang['start.date.validate.message']}"
+                                            value="#{liquidateApproveController.requestLiquidateDTO.fromDate}"
+                                            placeholder="#{lang['common.datetime.format']}"
+                                            required="true"
+                                            requiredMessage="#{lang['mn.stock.from.date.not.blank']}"
+                                            styleClass="fromDate">
+                                    <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                </p:calendar>
+                                <p:message for="fromDate"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.to.date']}" styleClass="lb-sentinel"
+                                               for="toDate"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar id="toDate"
+                                            mask="true"
+                                            pattern="#{lang['common.datetime.format']}"
+                                            converterMessage="#{lang['invalid.date.message']}"
+                                            validatorMessage="#{lang['end.date.validate.message']}"
+                                            value="#{liquidateApproveController.requestLiquidateDTO.toDate}"
+                                            placeholder="#{lang['common.datetime.format']}"
+                                            required="true"
+                                            styleClass="toDate"
+                                            requiredMessage="#{lang['mn.stock.to.date.not.blank']}">
+                                    <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                </p:calendar>
+                                <p:message for="toDate"/>
+                                <p:remoteCommand name="updateControls" update="@form"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Container100 TexAlCenter mg-top-10">
+                        <p:commandButton value="#{lang['create.note.search']}"
+                                         process="@form"
+                                         update="@form"
+                                         actionListener="#{liquidateApproveController.doSearch()}"/>
+                        <p:commandButton value="#{lang['common.reset']}" styleClass="mg-left-5"
+                                         action="#{liquidateApproveController.doReset()}"
+                                         process="@this"
+                                         update="@form"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <!--End vung thong tin tim kiem-->
+
+            <!--Start danh sach tim kiem-->
+            <p:outputPanel id="pnlListPropose" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="panelListSearch" toggle="true"
+                           titleHeader="#{lang['mn.stock.liquidate.approve.list.propose']}"/>
+
+                <div class="Container100 panelListSearch" style="margin-bottom: 10px;margin-top: 10px;">
+                    <p:dataTable
+                            id="listRequest"
+                            var="item"
+                            rowKey=""
+                            rowIndexVar="index"
+                            resizableColumns="true"
+                            paginator="#{lang['common.paging.paginator']}"
+                            rows="#{lang['common.paging.rows.default']}"
+                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                            emptyMessage="#{lang['common.emty.records']}"
+                            value="#{liquidateApproveController.lstRequestLiquidateDTO}">
+                        <p:column styleClass="TexAlLeft" style="width: 10%" sortBy="#{item.createShopId}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.liquidate.approve.stock']}"
+                                              title="#{lang['mn.stock.liquidate.approve.stock']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{liquidateApproveController.getOwnerCode(item.createShopId, 1)}"
+                                           title="#{liquidateApproveController.getOwnerCode(item.createShopId, 1)}"/>
+                        </p:column>
+                        <p:column styleClass="TexAlLeft" style="width: 10%" sortBy="#{item.createStaffId}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.liquidate.create.user']}"
+                                              title="#{lang['mn.stock.liquidate.create.user']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{liquidateApproveController.getOwnerCode(item.createStaffId, 2)}"
+                                           title="#{liquidateApproveController.getOwnerCode(item.createStaffId, 2)}"/>
+                        </p:column>
+                        <p:column styleClass="TexAlCenter" style="width: 10%" sortBy="#{item.createDatetime}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.liquidate.order.day']}"
+                                              title="#{lang['mn.stock.liquidate.order.day']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{item.createDatetime}"
+                                           title="#{liquidateApproveController.formatDateTime(item.createDatetime)}">
+                                <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column styleClass="TexAlLeft" style="width: 10%" sortBy="#{item.requestCode}">
+                            <f:facet name="header">
+                                <h:outputText
+                                        value="#{lang['mn.stock.liquidate.propose.code']}"
+                                        title="#{lang['mn.stock.liquidate.propose.code']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{item.requestCode}" title="#{item.requestCode}"/>
+                        </p:column>
+                        <p:column styleClass="TexAlLeft" style="width: 10%" sortBy="#{item.status}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.status']}"
+                                              title="#{lang['common.status']}"/>
+                            </f:facet>
+                            <p:outputLabel
+                                    value="#{liquidateApproveController.getDisplayName('mn.stock.liquidate.approve.stock.status',item.status)}"
+                                    title="#{liquidateApproveController.getDisplayName('mn.stock.liquidate.approve.stock.status',item.status)}"/>
+                        </p:column>
+                        <p:column styleClass="TexAlLeft" style="width: 10%" sortBy="#{item.approveStaffId}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.liquidate.approve.staff']}"
+                                              title="#{lang['mn.stock.liquidate.approve.staff']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{liquidateApproveController.getOwnerCode(item.approveStaffId, 2)}"
+                                           title="#{liquidateApproveController.getOwnerCode(item.approveStaffId, 2)}"/>
+                        </p:column>
+                        <p:column styleClass="TexAlLeft" style="width: 10%">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.liquidate.approve.reason.reject']}"
+                                              title="#{lang['mn.stock.liquidate.approve.reason.reject']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{item.rejectNote}"
+                                           title="#{item.rejectNote}"/>
+                        </p:column>
+                        <p:column styleClass="TexAlLeft" style="width: 10%" sortBy="#{item.createStaffId}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.liquidate.partner']}"
+                                              title="#{lang['mn.stock.liquidate.partner']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{lang['mn.stock.liquidate.partner.other']}"
+                                           title="#{lang['mn.stock.liquidate.partner.other']}"/>
+                        </p:column>
+
+                        <p:column styleClass="TexAlCenter" style="width: 10%">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.liquidate.approve.impacts']}"
+                                              title="#{lang['mn.stock.liquidate.approve.impacts']}"/>
+                            </f:facet>
+
+                            <p:commandLink styleClass="fa icon-attach Fs14 black mg-left-5"
+                                           style="text-decoration: none!important;"
+                                           title="#{lang['mn.stock.liquidate.file.msg.view']}"
+                                           disabled="#{item.documentContent == null}"
+                                           process="@this"
+                                           ajax="false">
+                                <p:fileDownload value="#{liquidateApproveController.downloadAttachFile(item)}"/>
+                            </p:commandLink>
+
+                            <cbs:confirmDialog
+                                    idComponent="btnApprove"
+                                    disableButton="#{!(item.status eq '0')}"
+                                    titleButton="#{lang['mn.stock.liquidate.approve.request']}"
+                                    valueButton=""
+                                    headerConfirm="#{lang['mn.stock.liquidate.approve.request']}"
+                                    actionValidate="#{liquidateApproveController.doSelectItem(item)}"
+                                    messageConfirm="#{liquidateApproveController.getConfirmMessage('APPROVE')}"
+                                    actionOK="#{liquidateApproveController.doApproveRequest()}"
+                                    resetValueButton="true"
+                                    styleClassButton="fa icon-ok Fs14 black mg-left-5"
+                                    process="@this, @form"
+                                    updateArea="@form"
+                                    updateOK="@form"
+                                    isButton="false"
+                                    focusCancel="false"/>
+
+                            <p:commandLink styleClass="fa icon-cancel Fs14 black mg-left-5"
+                                           process="@form"
+                                           update="@form, @([id$=dlgConfirm])"
+                                           disabled="#{!(item.status eq '0')}"
+                                           title="#{lang['mn.stock.liquidate.request.reject']}"
+                                           action="#{liquidateApproveController.doSelectItem(item)}"
+                                           oncomplete="if(!args.validationFailed){PF('dlgConfirm').show();}"/>
+
+                            <p:commandLink styleClass="fa icon-zoom-out Fs14 black mg-left-5"
+                                           style="text-decoration: none!important; color: red!important;"
+                                           title="#{lang['common.detail.zoom.out']}"
+                                           action="#{liquidateApproveController.doShowDetail(null)}"
+                                           rendered="#{!(!liquidateApproveController.renderDetail || !(item.requestLiquidateId == liquidateApproveController.selectedRequestLiquidateDTO.requestLiquidateId))}"
+                                           process="@this"
+                                           update="@form"/>
+
+                            <p:commandLink styleClass="fa icon-zoom-in Fs14 black mg-left-5"
+                                           style="text-decoration: none!important;"
+                                           title="#{lang['common.detail.zoom.in']}"
+                                           rendered="#{!liquidateApproveController.renderDetail || !(item.requestLiquidateId == liquidateApproveController.selectedRequestLiquidateDTO.requestLiquidateId)}"
+                                           action="#{liquidateApproveController.doShowDetail(item)}"
+                                           process="@this"
+                                           update="@form"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </p:outputPanel>
+            <!--End danh sach tim kiem-->
+
+            <!--Start vung thong tin chi tiet hang hoa-->
+            <p:outputPanel styleClass="ContainerIndent pnlInfoDetail"
+                           rendered="#{liquidateApproveController.renderDetail}"
+                           id="pnlInfoDetail">
+                <cbs:panel classForToggle="panelInfoDetail" toggle="true"
+                           titleHeader="#{lang['mn.stock.liquidate.inform.detail.title']}"/>
+
+                <div class="Container100 panelInfoDetail">
+                    <p:dataTable
+                            id="idListDetail"
+                            var="detail"
+                            rowKey=""
+                            rowIndexVar="index"
+                            resizableColumns="true"
+                            paginator="#{lang['common.paging.paginator']}"
+                            rows="#{lang['common.paging.rows.default']}"
+                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                            emptyMessage="#{lang['common.emty.records']}"
+                            value="#{liquidateApproveController.lstRequestLiquidateDetailDTO}">
+                        <p:column styleClass="TexAlLeft" style="width: 20%">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.product.code']}"
+                                              title="#{lang['common.product.code']}"/>
+                            </f:facet>
+                            <p:outputLabel
+                                    value="#{liquidateApproveController.getProductOffering(detail.prodOfferId).code}"
+                                    title="#{liquidateApproveController.getProductOffering(detail.prodOfferId).code}"/>
+                        </p:column>
+                        <p:column styleClass="TexAlLeft" style="width: 30%">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.product.name']}"
+                                              title="#{lang['common.product.name']}"/>
+                            </f:facet>
+                            <p:outputLabel
+                                    value="#{liquidateApproveController.getProductOffering(detail.prodOfferId).name}"
+                                    title="#{liquidateApproveController.getProductOffering(detail.prodOfferId).name}"/>
+                        </p:column>
+                        <p:column styleClass="TexAlLeft" style="width: 15%">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.status']}"
+                                              title="#{lang['common.status']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{liquidateApproveController.getStateName(detail.stateId)}"
+                                           title="#{liquidateApproveController.getStateName(detail.stateId)}"/>
+                        </p:column>
+                        <p:column styleClass="TexAlRight" style="width: 15%">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.liquidate.approve.quantity']}"
+                                              title="#{lang['mn.stock.liquidate.approve.quantity']}"/>
+                            </f:facet>
+                            <h:outputLabel converter="currencyFormat" styleClass="lb-sentinel-bold"
+                                           value="#{detail.quantity}"
+                                           title="#{detail.quantity}">
+                            </h:outputLabel>
+                        </p:column>
+                        <p:column headerText="#{lang['common.detail.serial']}" style="text-align: center">
+                            <p:commandLink value="#{lang['common.view.serial']}"
+                                           title="#{lang['common.view.serial']}"
+                                           oncomplete="if(!args.validationFailed){PF('dlgViewDetailSerial').show()}"
+                                           process="@this" update="@([id$=dlgViewDetailSerial]), @([id$=msgLiquidateApprove])"
+                                           rendered="#{detail.checkSerial eq '1'}"
+                                           action="#{liquidateApproveController.showDialogSerial(detail.requestLiquidateDetailId)}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </p:outputPanel>
+            <!--End vung thong tin chi tiet hang hoa-->
+        </h:form>
+
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="false"
+                  position="center"
+                  id="dlgConfirm"
+                  widgetVar="dlgConfirm"
+                  header="#{lang['mn.stock.liquidate.approve.reason.reject.placeholder']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="600">
+            <ui:include src="dlgConfirm.xhtml">
+                <!--<param name="controller" value="#{liquidateApproveController}"/>-->
+                <!--<param name="actor" value="#{liquidateApproveController.selectedRequestLiquidateDTO}"/>-->
+            </ui:include>
+        </p:dialog>
+
+        <p:dialog id="dlgViewDetailSerial" widgetVar="dlgViewDetailSerial"
+                  appendTo="@(body)" closable="true" closeOnEscape="true" maximizable="true"
+                  position="center" dynamic="true" modal="true" resizable="false"
+                  minWidth="700"
+                  width="60%"
+                  header="#{lang['common.detail.serial']}">
+            <ui:include src="dlgViewDetailSerial.xhtml"/>
+        </p:dialog>
+
+    </ui:define>
+</ui:composition>

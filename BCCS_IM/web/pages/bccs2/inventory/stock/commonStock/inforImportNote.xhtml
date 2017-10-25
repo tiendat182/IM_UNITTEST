@@ -1,0 +1,104 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+    <p:outputPanel styleClass="ContainerIndent">
+        <cbs:panel classForToggle="panelInfoImportOrder" toggle="true"
+                   titleHeader="#{lang['info.import.note']}"/>
+
+        <div class="Container100 panelInfoImportOrder">
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['code.import.note']}"/>
+                    </div>
+                    <div class="Container60 Responsive50  ui-fluid pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel-bold break-all"
+                                       value="#{staffImportStockController.selectedStockTrans.actionCode}"
+                                       title="#{staffImportStockController.selectedStockTrans.actionCode}"
+                                       readonly="true"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 pd-top-7 mg-left-15">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.utilities.person.create']}"/>
+                    </div>
+                    <div class="Container60 Responsive50  ui-fluid pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel-bold break-word"
+                                       value="#{staffImportStockController.selectedStockTrans.userCreate}"
+                                       title="#{staffImportStockController.selectedStockTrans.userCreate}"
+                                       readonly="true"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 pd-top-7 mg-left-15">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['create.note.create.date']}"/>
+                    </div>
+                    <div class="Container60 Responsive50  ui-fluid ui-tooltip-fluid pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel-bold break-word"
+                                       value="#{staffImportStockController.selectedStockTrans.createDateTime}"
+                                       title="#{staffImportStockController.selectedStockTrans.createDateTime}"
+                                       readonly="true">
+                            <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                        </p:outputLabel>
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['export.order.stock']}"/>
+                    </div>
+                    <div class="Container60 Responsive50  ui-fluid pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel-bold break-word"
+                                       value="#{staffImportStockController.selectedStockTrans.fromOwnerName}"
+                                       title="#{staffImportStockController.selectedStockTrans.fromOwnerName}"
+                                       readonly="true"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 pd-top-7 mg-left-15">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['export.order.stock.receive.product']}"/>
+                    </div>
+                    <div class="Container60 Responsive50  ui-fluid pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel-bold break-word"
+                                       value="#{staffImportStockController.selectedStockTrans.toOwnerName}"
+                                       title="#{staffImportStockController.selectedStockTrans.toOwnerName}"
+                                       readonly="true"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 pd-top-7 mg-left-15">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['list.order.import.reason.import']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 50 ui-fluid pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel-bold break-word"
+                                       value="#{staffImportStockController.selectedStockTrans.importReasonName}"
+                                       title="#{staffImportStockController.selectedStockTrans.importReasonName}"
+                                       readonly="true"/>
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container66 Responsive66">
+                    <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['create.note.note']}"/>
+                    </div>
+                    <div class="Container80 Responsive75 ui-fluid pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel-bold break-word"
+                                       value="#{staffImportStockController.selectedStockTrans.importNote}"
+                                       title="#{staffImportStockController.selectedStockTrans.importNote}"
+                                       readonly="true"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive"/>
+
+            </div>
+        </div>
+    </p:outputPanel>
+</ui:composition>

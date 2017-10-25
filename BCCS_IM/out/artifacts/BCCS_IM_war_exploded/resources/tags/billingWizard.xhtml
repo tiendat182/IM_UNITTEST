@@ -1,0 +1,238 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <composite:interface>
+        <composite:attribute name="stepHeaders" shortDescription="Headers hien thi tren cac buoc (List)" required="true"/>
+        <composite:attribute name="stepVar" shortDescription="Variable bien doi khi next/back" />
+        <composite:attribute name="nextListener" shortDescription="Listener cho nut next (just the method name)"/>
+        <composite:attribute name="backListener" shortDescription="Listener cho nut back (just the method name)"/>
+        <composite:attribute name="controller" shortDescription="Controller xu ly chuc nang"/>
+        <composite:attribute name="update" shortDescription="Vung se duoc update khi click back, next"/>
+        <composite:attribute name="process" shortDescription="Vung se duoc process khi click back, next"/>
+    </composite:interface>
+    <composite:implementation>
+        <div style="position:relative;width:100%;margin-bottom: 10px;">
+            <p:panel id="billingButtonNextAndBack" styleClass="hide-border">
+                <c:if test="#{cc.attrs.stepHeaders.size() lt 5}">
+                    <c:if test="#{cc.attrs.stepHeaders.size() eq 1}">
+                        <div class="headerText activeStep">#{cc.attrs.stepHeaders.get(0)}</div>
+                    </c:if>
+                    <c:if test="#{cc.attrs.stepHeaders.size() eq 2}">
+                        <c:if test="#{cc.attrs.stepVar eq 1}">
+                            <div class="headerText activeStep">#{cc.attrs.stepHeaders.get(0)}</div>
+                        </c:if>
+                        <c:if test="#{cc.attrs.stepVar ne 1}">
+                            <div class="headerText ">#{cc.attrs.stepHeaders.get(0)}</div>
+                        </c:if>
+                        <c:if test="#{cc.attrs.stepVar eq 2}">
+                            <div class="headerText activeStep">#{cc.attrs.stepHeaders.get(1)}</div>
+                        </c:if>
+                        <c:if test="#{cc.attrs.stepVar ne 2}">
+                            <div class="headerText ">#{cc.attrs.stepHeaders.get(1)}</div>
+                        </c:if>
+                    </c:if>
+                    <c:if test="#{cc.attrs.stepHeaders.size() eq 3}">
+                        <c:if test="#{cc.attrs.stepVar eq 1}">
+                            <div class="headerText activeStep">#{cc.attrs.stepHeaders.get(0)}</div>
+                        </c:if>
+                        <c:if test="#{cc.attrs.stepVar ne 1}">
+                            <div class="headerText ">#{cc.attrs.stepHeaders.get(0)}</div>
+                        </c:if>
+                        <c:if test="#{cc.attrs.stepVar eq 2}">
+                            <div class="headerText activeStep">#{cc.attrs.stepHeaders.get(1)}</div>
+                        </c:if>
+                        <c:if test="#{cc.attrs.stepVar ne 2}">
+                            <div class="headerText ">#{cc.attrs.stepHeaders.get(1)}</div>
+                        </c:if>
+                        <c:if test="#{cc.attrs.stepVar eq 3}">
+                            <div class="headerText activeStep">#{cc.attrs.stepHeaders.get(2)}</div>
+                        </c:if>
+                        <c:if test="#{cc.attrs.stepVar ne 3}">
+                            <div class="headerText ">#{cc.attrs.stepHeaders.get(2)}</div>
+                        </c:if>
+                    </c:if>
+                    <c:if test="#{cc.attrs.stepHeaders.size() eq 4}">
+                        <c:if test="#{cc.attrs.stepVar eq 1}">
+                            <div class="headerText activeStep">#{cc.attrs.stepHeaders.get(0)}</div>
+                        </c:if>
+                        <c:if test="#{cc.attrs.stepVar ne 1}">
+                            <div class="headerText ">#{cc.attrs.stepHeaders.get(0)}</div>
+                        </c:if>
+                        <c:if test="#{cc.attrs.stepVar eq 2}">
+                            <div class="headerText activeStep">#{cc.attrs.stepHeaders.get(1)}</div>
+                        </c:if>
+                        <c:if test="#{cc.attrs.stepVar ne 2}">
+                            <div class="headerText ">#{cc.attrs.stepHeaders.get(1)}</div>
+                        </c:if>
+                        <c:if test="#{cc.attrs.stepVar eq 3}">
+                            <div class="headerText activeStep">#{cc.attrs.stepHeaders.get(2)}</div>
+                        </c:if>
+                        <c:if test="#{cc.attrs.stepVar ne 3}">
+                            <div class="headerText ">#{cc.attrs.stepHeaders.get(2)}</div>
+                        </c:if>
+                        <c:if test="#{cc.attrs.stepVar eq 4}">
+                            <div class="headerText activeStep">#{cc.attrs.stepHeaders.get(3)}</div>
+                        </c:if>
+                        <c:if test="#{cc.attrs.stepVar ne 4}">
+                            <div class="headerText ">#{cc.attrs.stepHeaders.get(3)}</div>
+                        </c:if>
+                    </c:if>
+                </c:if>
+                <c:if test="#{cc.attrs.stepHeaders.size() gt 4}">
+                    <c:if test="#{cc.attrs.stepVar eq 1}">
+                        <c:if test="#{cc.attrs.stepHeaders.size() lt (cc.attrs.stepVar + 3)}">
+                            <c:forEach 
+                                begin="1"
+                                end="#{cc.attrs.stepHeaders.size()}" 
+                                var="i" 
+                                id="headerMenuWizard"
+                                >
+                                <c:if test="#{i ne cc.attrs.stepVar}">
+                                    <div class="headerText ">#{cc.attrs.stepHeaders.get(i-1)}</div>
+                                </c:if>
+                                <c:if test="#{i eq cc.attrs.stepVar}">
+                                    <div class="headerText activeStep">#{cc.attrs.stepHeaders.get(i-1)}</div>
+                                </c:if>
+                            </c:forEach>
+                        </c:if>
+                        <c:if test="#{!(cc.attrs.stepHeaders.size() lt (cc.attrs.stepVar + 3))}">
+                            <c:forEach begin="1" end="#{cc.attrs.stepVar + 3}" var="i" id="headerMenuWizard"
+                                       >
+                                <c:if test="#{i ne cc.attrs.stepVar}">
+                                    <div class="headerText ">#{cc.attrs.stepHeaders.get(i-1)}</div>
+                                </c:if>
+                                <c:if test="#{i eq cc.attrs.stepVar}">
+                                    <div class="headerText activeStep">#{cc.attrs.stepHeaders.get(i-1)}</div>
+                                </c:if>
+                            </c:forEach>
+                        </c:if>
+                    </c:if>
+
+                    <c:if test="#{cc.attrs.stepVar gt 1}"> <!-- Truong hop Buoc n (n > 1)-->
+                        <c:if test="#{!((cc.attrs.stepVar + 2) gt cc.attrs.stepHeaders.size())}">
+                            <c:forEach begin="#{cc.attrs.stepVar - 1}" end="#{cc.attrs.stepVar + 2}"
+                                       var="i" id="headerMenuWizard">
+                                <c:if test="#{i ne cc.attrs.stepVar}">
+                                    <div class="headerText ">#{cc.attrs.stepHeaders.get(i-1)}</div>
+                                </c:if>
+                                <c:if test="#{i eq cc.attrs.stepVar}">
+                                    <div class="headerText activeStep">#{cc.attrs.stepHeaders.get(i-1)}</div>
+                                </c:if>
+                            </c:forEach>
+                        </c:if>
+                        <c:if test="#{((cc.attrs.stepVar + 2) gt cc.attrs.stepHeaders.size())}">
+                            <c:forEach begin="#{cc.attrs.stepHeaders.size() - 3}" end="#{cc.attrs.stepHeaders.size()}"
+                                       var="i" id="headerMenuWizard">
+                                <c:if test="#{i ne cc.attrs.stepVar}">
+                                    <div class="headerText ">#{cc.attrs.stepHeaders.get(i-1)}</div>
+                                </c:if>
+                                <c:if test="#{i eq cc.attrs.stepVar}">
+                                    <div class="headerText activeStep">#{cc.attrs.stepHeaders.get(i-1)}</div>
+                                </c:if>
+                            </c:forEach>
+                        </c:if>
+                    </c:if>
+                </c:if>
+
+                <p:commandLink
+                    action="#{billingWizardController.doExecute(cc.attrs.controller, cc.attrs.backListener)}"
+                    resetValues="true"
+                    update="#{cc.attrs.update},@([id$=billingButtonNextAndBack])"
+                    rendered="#{cc.attrs.stepVar ne 1}"
+                    style="margin-right: 2px"
+                    process="@this"
+                    global="false"
+                    ><img src="resources/themes/images/button-back.png" alt=""/></p:commandLink>
+                <p:commandLink
+                    action="#{billingWizardController.doExecute(cc.attrs.controller, cc.attrs.backListener)}"
+                    resetValues="true"
+                    update="#{cc.attrs.update},@([id$=billingButtonNextAndBack])"
+                    disabled="#{cc.attrs.stepVar eq 1}"
+                    rendered="#{cc.attrs.stepVar eq 1}"
+                    process="@this"
+                    style="margin-right: 2px"
+                    global="false"
+                    ><img src="resources/themes/images/button-back-gray.png" alt=""/></p:commandLink>
+                <p:commandLink 
+                    action="#{billingWizardController.doExecute(cc.attrs.controller, cc.attrs.nextListener)}"
+                    resetValues="true"
+                    rendered="#{cc.attrs.stepHeaders.size() ne cc.attrs.stepVar}"
+                    update="#{cc.attrs.update},@([id$=billingButtonNextAndBack])"
+                    process="@this,#{cc.attrs.process}"
+                    global="false"
+                    ><img src="resources/themes/images/button-next-vi.png" alt=""/></p:commandLink>
+                <p:commandLink 
+                    action="#{billingWizardController.doExecute(cc.attrs.controller, cc.attrs.nextListener)}"
+                    resetValues="true"
+                    disabled="#{cc.attrs.stepHeaders.size() eq cc.attrs.stepVar}"
+                    rendered="#{cc.attrs.stepHeaders.size() eq cc.attrs.stepVar}"
+                    update="#{cc.attrs.update},@([id$=billingButtonNextAndBack])"
+                    process="@this,#{cc.attrs.process}"
+                    global="false"
+                    ><img src="resources/themes/images/button-next-grey-vi.png" alt=""/></p:commandLink>
+            </p:panel>
+        </div>
+        <style>
+            .hide-border{
+                border: none !important;
+            }
+            .headerText{
+                height: 25px;
+                line-height: 25px;
+                background: #B7B7B7;
+                width: 250px;
+                float:left;
+                color: white;                
+                margin-right: 20px;
+                position:relative;
+                text-align: center;
+                margin-bottom: 5px;                
+            }
+            .headerText.activeStep{
+                background: #376400 !important;
+            }
+            .headerText.activeStep:after{
+                content:"";
+                position:absolute;
+                height:0;
+                width:0;
+                left:100%;
+                top:0;
+                border:12.5px solid transparent;
+                border-left:12.5px solid #376400;
+            }
+            .headerText:after{
+                content:"";
+                position:absolute;
+                height:0;
+                width:0;
+                left:100%;
+                top:0;
+                border:12.5px solid transparent;
+                border-left: 12.5px solid #B7B7B7;
+            }
+            .headerText.activeStep:before{
+                content: "";
+                display: inline-block;
+                position: absolute;
+                border: 12px solid black;
+                border-color: transparent transparent transparent white;
+                top: 0px;
+                left: 0px;
+            }
+            .headerText:before{
+                content: "";
+                display: inline-block;
+                position: absolute;
+                border: 12px solid black;
+                border-color: transparent transparent transparent white;
+                top: 0px;
+                left: 0px;
+            }
+        </style>
+    </composite:implementation>
+</html>
+

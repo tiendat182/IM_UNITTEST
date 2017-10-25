@@ -1,0 +1,250 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.list.signFlow.voffice']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.list.signFlow.voffice']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmSignFlow">
+            <p:outputPanel id="pnSignFlow" styleClass="Container">
+                <div class="ContainerIndent">
+                    <p:messages id="msgSignFlow" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:remoteCommand name="updateControls" update="@form" process="@this"/>
+                <!--Start vung tra cuu-->
+                <p:outputPanel styleClass="Container100" id="pnlSignFlowInfor">
+                    <div class="ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="pnInputSearch"
+                                   titleHeader="#{lang['mn.invoice.SignFlow.infor']}" toggle="true"/>
+
+                        <div class="Container100 pnInputSearch pd-top-10">
+
+                            <div class="ContainerIndent ">
+                                <div class="Container50 Responsive50">
+                                    <div class="Container33 Responsive ui-fluid mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" for="txtName"
+                                                       value="#{lang['signFlow.input.name']}"/>
+                                    </div>
+                                    <div class="Container66 Responsive ui-fluid">
+                                        <p:inputText id="txtName"
+                                                     maxlength="100"
+                                                     onblur="this.value = this.value.trim();"
+                                                     placeholder="#{lang['signFlow.name.placeholder']}"
+                                                     value="#{signFlowController.forSearchSignFlow.name}"
+                                                     title="#{signFlowController.forSearchSignFlow.name}"/>
+                                    </div>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <cbs:inputShop value="#{signFlowController.shopInfoExportTag}"
+                                                   idComponent="ipExportShop"
+                                                   id="ipExportShop"
+                                                   methodName="exportShop"
+                                                   clearMethodName="clearExportShop"
+                                                   update="@this"
+                                                   limit="#{signFlowController.limitAutoComplete}"
+                                                   label="#{lang['signFlow.input.shop']}"
+                                                   require="false"
+                                                   forceSelection="false"
+                                                   classDivLabel="Container33 Responsive mg-left-15 pd-top-4"
+                                                   classDivInput="Container66 Responsive ui-fluid"
+                                                   placeholder="#{lang['search.number.range.shop.placehoder']}"
+                                                   requiredMessage="#{lang['signFlow.require.shopId']}">
+                                    </cbs:inputShop>
+                                </div>
+                            </div>
+
+                            <div class="ContainerIndent ">
+                                <div class="Container50 Responsive50">
+                                    <div class="Container33 Responsive ui-fluid mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" for="roleName"
+                                                       value="#{lang['signRoleVoffice.voficeRole.roleName']}"/>
+                                    </div>
+                                    <div class="Container66 Responsive ui-fluid">
+                                        <p:selectOneMenu id="roleName"
+                                                         value="#{signFlowController.forSearchSignFlow.vofficeRoleId}">
+                                            <f:selectItem itemLabel="#{lang['common.selectOneMenu.select']}"
+                                                          escape="true"/>
+                                            <f:selectItems value="#{signFlowController.listVofficeRole}"
+                                                           itemLabel="#{item.roleName}" var="item"
+                                                           itemValue="#{item.vofficeRoleId}"/>
+                                            <p:ajax event="change" process="@this"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <div class="Container33 Responsive ui-fluid mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" for="txtEmail"
+                                                       value="#{lang['signFlow.input.email']}"/>
+                                    </div>
+                                    <div class="Container66 Responsive ui-fluid">
+                                        <p:inputText id="txtEmail"
+                                                     maxlength="100"
+                                                     onblur="this.value = this.value.trim();"
+                                                     placeholder="#{lang['signFlow.email.placeholder']}"
+                                                     value="#{signFlowController.forSearchSignFlow.email}"
+                                                     title="#{signFlowController.forSearchSignFlow.email}"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="Container100 TexAlCenter pd-top-10">
+                                <p:commandButton value="#{lang['create.note.search']}"
+                                                 actionListener="#{signFlowController.searchSignFlow}"
+                                                 update="@([id$=lstSignFlow]),@([id$=msgSignFlow])"
+                                                 resetValues="true"
+                                                 process="@this,@([id$=pnlSignFlowInfor])"/>
+                                <p:commandButton value="#{lang['common.reset']}" styleClass="mrg-left-5"
+                                                 actionListener="#{signFlowController.resetForm}"
+                                                 update="@form"
+                                                 resetValues="true"
+                                                 process="@this"/>
+
+                            </div>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <!--End vung tra cuu-->
+                <!--Start vung lap yeu cau-->
+                <p:outputPanel styleClass="Container100" id="pnlSignFlowList">
+                    <div class="ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="pnViewExport" titleHeader="#{lang['signFlow.listSignFlow']}"
+                                   toggle="false"/>
+
+                        <div class="pnViewExport ContainerIndent">
+                            <div class="Container TexAlLeft">
+                                <p:commandLink value="#{lang['mn.stock.limit.createNew']}"
+                                               styleClass="fa icon-plus Fs14 blue md-link"
+                                               oncomplete="PF('dlgAddSignFlow').show();"
+                                               update="dlgAddSignFlow,@([id$=msgSignFlow])" resetValues="false"
+                                               actionListener="#{signFlowController.preAddSignFlow}"
+                                               process="@this">
+                                </p:commandLink>
+                                <cbs:confirmDialog
+                                        idComponent="btnDelete"
+                                        valueButton="#{lang['common.delete']}"
+                                        headerConfirm="#{lang['mn.stock.limit.financeType.header.delete']}"
+                                        messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                        actionOK="#{signFlowController.deleteSignFlow}"
+                                        resetValueButton="true"
+                                        process="@this,@([id$=lstSignFlow])"
+                                        updateArea="@([id$=frmSignFlow])"
+                                        updateOK="@([id$=frmSignFlow])"
+                                        actionValidate="#{signFlowController.validateDeleteSignFlow}"
+                                        styleClassButton="fa icon-trash Fs14 blue md-link mg-left-5"
+                                        focusCancel="true"
+                                        isButton="false"/>
+                            </div>
+                            <div class="Container">
+                                <p:dataTable
+                                        id="lstSignFlow"
+                                        var="signFlow"
+                                        value="#{signFlowController.signFlowList}"
+                                        rowIndexVar="index"
+                                        rowKey="#{signFlow.signFlowId}"
+                                        selection="#{signFlowController.signFlowSelection}"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}">
+                                    <p:column selectionMode="multiple" styleClass="width5 TexAlCenter"/>
+
+                                    <p:column headerText="#{lang['signFlow.input.name']}"
+                                              sortBy="#{signFlow.name}"
+                                              style="width: 20%;">
+                                        <p:outputLabel
+                                                value="#{signFlow.name}"
+                                                title="#{signFlow.name}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['signFlow.input.shop']}"
+                                              sortBy="#{signFlow.shopCode}"
+                                              style="width: 20%;">
+                                        <p:outputLabel
+                                                value="#{signFlow.shopCode}"
+                                                title="#{signFlow.shopCode}"/>
+                                    </p:column>
+
+                                    <p:column headerText="#{lang['mn.invoice.invoiceType.userCreate']}"
+                                              sortBy="#{signFlow.createUser}" style="width: 15%;">
+                                        <p:outputLabel value="#{signFlow.createUser}"
+                                                       title="#{signFlow.createUser}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.invoice.invoiceType.dateCreate']}"
+                                              sortBy="#{signFlow.createDate}" style="width: 15%;">
+
+                                        <p:outputLabel value="#{signFlow.createDate}"
+                                                       title="#{signFlow.createDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.infrastructure.date.update']}"
+                                              sortBy="#{signFlow.lastUpdateTime}" style="width: 15%;">
+
+                                        <p:outputLabel value="#{signFlow.lastUpdateTime}"
+                                                       title="#{signFlow.lastUpdateTime}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.edit.delete']}" style="width: 8%;"
+                                              styleClass="col-left">
+                                        <p:commandLink styleClass="fa  icon-edit Fs14 blue icon-link"
+                                                       style="text-decoration: none;font-size: 16px!important;padding-top: 4px;float: left;"
+                                                       oncomplete="if(!args.validationFailed) {PF('dlgAddSignFlow').show();}"
+                                                       title="#{lang['common.edit.record']}"
+                                                       update="dlgAddSignFlow,@([id$=msgSignFlow])"
+                                                       actionListener="#{signFlowController.prepareEdit(signFlow)}"
+                                                       process="@this"/>
+                                        <cbs:confirmDialog
+                                                idComponent="btnDeleteOnePackageGoods#{index}"
+                                                disableButton="#{SignFlow.status == '0'}"
+                                                valueButton=""
+                                                headerConfirm="#{lang['common.confirm']}"
+                                                messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                                actionOK="#{signFlowController.deleteOneSignFlow}"
+                                                resetValueButton="true"
+                                                process="@this"
+                                                titleButton="#{lang['common.delete']}"
+                                                actionValidate="#{signFlowController.preDeleteOneSignFlow(signFlow)}"
+                                                updateArea="@this,@([id$=msgSignFlow])"
+                                                updateOK="@([id$=lstSignFlow]),@([id$=msgSignFlow])"
+                                                styleClassButton="fa icon-trash Fs14 blue #{index}"
+                                                styleButton="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                                focusCancel="true"
+                                                oncompleteOK=""
+                                                isButton="false"
+                                                />
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <!--End vung lap yeu cau-->
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="top"
+                  id="dlgAddSignFlow"
+                  widgetVar="dlgAddSignFlow"
+                  header="#{signFlowController.titleDlgSignFlow}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="60%">
+            <ui:include src="dlgAddSignFlow.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,446 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:pe="http://primefaces.org/ui/extensions"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.isdn.manage.creat.field.export.isdn']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.isdn.manage.creat.field.export.isdn']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmExportIsdn">
+            <div class="Container100">
+                <!--Start vung thong tin lenh xuat-->
+                <!--rendered="#{!creatFieldExportIsdnController.infoOrderDetail}"-->
+                <p:outputPanel id="pnInfoExportOrder" styleClass="ContainerIndent  mg-top-0">
+                    <p:focus context="pnInfoExportOrder"/>
+                    <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                        <p:messages id="msgs" showDetail="true" showSummary="false" closable="true" />
+                    </div>
+                    <cbs:panel classForToggle="panelInforExport" toggle="true" titleHeader="#{lang['import.order.search.transaction']}"/>
+                    <div class="Container100 panelInforExport" style="margin-bottom: 10px;margin-top: 10px;">
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 Responsive pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['export.order.trans.code']}"
+                                                   for="codeExportTxt"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:inputText id="codeExportTxt"
+                                                 maxlength="50"
+                                                 onchange="this.value=this.value.replace(new RegExp('[^a-zA-Z0-9_ ]','gm'),'').trim()"
+                                                 value="#{creatFieldExportIsdnController.forSearch.actionCode}"
+                                                 placeholder="#{lang['export.order.trans.code.placehoder']}">
+                                    <pe:keyFilter regEx="/[a-z0-9_]/i"  preventPaste="false"/>
+                                    </p:inputText>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 Responsive pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['common.status']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:selectOneMenu itemLabelEscaped="true" id="cbxStatus"
+                                                     value="#{creatFieldExportIsdnController.forSearch.stockTransStatus}">
+                                        <f:selectItem itemValue="" itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                        <f:selectItems value="#{creatFieldExportIsdnController.optionSetValueDTOsList}"
+                                                       var="optionSetValueDTOsList"
+                                                       itemLabel="#{optionSetValueDTOsList.name}"
+                                                       itemValue="#{optionSetValueDTOsList.value}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <!--<div class="Container40 mg-left-15 Responsive pd-top-7">-->
+                                <!--<p:outputLabel-->
+                                <!--value="#{lang['create.note.warehouse.export']}"/>-->
+                                <!--</div>-->
+                                <!--<div class="Container60 Responsive ui-fluid ui-tooltip-fluid">-->
+                                <!--<p:inputText value="VT_TCT viễn thông Viettel"-->
+                                <!--disabled="true"/>-->
+                                <!--</div>-->
+
+                                <cbs:inputShop value="#{creatFieldExportIsdnController.shopInfoTagExport}"
+                                               idComponent="ipExportShop"
+                                               methodName="doExportShop"
+                                               update="@this"
+                                               limit="#{creatFieldExportIsdnController.limitAutoComplete}"
+                                               label="#{lang['export.order.stock']}"
+                                               require="false"
+                                               classDivLabel="Container40 mg-left-15 Responsive50 pd-top-7"
+                                               classDivInput="Container60 Responsive50 ui-fluid"
+                                               requiredMessage="#{lang['export.order.stock.require.msg']}"
+                                               placeholder="#{lang['export.order.stock.placehoder']}"
+                                                forceSelection="false"
+                                                clearMethodName="doResetExportShop">
+                                </cbs:inputShop>
+
+                                <!-- <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                     <p:outputLabel styleClass="lb-sentinel" value="#{lang['create.note.warehouse.export']}"/>
+                                 </div>
+                                 <div class="Container60 Responsive50 ui-fluid">
+                                     <p:inputText value="#{creatFieldExportIsdnController.forSearch.fromOwnerName}" disabled="false"/>
+
+                                 </div>-->
+
+                            </div>
+                        </div>
+                        <div class="ContainerIndent">
+                            <div class="Container33 Responsive">
+                                <!--<div class="Container40 mg-left-15 Responsive pd-top-7">-->
+                                <!--<p:outputLabel-->
+                                <!--value="#{lang['create.note.warehouse.import']}"/>-->
+                                <!--</div>-->
+                                <!--<div class="Container60 Responsive ui-fluid">-->
+                                <!--<p:autoComplete-->
+                                <!--placeholder="#{lang['create.note.warehouse.import.placeholder']}"/>-->
+                                <!--</div>-->
+                                <cbs:inputShop value="#{creatFieldExportIsdnController.shopInfoTagReceive}"
+                                               idComponent="ipReceiveShop"
+                                               methodName="doReceiveShop"
+                                               update="@this"
+                                               limit="#{creatFieldExportIsdnController.limitAutoComplete}"
+                                               label="#{lang['create.note.warehouse.import']}"
+                                               require="false"
+                                               classDivLabel="Container40 mg-left-15 Responsive50 pd-top-7"
+                                               classDivInput="Container60 Responsive50 ui-fluid"
+                                               requiredMessage="#{lang['export.order.stock.require.msg']}"
+                                               placeholder="#{lang['export.order.stock.receive.product']}"
+                                               forceSelection="false"
+                                               clearMethodName="doResetReceiveShop">
+                                </cbs:inputShop>
+
+                                <!--<div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['create.note.warehouse.import']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                                    <p:inputText value="#{creatFieldExportIsdnController.forSearch.toOwnerName}"
+                                                 placeholder="#{lang['export.order.stock.receive.product']}"
+                                                 disabled="false"/>
+                                </div>-->
+
+                            </div>
+                            <div class="Container33 Responsiv0">
+                                <div class="Container40 Responsive50 mg-left-15 Responsive pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel fromDate" value="#{lang['create.note.from.date']}"
+                                                   for="fromDate"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid fromDate">
+                                    <p:calendar id="fromDate" value="#{creatFieldExportIsdnController.forSearch.startDate}"
+                                                placeholder="#{lang['create.note.from.date.placeholder']}"
+                                                required="true"
+                                                validatorMessage="#{lang['mn.stock.from.date.not.format']}"
+                                                converterMessage="#{lang['mn.stock.from.date.not.format']}"
+                                                requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/><cbs:message forId="fromDate"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 Responsive pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel toDate" value="#{lang['create.note.to.date']}"
+                                                   for="toDate"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid toDate">
+                                    <p:calendar id="toDate"
+                                                value="#{creatFieldExportIsdnController.forSearch.endDate}"
+                                                required="true"
+                                                validatorMessage="#{lang['mn.stock.from.date.not.format']}"
+                                                converterMessage="#{lang['mn.stock.from.date.not.format']}"
+                                                placeholder="#{lang['create.note.to.date.placeholder']}"
+                                                requiredMessage="#{lang['mn.stock.to.date.not.blank']}"/>
+                                    <cbs:message forId="toDate"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent TexAlCenter">
+                            <p:commandButton value="#{lang['create.note.search']}"
+                                             process="pnInfoExportOrder" update="@form, frmInputIsdn"
+                                             action="#{creatFieldExportIsdnController.doSearch}"/>
+                            <p:commandButton styleClass="mg-left-5"
+                                             value="#{lang['mn.stock.utilities.export.file']}"
+                                             ajax="false"
+                                             immediate="true"
+                                             process="@this" update="@form">
+                            <p:fileDownload value="#{creatFieldExportIsdnController.exportOrder()}"/>
+                            </p:commandButton>
+                            <!--<p:commandButton styleClass="mg-left-5"-->
+                                             <!--value="#{lang['create.note.export.detail']}"-->
+                                             <!--process="@this" update="@form"-->
+                                             <!--action="#{creatFieldExportIsdnController.exportOrderDetail}"/>-->
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <!--End vung thong tin lenh xuat-->
+            </div>
+            <p:outputPanel id="pnDetail" styleClass="Container100">
+                <!--Start vung ds lenh xuat-->
+                <p:outputPanel id="pnLstExportOrder" styleClass="Container100" rendered="#{!creatFieldExportIsdnController.infoOrderDetail}">
+                    <div class="ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="panelListOrderExport" toggle="true" titleHeader="#{lang['create.note.list.trans']}"/>
+                        <div class="Container100 panelListOrderExport" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <p:dataTable
+                                    id="lstOrderExport"
+                                    var="stockTrans"
+                                    rowKey=""
+                                    rowIndexVar="index"
+                                    resizableColumns="true"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage=""
+                                    value="#{creatFieldExportIsdnController.listResultSearch}">
+                                    <p:column headerText="#{lang['export.order.code']}" sortBy="#{stockTrans.actionCMDCode}">
+                                        <p:outputLabel value="#{stockTrans.actionCMDCode}" title="#{stockTrans.actionCMDCode}" />
+                                    </p:column>
+                                    <p:column headerText="#{lang['create.note.create.date']}" sortBy="#{stockTrans.createDateTrans}">
+                                        <h:outputText escape="true" value="#{stockTrans.createDateTrans}" styleClass="lb-sentinel-bold" title="#{stockTrans.createDateTrans}" >
+                                            <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="#{lang['create.note.warehouse.export']}" sortBy="#{stockTrans.toOwnerName}">
+                                        <p:outputLabel value="#{stockTrans.fromOwnerName}" title="#{stockTrans.fromOwnerName}" />
+                                    </p:column>
+                                    <p:column headerText="#{lang['create.note.warehouse.import']}" sortBy="#{stockTrans.fromOwnerName}">
+                                        <p:outputLabel value="#{stockTrans.toOwnerName}" title="#{stockTrans.toOwnerName}" />
+                                    </p:column>
+                                    <p:column headerText="#{lang['create.note.reason.export']}" sortBy="#{stockTrans.reasonName}">
+                                        <p:outputLabel value="#{stockTrans.reasonName}" title="#{stockTrans.reasonName}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.status']}" sortBy="#{stockTrans.statusName}">
+                                        <p:outputLabel value="#{stockTrans.statusName}" title="#{stockTrans.statusName}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['create.note.note']}" sortBy="#{stockTrans.note}">
+                                        <p:outputLabel value="#{stockTrans.note}" title="#{stockTrans.note}"/>
+                                    </p:column>
+                                    <!--<p:column headerText="#{lang['create.note.origin.export']}" sortBy="#{stockTrans.stockBase}">-->
+                                        <!--<p:outputLabel value="#{stockTrans.stockBase}" title="#{stockTrans.stockBase}"/>-->
+                                    <!--</p:column>-->
+                                    <!--<p:column headerText="#{lang['create.note.history.effect']}" sortBy="#{stockTrans.hisAction}">-->
+                                        <!--<p:outputLabel value="#{stockTrans.hisAction}" title="#{stockTrans.hisAction}"/>-->
+                                    <!--</p:column>-->
+                                <p:column headerText="#{lang['create.note.effect']}" style="text-align: center">
+                                    <p:commandLink styleClass="fa icon-zoom-in Fs12 black"
+                                                   style="text-decoration: none!important;"
+                                                   actionListener="#{creatFieldExportIsdnController.doShowInfoOrderDetail(stockTrans.actionID)}"
+                                                   process="@this" title="#{lang['create.note']}"
+                                                   update="@form" disabled="#{stockTrans.stockTransStatus != '1'}"/>
+                                    <!--<p:commandLink styleClass="fa icon-cancel-2 Fs14 blue "-->
+                                                   <!--style="text-decoration: none;"-->
+                                                    <!--actionListener="#{creatFieldExportIsdnController.preRemove(stockTrans.stockTransID)}"-->
+                                                   <!--oncomplete="PF('dlgConfirmDelete').show();setTimeout(function () {$('.btnbtnDeleteOnePackageGoods0NO').focus();}, 150);"-->
+                                                    <!--process="@this" title="#{lang['common.cancel.trans']}"-->
+                                                    <!--update="@form" disabled="#{stockTrans.stockTransStatus != '1' and stockTrans.stockTransStatus != '2'}"/>-->
+                                    <cbs:confirmDialog
+                                            idComponent="btnDeleteOne#{index}"
+                                            disableButton="#{stockTrans.stockTransStatus != '1' and stockTrans.stockTransStatus != '2'}"
+                                            valueButton=""
+                                            headerConfirm="#{lang['mn.stock.confirm.export.isdn.header']}"
+                                            messageConfirm="#{lang['mn.stock.confirm.export.isdn.header.msgConfirm']}"
+                                            actionOK="#{creatFieldExportIsdnController.doRemoveItem}"
+                                            resetValueButton="true"
+                                            process="@this"
+                                            titleButton="#{lang['common.cancel.trans']}"
+                                            actionValidate="#{creatFieldExportIsdnController.preRemove(stockTrans.stockTransID)}"
+                                            updateArea="@form"
+                                            updateOK="@form"
+                                            styleClassButton="fa icon-trash Fs14 blue"
+                                            styleButton="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                            focusCancel="true"
+                                            oncompleteOK=""
+                                            isButton="false"
+                                            />
+                                </p:column>
+
+                            </p:dataTable>
+                            </div>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <!--End vung ds lenh xuat-->
+                <p:outputPanel id="pnlViewDetailUnderExportIsdn" styleClass="Container100" rendered="#{creatFieldExportIsdnController.infoOrderDetail}">
+                    <!--Start vung thong tin view lenh xuat-->
+                    <div class="Container100">
+                        <cbs:inputOrderStock id="exportStockabc" title="#{lang['export.order.view.export']}"
+                                             methodNameOffice="receiveWriteOffice"
+                                             value="#{creatFieldExportIsdnController.orderStockTag}"
+                                             mode="2"
+                                             lblActionCode="#{lang['export.order.code']}"
+                                             lblbyWhom = "#{lang['create.order.not.staff']}"
+                                             lblorderDay = "#{lang['date.create.order']}"
+                                             showReasonExport="false"
+                                             showRegionStock="false"
+                                             showERP="false"
+                                             styleClassDiv="mg-top-0"/>
+                    </div>
+                    <!--End vung thong tin view lenh xuat-->
+
+                    <!--Start vung thong tin chi tiet-->
+                    <p:outputPanel id="pnlInfoDetailStockModel" styleClass="Container100">
+                        <div class="ContainerIndent mg-top-0">
+                            <cbs:panel classForToggle="panelDetailStock" toggle="true"
+                                       titleHeader="#{lang['mn.stock.partner.list.stock']}"/>
+
+                            <div class="Container100 panelDetailStock" style="margin-bottom: 10px;margin-top: 10px;">
+                                <div class="ContainerIndent">
+                                    <p:dataTable id="lstDetailStock"
+                                                 styleClass="mg-top-10 mg-bottom-10"
+                                                 var="good"
+                                                 rowIndexVar="index"
+                                                 value="#{creatFieldExportIsdnController.lstGoods}">
+                                        <p:column headerText="#{lang['export.order.type.product.name']}" style="width: 20%" sortBy="#{good.productOfferTypeName}">
+                                            <p:outputLabel value="#{good.productOfferTypeName}" title="#{good.productOfferTypeName}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['export.order.name.product.type']}" style="width: 20%" sortBy="#{good.prodOfferName}">
+                                            <p:outputLabel value="#{good.prodOfferName}" title="#{good.prodOfferName}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['common.status']}" style="width: 15%" sortBy="#{good.stateName}">
+                                            <p:outputLabel value="#{good.stateName}" title="#{good.stateName}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['common.unit']}" style="width: 15%" sortBy="#{good.unit}">
+                                            <p:outputLabel value="#{good.unit}" title="#{good.unit}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['common.number']}" style="width: 15%;text-align: right" sortBy="#{good.quantity}">
+                                            <h:outputText escape="true" converter="currencyFormat" value="#{good.quantity}" title="#{good.quantity}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['common.detail.isdn']}" style="width: 15%;text-align: right">
+                                            <p:commandLink rendered="#{good.checkSerial==1 and !good.getHaveListSerial()}"
+                                                           value="#{lang['common.input.isdn']}"
+                                                           resetValues="true"
+                                                           style="text-decoration: none!important;"
+                                                           actionListener="#{creatFieldExportIsdnController.preAddIsdn(index)}"
+                                                           oncomplete="if(!args.validationFailed){PF('dlgInputIsdn').show();}"
+                                                           process="@this"
+                                                           update="@form, frmInputIsdn, frmInputIsdn:pnlInputIsdn, frmInputIsdn:pnlResultIsdn"/>
+                                            <p:commandLink rendered="#{good.checkSerial == 1 and good.getHaveListSerial()}"
+                                                             value="#{lang['common.view.detail']}"
+                                                             resetValues="true"
+                                                             process="@this"
+                                                             update="@form, frmInputIsdn, frmInputIsdn:pnlInputIsdn, frmInputIsdn:pnlResultIsdn"
+                                                             actionListener="#{creatFieldExportIsdnController.preAddIsdn(index)}"
+                                                             oncomplete="if(!args.validationFailed){PF('dlgInputIsdn').show();}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin chi tiet-->
+
+                    <!--Start vung thong tin phieu xuat-->
+                    <div class="Container100">
+                        <p:outputPanel id="pnlInfoExportIsdn" styleClass="ContainerIndent mg-top-0">
+                            <cbs:panel classForToggle="pnViewExportField" toggle="true"
+                                       titleHeader="#{lang['export.order.view.export.field']}"/>
+                            <div class="ContainerIndent pnViewExportField">
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 mg-left-15 Responsive pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       for="ipExportCodeField"
+                                                       value="#{lang['export.order.code.field']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:inputText id="ipExportCodeField"
+                                                     styleClass="ipExportCodeField"
+                                                     placeholder="#{lang['export.order.code.field.placehoder']}"
+                                                     style="width: 100%;" required="true"
+                                                     readonly="#{creatFieldExportIsdnController.staffDTO.shopId eq 7282}"
+                                                     maxlength="50"
+                                                     onchange="this.value=this.value.replace(new RegExp('[^a-zA-Z0-9_ ]','gm'),'').trim()"
+                                                     value="#{creatFieldExportIsdnController.exportCode}"
+                                                     requiredMessage="#{lang['export.order.stock.code.require.msg']}">
+                                            <pe:keyFilter regEx="/[a-z0-9_-]/i"  preventPaste="false"/>
+                                        </p:inputText>
+                                        <p:message for="ipExportCodeField"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 mg-left-15 Responsive pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       for="checkboxVoffice"
+                                                       value="#{lang['export.order.write.office']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:selectBooleanCheckbox id="checkboxVoffice" value="#{creatFieldExportIsdnController.writeOffice}" disabled="#{creatFieldExportIsdnController.hasRoleSignCa}">
+                                            <p:ajax event="change" update="@([id$=pnlInfoVOffice])" process="@this"
+                                                    listener="#{creatFieldExportIsdnController.receiveWriteOffice}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive50"></div>
+                            </div>
+                        </p:outputPanel>
+                    </div>
+                    <!--End vung thong tin phieu xuat-->
+
+                    <!--Start vung thong tin VOffice-->
+                    <p:focus for="pnlInfoVOffice"/>
+                    <p:outputPanel id="pnlInfoVOffice" styleClass="Container100">
+                        <p:outputPanel styleClass="Container100"  rendered="#{creatFieldExportIsdnController.writeOffice}">
+                            <cbs:inputSignOffice id="writeOffice" title="#{lang['export.order.view.office']}"  idComponent="writeOffice" value="#{creatFieldExportIsdnController.signOfficeTag}"/>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <!--End vung thong tin VOffice-->
+
+                    <!--Start Vung data button-->
+                    <p:outputPanel id="pnlDataButton" styleClass="Container100">
+                        <div class="ContainerIndent TexAlCenter mg-top-0">
+                            <!--<p:commandButton value="#{lang['export.order.btn.submit.field']}"-->
+                                             <!--process="@form"-->
+                                             <!--update="@form"-->
+                                             <!--disabled="#{creatFieldExportIsdnController.isDone}"-->
+                                             <!--action="#{creatFieldExportIsdnController.validateCreateExportNote}"/>-->
+                            <cbs:confirmDialog
+                                    idComponent="btnDeleteOnePackageGoods"
+                                    disableButton="#{creatFieldExportIsdnController.isDone}"
+                                    valueButton="#{lang['export.order.btn.submit.field']}"
+                                    headerConfirm="#{lang['mn.isdn.manage.creat.field.export.createExportConfirm']}"
+                                    messageConfirm="#{lang['mn.isdn.manage.creat.field.export.createExportConfirm']}"
+                                    actionOK="#{creatFieldExportIsdnController.createExportNote}"
+                                    resetValueButton="true"
+                                    process="@form"
+                                    titleButton="#{lang['common.delete']}"
+                                    actionValidate="#{creatFieldExportIsdnController.validateCreateExportNote}"
+                                    updateArea="@form"
+                                    updateOK="@form"
+                                    styleClassButton="fa Fs14 blue"
+                                    styleButton="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                    focusCancel="false"
+                                    oncompleteOK=""
+                                    isButton="true"
+                                    />
+                            <p:commandButton value="#{lang['export.order.btn.print.field']}"
+                                             styleClass="mg-left-5"
+                                             process="@this"
+                                             update="@form"
+                                             disabled="#{!creatFieldExportIsdnController.isDone}"
+                                             ajax="false" immediate="true">
+                                <p:fileDownload value="#{creatFieldExportIsdnController.doPrintStockTransDetail()}"/>
+                                    </p:commandButton>
+                        </div>
+                    </p:outputPanel>
+                    <!--End Vung data button-->
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  maximizable="true"
+                  closable="true"
+                  closeOnEscape="true"
+                  position="center"
+                  id="dlgInputIsdn"
+                  widgetVar="dlgInputIsdn"
+                  header="#{lang['mn.isdn.detail.isdn']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  width="700"
+                  minWidth="700" >
+            <ui:include src="dlgInputIsdn.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+			http://www.springframework.org/schema/aop
+			http://www.springframework.org/schema/aop/spring-aop-4.1.xsd">
+
+    <!-- Enable AspectJ style of Spring AOP -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!--Spring AOP XML Configuration-->
+    <bean class="com.viettel.bccs.fw.logging.KpiMethodAspect"/>
+    <bean name="methodInterceptorName" class="com.viettel.web.log.MethodInterceptor"/>
+    <bean id="loggingFilter" class="com.viettel.web.log.LoggingFilter"/>
+    <aop:config>
+
+
+        <aop:aspect ref="methodInterceptorName" id="methodInterceptorTag" order="3">
+            <aop:pointcut
+                    id="logPointCut"
+                    expression="execution(public * com.viettel.web.log.ReportLogService.*(..))"/>
+            <aop:around method="loggingTraceAction" pointcut-ref="logPointCut" arg-names="proceedingJoinPoint"/>
+        </aop:aspect>
+
+        <!--thiendn1: uncomment aspect duoi day neu chay o che do DIRECT-->
+        <!--<aop:aspect ref="methodInterceptorName" id="methodInterceptorService" order="1">-->
+        <!--<aop:pointcut-->
+        <!--id="servicePointcut"-->
+        <!--expression="execution(public * com.viettel.bccs.sale.service..*(..))"/>-->
+        <!--<aop:around method="loggingTraceAction" pointcut-ref="servicePointcut" arg-names="proceedingJoinPoint"/>-->
+        <!--</aop:aspect>-->
+
+    </aop:config>
+
+</beans>

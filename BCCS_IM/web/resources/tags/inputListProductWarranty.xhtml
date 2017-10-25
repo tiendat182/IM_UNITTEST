@@ -1,0 +1,748 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:o="http://omnifaces.org/ui">
+<composite:interface>
+    <composite:attribute name="idComponent" shortDescription="id component cua doi tuong " required="true"/>
+    <composite:attribute name="title" shortDescription="title tag "
+                         default="#{lang['export.order.view.list.product']}"/>
+    <composite:attribute name="disableEditStatus" shortDescription="title tag "
+                         default="false"/>
+    <composite:attribute name="value" shortDescription="Doi tuong chua ket qua tra ve"
+                         required="true" type="com.viettel.bccs.inventory.tag.ListProductNameable"/>
+    <composite:attribute name="extraValue" shortDescription="them Gia goc, ma TC" required="false" default="true"/>
+    <composite:attribute name="renderRetrieveStock" shortDescription=" hien thi Tong dap ung" required="false"
+                         default="true"/>
+    <composite:attribute name="idMessage" shortDescription="id message can dung khi thong bao loi" required="true"/>
+    <composite:attribute name="onCompleteCheckSerial" shortDescription="action onComplete cua link check serial"
+                         default="emptyFunction()"/>
+    <composite:attribute name="updateCheckSerial" shortDescription="action onComplete cua link check serial"/>
+    <composite:attribute name="onCompleteLinkAddNew" shortDescription="action onComplete cua link add moi bang ghi"
+                         default="emptyFunction"/>
+    <composite:attribute name="lbFromSeri" shortDescription="label tu seri" required="false"
+                         default="#{lang['mn.stock.fromSerial']}"/>
+    <composite:attribute name="lbToSeri" shortDescription="label den seri" required="false"
+                         default="#{lang['mn.stock.ToSerial']}"/>
+    <composite:attribute name="lbSeriDetail" shortDescription="label chi tiet seri" required="false"
+                         default="#{lang['create.note.detail.serial']}"/>
+    <composite:attribute name="lbStockDeviceTransfer" shortDescription="label chi tiet item" required="false"
+                         default="#{lang['order.divide.product.detail.item']}"/>
+    <composite:attribute name="lbListSeriDetail" shortDescription="label danh sach chi tiet seri" required="false"
+                         default="#{lang['stock.trans.search.serial.stock']}"/>
+    <composite:attribute name="lbListDeviceConfig" shortDescription="label danh sach chi tiet cau hinh thiet bi" required="false"
+                         default="#{lang['order.divide.product.detail.itemFull']}"/>
+    <composite:attribute name="lbInfoDetailSeri" shortDescription="label thong tin chi tiet seri" required="false"
+                         default="#{cc.attrs.value.titleSerialProduct}"/>
+    <composite:attribute name="lbTotalAmount" shortDescription="label tong tien" required="false"
+                         default="#{lang['agency.deposit.amount']}"/>
+    <composite:attribute name="balanceStock" shortDescription="giao dich can kho" required="false"
+                         default="false"/>
+    <composite:attribute name="changeProduct" shortDescription="chuyen doi mat hang" required="false"
+                         default="false"/>
+</composite:interface>
+<composite:implementation>
+    <c:if test="#{cc.attrs.value.addNewProduct}">
+        <p:outputPanel id="#{cc.attrs.idComponent}pnListProduct" styleClass="ContainerIndent mg-top-0">
+            <cbs:panel classForToggle="pnViewOffice" titleHeader="#{cc.attrs.title}" toggle="true"/>
+
+            <div class="Container100 pnViewOffice" style="margin-bottom: 10px;margin-top: 10px;">
+                <div class="Container100">
+                    <p:hotkey bind="f9"
+                              update="@([id$=#{cc.attrs.idComponent}tblLsProduct]),@([id$=#{cc.attrs.idMessage}])"
+                              actionListener="#{cc.attrs.value.doAddItem()}"
+                              oncomplete="#{cc.attrs.onCompleteLinkAddNew}()"
+                              process="@this,@([id$=#{cc.attrs.idComponent}pnListProduct])"
+                    />
+                    <!--<p:remoteCommand name="f9Event"
+                                     update="@([id$=#{cc.attrs.idComponent}tblLsProduct]),@([id$=#{cc.attrs.idMessage}])"
+                                     actionListener="#{cc.attrs.value.doAddItem()}"
+                                     oncomplete="#{cc.attrs.onCompleteLinkAddNew}()"
+                                     process="@this,@([id$=#{cc.attrs.idComponent}pnListProduct])"
+                    />-->
+                    <p:commandLink value="#{lang['mn.stock.limit.createNew']} (F9)"
+                                   styleClass="fa icon-plus Fs14 blue md-link" id="#{cc.attrs.idComponent}AddNew"
+                                   oncomplete="#{cc.attrs.onCompleteLinkAddNew}()"
+                                   update="@([id$=#{cc.attrs.idComponent}tblLsProduct]),@([id$=#{cc.attrs.idMessage}])"
+                                   actionListener="#{cc.attrs.value.doAddItem()}"
+                                   process="@this,@([id$=#{cc.attrs.idComponent}pnListProduct])">
+                    </p:commandLink>
+                </div>
+                <div class="Container100 ui-fluid">
+                    <p:dataTable
+                            id="#{cc.attrs.idComponent}tblLsProduct"
+                            sortMode="single"
+                            paginator="false"
+                            rows="100"
+                            reflow="false"
+                            emptyMessage="#{lang['common.empty.records']}"
+                            styleClass="Width100" value="#{cc.attrs.value.lsListProductOfferDTO}"
+                            rowIndexVar="index" var="productOffer">
+                        <!--<p:column style="width: 15%;"
+                                  styleClass="col-left pd-top-6">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['export.order.type.product']}"
+                                              title="#{lang['export.order.type.product']}"/>
+                            </f:facet>
+                            <p:selectOneMenu value="#{productOffer.productOfferTypeDTO}" styleClass="Wid100"
+                                             filter="true" filterMatchMode="contains">
+                                <o:converter converterId="productOfferTypeConverter"
+                                             list="#{productOffer.lsProductOfferTypeDTO}"/>
+                                <p:ajax event="change" process="@this"
+                                        update="@([id$=#{cc.attrs.idComponent}pnListProduct])"
+                                        listener="#{cc.attrs.value.doChangeOfferType(index)}"/>
+                                <f:selectItems value="#{productOffer.lsProductOfferTypeDTO}" var="itemType"
+                                               itemLabelEscaped="true"
+                                               itemValue="#{itemType}" itemLabel="#{itemType.name}"/>
+                            </p:selectOneMenu>
+                        </p:column>-->
+
+                        <p:column style="width: 15%;" styleClass="col-left">
+                            <f:facet name="header">
+                                <c:if test="#{not cc.attrs.changeProduct}">
+                                    <h:outputText value="#{lang['export.order.name.product']}"
+                                                  title="#{lang['export.order.name.product']}"/>
+                                </c:if>
+                                <c:if test="#{cc.attrs.changeProduct}">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.change.product.offering.create.note.product.old']}"
+                                            title="#{lang['mn.stock.change.product.offering.create.note.product.old']}"/>
+                                </c:if>
+                            </f:facet>
+                            <p:outputLabel id="#{cc.attrs.idComponent}productOfferTotal_hidden" style="display:none;"
+                                           value="#{productOffer.productOfferingTotalDTO.itemLabel}"/>
+                            <p:autoComplete id="#{cc.attrs.idComponent}productOfferTotal"
+                                            value="#{productOffer.productOfferingTotalDTO}" forceSelection="true"
+                                            completeMethod="#{cc.attrs.value.doChangeOffering}"
+                                            placeholder="#{lang['export.order.stock.inputText.search']}"
+                                            onfocus="this.setSelectionRange(0, this.value.length)"
+                                            var="productOfferingTotalDTO"
+                                            maxResults="#{cc.attrs.value.limitAutoComplete}"
+                                            itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                            itemValue="#{productOfferingTotalDTO}"
+                                            inputStyleClass="txtProductName#{index}"
+                                            requiredMessage="#{lang['export.order.stock.inputText.require.msg']}"
+                                            maxlength="100" scrollHeight="300">
+                                <f:attribute name="index" value="#{index}"/>
+                                <o:converter converterId="productOfferingConverter"
+                                             list="#{productOffer.lsProductOfferingTotalDTO}"/>
+                                <p:ajax event="itemSelect" listener="#{cc.attrs.value.doSelectProductOffering}"
+                                        process="@([id$=#{cc.attrs.idComponent}tblLsProduct])"
+                                        update="@([id$=#{cc.attrs.idComponent}tblLsProduct]),@([id$=#{cc.attrs.idComponent}pnTotalPrice]),@([id$=#{cc.attrs.idMessage}])"/>
+                                <p:column headerText="#{lang['common.lb.code']}"><h:outputText escape="true"
+                                                                                               value="#{productOfferingTotalDTO.code}"/></p:column>
+                                <p:column headerText="#{lang['common.lb.name']}"><h:outputText escape="true"
+                                                                                               value="#{productOfferingTotalDTO.name}"/></p:column>
+                                <p:ajax event="query" global="false"/>
+                            </p:autoComplete>
+                            <pe:keyFilter for="#{cc.attrs.idComponent}productOfferTotal" preventPaste="false"
+                                          regEx="/[a-z0-9A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\._\-+]/i"/>
+                        </p:column>
+                        <c:if test="#{not cc.attrs.balanceStock and not cc.attrs.changeProduct}">
+                            <p:column style="width: 10%;" styleClass="col-left pd-top-6">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['common.status']}" title="#{lang['common.status']}"/>
+                                </f:facet>
+                                <p:outputLabel rendered="#{cc.attrs.disableEditStatus}"
+                                               value="#{lang['stock.total.state.new']}"/>
+                                <p:selectOneMenu value="#{productOffer.strStateId}" styleClass="Wid100 txtState#{index}"
+                                                 rendered="#{not cc.attrs.disableEditStatus}">
+                                    <p:ajax event="change" process="@this"
+                                            listener="#{cc.attrs.value.doChangeOfferType(index)}"
+                                            update="@([id$=#{cc.attrs.idComponent}tblLsProduct]), @([id$=#{cc.attrs.idComponent}pnTotalPrice])"/>
+                                    <f:selectItems value="#{cc.attrs.value.lsProductStatus}" var="status"
+                                                   itemValue="#{status.value}" itemLabel="#{status.name}"/>
+                                </p:selectOneMenu>
+                            </p:column>
+                            <!-- Tuydv1 them truong vao trong Thu hoi hang UCTT-->
+                            <p:column style="width: 18%;" styleClass="col-left pd-top-6"
+                                      rendered="#{cc.attrs.value.showForRetrieveStock }">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.stock.status.after.retrieve']}"
+                                                  title="#{lang['mn.stock.status.after.retrieve']}"/>
+                                </f:facet>
+                                <p:selectOneMenu value="#{productOffer.strStateIdAfter}" styleClass="Wid100">
+                                    <f:selectItems value="#{cc.attrs.value.lsProductStatusAfter}" var="statusAfter"
+                                                   itemValue="#{statusAfter.value}" itemLabel="#{statusAfter.name}"/>
+                                    <p:ajax event="change" process="@this"/>
+                                </p:selectOneMenu>
+                            </p:column>
+
+                            <p:column style="width: 10%;" styleClass="col-left pd-top-10">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['common.unit']}" title="#{lang['common.unit']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{productOffer.productOfferingTotalDTO.unitName}"
+                                               title="#{productOffer.productOfferingTotalDTO.unitName}"/>
+                            </p:column>
+                            <p:column style="width: 7%;" styleClass="col-right pd-top-10"
+                                      rendered="#{cc.attrs.extraValue eq null or cc.attrs.extraValue }">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['export.order.price']}"
+                                                  title="#{lang['export.order.price']}"/>
+                                </f:facet>
+                                <h:outputText converter="currencyFormat" escape="true"
+                                              value="#{productOffer.productOfferingTotalDTO.sourcePrice}"
+                                              title="#{productOffer.productOfferingTotalDTO.sourcePrice}"
+                                              styleClass="lb-sentinel-bold"/>
+                            </p:column>
+
+                            <p:column style="width: 10%;" styleClass="col-left pd-top-10"
+                                      rendered="#{cc.attrs.extraValue eq null or cc.attrs.extraValue}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['export.order.code.TC']}"
+                                                  title="#{lang['export.order.code.TC']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{productOffer.productOfferingTotalDTO.accountingModelCode}"
+                                               title="#{productOffer.productOfferingTotalDTO.accountingModelCode}"/>
+                            </p:column>
+                            <p:column style="width: 13%;" styleClass="col-right pd-top-10"
+                                      rendered="#{cc.attrs.value.configTagDto.collaborator or cc.attrs.value.configTagDto.agent}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.stock.price.deposit']}"
+                                                  title="#{lang['mn.stock.price.deposit']}"/>
+                                </f:facet>
+                                <h:outputText converter="currencyFormat" escape="true"
+                                              value="#{productOffer.productOfferingTotalDTO.priceAmount}"
+                                              styleClass="lb-sentinel-bold" title=""/>
+                            </p:column>
+                            <p:column style="width: 15%;" styleClass="col-right pd-top-10"
+                                      rendered="#{cc.attrs.renderRetrieveStock }">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['export.order.total.confirm']}"
+                                                  title="#{lang['export.order.total.confirm']}"/>
+                                </f:facet>
+                                <h:outputLabel converter="currencyFormat" styleClass="lb-sentinel-bold"
+                                               value="#{productOffer.productOfferingTotalDTO.availableQuantity}"/>
+                            </p:column>
+                        </c:if>
+                        <c:if test="#{not cc.attrs.balanceStock and cc.attrs.changeProduct}">
+                            <p:column style="width: 10%;" styleClass="col-left pd-top-6">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['common.status']}" title="#{lang['common.status']}"/>
+                                </f:facet>
+                                <p:outputLabel rendered="#{cc.attrs.disableEditStatus}"
+                                               value="#{lang['stock.total.state.new']}"/>
+                                <p:selectOneMenu value="#{productOffer.strStateId}" styleClass="Wid100 txtState#{index}"
+                                                 rendered="#{not cc.attrs.disableEditStatus}">
+                                    <p:ajax event="change" process="@this"
+                                            listener="#{cc.attrs.value.doChangeOfferType(index)}"
+                                            update="@([id$=#{cc.attrs.idComponent}tblLsProduct]), @([id$=#{cc.attrs.idComponent}pnTotalPrice])"/>
+                                    <f:selectItems value="#{cc.attrs.value.lsProductStatus}" var="status"
+                                                   itemValue="#{status.value}" itemLabel="#{status.name}"/>
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column style="width: 15%;" styleClass="col-left">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.change.product.offering.create.note.product.new']}"
+                                            title="#{lang['mn.stock.change.product.offering.create.note.product.new']}"/>
+                                </f:facet>
+                                <p:outputLabel id="#{cc.attrs.idComponent}productOfferTotalNew_hidden"
+                                               style="display:none;"
+                                               value="#{productOffer.productOfferingTotalDTONew.itemLabel}"/>
+                                <p:autoComplete id="#{cc.attrs.idComponent}productOfferTotalNew"
+                                                value="#{productOffer.productOfferingTotalDTONew}" forceSelection="true"
+                                                completeMethod="#{cc.attrs.value.doChangeOfferingNew}"
+                                                placeholder="#{lang['export.order.stock.inputText.search']}"
+                                                onfocus="this.setSelectionRange(0, this.value.length)"
+                                                var="productOfferingTotalDTO"
+                                                maxResults="#{cc.attrs.value.limitAutoComplete}"
+                                                itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                itemValue="#{productOfferingTotalDTO}"
+                                                inputStyleClass="txtProductNameNew#{index}"
+                                                requiredMessage="#{lang['export.order.stock.inputText.require.msg']}"
+                                                maxlength="100" scrollHeight="300">
+                                    <f:attribute name="index" value="#{index}"/>
+                                    <o:converter converterId="productOfferingConverter"
+                                                 list="#{productOffer.lsProductOfferingTotalDTONew}"/>
+                                    <p:ajax event="itemSelect" listener="#{cc.attrs.value.doSelectProductOfferingNew}"
+                                            process="@([id$=#{cc.attrs.idComponent}tblLsProduct])"
+                                            update="@([id$=#{cc.attrs.idComponent}tblLsProduct]),@([id$=#{cc.attrs.idComponent}pnTotalPrice]),@([id$=#{cc.attrs.idMessage}])"/>
+                                    <p:column headerText="#{lang['common.lb.code']}"><h:outputText escape="true"
+                                                                                                   value="#{productOfferingTotalDTO.code}"/></p:column>
+                                    <p:column headerText="#{lang['common.lb.name']}"><h:outputText escape="true"
+                                                                                                   value="#{productOfferingTotalDTO.name}"/></p:column>
+                                    <p:ajax event="query" global="false"/>
+                                </p:autoComplete>
+                                <pe:keyFilter for="#{cc.attrs.idComponent}productOfferTotalNew" preventPaste="false"
+                                              regEx="/[a-z0-9A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\._\-+]/i"/>
+                            </p:column>
+                            <p:column style="width: 10%;" styleClass="col-left pd-top-10">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['common.unit']}" title="#{lang['common.unit']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{productOffer.productOfferingTotalDTO.unitName}"
+                                               title="#{productOffer.productOfferingTotalDTO.unitName}"/>
+                            </p:column>
+                            <p:column style="width: 15%;" styleClass="col-right pd-top-10"
+                                      rendered="#{cc.attrs.renderRetrieveStock }">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['export.order.total.confirm']}"
+                                                  title="#{lang['export.order.total.confirm']}"/>
+                                </f:facet>
+                                <h:outputLabel converter="currencyFormat" styleClass="lb-sentinel-bold"
+                                               value="#{productOffer.productOfferingTotalDTO.availableQuantity}"/>
+                            </p:column>
+                        </c:if>
+                        <!--Hoangnt voi cac giao dich can kho-->
+                        <c:if test="#{cc.attrs.balanceStock and not cc.attrs.changeProduct}">
+
+                            <p:column style="width: 7%;" styleClass="col-right pd-top-10">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.balance.stock.request.amount.BCCS']}"
+                                                  title="#{lang['mn.balance.stock.request.amount.BCCS']}"/>
+                                </f:facet>
+                                <h:outputText converter="currencyFormat" escape="true"
+                                              value="#{productOffer.productOfferingTotalDTO.quantityBccs}"
+                                              title="#{productOffer.productOfferingTotalDTO.quantityBccs}"
+                                              styleClass="lb-sentinel-bold"/>
+                            </p:column>
+                            <p:column style="width: 7%;" styleClass="col-right pd-top-10">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.balance.stock.request.amount.inspect']}"
+                                                  title="#{lang['mn.balance.stock.request.amount.inspect']}"/>
+                                </f:facet>
+                                <h:outputText converter="currencyFormat" escape="true"
+                                              value="#{productOffer.productOfferingTotalDTO.quantityInspect}"
+                                              title="#{productOffer.productOfferingTotalDTO.quantityInspect}"
+                                              styleClass="lb-sentinel-bold"/>
+                            </p:column>
+                            <p:column style="width: 9%;" styleClass="col-right">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.balance.stock.request.amount.finance']}"
+                                                  title="#{lang['mn.balance.stock.request.amount.finance']}"/>
+                                </f:facet>
+                                <!--<h:outputText converter="currencyFormat" escape="true"-->
+                                <!--value="#{productOffer.productOfferingTotalDTO.quantityFinance}"-->
+                                <!--title="#{productOffer.productOfferingTotalDTO.quantityFinance}"-->
+                                <!--styleClass="lb-sentinel-bold"/>-->
+                                <pe:inputNumber value="#{productOffer.productOfferingTotalDTO.quantityFinance}"
+                                                decimalPlaces="0" maxValue="9999999999"
+                                                id="quantityFinance"
+                                                styleClass="txtNumber#{index} Wid100 TexAlRight">
+                                    <p:ajax event="blur" listener="#{cc.attrs.value.doChangeFinanceQuantity}"
+                                            process="@this"
+                                            update="@([id$=#{cc.attrs.idMessage}]),@([id$=differentBCCS]),@([id$=differentInspect])"/>
+                                </pe:inputNumber>
+                                <pe:keyFilter for="quantityFinance" regEx="/[0-9]+/i"
+                                              preventPaste="true"/>
+                            </p:column>
+                            <p:column style="width: 7%;" styleClass="col-right pd-top-10">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.balance.stock.request.different.BCCS']}"
+                                                  title="#{lang['mn.balance.stock.request.different.BCCS']}"/>
+                                </f:facet>
+                                <h:outputText converter="currencyFormat" escape="true" id="differentBCCS"
+                                              value="#{productOffer.productOfferingTotalDTO.quantityBccs == null ? null : productOffer.productOfferingTotalDTO.quantityBccs - productOffer.productOfferingTotalDTO.quantityFinance}"
+                                              title="#{productOffer.productOfferingTotalDTO.quantityBccs == null ? null : productOffer.productOfferingTotalDTO.quantityBccs - productOffer.productOfferingTotalDTO.quantityFinance}"
+                                              styleClass="lb-sentinel-bold"/>
+                            </p:column>
+                            <p:column style="width: 7%;" styleClass="col-right pd-top-10">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.balance.stock.request.different.inspect']}"
+                                                  title="#{lang['mn.balance.stock.request.different.inspect']}"/>
+                                </f:facet>
+                                <h:outputText converter="currencyFormat" escape="true" id="differentInspect"
+                                              value="#{productOffer.productOfferingTotalDTO.quantityInspect == null ? null : productOffer.productOfferingTotalDTO.quantityInspect - productOffer.productOfferingTotalDTO.quantityFinance}"
+                                              title="#{productOffer.productOfferingTotalDTO.quantityInspect == null ? null : productOffer.productOfferingTotalDTO.quantityInspect - productOffer.productOfferingTotalDTO.quantityFinance}"
+                                              styleClass="lb-sentinel-bold"/>
+                            </p:column>
+
+                        </c:if>
+                        <p:column style="width: 8%;" styleClass="col-right ">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.number']}" title="#{lang['common.number']}"/>
+                            </f:facet>
+                            <pe:inputNumber value="#{productOffer.number}" id="#{cc.attrs.idComponent}offerNumber"
+                                            decimalPlaces="0" maxValue="9999999999"
+                                            styleClass="txtNumber#{index} Wid100 TexAlRight"
+                                            rendered="#{!productOffer.haveListSerial}">
+                                <p:ajax event="blur" listener="#{cc.attrs.value.doChangePrice}" process="@this"
+                                        update="@([id$=#{cc.attrs.idComponent}pnTotalPrice])"/>
+                            </pe:inputNumber>
+                            <pe:keyFilter for="#{cc.attrs.idComponent}offerNumber" regEx="/[0-9]+/i"
+                                          preventPaste="true"/>
+                            <h:outputLabel converter="currencyFormat" styleClass="lb-sentinel-bold pd-top-6"
+                                           value="#{productOffer.number}"
+                                           rendered="#{productOffer.haveListSerial}"/>
+                        </p:column>
+
+                        <p:column styleClass=" pd-top-10 TexAlCenter">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['order.divide.product.detail.item']}"
+                                              title="#{lang['order.divide.product.detail.item']}"/>
+                            </f:facet>
+                            <p:commandLink process="@this" actionListener="#{cc.attrs.value.preToShowDeviceConfig(index)}"
+                                           update="@([id$=#{cc.attrs.idComponent}dlgDeviceConfig])"
+                                           oncomplete="PF('#{cc.attrs.idComponent}dlgDeviceConfig').show();"
+                                           rendered="#{productOffer.productOfferingTotalDTO.productOfferingId != null}"
+                                           value="#{cc.attrs.lbStockDeviceTransfer}"/>
+                            </p:column>
+
+
+                        <p:column style="width: 12%" styleClass=" pd-top-10 TexAlCenter"
+                                  rendered="#{cc.attrs.value.showSerial}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['create.note.detail.serial']}"
+                                              title="#{lang['create.note.detail.serial']}"/>
+                            </f:facet>
+                            <p:commandLink process="@this" actionListener="#{cc.attrs.value.doOpenDlgSerial(index)}"
+                                           update="@([id$=#{cc.attrs.idComponent}pnViewListSerial])"
+                                           oncomplete="PF('#{cc.attrs.idComponent}dlgSerialView').show();"
+                                           value="#{cc.attrs.lbSeriDetail}"
+                                           rendered="#{productOffer.productOfferingTotalDTO.checkSerial eq '1' and (productOffer.haveListSerial or cc.attrs.value.configTagDto.showSerialView)}"/>
+
+                            <p:commandLink process="@this" update="#{cc.attrs.updateCheckSerial}"
+                                           actionListener="#{cc.attrs.value.doOpenDlgSerial(index)}"
+                                           oncomplete="#{cc.attrs.onCompleteCheckSerial}"
+                                           value="#{lang['mn.stock.input.serial']}"
+                                           rendered="#{productOffer.productOfferingTotalDTO.checkSerial eq '1' and !productOffer.haveListSerial and !cc.attrs.value.configTagDto.showSerialView}"/>
+                        </p:column>
+                        <p:column style="width: 5%; "
+                                  styleClass="col-left  pd-top-10 ">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.delete']}"
+                                              title="#{lang['common.delete']}"/>
+                            </f:facet>
+                            <p:commandLink styleClass="fa icon-trash Fs14 blue link-icon"
+                                           disabled="#{productOffer.disAbleRemove}"
+                                           style="font-size: 16px!important;" immediate="true"
+                                           update="@([id$=#{cc.attrs.idComponent}tblLsProduct]), @([id$=#{cc.attrs.idComponent}pnTotalPrice])"
+                                           actionListener="#{cc.attrs.value.doRemoveItem(index)}"
+                                           title="#{lang['range.time.promotion.day.header.confirm']}"
+                                           process="@this"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+                <p:outputPanel styleClass="Container100" id="#{cc.attrs.idComponent}pnTotalPrice"
+                               rendered="#{(cc.attrs.value.configTagDto.modeSerial eq '1' or cc.attrs.value.configTagDto.modeSerial eq '4' ) and cc.attrs.value.configTagDto.showTotalPrice}">
+                    <div class="Container75 Responsive75"><span style="color: transparent;">.</span></div>
+                    <div class="Container25 Responsive25">
+                        <div class="Container60 Responsive50 pd-top-4">
+                            <p:outputLabel value="#{cc.attrs.lbTotalAmount}" styleClass="lb-sentinel-bold red"/>
+                        </div>
+                        <div class="Container40 Responsive50 pd-top-4 TexAlRight">
+                            <h:outputText converter="currencyFormat" styleClass="red" escape="true"
+                                          value="#{cc.attrs.value.totalPriceAmount}"
+                                          style="margin-right: 5px;padding-right: 15px!important;"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+    </c:if>
+    <c:if test="#{!cc.attrs.value.addNewProduct}">
+        <div class="ContainerIndent mg-top-0">
+            <cbs:panel classForToggle="panelDetailStock" toggle="true" titleHeader="#{cc.attrs.title}"/>
+
+            <div class="Container100 panelDetailStock" style="margin-bottom: 10px;margin-top: 10px;">
+                <div class="ContainerIndent mg-top-0">
+                    <p:dataTable id="#{cc.attrs.idComponent}_tbl"
+                                 var="stockTransFull"
+                                 resizableColumns="true"
+                                 reflow="false"
+                                 paginator="#{lang['common.paging.paginator']}"
+                                 rows="#{lang['common.paging.rows.default']}"
+                                 rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                 paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                 paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                 paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                 currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                 emptyMessage="#{lang['common.empty.records']}"
+                                 rowIndexVar="index"
+                                 value="#{cc.attrs.value.lsStockTransFull}">
+                        <p:column headerText="#{lang['common.stt']}" style="width: 8%">
+                            <p:outputLabel value="#{index + 1}"/>
+                        </p:column>
+                        <p:column style="width: 15%" styleClass="col-left"
+                                  sortBy="#{stockTransFull.productOfferTypeName}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['export.order.type.product']}"
+                                              title="#{lang['export.order.type.product']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{stockTransFull.productOfferTypeName}"
+                                           title="#{stockTransFull.productOfferTypeName}"/>
+                        </p:column>
+                        <!--<p:column style="width: 15%" styleClass="col-left"
+                                  sortBy="#{stockTransFull.productOfferTypeName}">
+                            <f:facet name="header">
+                                <h:outputText value="Ma code"
+                                              title="#{lang['export.order.type.product']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{stockTransFull.prodOfferCode}"
+                                           title="#{stockTransFull.prodOfferCode}"/>
+                        </p:column>-->
+                        <p:column style="width: 15%"
+                                  styleClass="col-left" sortBy="#{stockTransFull.prodOfferName}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['export.order.name.product.type']}"
+                                              title="#{lang['export.order.name.product.type']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{stockTransFull.prodOfferName}"
+                                           title="#{stockTransFull.prodOfferName}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" style="width: 12%" sortBy="#{stockTransFull.stateName}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.status']}" title="#{lang['common.status']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{stockTransFull.stateName}" title="#{stockTransFull.stateName}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" style="width: 10%">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.unit']}" title="#{lang['common.unit']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{stockTransFull.unit}" title="#{stockTransFull.unit}"/>
+                        </p:column>
+                        <p:column style="width: 10%;text-align: right" sortBy="#{stockTransFull.sourcePrice}"
+                                  rendered="#{cc.attrs.extraValue}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['export.order.price']}"
+                                              title="#{lang['export.order.price']}"/>
+                            </f:facet>
+                            <h:outputText escape="true" converter="currencyFormat" styleClass="lb-sentinel-bold"
+                                          title="#{stockTransFull.sourcePrice}"
+                                          value="#{stockTransFull.sourcePrice}"/>
+                        </p:column>
+                        <p:column style="width: 10%;text-align: right" sortBy="#{stockTransFull.depositPrice}"
+                                  rendered="#{cc.attrs.value.configTagDto.collaborator or cc.attrs.value.configTagDto.agent or cc.attrs.value.configTagDto.retrieveExpense}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.price.deposit']}"
+                                              title="#{lang['mn.stock.price.deposit']}"/>
+                            </f:facet>
+                            <h:outputText converter="currencyFormat" escape="true"
+                                          value="#{stockTransFull.depositPrice}"
+                                          styleClass="lb-sentinel-bold" title="#{stockTransFull.depositPrice}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" style="width: 11%" rendered="#{cc.attrs.extraValue}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['export.order.code.TC']}"
+                                              title="#{lang['export.order.code.TC']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{stockTransFull.accountingModelCode}"
+                                           title="#{stockTransFull.accountingModelCode}"/>
+                        </p:column>
+                        <p:column style="width: 12%;text-align: right" sortBy="#{stockTransFull.quantity}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.number']}" title="#{lang['common.number']}"/>
+                            </f:facet>
+                            <h:outputText escape="true" converter="currencyFormat" value="#{stockTransFull.quantity}"
+                                          styleClass="lb-sentinel-bold"
+                                          title="#{stockTransFull.quantity}"/>
+                        </p:column>
+                        <p:column style="width: 13%" styleClass="TexAlCenter" rendered="#{cc.attrs.value.showSerial}">
+                            <f:facet name="header">
+                                <h:outputText value="#{cc.attrs.lbSeriDetail}" title="#{cc.attrs.lbSeriDetail}"/>
+                            </f:facet>
+                            <p:commandLink process="@this" actionListener="#{cc.attrs.value.doOpenDlgSerial(index)}"
+                                           update="@([id$=#{cc.attrs.idComponent}pnViewListSerial])"
+                                           oncomplete="PF('#{cc.attrs.idComponent}dlgSerialView').show();"
+                                           value="#{cc.attrs.lbSeriDetail}"
+                                           rendered="#{stockTransFull.checkSerial eq '1' and (stockTransFull.haveListSerial or cc.attrs.value.configTagDto.showSerialView)}"/>
+
+                            <p:commandLink process="@this" update="#{cc.attrs.updateCheckSerial}"
+                                           actionListener="#{cc.attrs.value.doOpenDlgSerial(index)}"
+                                           oncomplete="#{cc.attrs.onCompleteCheckSerial}" resetValues="true"
+                                           value="#{lang['mn.stock.input.serial']}"
+                                           rendered="#{stockTransFull.checkSerial eq '1' and !stockTransFull.haveListSerial and !cc.attrs.value.configTagDto.showSerialView}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+                <p:outputPanel styleClass="ContainerIndent" id="#{cc.attrs.idComponent}pnUploadList">
+                    <p:outputPanel rendered="#{cc.attrs.value.showUploadProdByFile}" styleClass="Container100">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 mg-left-15 Responsive50 pd-top-4 lb-sentinel">
+                                <p:outputLabel value="#{lang['mn.stock.import.with.file']}" for="outputAttachByProd"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="outputAttachByProd"
+                                             maxlength="100"
+                                             requiredMessage="#{lang['serial.input.file.empty']}"
+                                             required="true"
+                                             value="#{cc.attrs.value.attachFileNameByProd}"
+                                             title="#{cc.attrs.value.attachFileNameByProd}"
+                                             readonly="true"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container100">
+                                <p:fileUpload id="upLoadFileByProd"
+                                              styleClass="Fleft"
+                                              label="#{lang['select.file']}"
+                                              validatorMessage="abc"
+                                              invalidFileMessage="#{lang['mn.stock.limit.importFile.msg.format']}"
+                                              requiredMessage="#{lang['mn.stock.limit.attachFile.msg.require']}"
+                                              invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                              update="@this, @([id$=messageAttachProd]), @([id$=outputAttachByProd]),@([id$=#{cc.attrs.idMessage}]), @([id$=pnTemplate]), #{cc.attrs.idComponent}_tbl"
+                                              dragDropSupport="true" required="true" mode="advanced"
+                                              auto="true"
+                                              allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                              sizeLimit="5242880"
+                                              value="#{cc.attrs.value.fileUploadByProd}"
+                                              fileUploadListener="#{cc.attrs.value.handleFileUploadByProd}">
+                                </p:fileUpload>
+                                <p:commandButton value="#{lang['mn.stock.partner.serial.select']}" styleClass="Fleft"
+                                                 process="@this" style="margin-top: 3px;"
+                                                 update="@([id$=#{cc.attrs.idMessage}]),@([id$=#{cc.attrs.idComponent}_tbl]),@([id$=#{cc.attrs.idComponent}pnUploadList])"
+                                                 actionListener="#{cc.attrs.value.doSelectSerialByProd}"
+                                        />
+                                <!--<p:commandLink value="#{lang['create.order.file.download.file.template']}"-->
+                                <!--styleClass="Fleft mg-top-4" ajax="false">-->
+                                <!--<p:fileDownload value="#{cc.attrs.value.addTemplateFileByProd}"/>-->
+                                <!--</p:commandLink>-->
+                                <p:commandButton value="#{lang['brasIpPool.button.export']}"
+                                                 process="@this"
+                                                 styleClass="mg-left-5"
+                                                 ajax="false"
+                                                 style="margin-top:3px;"
+                                                 immediate="true">
+                                    <p:fileDownload value="#{cc.attrs.value.addTemplateFileByProd}"/>
+                                </p:commandButton>
+                            </div>
+                            <p:message id="messageAttachProd" for="upLoadFileByProd"/>
+                        </div>
+                        <p:outputPanel styleClass="Container33 Responsive" id="pnTemplate">
+                            <p:commandLink value="#{lang['button.export.excel.error']}"
+                                           ajax="false" styleClass="Fleft mg-top-4" style="color: #e90c45!important;"
+                                           rendered="#{cc.attrs.value.errorImportProd}">
+                                <p:fileDownload value="#{cc.attrs.value.exportImportListErrorFile()}"/>
+                            </p:commandLink>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </div>
+    </c:if>
+
+
+    <p:dialog appendTo="@(parent)"
+              closable="true"
+              closeOnEscape="true"
+              maximizable="true"
+              onShow="setFocusByClass('btnCloseView')"
+              position="center"
+              id="#{cc.attrs.idComponent}dlgDeviceConfig"
+              widgetVar="#{cc.attrs.idComponent}dlgDeviceConfig"
+              header="#{cc.attrs.lbListDeviceConfig}"
+              modal="true" resizable="false"
+              dynamic="true"
+              styleClass="sale"
+              width="900">
+        <p:outputPanel id="pnlViewDeviceConfig" styleClass="Container100">
+            <div class="ContainerIndent">
+                <p:dataTable
+                        id="tblListDeviceConfig"
+                        var="item" value="#{cc.attrs.value.currentDeviceConfig}"
+                        rowIndexVar="index"
+                        resizableColumns="true"
+                        paginator="#{lang['common.paging.paginator']}"
+                        rows="#{lang['common.paging.rows.default']}"
+                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                        emptyMessage="#{lang['common.empty.records']}">
+                    <p:column headerText="#{lang['common.stt']}" style="width: 10%" styleClass="TexAlCenter">
+                        <p:outputLabel value="#{index + 1}"/>
+                    </p:column>
+                    <p:column headerText="#{lang['deviceConfig.product']}"
+                              styleClass="ui-fluid" sortBy="">
+                        <p:outputLabel value="#{item.newProbOfferCode.concat(' - ').concat(item.newProbOfferName)}" title=""/>
+                    </p:column>
+                    <p:column headerText="#{lang['common.status']}" styleClass="ui-fluid" sortBy="">
+                        <p:selectOneMenu value="#{item.newStateId}" styleClass="Wid100"
+                                         disabled="#{cc.attrs.value.currentProduct.strStateId eq 1}">
+                            <p:ajax event="change" process="@this"/>
+                            <f:selectItem itemLabel="#{lang['common.selectOneMenu.select']}" itemValue="#{null}" />
+                            <f:selectItems value="#{cc.attrs.value.lsProductStatus}" var="status"
+                                           itemValue="#{status.value}" itemLabel="#{status.name}"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                </p:dataTable>
+            </div>
+            <div class="ContainerIndent TexAlCenter">
+                <p:commandButton value="#{lang['notification.close']}"
+                                 immediate="true"
+                                 styleClass="btnCloseView"
+                                 oncomplete="PF('#{cc.attrs.idComponent}dlgDeviceConfig').hide()"/>
+            </div>
+        </p:outputPanel>
+    </p:dialog>
+
+    <p:dialog appendTo="@(parent)"
+              closable="true"
+              closeOnEscape="true"
+              maximizable="true"
+              onShow="setFocusByClass('btnCloseView')"
+              position="center"
+              id="#{cc.attrs.idComponent}dlgSerialView"
+              widgetVar="#{cc.attrs.idComponent}dlgSerialView"
+              header="#{cc.attrs.lbListSeriDetail}"
+              modal="true" resizable="false"
+              dynamic="true"
+              styleClass="sale"
+              width="900">
+        <p:outputPanel styleClass="ContainerIndent" id="#{cc.attrs.idComponent}pnViewListSerial">
+            <cbs:panel classForToggle="#{cc.attrs.idComponent}lstOrderExport"
+                       titleHeader="#{cc.attrs.lbInfoDetailSeri}"
+                       toggle="false"/>
+
+            <div class="Container100 #{cc.attrs.idComponent}lstDataExport">
+                <p:dataTable
+                        value="#{cc.attrs.value.stockTransDetail.lstSerial}"
+                        var="serialDetail"
+                        resizableColumns="true"
+                        paginator="false"
+                        rowIndexVar="index"
+                        scrollable="true"
+                        scrollHeight="150"
+                        emptyMessage="#{lang['common.empty.records']}">
+                    <p:column styleClass="col-left" sortBy="#{cc.attrs.lbFromSeri}">
+                        <f:facet name="header">
+                            <h:outputText value="#{cc.attrs.lbFromSeri}" title="#{cc.attrs.lbFromSeri}"/>
+                        </f:facet>
+                        <h:outputText escape="true" value="#{serialDetail.fromSerial}"
+                                      title="#{serialDetail.fromSerial}"/>
+                    </p:column>
+                    <p:column styleClass="col-left" sortBy="#{serialDetail.toSerial}">
+                        <f:facet name="header">
+                            <h:outputText value="#{cc.attrs.lbToSeri}" title="#{cc.attrs.lbToSeri}"/>
+                        </f:facet>
+                        <h:outputText escape="true" value="#{serialDetail.toSerial}"
+                                      title="#{serialDetail.toSerial}"/>
+                    </p:column>
+                    <p:column styleClass="col-left" sortBy="#{serialDetail.quantity}">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['common.number']}" title="#{lang['common.number']}"/>
+                        </f:facet>
+                        <h:outputText escape="true" value="#{serialDetail.quantity}"
+                                      title="#{serialDetail.quantity}" converter="currencyFormat"/>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+
+        <div class="ContainerIndent TexAlCenter">
+            <p:commandButton value="#{lang['notification.close']}"
+                             immediate="true"
+                             styleClass="btnCloseView"
+                             oncomplete="PF('#{cc.attrs.idComponent}dlgSerialView').hide()"/>
+            <p:commandButton value="#{lang['mn.stock.export.excel']}"
+                             styleClass="mg-left-5"
+                             immediate="true"
+                             process="@this"
+                             ajax="false"
+                    >
+                <p:fileDownload value="#{cc.attrs.value.exportSerialsDlgView()}"/>
+            </p:commandButton>
+        </div>
+    </p:dialog>
+</composite:implementation>
+</html>
+

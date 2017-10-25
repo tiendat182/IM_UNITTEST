@@ -1,0 +1,196 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://java.sun.com/jsf/core">
+
+    <style>
+        .pe-inputNumber{
+            width: 90% !important;
+        }
+    </style>
+
+    <h:form id="frmAddImsiRange">
+        <p:outputPanel id="pnAddImsiRange" styleClass="Containe100">
+            <div class="ContainerIndent mg-top-0">
+                <p:messages id="mesageAdd" showSummary="false" globalOnly="true" showDetail="true" closable="true"/>
+            </div>
+            <div class="ContainerIndent">
+                <p:outputPanel styleClass="Container33 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel value="#{lang['imsiRangeProceduce.docNo']}"
+                                       for="docCode" styleClass="lb-sentinel"/>
+                        <p:outputLabel value="*" style="color: red"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid ui-relative">
+                        <p:inputText id="docCode" placeholder="#{lang['imsiRangeProceduce.docNoPlaceHolder']}" maxlength="20" converter="stringTrimmer" value="#{chooseProduceImsiRangeController.currentImsiMade.po}"/>
+                        <p:message for="docCode" />
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel styleClass="Container33 Responsive50" id="pnProductAdd">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel value="#{lang['process.stock.product.name']}"
+                                       for="productOfferAdd" styleClass="lb-sentinel"/>
+                        <p:outputLabel value="*" style="color: red"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid ui-relative">
+                        <p:autoComplete id="productOfferAdd"
+                                        forceSelection="true"
+                                        placeholder="#{lang['view.warehouse.product.info.holder']}"
+                                        onfocus="this.setSelectionRange(0, this.value.length)"
+                                        value="#{chooseProduceImsiRangeController.productOfferingTotalDTO}"
+                                        completeMethod="#{chooseProduceImsiRangeController.doChangeOffering}"
+                                        var="productOfferingTotalAddDTO"
+                                        maxResults="100"
+                                        styleClass="ignore-confirm"
+                                        inputStyleClass="ignore-confirm"
+                                        itemLabel="#{productOfferingTotalAddDTO.itemLabel}"
+                                        itemValue="#{productOfferingTotalAddDTO}"
+                                        required="false"
+                                        requiredMessage="#{lang['export.order.stock.inputText.require.msg']}"
+                                        maxlength="100" scrollHeight="300">
+                            <o:converter converterId="productOfferingConverter"
+                                         list="#{chooseProduceImsiRangeController.lsProductOfferingTotalDTO}"/>
+                            <p:ajax event="itemSelect" listener="#{chooseProduceImsiRangeController.receiveProductAdd}"
+                                    update="@([id$=productOfferAdd])"
+                                    process="@this"/>
+                            <p:column headerText="#{lang['common.lb.code']}"><h:outputText escape="true"
+                                                                                           value="#{productOfferingTotalAddDTO.code}"/></p:column>
+                            <p:column headerText="#{lang['common.lb.name']}"><h:outputText escape="true"
+                                                                                           value="#{productOfferingTotalAddDTO.name}"/></p:column>
+                            <p:ajax event="query" global="false"/>
+                        </p:autoComplete>
+                        <p:message for="productOfferAdd" />
+                        <p:commandLink styleClass="ui-link-right"
+                                       actionListener="#{chooseProduceImsiRangeController.resetProductAdd}"
+                                       update="@([id$=productOfferAdd])"
+                                       process="@this">
+                            <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                        </p:commandLink>
+                    </div>
+                </p:outputPanel>
+                <div class="Container33 Responsive50">
+                    <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="cbxTypeInput"
+                                       value="#{lang['imsiRangeProceduce.imsiRange.simType']}"/>
+                        <p:outputLabel value="*" style="color: red"/>
+                    </div>
+                    <div class="Container60 Responsive ui-fluid">
+                        <p:selectOneMenu id="cbxTypeInput"
+                                         value="#{chooseProduceImsiRangeController.currentImsiMade.simType}">
+                            <f:selectItem itemLabel="#{lang['common.selectOneMenu.select']}"
+                                          itemValue="#{null}"/>
+                            <f:selectItem itemLabel="#{lang['imsiRangeProceduce.imsiRange.gsm']}"
+                                          itemValue="#{1}"/>
+                            <f:selectItem itemLabel="#{lang['imsiRangeProceduce.imsiRange.usim']}"
+                                          itemValue="#{2}"/>
+                        </p:selectOneMenu>
+                        <p:message for="cbxTypeInput" />
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent ">
+                <p:outputPanel styleClass="Container33 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel value="#{lang['imsiRangeProceduce.chooseFirstImsi']}"
+                                       for="fromImsi" styleClass="lb-sentinel"/>
+                        <p:outputLabel value="*" style="color: red"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid ui-relative">
+                        <p:inputText maxlength="15" value="#{chooseProduceImsiRangeController.currentImsiMade.fromImsi}" placeholder="#{lang['imsiRangeProceduce.chooseFirstImsiPlaceHolder']}" id="fromImsi" converter="stringTrimmer">
+                            <p:ajax process="@this" event="blur" update="@([id$=toImsi])" listener="#{chooseProduceImsiRangeController.calQuantity}"/>
+                        </p:inputText>
+                        <p:message for="fromImsi" />
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel styleClass="Container33 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel value="#{lang['common.number']}"
+                                       for="quantity" styleClass="lb-sentinel"/>
+                        <p:outputLabel value="*" style="color: red"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid ui-relative">
+                        <pe:inputNumber id="quantity" maxValue="999999999"
+                                        minValue="0"
+                                        converterMessage="#{lang['ksnb.reportInspectionResult.numberRequire']}"
+                                        value="#{chooseProduceImsiRangeController.currentImsiMade.quantity}"
+                                        decimalSeparator="#{lang['common.currency.decimalSeparator']}"
+                                        thousandSeparator="#{lang['common.currency.thousandSeparator']}"
+                                        styleClass="Wid100 TexAlRight">
+                            <p:ajax event="blur" listener="#{chooseProduceImsiRangeController.calQuantity}" update="@([id$=toImsi])"/>
+                        </pe:inputNumber>
+                        <pe:keyFilter for="quantity" regEx="/[0-9]+/i"
+                                      preventPaste="true"/>
+                        <p:message for="quantity" />
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel styleClass="Container33 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel value="#{lang['imsiRangeProceduce.chooseEndImsi']}"
+                                       for="toImsi" styleClass="lb-sentinel"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid ui-relative">
+                        <p:inputText maxlength="15" disabled="true" value="#{chooseProduceImsiRangeController.currentImsiMade.toImsi}" placeholder="#{lang['imsiRangeProceduce.chooseEndImsiPlaceHolder']}" id="toImsi" converter="stringTrimmer" />
+                        <p:message for="toImsi" />
+                    </div>
+                </p:outputPanel>
+            </div>
+            <div class="ContainerIndent ">
+                <p:outputPanel styleClass="Container33 Responsive50">
+                    <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="partner"
+                                       value="#{lang['imsiRangeProceduce.imsiRange.partner']}"/>
+                        <p:outputLabel value="*" style="color: red"/>
+                    </div>
+                    <div class="Container60 Responsive ui-fluid">
+                        <p:selectOneMenu id="partner"
+                                         value="#{chooseProduceImsiRangeController.currentImsiMade.opKey}">
+                            <f:selectItem itemLabel="#{lang['common.selectOneMenu.select']}"
+                                          itemValue="#{null}"/>
+                            <f:selectItems value="#{chooseProduceImsiRangeController.partnerDTOS}"
+                                           var="partner" itemLabel="#{partner.partnerName}" itemValue="#{partner.a4Key}" />
+                        </p:selectOneMenu>
+                        <p:message for="partner" />
+                    </div>
+                </p:outputPanel>
+            </div>
+            <div class="Container100 TexAlCenter">
+                <cbs:confirmDialog
+                        idComponent="btnAdd"
+                        valueButton="#{lang['mn.stock.limit.createNew']}"
+                        headerConfirm="#{lang['mn.stock.limit.financeType.header.add']}"
+                        messageConfirm="#{lang['common.msg.add.confirm']}"
+                        actionOK="#{chooseProduceImsiRangeController.doCreate}"
+                        resetValueButton="true"
+                        process="@this, @([id$=docCode]), @([id$=cbxTypeInput]), @([id$=fromImsi]), @([id$=toImsi]), @([id$=quantity]), @([id$=partner])"
+                        updateArea="@([id$=pnAddImsiRange]), @([id$=mesageAdd])"
+                        updateOK="@([id$=pnAddImsiRange]), @([id$=mesageAdd])"
+                        oncompleteOK="if(!args.validationFailed) {PF('dlgAddImsiRange').hide();clickLinkByClass('downloadFileImsi')}"
+                        actionValidate="#{chooseProduceImsiRangeController.validateBeforeCreate}"
+                        focusCancel="false"
+                        isButton="true"
+                />
+                <p:commandButton value="#{lang['common.reset']}"
+                                 process="@this"
+                                 immediate="true"
+                                 actionListener="#{chooseProduceImsiRangeController.resetFormAdd}"
+                                 update="@([id$=pnAddImsiRange])"
+                                 styleClass="mg-left-5"/>
+                <p:commandButton
+                        ajax="false"
+                        id="downloadFile"
+                        style="display: none; float: right;margin-right:5px"
+                        styleClass="downloadFileImsi"
+                        immediate="true"
+                        process="@this"
+                        value="#{lang['common.button.export']}">
+                    <p:fileDownload value="#{chooseProduceImsiRangeController.downloadFileAttachWhenCreateSuccess}"/>
+                </p:commandButton>
+            </div>
+        </p:outputPanel>
+    </h:form>
+
+</ui:composition>

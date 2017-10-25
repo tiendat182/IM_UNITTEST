@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+<composite:interface>
+    <composite:attribute name="id" shortDescription="id of this component" required="false"/>
+    <composite:attribute name="value" shortDescription="noi dung message"/>
+    <composite:attribute name="rendered" shortDescription="render"/>
+</composite:interface>
+<composite:implementation>
+    <p:outputPanel id="#{cc.attrs.id}" styleClass="Container100" style="height: inherit;">
+        <p:outputPanel rendered="#{cc.attrs.rendered}" styleClass="Container100">
+            <div data-redisplay="true" data-severity="all,error" data-detail="data-detail" data-global="false" aria-live="polite" class="ui-messages ui-widget">
+                <div class="ui-messages-info ui-corner-all">
+                    <!--<a onclick="$(this).parent().slideUp();return false;" class="ui-messages-close" href="#"> <span class="ui-icon ui-icon-close"></span></a>-->
+                        <!--<a onclick="$(this).parent().slideUp();return false;" class="ui-messages-close" href="#"> <span class="ui-icon ui-icon-close"></span></a>-->
+                    <span class="ui-messages-info-icon" style="margin-top: -4px;"></span>
+                    <ul>
+                        <li><span class="ui-messages-info-detail">#{cc.attrs.value}</span></li>
+                    </ul>
+                </div>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+</composite:implementation>
+</html>
+

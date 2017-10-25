@@ -1,0 +1,2213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContextMenu>
+
+    <item>
+        <id>changeTechnology_wiredRequestManagement</id>
+        <name>Quản lý yêu cầu</name>
+        <url>wiredRequestManagement</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeTechnologyController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <fields>
+            <name>searchDTO.isdnAccount</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchOrder</name>
+        </methods>
+    </item>
+
+    <item>
+        <id>changeTechnology_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeTechnologyController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeTechnologyController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.idNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+    </item>
+
+    <item>
+        <id>changeTechnology_changeDeployAddress</id>
+        <name>Thay đổi địa chỉ lắp đặt</name>
+        <url>changeDeployAddress</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeTechnologyController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeTechnologyController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchCommon</name>
+        </methods>
+    </item>
+
+
+    <item>
+        <id>blockOpenFix_wiredRequestManagement</id>
+        <name>Quản lý yêu cầu</name>
+        <url>wiredRequestManagement</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenSubFixController</controller>
+            <name>subscriberDTO.isdn</name>
+        </sources>
+
+        <fields>
+            <name>searchDTO.isdnAccount</name>
+            <nameMap>subscriberDTO.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchOrder</name>
+        </methods>
+    </item>
+
+    <item>
+        <id>blockOpenFix_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenSubFixController</controller>
+            <name>subscriberDTO.isdn</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>subscriberDTO.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+
+    </item>
+
+
+    <item>
+        <id>changeVasWired_wiredRequestManagement</id>
+        <name>Quản lý yêu cầu</name>
+        <url>wiredRequestManagement</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeVasWiredServiceController</controller>
+            <name>subscriberDTO.isdn</name>
+        </sources>
+
+        <fields>
+            <name>searchDTO.isdnAccount</name>
+            <nameMap>subscriberDTO.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchOrder</name>
+        </methods>
+
+    </item>
+
+    <item>
+        <id>changeVasWired_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeVasWiredServiceController</controller>
+            <name>subscriberDTO.isdn</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>subscriberDTO.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+
+    </item>
+
+
+    <item>
+        <id>changeEquip_wiredRequestManagement</id>
+        <name>Quản lý yêu cầu</name>
+        <url>wiredRequestManagement</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeEquipmentController</controller>
+            <name>subscriberDTO.isdn</name>
+        </sources>
+
+        <fields>
+            <name>searchDTO.isdnAccount</name>
+            <nameMap>subscriberDTO.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchOrder</name>
+        </methods>
+
+    </item>
+
+
+    <item>
+        <id>changeEquip_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeEquipmentController</controller>
+            <name>subscriberDTO.isdn</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>subscriberDTO.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+
+    </item>
+
+    <item>
+        <id>changeDeployAddress_wiredRequestManagement</id>
+        <name>Quản lý yêu cầu</name>
+        <url>wiredRequestManagement</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeDeployAddressController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <fields>
+            <name>searchDTO.isdnAccount</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+        <methods>
+            <name>doSearchOrder</name>
+        </methods>
+    </item>
+
+
+
+    <item>
+        <id>changeDeployAddress_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeDeployAddressController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>subscriberDTO.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+
+
+    </item>
+
+    <item>
+        <id>changeDeployAddress_changeTechnology</id>
+        <name>Đổi công nghệ</name>
+        <url>changeTechnology</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeDeployAddressController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeDeployAddressController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+
+        <methods>
+            <name>doSearchCommon</name>
+        </methods>
+
+    </item>
+
+    <item>
+        <id>changeDeployAddress_productBasicService</id>
+        <name>Đổi gói cước dịch vụ cơ bản</name>
+        <url>productBasicService</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeDeployAddressController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeDeployAddressController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+
+        <methods>
+            <name>doSearchCommon</name>
+        </methods>
+
+    </item>
+    <item>
+        <id>changeDeployAddress_productLineService</id>
+        <name>Đổi gói cước dịch vụ kênh truyền</name>
+        <url>productLineService</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeDeployAddressController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeDeployAddressController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchCommon</name>
+        </methods>
+
+    </item>
+
+
+
+    <item>
+        <id>productLineService_wiredRequestManagement</id>
+        <name>Quản lý yêu cầu</name>
+        <url>wiredRequestManagement</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangePricePlanWiredController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <fields>
+            <name>searchDTO.isdnAccount</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+        <methods>
+            <name>doSearchOrder</name>
+        </methods>
+    </item>
+
+    <item>
+        <id>productLineService_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangePricePlanWiredController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangePricePlanWiredController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.idNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+
+    </item>
+
+    <item>
+        <id>productLineService_changeDeployAddress</id>
+        <name>Thay đổi địa chỉ lắp đặt</name>
+        <url>changeDeployAddress</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangePricePlanWiredController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangePricePlanWiredController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchCommon</name>
+        </methods>
+    </item>
+
+
+    <item>
+        <id>productBasicService_wiredRequestManagement</id>
+        <name>Quản lý yêu cầu</name>
+        <url>wiredRequestManagement</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeProductWiredController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <fields>
+            <name>searchDTO.isdnAccount</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+        <methods>
+            <name>doSearchOrder</name>
+        </methods>
+    </item>
+
+
+    <item>
+        <id>productBasicService_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeProductWiredController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+
+    </item>
+
+    <item>
+        <id>productBasicService_changeDeployAddress</id>
+        <name>Thay đổi địa chỉ lắp đặt</name>
+        <url>changeDeployAddress</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.ChangeProductWiredController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchCommon</name>
+        </methods>
+    </item>
+
+
+    <item>
+        <id>changeSimNew_aprovalChangeSim</id>
+        <name>Duyệt hồ sơ đổi sim</name>
+        <url>aprovalChangeSim</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeSimController</controller>
+            <name>subscriberSearch.isdn</name>
+        </sources>
+
+        <fields>
+            <name>isdn</name>
+            <nameMap>subscriberSearch.isdn</nameMap>
+        </fields>
+        <methods>
+            <name>search</name>
+        </methods>
+    </item>
+
+
+    <item>
+        <id>changeSimNew_blockOpenSub</id>
+        <name>Chặn mở thuê bao di động</name>
+        <url>blockOpenSub</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeSimController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeSimController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+    </item>
+
+    <item>
+        <id>changeSimNew_repairSim</id>
+        <name>Sửa sai đổi sim, lệch sim</name>
+        <url>repairSim</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeSimController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeSimController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>idNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+
+        <fields>
+            <name>isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearch</name>
+        </methods>
+    </item>
+
+    <item>
+        <id>blockOpenFix_changeSimNew</id>
+        <name>Đổi sim</name>
+        <url>changeSimNew</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenSubFixController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenSubFixController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>idNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+
+        <fields>
+            <name>isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearch</name>
+        </methods>
+    </item>
+
+    <item>
+        <id>blockOpenSub_changeSimNew</id>
+        <name>Đổi sim</name>
+        <url>changeSimNew</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+    <item>
+        <id>deleteInfoCust_changeSimNew</id>
+        <name>Đổi sim</name>
+        <url>changeSimNew</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.DeleteInfoCustController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.DeleteInfoCustController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+    <item>
+        <id>deleteInfoCust_editInfoCus</id>
+        <name>Thay đổi thông tin khách hàng</name>
+        <url>editInfoCus</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.DeleteInfoCustController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.DeleteInfoCustController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+    </item>
+    <item>
+        <id>deleteInfoCust_terminateMobile</id>
+        <name>Chấm dứt thuê bao</name>
+        <url>terminateMobile</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.DeleteInfoCustController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.DeleteInfoCustController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+    <item>
+        <id>deleteInfoCust_changeVas</id>
+        <name>Đổi dịch vụ GTGT</name>
+        <url>changeVas</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.DeleteInfoCustController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.DeleteInfoCustController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+    <item>
+        <id>blockOpenSub_changeZoneHomePhone</id>
+        <name>Đổi Zone</name>
+        <url>changeZoneHomePhone</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+    <item>
+        <id>terminateMobile_blockOpenSub</id>
+        <name>Chặn, mở thuê bao di động</name>
+        <url>blockOpenSub</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.TerminateSubController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.TerminateSubController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+
+    <item>
+        <id>terminateMobile_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.TerminateSubController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.TerminateSubController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.idNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+
+
+    </item>
+
+
+    <item>
+        <id>changeToPRE_blockOpenSub</id>
+        <name>Chặn, mở thuê bao di động</name>
+        <url>blockOpenSub</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ConvertToPREController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ConvertToPREController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+
+
+    <item>
+        <id>changeToPRE_editInfoCus</id>
+        <name>Thay đổi thông tin khách hàng</name>
+        <url>editInfoCus</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.changePreToPosController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.changePreToPosController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+    </item>
+
+
+    <item>
+        <id>changZoneHomePhone_blockOpenSub</id>
+        <name>Chặn, mở thuê bao di động</name>
+        <url>blockOpenSub</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeZoneHomephoneContoller</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeZoneHomephoneContoller</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+    <item>
+        <id>changZoneHomePhone_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeZoneHomephoneContoller</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeZoneHomephoneContoller</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.idNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+
+
+
+    </item>
+
+
+    <item>
+        <id>changeSimNew_editInfoCus</id>
+        <name>Thay đổi thông tin khách hàng</name>
+        <url>editInfoCus</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeSimController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeSimController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+    </item>
+
+    <item id="changeSimNew_paymentStore">
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeSimController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeSimController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.idNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+
+
+    </item>
+
+    <item id="blockOpenSub_editInfoCus">
+        <name>Thay đổi thông tin khách hàng</name>
+        <url>editInfoCus</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+    </item>
+
+    <item id="blockOpenSub_terminateMobile">
+        <name>Chấm dứt thuê bao</name>
+        <url>terminateMobile</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+
+    <item id="blockOpenSub_changeVas">
+        <name>Đổi dịch vụ GTGT</name>
+        <url>changeVas</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+
+    <item id="blockOpenSub_mobilePromotionPos">
+        <name>Đổi khuyến mại</name>
+        <url>mobilePromotionPos</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+    </item>
+
+    <item id="blockOpenSub_changeProductMobile">
+        <name>Đổi gói cước</name>
+        <url>changeProductMobile</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+    <item id="blockOpenSub_changeDepositLimit">
+        <name>Thay đổi đặt cọc hạn mức</name>
+        <url>changeDepositLimit</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+    <item id="blockOpenSub_changeToPRE">
+        <name>Chuyển thuê bao sang trả trước</name>
+        <url>changeToPRE</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+    <item id="blockOpenSub_changeToPOS">
+        <name>Chuyển thuê bao sang trả sau</name>
+        <url>changeToPOS</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+
+    <item>
+        <id>blockOpenSub_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.BlockOpenController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.idNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+
+    </item>
+
+
+    <item>
+        <id>editInfoCus_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeOrEditInforCustomerController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeOrEditInforCustomerController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.idNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+    </item>
+
+
+    <item>
+        <id>editInfoCus_changeSimNew</id>
+        <name>Đổi sim</name>
+        <url>changeSimNew</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeOrEditInforCustomerController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeOrEditInforCustomerController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+    <item>
+        <id>editInfoCus_blockOpenSub</id>
+        <name>Chặn mở thuê bao</name>
+        <url>blockOpenSub</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeOrEditInforCustomerController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeOrEditInforCustomerController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+
+
+    <item>
+        <id>mobilePromotionPos_blockOpenSub</id>
+        <name>Chặn mở thuê bao</name>
+        <url>blockOpenSub</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.PromotionPosMobileController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.PromotionPosMobileController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+
+
+    <item>
+        <id>mobilePromotionPos_editInfoCus</id>
+        <name>Thay đổi thông tin khách hàng</name>
+        <url>editInfoCus</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.PromotionPosMobileController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.PromotionPosMobileController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+    <item>
+        <id>changeProductMobile_blockOpenSub</id>
+        <name>Chặn mở thuê bao</name>
+        <url>blockOpenSub</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeProductMobileController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeProductMobileController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+
+    <item>
+        <id>changeProductMobile_editInfoCus</id>
+        <name>Thay đổi thông tin khách hàng</name>
+        <url>editInfoCus</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeProductMobileController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeProductMobileController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+    <item>
+        <id>terminateMobile_changeDepositLimit</id>
+        <name>Thay đổi đặt cọc hạn mức</name>
+        <url>changeDepositLimit</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.TerminateSubController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.TerminateSubController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+    </item>
+
+    <item>
+        <id>terminateMobile_familyManagement</id>
+        <name>Quản lý nhóm Family</name>
+        <url>familyManagement</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.TerminateSubController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.TerminateSubController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>searchDto.idNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>searchDto.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>searchGroup</name>
+        </methods>
+    </item>
+
+
+    <item>
+        <id>terminateMobile_corporateManagement</id>
+        <name>Quản lý nhóm Corporate</name>
+        <url>corporateManagement</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.TerminateSubController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.TerminateSubController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>searchDto.idNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>searchDto.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>searchGroup</name>
+        </methods>
+    </item>
+
+
+    <item>
+        <id>changeDepositLimit_blockOpenSub</id>
+        <name>Chặn mở thuê bao di động</name>
+        <url>blockOpenSub</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeDepositLimitController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeDepositLimitController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+    </item>
+
+
+    <item>
+        <id>changeDepositLimit_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeDepositLimitController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeDepositLimitController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.idNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+
+
+    </item>
+
+    <item id="changeDepositLimit_terminateMobile">
+        <name>Chấm dứt thuê bao</name>
+        <url>terminateMobile</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeDepositLimitController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeDepositLimitController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+
+    <item>
+        <id>changeToPRE_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ConvertToPREController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ConvertToPREController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.idNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+
+
+    </item>
+
+    <item id="changeToPRE_terminateMobile">
+        <name>Chấm dứt thuê bao</name>
+        <url>terminateMobile</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ConvertToPREController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ConvertToPREController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+
+
+    <item>
+        <id>changeToPOS_blockOpenSub</id>
+        <name>Chặn, mở thuê bao di động</name>
+        <url>blockOpenSub</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangePreToPosController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangePreToPosController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+
+    <item>
+        <id>changeToPOS_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangePreToPosController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangePreToPosController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.idNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+
+
+    </item>
+
+    <item id="changeToPOS_terminateMobile">
+        <name>Chấm dứt thuê bao</name>
+        <url>terminateMobile</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangePreToPosController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangePreToPosController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+    <item>
+        <id>changeToPOS_editInfoCus</id>
+        <name>Thay đổi thông tin khách hàng</name>
+        <url>editInfoCus</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangePreToPosController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangePreToPosController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+    </item>
+
+
+
+    <item>
+        <id>changeVas_blockOpenSub</id>
+        <name>Chặn, mở thuê bao di động</name>
+        <url>blockOpenSub</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeVasController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeVasController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+
+    </item>
+
+    <item>
+        <id>changeVas_editInfoCus</id>
+        <name>Thay đổi thông tin khách hàng</name>
+        <url>editInfoCus</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeVasController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeVasController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+    </item>
+
+    <item>
+        <id>changeVas_changeDepositLimit</id>
+        <name>Thay đổi đặt cọc/hạn mức</name>
+        <url>changeDepositLimit</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeVasController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeVasController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <fields>
+            <name>customerSearch.identityNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchByIsdn</name>
+        </methods>
+    </item>
+
+    <item>
+        <id>changeIpStatic_blockOpenFix</id>
+        <name>Chặn, mở cố định</name>
+        <url>blockOpenFix</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeIpStaticController</controller>
+            <name>subscriberDTO.isdn</name>
+        </sources>
+
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>subscriberDTO.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchCommon</name>
+        </methods>
+    </item>
+
+    <item>
+        <id>changeIpStatic_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ChangeIpStaticController</controller>
+            <name>subscriberDTO.isdn</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>subscriberDTO.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+    </item>
+
+
+    <item>
+        <id>resetPassword_blockOpenFix</id>
+        <name>Chặn, mở cố định</name>
+        <url>blockOpenFix</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ResetPasswordController</controller>
+            <name>subscriberDTO.isdn</name>
+        </sources>
+
+        <fields>
+            <name>subscriberSearch.isdn</name>
+            <nameMap>subscriberDTO.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchCommon</name>
+        </methods>
+    </item>
+
+
+    <item>
+        <id>resetPassword_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.ResetPasswordController</controller>
+            <name>subscriberDTO.isdn</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>subscriberDTO.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+    </item>
+
+    <item>
+        <id>wiredDepositLimit_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.DepositLimitWiredController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.DepositLimitWiredController</controller>
+            <name>currentCustomer.identityNo</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.idNo</name>
+            <nameMap>currentCustomer.identityNo</nameMap>
+        </fields>
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+    </item>
+
+    <item>
+        <id>wiredDepositLimit_wiredRequestManagement</id>
+        <name>Quản lý yêu cầu</name>
+        <url>wiredRequestManagement</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.DepositLimitWiredController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <fields>
+            <name>searchDTO.isdnAccount</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchOrder</name>
+        </methods>
+
+    </item>
+
+
+    <item>
+        <id>promotionFixedScreen_wiredRequestManagement</id>
+        <name>Quản lý yêu cầu</name>
+        <url>wiredRequestManagement</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.WiredPromotionController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <fields>
+            <name>searchDTO.isdnAccount</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchOrder</name>
+        </methods>
+
+    </item>
+
+    <item>
+        <id>promotionFixedScreen_paymentStore</id>
+        <name>Thanh toán tại cửa hàng</name>
+        <url>paymentStore</url>
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.WiredPromotionController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <fields>
+            <name>groupSearchDTO.isdn</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchAccount</name>
+            <parameteres>
+                <type>bool</type>
+                <value>false</value>
+            </parameteres>
+        </methods>
+
+    </item>
+
+    <item>
+        <id>promotionFixedScreen_wiredRequestManagement</id>
+        <name>Quản lý yêu cầu</name>
+        <url>wiredRequestManagement</url>
+
+        <sources>
+            <controller>com.viettel.bccs.sale.controller.aftersale.wired.WiredPromotionController</controller>
+            <name>currentSubscriber.isdn</name>
+        </sources>
+
+        <fields>
+            <name>searchDTO.isdnAccount</name>
+            <nameMap>currentSubscriber.isdn</nameMap>
+        </fields>
+
+        <methods>
+            <name>doSearchOrder</name>
+        </methods>
+
+    </item>
+
+
+
+</ContextMenu>

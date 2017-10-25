@@ -1,0 +1,70 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:pe="http://primefaces.org/ui/extensions">
+    <h:form id="frmEditVofficeRole" styleClass="Container100">
+        <p:outputPanel id="pnlEditVofficeRole" styleClass="Container100">
+            <p:focus for="pnlEditVofficeRole"/>
+            <div class="ContainerIndent mg-top-0">
+                <p:messages showSummary="false" showDetail="true" closable="true"/>
+            </div>
+            <div class="ContainerIndent">
+                <div class="Container33 Responsive ui-fluid mg-left-15 pd-top-7">
+                    <p:outputLabel styleClass="lb-sentinel" for="txtRoleCodeEdit"
+                                   value="#{lang['signRoleVoffice.voficeRole.roleCode']}"/>
+                </div>
+                <div class="Container66 Responsive ui-fluid">
+                    <p:inputText id="txtRoleCodeEdit"
+                                 required="true"
+                                 maxlength="20"
+                                 onblur="this.value = this.value.trim();"
+                                 placeholder="#{lang['signRoleVoffice.code.placeholder']}"
+                                 requiredMessage="#{lang['signRoleVoffice.require.roleCode']}"
+                                 value="#{vofficeRoleController.editVofficeRole.roleCode}"
+                                 title="#{vofficeRoleController.editVofficeRole.roleCode}"/>
+                    <pe:keyFilter for="txtRoleCodeEdit" regEx="/^[0-9a-zA-Z_]+$/i" preventPaste="false"/>
+                    <cbs:message forId="txtRoleCodeEdit"/>
+                </div>
+            </div>
+            <div class="ContainerIndent">
+                <div class="Container33 Responsive ui-fluid mg-left-15 pd-top-7">
+                    <p:outputLabel styleClass="lb-sentinel" for="txtRoleNameEdit"
+                                   value="#{lang['signRoleVoffice.voficeRole.roleName']}"/>
+                </div>
+                <div class="Container66 Responsive ui-fluid">
+                    <p:inputText id="txtRoleNameEdit"
+                                 required="true"
+                                 maxlength="100"
+                                 onblur="this.value = this.value.trim();"
+                                 placeholder="#{lang['signRoleVoffice.name.placeholder']}"
+                                 requiredMessage="#{lang['signRoleVoffice.require.roleName']}"
+                                 value="#{vofficeRoleController.editVofficeRole.roleName}"
+                                 title="#{vofficeRoleController.editVofficeRole.roleName}"/>
+                    <pe:keyFilter for="txtRoleNameEdit" preventPaste="false"
+                    regEx="/[a-z0-9A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\._\-+]/i"/>
+                    <cbs:message forId="txtRoleNameEdit"/>
+                </div>
+            </div>
+            <div class="Container100 TexAlCenter marT10">
+                <cbs:confirmDialog
+                        idComponent="btnEdit"
+                        valueButton="#{lang['common.edit.record']}"
+                        headerConfirm="#{lang['mn.stock.limit.financeType.header.edit']}"
+                        messageConfirm="#{lang['common.msg.edit.confirm']}"
+                        actionOK="#{vofficeRoleController.editVofficeRoleProcess}"
+                        resetValueButton="true"
+                        process="@([id$=frmEditVofficeRole])"
+                        updateArea="@form"
+                        updateOK="@form,@([id$=lstVofficeRole]),@([id$=pnlVofficeRoleInfor])"
+                        oncompleteOK="if(!args.validationFailed) {PF('dlgEditRoleVoffice').hide();}"
+                        focusCancel="false"
+                        isButton="true"
+                        />
+            </div>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

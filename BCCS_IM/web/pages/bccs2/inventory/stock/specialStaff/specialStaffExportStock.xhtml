@@ -1,0 +1,351 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.special.staff.export.stock']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmExportOrder">
+            <p:outputPanel id="pnStaffExportOrder" styleClass="Container100">
+                <!--Start vung thong tin view phieu-->
+                <p:outputPanel id="pnInfoExportOrder" styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="pnInfoExportOrder" titleHeader="#{lang['mn.stock.infor.note']}"/>
+
+                    <div class="Container100" style="margin-bottom: 10px;margin-top: 10px;">
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container66 Responsive">
+                                <div class="Container20 Responsive mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['mn.stock.type.export.note']}"/>
+                                </div>
+                                <div class="Container80 Responsive">
+                                    <p:selectOneRadio value="#{specialStaffExportStockController.type}">
+                                        <f:selectItem itemLabel="#{lang['special.staff.export.deposit']}"
+                                                      itemValue="#{specialStaffExportStockController.depositExport}"/>
+                                        <f:selectItem itemLabel="#{lang['special.staff.export.consigned']}"
+                                                      itemValue="#{!specialStaffExportStockController.consignedExport}"/>
+                                        <p:ajax event="change"
+                                                listener="#{specialStaffExportStockController.switchType()}"
+                                                process="@this"
+                                                update="@form"/>
+                                    </p:selectOneRadio>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive50">
+                            </div>
+                        </div>
+                        <div class="ContainerIndent">
+                            <div class="Container33 Responsive50">
+                                <div class="Container40 Responsive mg-left-15 pd-top-4">
+                                    <p:outputLabel value="#{lang['export.order.code.field']}"
+                                                   for="codeExportOrderTxt"/>
+                                </div>
+                                <div class="Container60 Responsive ui-fluid">
+                                    <p:inputText id="codeExportOrderTxt"
+                                                 required="true"
+                                                 requiredMessage=""/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive50">
+                                <div class="Container40 Responsive mg-left-15 pd-top-4">
+                                    <p:outputLabel value="#{lang['export.order.by.whom']}"
+                                                   for="peopleExportTxt"/>
+                                </div>
+                                <div class="Container60 Responsive ui-fluid">
+                                    <p:inputText id="peopleExportTxt"
+                                                 disabled="true"
+                                                 value="vtt_test"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive50">
+                                <div class="Container40 Responsive mg-left-15 pd-top-4">
+                                    <p:outputLabel value="#{lang['export.order.day']}"/>
+                                </div>
+                                <div class="Container60 Responsive ui-fluid">
+                                    <p:calendar disabled="true"
+                                                value="#{specialStaffExportStockController.date}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent">
+                            <div class="Container33 Responsive50">
+                                <div class="Container40 Responsive mg-left-15 pd-top-4">
+                                    <p:outputLabel value="#{lang['export.order.stock']}"
+                                            />
+                                </div>
+                                <div class="Container60 Responsive ui-fluid">
+                                    <p:inputText value="VTT-TCT viễn thông Viettel"
+                                                 disabled="true"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive50">
+                                <div class="Container40 Responsive mg-left-15 pd-top-4">
+                                    <p:outputLabel value="#{lang['mn.stock.type.object']}"
+                                                   for="cbxTypeObject"
+                                            />
+                                </div>
+                                <div class="Container60 Responsive ui-fluid">
+                                    <p:selectOneMenu
+                                                     id="cbxTypeObject"
+                                                     required="true"
+                                                     requiredMessage="">
+                                        <f:selectItem itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                        <f:selectItem itemLabel="Loại đối tượng"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive50">
+                                <div class="Container40 Responsive mg-left-15 pd-top-4">
+                                    <p:outputLabel value="#{lang['export.order.stock.receive.product']}"
+                                                   for="autoCompStockReceive"
+                                            />
+                                </div>
+                                <div class="Container60 Responsive ui-fluid">
+                                    <p:autoComplete id="autoCompStockReceive"
+                                                    required="true"
+                                                    requiredMessage=""/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent">
+                            <div class="Container33 Responsive50">
+                                <div class="Container40 Responsive mg-left-15 pd-top-4">
+                                    <p:outputLabel value="#{lang['create.note.reason.export']}"
+                                                   for="cbxReason"/>
+                                </div>
+                                <div class="Container60 Responsive ui-fluid">
+                                    <p:selectOneMenu id="cbxReason"
+                                                     required="true"
+                                                     requiredMessage="">
+                                        <f:selectItem itemLabel="#{lang['export.order.by.reason']}"
+                                                      itemValue="#{lang['export.order.by.reason']}"/>
+                                    </p:selectOneMenu>
+
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive50">
+                                <div class="Container40 Responsive mg-left-15 pd-top-4">
+                                    <p:outputLabel value="#{lang['mn.stock.program.bhld']}"
+                                            />
+                                </div>
+                                <div class="Container60 Responsive ui-fluid">
+                                    <p:autoComplete/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive50">
+                                <div class="Container40 Responsive mg-left-15 pd-top-4">
+                                    <p:outputLabel value="#{lang['create.note.note']}"/>
+                                </div>
+                                <div class="Container60 Responsive ui-fluid">
+                                    <p:inputText/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <!--End vung thong tin view phieu-->
+
+                <!--Start vung thong tin Danh sach hang hoa-->
+                <p:outputPanel id="pnListProduct" styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="pnViewOffice" titleHeader="#{lang['export.order.view.list.product']}"/>
+
+                    <p:outputPanel styleClass="Container100 pnViewOffice"
+                                   style="margin-bottom: 10px;margin-top: 10px;"
+                                   rendered="#{specialStaffExportStockController.renderedDeposit}">
+
+                        <div class="ContainerIndent">
+                            <p:dataTable
+                                    styleClass="Width100"
+                                    value="#{specialStaffExportStockController.lsTest}"
+                                    resizableColumns="true"
+                                    var="item"
+                                    rowIndexVar="index"
+                                    id="tblLsProduct"
+                                    editable="true" editMode="cell">
+                                <p:ajax event="cellEdit" process="@this" listener="#{specialStaffExportStockController.doOncelEdit}" />
+                                <p:column headerText="#{lang['export.order.type.product']}" style="width: 15%;" styleClass="col-left">
+                                    <p:cellEditor>
+                                        <f:facet name="output"> <p:outputLabel value="#{item.str1}" /> </f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu value="#{item.str1}" styleClass="Wid100">
+                                                <f:selectItem itemValue="1"  itemLabel="Điện thoại" />
+                                                <f:selectItem itemValue="2"  itemLabel="Máy tính bảng" />
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="#{lang['export.order.name.product']}" style="width: 18%;" styleClass="col-left">
+                                    <p:cellEditor>
+                                        <f:facet name="output"> <p:outputLabel value="#{item.str2}" /> </f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu value="#{item.str2}" styleClass="Wid100">
+                                                <f:selectItem itemValue="1"  itemLabel="Iphone 6S" />
+                                                <f:selectItem itemValue="2"  itemLabel="Iphone 6Plus" />
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="#{lang['common.status']}" style="width: 10%;" styleClass="col-left">
+                                    <p:cellEditor>
+                                        <f:facet name="output"> <p:outputLabel value="#{item.str3}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu value="" styleClass="Wid100">
+                                                <f:selectItem itemValue=""  itemLabel="#{item.str3}"/>
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="#{lang['common.unit']}" style="width: 8%;" styleClass="col-right">
+                                    <p:outputLabel value="#{item.str4}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.stock.price.deposit']}" style="width: 10%;"
+                                          styleClass="col-right">
+                                    <p:outputLabel value="#{item.price}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.number']}" styleClass="ui-fluid col-right"
+                                          sortBy="">
+                                    <p:cellEditor>
+                                        <f:facet name="output"> <p:outputLabel value="#{item.number}"/></f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{item.number}" style="text-align: right"/>
+                                        </f:facet>
+
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.stock.money']}" style="width: 10%;"
+                                          styleClass="col-right ui-fluid">
+                                    <p:outputLabel value="#{specialStaffExportStockController.priceMoney}"/>
+
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.detail.serial']}"
+                                          style="width: 12%"
+                                          styleClass="TexAlCenter">
+                                    <p:commandLink process="@this" immediate="true" update="@this,@([id$=frmDlgDetailSerial])" oncomplete="PF('dlgDetailSerial').show()" value="Chi tiết Serial"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.delete']}" style="width: 5%;"
+                                          styleClass="col-left">
+                                    <p:commandLink styleClass="fa  icon-trash Fs14 blue " style="text-decoration: none;"
+                                                   actionListener="#{specialStaffExportStockController.doRemoveItem(index)}"
+                                                   title="Xóa bản ghi"
+                                                   process="@this"
+                                                   update="@([id$=tblLsProduct])">
+                                    </p:commandLink>
+                                </p:column>
+                                <f:facet name="footer">
+                                    <div class="Container100 TexAlLeft">
+                                        <p:commandLink value="#{lang['common.add']}"
+                                                       actionListener="#{specialStaffExportStockController.doAddItem()}"
+                                                       process="@this" update="@([id$=tblLsProduct])"/>
+                                    </div>
+                                </f:facet>
+                            </p:dataTable>
+                        </div>
+                        <div class="ContainerIndent">
+                            <div class="Container50 Responsive">
+                                <p:outputLabel value="." style="color: #FFFFFF"/>
+                            </div>
+                            <div class="Container50 Responsive">
+                                <div class="Container15 mg-left-15">
+                                    <p:outputLabel value="#{lang['sum.money.label']}"/>
+                                </div>
+                                <div class="Container85">
+                                    <p:outputLabel style="font-style: oblique"
+                                                   value="#{specialStaffExportStockController.sumMoney}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <p:outputPanel styleClass="Container100 pnViewOffice"
+                                   style="margin-bottom: 10px;margin-top: 10px;"
+                                   rendered="#{!specialStaffExportStockController.renderedDeposit}">
+
+                        <div class="ContainerIndent">
+                            <p:dataTable
+                                    styleClass="Width100"
+                                    value="#{specialStaffExportStockController.lsTest}"
+                                    resizableColumns="true"
+                                    var="item"
+                                    rowIndexVar="index"
+                                    id="tblLsProduct2">
+                                <p:column headerText="#{lang['common.stt']}" style="width: 5%; text-align: left">
+                                    <p:outputLabel value="#{index+1}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.stock.type.service']}" style="width: 12%;"
+                                          styleClass="col-left">
+                                    <p:selectOneMenu value="" styleClass="Wid100">
+                                        <f:selectItem itemValue="" itemLabel="#{item.str1}"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                                <p:column headerText="#{lang['export.order.name.product']}" style="width: 12%;"
+                                          styleClass="col-left">
+                                    <p:selectOneMenu value="" styleClass="Wid100">
+                                        <f:selectItem itemValue="" itemLabel="#{item.str2}"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                                <p:column headerText="#{lang['common.status']}" style="width: 10%;"
+                                          styleClass="col-left">
+                                    <p:selectOneMenu value="" styleClass="Wid100">
+                                        <f:selectItem itemValue="" itemLabel="#{item.str3}"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                                <p:column headerText="#{lang['common.unit']}" style="width: 10%;"
+                                          styleClass="col-right">
+                                    <p:outputLabel value="#{item.str4}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['create.order.file.count.sum']}" style="width: 7%;"
+                                          styleClass="ui-fluid">
+                                    <p:inputText value="#{specialStaffExportStockController.count}"
+                                                 style="text-align: right"/>
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.detail.serial']}"
+                                          style="width: 12%"
+                                          styleClass="TexAlCenter">
+                                    <p:commandLink process="@this" immediate="true" update="@this,@([id$=frmDlgDetailSerial])" oncomplete="PF('dlgDetailSerial').show()" value="Chi tiết Serial"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.delete']}" style="width: 5%;"
+                                          styleClass="col-left">
+                                    <p:commandLink styleClass="fa  icon-trash Fs14 blue " style="text-decoration: none;"
+                                                   actionListener="#{specialStaffExportStockController.doRemoveItem(index)}"
+                                                   title="#{lang['common.delete.record']}"
+                                                   process="@this"
+                                                   update="@([id$=tblLsProduct2])">
+                                    </p:commandLink>
+                                </p:column>
+                                <f:facet name="footer">
+                                    <div class="Container100 TexAlLeft">
+                                        <p:commandLink value="#{lang['mn.stock.limit.createNew']}"
+                                                       actionListener="#{specialStaffExportStockController.doAddItem()}"
+                                                       process="@this" update="@([id$=tblLsProduct2])"/>
+                                    </div>
+                                </f:facet>
+                            </p:dataTable>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+                <!--End vung thong tin danh sach hang hoa-->
+                <!--Start Vung data button-->
+                <div class="ContainerIndent TexAlCenter">
+                    <p:commandButton value="#{lang['mn.stock.above.exportStock']}"/>
+                    <p:commandButton value="#{lang['export.order.btn.print.field']}" styleClass="mg-left-5"/>
+                </div>
+                <!--End Vung data button-->
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="top"
+                  id="dlgDetailSerial"
+                  widgetVar="dlgDetailSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <ui:include src="../toAbove/dlgDetailSerial.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

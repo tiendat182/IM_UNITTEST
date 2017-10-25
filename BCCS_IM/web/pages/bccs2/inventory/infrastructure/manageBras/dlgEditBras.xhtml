@@ -1,0 +1,181 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:pe="http://primefaces.org/ui/extensions">
+    <h:form id="frmEditBras" styleClass="Container100">
+        <p:outputPanel id="pnlEditBras" styleClass="Container100">
+            <div class="ContainerIndent mg-top-0">
+                <p:messages showSummary="false" showDetail="true" closable="true"/>
+            </div>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="txtCode"
+                                       value="#{lang['mn.infrastructure.code.bras']}"/>
+                    </div>
+                    <div class="Container60 Responsive ui-fluid">
+                        <p:inputText id="txtCode"
+                                     maxlength="50"
+                                     required="true"
+                                     requiredMessage="#{lang['mn.infrastructure.bras.code.require.msg']}"
+                                     placeholder="#{lang['mn.infrastructure.bras.input.code']}"
+                                     value="#{manageBrasController.editBras.code}"
+                                     title=""/>
+                        <pe:keyFilter for="txtCode" regEx="/^[0-9a-zA-Z_]+$/i"/>
+                        <cbs:message forId="txtCode"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="txtName"
+                                       value="#{lang['mn.infrastructure.name.bras']}"/>
+                    </div>
+                    <div class="Container60 Responsive ui-fluid">
+                        <p:inputText id="txtName"
+                                     maxlength="100"
+                                     required="true"
+                                     requiredMessage="#{lang['mn.infrastructure.bras.name.require.msg']}"
+                                     placeholder="#{lang['mn.infrastructure.bras.input.name']}"
+                                     value="#{manageBrasController.editBras.name}"
+                                     title=""/>
+                        <cbs:message forId="txtName"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="selOnEquipmentBras"
+                                       value="#{lang['mn.infrastructure.device']}"/>
+                    </div>
+                    <div class="Container60 Responsive ui-fluid">
+                        <p:selectOneMenu id="selOnEquipmentBras"
+                                         required="true"
+                                         requiredMessage="#{lang['mn.infrastructure.bras.equipment.require.msg']}"
+                                         value="#{manageBrasController.editBras.equipmentId}">
+                            <f:selectItems value="#{manageBrasController.equipmentList}"
+                                           itemLabel="#{item.code}" var="item"
+                                           itemValue="#{item.equipmentId}"/>
+                            <cbs:message forId="selOnEquipmentBras"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="textIp"
+                                       value="#{lang['mn.infrastructure.ip']}"/>
+                    </div>
+                    <div class="Container60 Responsive ui-fluid">
+                        <p:inputText id="textIp"
+                                     maxlength="30"
+                                     required="true"
+                                     requiredMessage="#{lang['mn.infrastructure.bras.ip.require.msg']}"
+                                     placeholder="#{lang['mn.infrastructure.bras.input.ip']}"
+                                     value="#{manageBrasController.editBras.ip}"
+                                     title=""/>
+                        <pe:keyFilter for="textIp" regEx="/^[0-9.:/]+$/i"/>
+                        <cbs:message forId="textIp"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="textAaaIp"
+                                       value="#{lang['mn.infrastructure.aaa.ip']}"/>
+                    </div>
+                    <div class="Container60 Responsive ui-fluid">
+                        <p:inputText id="textAaaIp"
+                                     maxlength="30"
+                                     placeholder="#{lang['mn.infrastructure.bras.input.aaaIp']}"
+                                     value="#{manageBrasController.editBras.aaaIp}"
+                                     title=""/>
+                        <pe:keyFilter for="textAaaIp" regEx="/[0-9.]/i"/>
+                        <cbs:message forId="textAaaIp"/>
+                    </div>
+                </div>
+                <!--<div class="Container33 Responsive50">-->
+                <!--<div class="Container40 Responsive ui-fluid  mg-left-15 pd-top-7">-->
+                <!--<p:outputLabel styleClass="lb-sentinel" value="#{lang['common.status']}"/>-->
+                <!--</div>-->
+                <!--<div class="Container60 Responsive ui-fluid">-->
+                <!--<p:selectOneMenu value="#{manageBrasController.editBras.status}"-->
+                <!--id="cobStatus">-->
+                <!--<f:selectItem itemValue="1" escape="true"-->
+                <!--itemLabel="#{lang['mn.invoice.invoiceSerial.status.active']}"/>-->
+                <!--<f:selectItem itemValue="0" escape="true"-->
+                <!--itemLabel="#{lang['mn.invoice.invoiceSerial.status.not.active']}"/>-->
+                <!--<p:ajax event="change" process="@this"/>-->
+                <!--</p:selectOneMenu>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--<div class="ContainerIndent mg-top-0">-->
+                <div class="Container33 Responsive50">
+                    <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="textSlot"
+                                       value="#{lang['mn.infrastructure.slot']}"/>
+                    </div>
+                    <div class="Container60 Responsive ui-fluid">
+                        <p:inputText id="textSlot"
+                                     maxlength="20"
+                                     placeholder="#{lang['mn.infrastructure.bras.input.slot']}"
+                                     value="#{manageBrasController.editBras.slot}"
+                                     title=""/>
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container33 Responsive50">
+                    <div class="Container40 Responsive ui-fluid  mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="txtPort"
+                                       value="#{lang['mn.infrastructure.port']}"/>
+                    </div>
+                    <div class="Container60 Responsive ui-fluid">
+                        <p:inputText id="txtPort"
+                                     maxlength="20"
+                                     placeholder="#{lang['mn.infrastructure.bras.input.port']}"
+                                     value="#{manageBrasController.editBras.port}"
+                                     title=""/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive50">
+                    <div class="Container40 Responsive ui-fluid  mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="textDescription"
+                                       value="#{lang['mn.invoice.invoiceSerial.description']}"/>
+                    </div>
+                    <div class="Container60 Responsive ui-fluid">
+                        <p:inputText id="textDescription"
+                                     maxlength="100"
+                                     placeholder="#{lang['mn.infrastructure.bras.input.description']}"
+                                     value="#{manageBrasController.editBras.description}"
+                                     title=""/>
+                    </div>
+                </div>
+            </div>
+            <div class="Container100 TexAlCenter marT10">
+                <p:commandButton process="pnlEditBras" update="pnlEditBras" value="#{lang['common.edit']}"
+                                 oncomplete="if(!args.validationFailed) {PF('dlgConfirmEdit').show()}  setTimeout(function () {$('.btnbtnEditOK').focus();}, 350);"
+                                 actionListener="#{manageBrasController.doConfirmEdit}"/>
+            </div>
+        </p:outputPanel>
+        <p:confirmDialog closeOnEscape="true" closable="true"
+                         appendTo="@(body)"
+                         widgetVar="dlgConfirmEdit"
+                         header="#{lang['mn.invoice.invoiceType.header.edit']}"
+                         id="cfmBtn"
+                         width="550"
+                         message="#{lang['mn.invoice.invoiceType.msg.edit.confirm']}">
+            <p:commandLink value="#{lang['common.button.NO']}" styleClass="md-button" process="@none"
+                           onstart="PF('dlgConfirmEdit').hide();"
+                    />
+            <p:commandLink process="@this,pnlEditBras" update="pnlEditBras, @([id$=pnlManageBrasFor]), @([id$=pnlListBras])"
+                           value="#{lang['common.button.YES']}" styleClass="md-button btnbtnEditOK"
+                           oncomplete="PF('dlgConfirmEdit').hide(); if(!args.validationFailed) {PF('dlgEditBras').hide();}"
+                           actionListener="#{manageBrasController.editBrasProcess}"/>
+
+        </p:confirmDialog>
+    </h:form>
+</ui:composition>

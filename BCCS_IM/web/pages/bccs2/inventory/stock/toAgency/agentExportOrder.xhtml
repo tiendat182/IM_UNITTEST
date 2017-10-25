@@ -1,0 +1,43 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.agency.export.Order']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.agency.export.Order']}</ui:define>
+    <ui:define name="content">
+        <style>
+            .ui-tabs-top .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs-top .ui-tabs-nav li.ui-tabs-active a, .ui-tabs-top .ui-tabs-nav li.ui-state-hover a {
+                color: rgb(16, 108, 200) !important;
+                font-weight: bold;
+            }
+        </style>
+        <h:form id="frmAgentExportOrder">
+            <p:outputPanel id="pnlTabAgentExportOrder" styleClass="Container100">
+                <p:outputPanel id="pnlInfoAgentExport">
+                    <p:focus for="pnlInfoAgentExport"/>
+                    <!-- message thong bao -->
+                    <p:tabView id="numberTabView" dynamic="true"
+                               tabindex="#{agentExportOrderController.tabIndex}">
+                        <p:ajax event="tabChange" listener="#{agentExportOrderController.onTabChange}"
+                                update="@([id$=agentExportPayCmd]),@([id$=agentExportDepositCmd])"/>
+                        <p:tab id="exportSale" title="#{lang['agent.cmd.export.sale']}" titletip="abc">
+                            <cbs:inputAgentStockOrder id="agentExportPayCmd"
+                                                      title="#{lang['export.order.view.export.sale']}"
+                                                      mode="2" showRegionStock="true"/>
+                        </p:tab>
+                        <p:tab id="exportDeposit" title="#{lang['agent.cmd.export.deposit']}">
+                            <cbs:inputAgentStockOrder id="agentExportDepositCmd"
+                                                      title="#{lang['export.order.view.export.deposit']}"
+                                                      mode="1" showRegionStock="false"/>
+                        </p:tab>
+                    </p:tabView>
+
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

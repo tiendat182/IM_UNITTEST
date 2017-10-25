@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <composite:interface>
+        <composite:attribute name="oncompleteAdd" shortDescription="oncomplete for button add"/>
+        <composite:attribute name="styleAdd" default="" shortDescription="style css action add"/>
+        <composite:attribute name="oncompleteDelete" shortDescription="oncomplete for button delete"/>
+        <composite:attribute name="styleDelete" default="" shortDescription="style css action report"/>
+        <composite:attribute name="columnName" default="" shortDescription="style css action report"/>
+        <composite:attribute name="idComponent" shortDescription="id of form" required="true"/>
+        <composite:attribute name="rederedSearch" shortDescription="rendered form search" required="true"/>
+    </composite:interface>
+
+    <composite:implementation>
+
+        <p:remoteCommand
+            action="#{prototypeController.parseColumn(cc.attrs.columnName)}"
+            update=",@([id$=prototypeTable])"
+            autoRun="true"
+            global="false"/>
+
+
+        <span class="vt-button sale">
+            <span class="vt-button sale" 
+                  style="float:left;height: 20px;padding-left: 0px;">
+                <p:commandLink
+                    ajax="true"
+                    disabled="false"
+                    global="true"
+                    process="@this"
+                    resetValues="true"
+                    oncomplete="#{cc.attrs.oncompleteAdd}"
+                    style="color:black;#{cc.attrs.styleAdd}">
+                    <p:graphicImage style="float: left;margin-right: 5px;"
+                                    styleClass="ui-icon ui-icon-add"/>
+                    <span style="font-weight: bold;">
+                        <h:outputText
+                            value="#{lang['common.add']}"/>
+                    </span>
+                </p:commandLink>
+            </span>
+            <span class="vt-button sale" style="float:left;">
+                <p:commandLink
+                    ajax="true"
+                    disabled="false"
+                    global="true"
+                    process="@this"
+                    resetValues="true"
+                    oncomplete="#{cc.attrs.oncompleteDelete}"
+                    style="color:black;#{cc.attrs.styleDelete}"
+                    >
+                    <p:graphicImage style="float: left;margin-right: 5px;"
+                                    styleClass="ui-icon ui-icon-trash"/>
+                    <span style="font-weight: bold;">
+                        <h:outputText
+                            value="#{lang['common.delete']}"/>
+                    </span>
+                </p:commandLink>
+
+            </span>
+
+        </span><br/>
+
+        <table style="width: 100%;">
+            <tr>
+                <td style="text-align: right;vertical-align: middle;width: 10%;">
+                    <p:outputLabel value="Code"/>
+                </td>
+                <td style="text-align: left;vertical-align: middle;width: 70%;">
+                    <span style="display:block;float:left;width: 30%;">
+                        <p:inputText styleClass="form-control input_search_gridCell w100"
+                                     placeholder="#{lang['common.button.search']}"
+                                     onblur="this.value = this.value.trim();"
+                                     rendered="#{cc.attrs.rederedSearch}"/>
+                    </span>
+                    <span class="sale"
+                          style="display:block;float:left;margin-left: 7px;margin-top: 1px; margin-right: 10px;">
+                        <p:commandButton styleClass="input-group-addon bg-button"
+                                         icon="ui-icon-search"
+                                         rendered="#{cc.attrs.rederedSearch}">
+                        </p:commandButton>
+                    </span>
+                </td>
+                <td style="width: auto"/>
+            </tr>
+        </table>
+
+        <p:dataTable 
+            id="prototypeTable"
+            value="#{prototypeController.data}"
+            var="abc"
+            style="width: 100%;border-color: gray;;margin-top:10px"
+            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}" 
+            rows="#{lang['common.paging.rows.default']}"
+            paginator="#{lang['common.paging.paginator']}" 
+            resizableColumns="#{lang['common.paging.resizableColumns']}"
+            draggableColumns="#{lang['common.paging.draggableColumns']}"  
+            draggableRows="#{lang['common.paging.draggableRows']}"
+            paginatorPosition="#{lang['common.paging.paginatorPosition']}" 
+            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+            selectionMode="single">
+
+            <p:columns value="#{prototypeController.column}" 
+                       var="col" 
+                       headerText="#{col}"
+                       style="text-align: right">
+            </p:columns>
+
+        </p:dataTable>
+
+
+        <p:separator styleClass="vt-separate"/>
+    </composite:implementation>
+</html>
+

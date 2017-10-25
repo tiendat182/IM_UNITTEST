@@ -1,0 +1,104 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mm.list.import.voucherinfo']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmImportVoucher">
+            <p:outputPanel styleClass="container100">
+                <div class="ContainerIndent">
+                    <p:messages id="messages" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel id="pnImport" styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="panelImport"
+                               toggle="true"
+                               titleHeader="#{lang['import.voucher.title']}"/>
+
+                    <div class="Container100 panelImport" style="margin-bottom: 10px;margin-top: 10px;">
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container66 Responsive66" style="margin-top: 10px!important;">
+                                <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['create.order.file.data']}"/>
+                                </div>
+                                <div class="Container80 Responsive75 ui-fluid">
+                                    <p:inputText id="outputAttachFile"
+                                                 styleClass="outputAttachFile"
+                                                 maxlength="100"
+                                                 required="true"
+                                                 placeholder="#{lang['search.number.range.input.fileName']}"
+                                                 value="#{importVoucherController.fileName}"
+                                                 readonly="true"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container100">
+                                    <p:fileUpload id="fileAttach"
+                                                  process="@this"
+                                                  label="#{lang['mn.stock.limit.createFile']}"
+                                                  update="@this, @([id$=outputAttachFile]),@([id$=messages]),@([id$=pnDown])"
+                                                  dragDropSupport="true" required="true" mode="advanced"
+                                                  auto="true"
+                                                  allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                                  invalidFileMessage="#{lang['mn.isdn.rule.invalid.file.type']}"
+                                                  value="#{importVoucherController.uploadedFile}"
+                                                  fileUploadListener="#{importVoucherController.fileUploadAction}">
+                                    </p:fileUpload>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container100">
+                                <p:outputPanel id="pnDown" style="margin-left: 20px">
+                                    <p:commandLink
+                                            id="btnDownloadTemplate"
+                                            value="#{lang['mn.stock.status.isdn.update.status.file_template']}"
+                                            rendered="#{empty importVoucherController.listError}"
+                                            title="#{lang['create.note.download.file.title']}"
+                                            ajax="false"
+                                            immediate="true"
+                                            style="text-decoration: none!important;">
+                                        <p:fileDownload
+                                                value="#{importVoucherController.downloadFileTemplate()}"/>
+                                    </p:commandLink>
+                                    <p:commandLink
+                                            id="bthDownloadError"
+                                            value="#{lang['button.export.excel.error']}"
+                                            rendered="#{not empty importVoucherController.listError}"
+                                            title="#{lang['create.note.download.file.title']}"
+                                            ajax="false"
+                                            immediate="true"
+                                            style="text-decoration: none!important;color: red !important;">
+                                        <p:fileDownload
+                                                value="#{importVoucherController.downloadFileError()}"/>
+                                    </p:commandLink>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Container100 TexAlCenter" style="margin-bottom: 10px !important;">
+                        <cbs:confirmDialog
+                                idComponent="import"
+                                id="import"
+                                valueButton="Import"
+                                headerConfirm="#{lang['import.apn.apnip.confirm.import.header']}"
+                                messageConfirm="#{lang['import.apn.apnip.confirm.import.body']}"
+                                actionOK="#{importVoucherController.importData()}"
+                                resetValueButton="true"
+                                process="@this,@([id$=frmImportVoucher])"
+                                updateArea="@this,@([id$=frmImportVoucher])"
+                                processOK="@this,@([id$=frmImportVoucher])"
+                                updateOK="@([id$=frmImportVoucher])"
+                                actionValidate="#{importVoucherController.validateImport()}"
+                                focusCancel="true"
+                                isButton="true"/>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

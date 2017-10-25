@@ -1,0 +1,170 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:form id="frmIsdnHistory">
+        <div class="ContainerIndent">
+            <p:messages id="messages" showSummary="false" showDetail="true" closable="true"/>
+        </div>
+        <p:outputPanel id="pnInfoHistory" styleClass="ContainerIndent">
+            <cbs:panel classForToggle="pnInfoHistory"
+                       toggle="true"
+                       titleHeader="#{lang['mn.stock.limit.information.search']}"/>
+
+            <div class="Container100 pnInfoHistory" style="margin-bottom: 10px;margin-top: 10px;">
+                <div class="ContainerIndent mg-top-0">
+                    <div class="Container33 Responsive">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel"
+                                           value="#{lang['subscriber.number']}"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid pd-top-6">
+                            <p:outputLabel value="#{searchIsdnController.transStock.isdn}"/>
+                        </div>
+                    </div>
+                    <div class="Container33 Responsive">
+                        <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel txtFromDate"
+                                           value="#{lang['create.note.from.date']}"
+                                           for="txtFromDate"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid txtFromDate">
+                            <p:calendar id="txtFromDate" rendered="true" required="true" readonlyInput="false"
+                                        converterMessage="#{lang['from.date.invalid']}"
+                                        pattern="dd/MM/yyyy"
+                                        mask="true"
+                                        value="#{searchIsdnController.transStock.fromDate}"
+                                        requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                            <p:message for="txtFromDate"/>
+                        </div>
+                    </div>
+                    <div class="Container33 Responsive">
+                        <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel txtToDate" value="#{lang['create.note.to.date']}"
+                                           for="txtToDate"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid txtToDate">
+                            <p:calendar id="txtToDate" rendered="true"
+                                        required="true"
+                                        mask="true"
+                                        pattern="dd/MM/yyyy"
+                                        converterMessage="#{lang['to.date.invalid']}"
+                                        value="#{searchIsdnController.transStock.toDate}"
+                                        requiredMessage="#{lang['mn.stock.to.date.not.blank']}">
+                            </p:calendar>
+                            <p:message for="txtToDate"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="Container100 TexAlCenter">
+                    <p:commandButton value="#{lang['mn.stock.look.up']}"
+                                     process="@([id$=frmIsdnHistory])"
+                                     update="@([id$=frmIsdnHistory])"
+                                     resetValues="false"
+                                     actionListener="#{searchIsdnController.searchHistory()}"/>
+                </div>
+            </div>
+        </p:outputPanel>
+        <p:outputPanel id="pnListHistory" styleClass="ContainerIndent">
+            <cbs:panel classForToggle="panelListHisory"
+                       toggle="true"
+                       titleHeader="#{lang['search.isdn.history.list']}"/>
+
+            <div class="Container100 panelListHisory" style="margin-bottom: 10px;margin-top: 10px;">
+
+                <p:dataTable
+                        id="lstCommitment"
+                        rowKey="#{item.stockIsdnTransId}"
+                        resizableColumns="true"
+                        paginator="#{lang['common.paging.paginator']}"
+                        rows="#{lang['common.paging.rows.default']}"
+                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                        emptyMessage="#{lang['common.empty.records']}"
+                        value="#{searchIsdnController.listIsdnHistory}"
+                        var="item"
+                        rowIndexVar="rowIndex"
+                        >
+                    <p:column headerText="#{lang['mn.stock.limit.template.stt']}"
+                              style="width: 10%">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['mn.stock.limit.template.stt']}"
+                                          title="#{lang['mn.stock.limit.template.stt']}"/>
+                        </f:facet>
+                        <p:outputLabel value="#{rowIndex+1}" style="text-align: left"/>
+                    </p:column>
+                    <p:column headerText="#{lang['export.order.trans.code']}"
+                              style="width: 20%" sortBy="#{item.stockIsdnTransCode}">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['export.order.trans.code']}"
+                                          title="#{lang['export.order.trans.code']}"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.stockIsdnTransCode}" title="#{item.stockIsdnTransCode}"
+                                       style="text-align: left"/>
+                    </p:column>
+                    <p:column headerText="#{lang['export.order.stock']}"
+                              style="width: 20%" sortBy="#{item.fullLabelFromOwner}">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['export.order.stock']}"
+                                          title="#{lang['export.order.stock']}"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.fullLabelFromOwner}" title="#{item.fullLabelFromOwner}"
+                                       style="text-align: left"/>
+                    </p:column>
+                    <p:column headerText="#{lang['export.order.stock.receive.product']}"
+                              style="width: 20%" sortBy="#{item.fullLabelToOwner}">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['export.order.stock.receive.product']}"
+                                          title="#{lang['export.order.stock.receive.product']}"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.fullLabelToOwner}" title="#{item.fullLabelToOwner}"
+                                       style="text-align: left"/>
+                    </p:column>
+                    <p:column headerText="#{lang['agency.deposit.reason']}"
+                              style="width: 20%" sortBy="#{item.reasonName}">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['agency.deposit.reason']}"
+                                          title="#{lang['agency.deposit.reason']}"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.reasonName}" title="#{item.reasonName}" style="text-align: left"/>
+                    </p:column>
+                    <p:column headerText="#{lang['export.order.note']}"
+                              style="width: 20%" sortBy="#{item.note}">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['export.order.note']}"
+                                          title="#{lang['export.order.note']}"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.note}" title="#{item.note}" style="text-align: left"/>
+                    </p:column>
+                    <p:column headerText="#{lang['search.isdn.person.effect']}"
+                              style="width: 20%" sortBy="#{item.createdUserName}">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['search.isdn.person.effect']}"
+                                          title="#{lang['search.isdn.person.effect']}"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.createdUserName}" title="#{item.createdUserName}"
+                                       style="text-align: left"/>
+                    </p:column>
+                    <p:column headerText="#{lang['search.isdn.time.effect']}"
+                              style="width: 20%" sortBy="#{item.createdTime}">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['search.isdn.time.effect']}"
+                                          title="#{lang['search.isdn.time.effect']}"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.createdTime}" title="#{item.createdTime}" style="text-align: left">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

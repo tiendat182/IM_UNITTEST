@@ -1,0 +1,193 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.limit.financeType.title']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.limit.financeType.title']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmFinanceType">
+            <p:outputPanel id="pnFinanceType" styleClass="Container">
+                <div class="ContainerIndent">
+                    <p:messages showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <!--Start vung tra cuu-->
+                <p:outputPanel styleClass="Container100" id="pnSearchFinace">
+                    <div class="ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="pnInputSearch"
+                                   titleHeader="#{lang['mn.stock.limit.financeType.title']}" toggle="true"/>
+
+                        <div class="Container100 pnInputSearch pd-top-10">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 mg-left-15 Responsive pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="cbxTypeLimit"
+                                                       value="#{lang['mn.stock.limit.financeType.typelimit']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:selectOneMenu id="cbxTypeLimit"
+                                                         value="#{limitFinanceTypeController.financeTypeDTOSearch.financeType}">
+                                            <f:selectItem itemValue=""
+                                                          itemLabel="#{lang['mn.stock.limit.financeType.limitType']}"/>
+                                            <f:selectItems value="#{limitFinanceTypeController.lsLimitOptionType}"
+                                                           var="productOffer" itemLabel="#{productOffer.name}"
+                                                           itemValue="#{productOffer.value}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 mg-left-15 Responsive pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="inputOrderCode"
+                                                       value="#{lang['mn.stock.limit.financeType.day.offer']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:inputText id="inputOrderCode"
+                                                     value="#{limitFinanceTypeController.financeTypeDTOSearch.strDayNum}"
+                                                     requiredMessage="#{lang['mn.stock.limit.financeType.day.offer.require.msg']}"
+                                                     placeholder="#{lang['mn.stock.limit.financeType.day.offer.placehoder']}"/>
+                                        <pe:keyFilter for="inputOrderCode" regEx="/[0-9]{1,50}/i" preventPaste="true"/>
+                                        <cbs:message forId="inputOrderCode"></cbs:message>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent TexAlCenter">
+                                <p:commandButton value="#{lang['create.note.search']}"
+                                                 actionListener="#{limitFinanceTypeController.doSearchFinanceType}"
+                                                 process="pnSearchFinace"
+                                                 update="@form" validateClient="true"/>
+                                <p:commandButton value="#{lang['common.reset']}"
+                                                 actionListener="#{limitFinanceTypeController.doResetSearchFinanceType}"
+                                                 process="@this"
+                                                 update="@form" validateClient="true" styleClass="mg-left-5"/>
+                            </div>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <!--End vung tra cuu-->
+                <!--Start vung lap yeu cau-->
+                <p:outputPanel styleClass="Container100" id="pnTblFinance">
+                    <div class="ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="pnViewExport" titleHeader="#{lang['mn.stock.limit.financeType.title.list']}" toggle="false" />
+                        <div class="pnViewExport ContainerIndent">
+                            <div class="Container TexAlLeft">
+                                <p:commandLink value="#{lang['mn.stock.limit.createNew']}"
+                                               styleClass="fa icon-plus Fs14 blue md-link"
+                                               oncomplete="PF('dlgAddFinanceType').show();"
+                                               update="dlgAddFinanceType" resetValues="false"
+                                               actionListener="#{limitFinanceTypeController.doOpenAddFinanceType}"
+                                               process="@this">
+                                </p:commandLink>
+                                <cbs:confirmDialog
+                                        idComponent="btnDelete"
+                                        valueButton="#{lang['common.delete']}"
+                                        headerConfirm="#{lang['mn.stock.limit.financeType.header.delete']}"
+                                        messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                        actionOK="#{limitFinanceTypeController.doDeleteListFinance}"
+                                        resetValueButton="true"
+                                        process="@this,@([id$=tblFinance])"
+                                        updateArea="@([id$=frmFinanceType])"
+                                        updateOK="@([id$=frmFinanceType])"
+                                        actionValidate="#{limitFinanceTypeController.doConfirmListDelete}"
+                                        styleClassButton="fa icon-trash Fs14 blue md-link mg-left-5"
+                                        focusCancel="true"
+                                        isButton="false"/>
+                            </div>
+                            <div class="Container">
+                                <p:dataTable
+                                        id="tblFinance"
+                                        sortMode="single"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}"
+                                        value="#{limitFinanceTypeController.lsFinanceType}"
+                                        selection="#{limitFinanceTypeController.lsFinanceTypeSelect}"
+                                        rowIndexVar="index"
+                                        rowKey="#{financeType.id}"
+                                        var="financeType">
+                                    <p:column selectionMode="multiple" style="width:5%;text-align:center"/>
+                                    <p:column headerText="#{lang['mn.stock.limit.financeType.typelimit']}" style="width: 12%;" styleClass="col-left" sortBy="#{financeType.financeType}">
+                                        <p:outputLabel value="#{limitFinanceTypeController.mapLimitOption.get(financeType.financeType)}"
+                                                title="#{limitFinanceTypeController.mapLimitOption.get(financeType.financeType)}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.limit.financeType.day.number']}"
+                                              style="width: 20%;text-align: right"  sortBy="#{financeType.dayNum}">
+                                        <p:outputLabel value="#{financeType.dayNum}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.limit.financeType.lasthuman.update']}"
+                                              style="width: 22%;" styleClass="col-left"
+                                              sortBy="#{financeType.lastUpdateUser}">
+                                        <p:outputLabel value="#{financeType.lastUpdateUser}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.limit.financeType.lastday.update']}"
+                                              style="width: 22%;" styleClass="col-left"
+                                              sortBy="#{financeType.lastUpdateTime}">
+                                        <h:outputText escape="true" value="#{financeType.lastUpdateTime}" styleClass="lb-sentinel-bold">
+                                            <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.status']}" style="width: 11%;"
+                                              styleClass="col-left">
+                                        <p:outputLabel value="#{limitFinanceTypeController.getStrStatus(financeType.status)}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.edit.delete']}" style="width: 8%;"
+                                              styleClass="col-left">
+                                        <p:commandLink styleClass="fa  icon-edit Fs14 blue icon-link"
+                                                       style="text-decoration: none;font-size: 16px!important;padding-top: 4px;float: left;"
+                                                       oncomplete="PF('dlgAddFinanceType').show();"
+                                                       title="#{lang['common.edit.record']}"
+                                                       update="dlgAddFinanceType"
+                                                       actionListener="#{limitFinanceTypeController.doOpenEditFinanceType(financeType.id)}"
+                                                       process="@this"/>
+                                        <cbs:confirmDialog
+                                                idComponent="btnConfirm2"
+                                                valueButton=""
+                                                titleButton="#{lang['common.delete']}"
+                                                headerConfirm="#{lang['mn.stock.limit.financeType.header.delete']}"
+                                                messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                                actionOK="#{limitFinanceTypeController.doDeleteOneFinance()}"
+                                                resetValueButton="false"
+                                                process="@this"
+                                                updateArea="@([id$=pnInsertFinance])"
+                                                updateOK="@([id$=frmFinanceType])"
+                                                actionValidate="#{limitFinanceTypeController.doConfirmDelete(financeType)}"
+                                                styleClassButton="fa icon-trash Fs14 blue icon-link"
+                                                styleButton="font-size: 16px!important;padding-top: 4px;"
+                                                focusCancel="true"
+                                                oncompleteOK=""
+                                                isButton="false"
+                                                />
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <!--End vung lap yeu cau-->
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgAddFinanceType"
+                  widgetVar="dlgAddFinanceType"
+                  header="#{limitFinanceTypeController.titleDlgFinance}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="500">
+            <ui:include src="dlgAddFinanceType.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

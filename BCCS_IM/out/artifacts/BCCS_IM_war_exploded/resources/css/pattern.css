@@ -1,0 +1,19 @@
+/* 
+    Document   : pattern
+    Created on : Oct 14, 2014, 5:35:41 PM
+    Author     : phuongdt21
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.col8 .oddCol{
+    text-align: right;
+    width:8%;
+}
+
+.col8 .evenCol{
+    width: 50%;
+}
+.w100{width:100%;}
+
+

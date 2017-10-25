@@ -1,0 +1,128 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['stock.retrieve.from.collaborator.title']}</ui:define>
+    <ui:define name="featureName">#{lang['stock.retrieve.from.collaborator.title']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmRetrieveCollaborator">
+            <p:outputPanel id="pnlExportStockToCollaborator" styleClass="Container100 mg-top-0">
+                <p:focus for="pnlExportStockToCollaborator"/>
+
+                <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                    <p:messages id="pnlExportStockToCollaboratorMsgs" showDetail="true" showSummary="false"
+                                closable="true"/>
+                </div>
+                <!--Start vung thong tin xuat hang-->
+                <cbs:inputOrderStock id="inputExportStockToCollaborator"
+                                     title="#{lang['export.order.view.export.field.deposit']}" mode="1"
+                                     styleClassDiv="mg-top-0"
+                                     methodNameReceiveShop="doReceiveShop"
+                                     collaborator="1"
+                                     updateReceiveShop="@this,@([id$=pnlProductXXX]),@([id$=pnlExportStockToCollaboratorMsgs])"
+                                     value="#{retrieveStockFromCollaboratorController.orderStockTag}"
+                                     showRegionStock="false"
+                                     isRetrieve="true"
+                                     lblActionCode="#{lang['stock.retrieve.from.collaborator.export.code']}"
+                                     requireMessageActionCode="#{lang['stock.retrieve.from.collaborator.export.code.require']}"
+                                     lblbyWhom="#{lang['stock.retrieve.from.collaborator.receive.staff']}"
+                                     lblorderDay="#{lang['stock.retrieve.from.collaborator.date']}"
+                                     lblshopExport="#{lang['stock.retrieve.from.collaborator.export.shop']}"
+                                     lblshopReceive="#{lang['stock.retrieve.from.collaborator.recieve.shop']}"
+                                     lblreason="#{lang['common.reason']}"
+                                     lblExportCodePlaceHoder="#{lang['stock.retrieve.from.collaborator.export.code.placehoder']}"
+                                     requireshopReceiveMgs="#{lang['stock.retrieve.from.collaborator.recieve.shop.require']}"
+                                     shopReceivePlaceHolder="#{lang['stock.retrieve.from.collaborator.recieve.shop.placeHolder']}">
+                </cbs:inputOrderStock>
+                <!--End vung thong tin xuat hang-->
+                <!--Start vung thong tin Danh sach hang hoa-->
+                <p:outputPanel id="pnlProductXXX" styleClass="Container100">
+                    <div class="Container100">
+                        <cbs:inputListProduct idComponent="retrievelistProduct" id="retrievelistProduct"
+                                              value="#{retrieveStockFromCollaboratorController.listProductTag}"
+                                              rendered="#{retrieveStockFromCollaboratorController.tagProductList}"
+                                              idMessage="msgExport"
+                                              lbTotalAmount="#{lang['agency.deposit.amount.total']}"
+                                              updateCheckSerial="@([id$=dlgDetailSerial]),@([id$=pnlExportStockToCollaboratorMsgs])"
+                                              onCompleteCheckSerial="if(!args.validationFailed){PF('dlgDetailSerial').show();}"
+                                              extraValue="false"/>
+                    </div>
+                </p:outputPanel>
+                <!--Start Vung data button-->
+
+
+                <div class="Container100">
+                    <div class="ContainerIndent TexAlCenter mg-top-0">
+                        <cbs:confirmDialog
+                                idComponent="retrievesubmitOrder"
+                                id="retrievecreateOrder"
+                                disableButton="#{retrieveStockFromCollaboratorController.canPrint}"
+                                valueButton="#{lang['mn.stock.agency.retrieve.export']}(F8)"
+                                headerConfirm="#{lang['mn.stock.agency.retrieve.submit.header.confirm']}"
+                                messageConfirm="#{lang['mn.stock.agency.retrieve.submit.header.confirm.msg']}"
+                                actionOK="#{retrieveStockFromCollaboratorController.doRetrieveStockFromCollaborator}"
+                                resetValueButton="false"
+                                process="@([id$=pnlExportStockToCollaborator])"
+                                updateArea="@([id$=pnlExportStockToCollaborator])"
+                                updateOK="@([id$=pnlExportStockToCollaborator])"
+                                focusCancel="false"
+                                oncompleteOK=""
+                                isButton="true"
+                                actionValidate="#{retrieveStockFromCollaboratorController.doValidateStockFromCollaborator}"
+                                />
+                        <p:commandButton value="#{lang['mn.stock.agency.retrieve.print']}"
+                                         process="@this"
+                                         disabled="#{!retrieveStockFromCollaboratorController.canPrint}"
+                                         update="@form"
+                                         ajax="false"
+                                         immediate="true"
+                                         styleClass="mg-left-5">
+                            <p:fileDownload
+                                    value="#{retrieveStockFromCollaboratorController.retrieveStockFromCollaboratorExcel()}"/>
+                        </p:commandButton>
+                        <p:commandButton value="#{lang['common.reset']}" process="@([id$=pnlExportStockToCollaborator])"
+                                         styleClass="mg-left-5"
+                                         action="#{retrieveStockFromCollaboratorController.doResetExportCollaborator}"
+                                         immediate="true"
+                                         resetValues="true"
+                                         update="@([id$=pnlExportStockToCollaborator])"/>
+                    </div>
+                </div>
+                <!--End Vung data button-->
+            </p:outputPanel>
+            <script type="text/javascript">
+                document.getElementById('frmRetrieveCollaborator').onkeypress = function (event) {
+                    if (event.keyCode == 119 &amp;&amp; document.getElementById('frmRetrieveCollaborator:retrievecreateOrder:retrievesubmitOrderbtn') != null) {
+                        document.getElementById('frmRetrieveCollaborator:retrievecreateOrder:retrievesubmitOrderbtn').click();
+                        return false;
+                    }
+                    if (event.keyCode == 120 &amp;&amp; document.getElementById('frmRetrieveCollaborator:retrievelistProduct:retrievelistProductAddNew') != null) {
+                        document.getElementById('frmRetrieveCollaborator:retrievelistProduct:retrievelistProductAddNew').click();
+                        return false;
+                    }
+                }
+            </script>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailSerial"
+                  widgetVar="dlgDetailSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <ui:include src="../../../../../resources/tags/dlgDetailSerial.xhtml">
+                <ui:param name="controller" value="#{retrieveStockFromCollaboratorController.listProductTag}"/>
+                <ui:param name="idComponent" value="retrievelistProduct"/>
+            </ui:include>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

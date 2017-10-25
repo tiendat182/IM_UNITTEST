@@ -1,0 +1,90 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:form id="frmDlgViewSaleTrans" styleClass="Container">
+        <div class="Container">
+            <cbs:panel classForToggle="viewSaleTrans" titleHeader="#{lang['mn.stock.view.sale.trans.dlg.title']}" />
+            <div class="ContainerIndent viewSaleTrans">
+                <div class="ContainerIndent">
+                    <div class="Container33 Responsive">
+                        <div class="Container40 Responsive50 ">
+                            <p:outputLabel styleClass="lb-sentinel" value="#{lang['invoice.type.shop']}" />
+                        </div>
+                        <div class="Container60 Responsive50 ">
+                            <p:outputLabel value="#{viewInforWarehouseController.itemDTO.shopCodeName}" styleClass="lb-sentinel" title="#{viewInforWarehouseController.itemDTO.shopCodeName}"/>
+                        </div>
+                    </div>
+                    <div class="Container33 Responsive">
+                        <div class="Container40 Responsive50 ">
+                            <p:outputLabel styleClass="lb-sentinel" value="#{lang['create.order.file.stock.model']}" />
+                        </div>
+                        <div class="Container60 Responsive50 ">
+                            <p:outputLabel value="#{viewInforWarehouseController.itemDTO.name}" title="#{viewInforWarehouseController.itemDTO.name}" styleClass="lb-sentinel" />
+                        </div>
+                    </div>
+                    <div class="Container33 Responsive">
+                        <div class="Container40 Responsive50 ">
+                            <h:outputText value="#{lang['common.status']}" title="#{lang['common.status']}" styleClass="lb-sentinel" />
+                        </div>
+                        <div class="Container60 Responsive50 ">
+                            <h:outputText value="#{viewInforWarehouseController.itemDTO.stateName}" title="#{viewInforWarehouseController.itemDTO.stateName}" styleClass="lb-sentinel"
+                                          converter="currencyFormat" escape="true"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="ContainerIndent">
+                    <div class="Container33 Responsive">
+                        <div class="Container40 Responsive50 ">
+                            <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.utilities.quality.responsive']}"/>
+                        </div>
+                        <div class="Container60 Responsive50 ">
+                            <p:outputLabel value="#{viewInforWarehouseController.itemDTO.availableQuanlity}" title="#{viewInforWarehouseController.itemDTO.availableQuanlity}"/>
+                        </div>
+                    </div>
+                    <div class="Container33 Responsive">
+                        <div class="Container40 Responsive50 ">
+                            <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.utilities.quality.real']}" />
+                        </div>
+                        <div class="Container60 Responsive50 ">
+                            <p:outputLabel value="#{viewInforWarehouseController.itemDTO.currentQuanlity}" title="#{viewInforWarehouseController.itemDTO.currentQuanlity}" />
+                        </div>
+                    </div>
+                    <div class="Container33 Responsive">
+                        <div class="Container40 Responsive50 ">
+                            <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.utilities.quality.contract']}" />
+                        </div>
+                        <div class="Container60 Responsive50 ">
+                            <h:outputText value="#{viewInforWarehouseController.itemDTO.totalSaleQuantity}" title="#{viewInforWarehouseController.itemDTO.totalSaleQuantity}"
+                                          converter="currencyFormat" escape="true"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="ContainerIndent">
+                    <p:dataTable
+                            id="tblSelectSerialRange"
+                            value="#{viewInforWarehouseController.itemDTO.lstGoods}"
+                            var="serialDetail"
+                            resizableColumns="true"
+                            paginator="false"
+                            rowIndexVar="index"
+                            scrollable="true"
+                            scrollHeight="150"
+                            emptyMessage="#{lang['common.empty.records']}">
+                        <p:column headerText="#{lang['subscriber.number']}" styleClass="col-left"
+                                  sortBy="#{serialDetail.isdn}">
+                            <p:outputLabel value="#{serialDetail.isdn}" title="#{serialDetail.isdn}"/>
+                        </p:column>
+                        <p:column headerText="#{lang['common.number']}" styleClass="col-right"
+                                  sortBy="#{serialDetail.quantity}">
+                            <p:outputLabel value="#{serialDetail.quantity}" title="#{serialDetail.quantity}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </div>
+    </h:form>
+</ui:composition>

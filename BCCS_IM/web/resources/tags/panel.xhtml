@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core">
+<composite:interface>
+    <composite:attribute name="iconHeader" default=""
+                         shortDescription="duong dan chua file icon"/>
+    <composite:attribute name="titleHeader" default="CBS Panel"
+                         shortDescription="tieu de cua panel"/>
+    <composite:attribute name="classForToggle" default="" required="true"
+                         shortDescription="class css cua panel chua component can toggle"/>
+    <composite:attribute name="styleHeader" default=""
+                         shortDescription="style css cua header"/>
+    <composite:attribute name="toggle" default="true"
+                         shortDescription="co trien khai co gian vung panel hay ko (default:true)"/>
+    <composite:attribute name="highlightMoreTitle"
+                         shortDescription="thong tin hien thi ngay canh tieu de de nhan manh"/>
+    <composite:attribute name="shadow"
+                         shortDescription="co hien thi do bong khong" default="true"/>
+    <composite:attribute name="onToggle" default="empTyFunction"
+                         shortDescription="remote command chay khi click toggle. De dung duoc thi bat buoc ten
+                         remote command phai ket thuc bang ki tu x, va khi truyen vao thi bo chu x di"/>
+    <composite:attribute name="defaultToggle" default="on"
+                         shortDescription="Tu dong hien thi on hay off"/>
+</composite:interface>
+<composite:implementation>
+    <script type="text/javascript">
+        try {
+            jQuery(document).ready(function () {
+                //goi ham js trong file framework.js set lai border cho panel cha
+//                if ($(".#{cc.attrs.classForToggle}a").val() == 'true') {
+//                    jQuery(".cbs-panel-header").parent().addClass("shadow-bottom");
+//                }
+                if ($(".#{cc.attrs.classForToggle}a1").val() == 'true') {
+                    jQuery(".cbs-panel-header").parent().addClass("shadow-bottom bg-panel");
+                }
+                jQuery(".#{cc.attrs.classForToggle}").addClass("ui-corner-all clear-both bg-panel");
+
+                if ($(".#{cc.attrs.classForToggle}a2").val() == 'off') {
+                    try{onToggle#{cc.attrs.classForToggle}('.#{cc.attrs.classForToggle}')}catch(e){}
+                }
+            });
+        } catch (e) {
+        }
+    </script>
+    <p:inputText type="hidden" value="#{cc.attrs.shadow}" styleClass="#{cc.attrs.classForToggle}a1"/>
+    <p:inputText type="hidden" value="#{cc.attrs.defaultToggle}" styleClass="#{cc.attrs.classForToggle}a2"/>
+
+    <div class="Container cbs-panel-header bg-ground-panel-q "
+         style="#{not empty cc.attrs.classForToggle ? 'cursor:pointer !important;':''}#{cc.attrs.styleHeader};"
+         onclick="try{onToggle#{cc.attrs.classForToggle}('.#{cc.attrs.classForToggle}');#{empty cc.attrs.onToggle ? 'emptyFunction' : cc.attrs.onToggle}x();}catch(e){}">
+        <!--<p:graphicImage value="#{cc.attrs.iconHeader}" width="35px" height="25px" style="float:left;margin:3px;"-->
+        <!--rendered="#{not empty cc.attrs.iconHeader and cc.attrs.iconHeader ne ''}"/>-->
+        <h:outputText value="#{cc.attrs.titleHeader}" styleClass="ui-panel-title"/>
+        <h:outputText value="#{cc.attrs.highlightMoreTitle}" styleClass="ui-panel-title lb-sentinel-bold"/>
+        <c:if test="#{empty cc.attrs.toggle or cc.attrs.toggle eq '' or cc.attrs.toggle eq 'true'}">
+            <!-- ui-icon ui-icon-triangle-1-s, ui-icon ui-icon-triangle-1-e -->
+                <span class="ui-icon ui-icon-triangle-1-s #{cc.attrs.classForToggle}Span float-left"
+                      style="float:left"/>
+            <script type="text/javascript">
+                function onToggle#{cc.attrs.classForToggle}(cssClass) {
+                    jQuery(cssClass).toggle("slow", function () {
+                        if (jQuery(cssClass + 'Span').attr("class").indexOf("ui-icon-triangle-1-s") > 0) {
+                            jQuery(cssClass + 'Span').removeClass("ui-icon-triangle-1-s");
+                            jQuery(cssClass + 'Span').addClass("ui-icon-triangle-1-e");
+                        } else {
+                            jQuery(cssClass + 'Span').removeClass("ui-icon-triangle-1-e");
+                            jQuery(cssClass + 'Span').addClass("ui-icon-triangle-1-s");
+                        }
+                    });
+                }
+            </script>
+        </c:if>
+        <c:if test="#{cc.attrs.toggle eq 'false'}">
+            <script type="text/javascript">
+                function onToggle#{cc.attrs.classForToggle}(cssClass) {
+                    //do nothing (tranh loi undefined method)
+                }
+            </script>
+        </c:if>
+    </div>
+</composite:implementation>
+</html>
+

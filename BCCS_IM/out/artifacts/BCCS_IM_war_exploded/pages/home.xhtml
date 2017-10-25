@@ -1,0 +1,518 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:of="http://omnifaces.org/functions"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+        >
+
+
+<ui:composition template="bccs2/sentinel/template.xhtml">
+    <ui:define name="title">Home</ui:define>
+    <ui:define name="featureName">Home</ui:define>
+    <ui:define name="content">
+        <style type="text/css">
+            .link-style {
+                text-decoration: none;
+            }
+
+            .link-softblue-style {
+                text-decoration: none;
+                color: #27AAE1;
+            }
+
+            .text-softblue-style {
+                text-decoration: none;
+                color: #27AAE1;
+            }
+
+            .zIndex1007-style {
+                z-index: 997 !important;
+            }
+
+            .zIndex1006-style {
+                z-index: 996 !important;
+            }
+            .pnLockUserMsgInfo div.ui-datalist {
+                background-color: transparent;
+                border: 0px;
+            }
+        </style>
+        <script type="text/javascript">
+            (function () {
+                Sentinel.toggleLeftMenu = function () {
+                    if (this.menubar.hasClass('slimmenu')) {
+                        this.menubar.removeClass('slimmenu');
+                        $('#searchArea').removeClass('slimsearch');
+                        $('.sentinelMenu').removeClass('slim');
+                        $.cookie('sentinel_menumode', 'large', {path: '/'});
+                        initDND();
+                    }
+                    else {
+                        this.menubar.addClass('slimmenu').removeClass('layout-menubar-open-fullscr');
+                        $('#searchArea').addClass('slimsearch');
+                        //thiendn1: add sentinelMenuSlim
+                        $('.sentinelMenu').addClass('slim');
+                        $.cookie('sentinel_menumode', 'slim', {path: '/'});
+                        initDND();
+                    }
+
+                }
+            })();
+
+            function initDND() {
+
+                $('.sentinelMenu').draggable({
+                    helper: 'clone',
+                    opacity: 0.9,
+                    appendTo: 'parent',
+                    start: function (event, ui) {
+                        ui.helper.css('z-index', 999);
+                        PF('blockActivityForm').show();
+                        PF('dialogFavorite').show();
+
+                    },
+                    stop: function (ev, ui) {
+                        PF('blockActivityForm').hide();
+                        PF('dialogFavorite').hide();
+                    }
+                });
+                $('.sentinelMenu.slim').draggable({
+                    helper: 'clone',
+                    appendTo: 'body',
+                    start: function (event, ui) {
+                        ui.helper.css('z-index', 999);
+                        PF('blockActivityForm').show();
+                        PF('dialogFavorite').show();
+
+                    },
+                    stop: function (ev, ui) {
+                        PF('blockActivityForm').hide();
+                        PF('dialogFavorite').hide();
+
+                    }
+                });
+
+                $('.favoriteDropPoint').droppable({
+                    activeClass: 'ui-state-active',
+                    hoverClass: 'ui-state-highlight',
+                    tolerance: 'touch',
+                    drop: function (event, ui) {
+                        var href = ui.draggable.find('.menuHref').attr('href');
+                        itemFavorite([
+                            {name: 'href', value: href}
+                        ]);
+
+                    }
+                });
+            }
+            $(function () {
+                initDND();
+            });
+        </script>
+
+        <p:dialog widgetVar="dialogFavorite"
+                  id="dialogFavorite"
+                  header="Bookmark"
+                  closable="false"
+                  resizable="false"
+                  styleClass="zIndex1007-style"
+                >
+            <h:form>
+                <p:panel styleClass="favoriteDropPoint" style="width: 600px;height: 100px">
+                    <div align="center" style="margin-top: 5%">
+
+                        <p:outputLabel value="#{lang['dashboard.favorite.help']}"
+                                       style="font-size: xx-large;opacity: 0.2">
+                        </p:outputLabel>
+                    </div>
+
+                </p:panel>
+            </h:form>
+        </p:dialog>
+
+        <p:blockUI widgetVar="blockActivityForm" block="@(body)"
+                   styleClass="zIndex1006-style"/>
+
+        <h:form id="activityForm">
+
+            <p:remoteCommand action="#{homeController.init}" autoRun="true" immediate="true" process="@this"/>
+
+            <div class="ContainerIndent margin4-10 shadow-bottom bg-panel">
+                <p:outputPanel styleClass="ContainerIndent" rendered="#{userActivityController.showLockMsg}">
+                    <div class="ui-panel ContainerIndent pnLockUserMsgInfo">
+                        <p:dataList value="#{userActivityController.lockMsgDTO}" var="lock" style="background: transparent;">
+                            <p:commandLink styleClass="link-icon"
+                                    value="#{of:format2(lock.warningContent, lock.num, lock.transMessList)}" process="@this"
+                                    update="@this"
+                                    action="#{userActivityController.doForwardPage(lock.redirectUrl)}"
+                            />
+                        </p:dataList>
+                    </div>
+                </p:outputPanel>
+                <div class="ContainerIndent">
+                    <div class="Container33 Responsive">
+                        <div class="ContainerIndent">
+                            <p:panel id="userPanel" style="min-height: 350px;" styleClass="ui-fluid">
+                                <i class="icon-user-2 Fs50 Fleft Wid25 hardblue TexAlCenter"></i>
+
+                                <div class="Fs24 Fright MarTop10 leaden Wid70">#{lang['dashboard.user.title.welcome']}
+                                    <br/> <span
+                                            class="hardblue">#{userActivityController.userToken.fullName}</span>
+                                </div>
+                                <div class="EmptyBox10"></div>
+                                <p:separator styleClass="Wid100"></p:separator>
+
+                                <div class="EmptyBox10"></div>
+                                <div class="Fs16 Fright">
+                                    <p:outputLabel id="message">
+                                        <a href="#" class="DispInlBlock Fleft Fs16 MarRight20"><i
+                                                class="icon-mail hardblue"> #{lang['dashboard.user.message']}
+                                            <p:outputLabel styleClass="link-softblue-style" id="messageCountNotify"
+                                                           value="(#{notifyController.countNotify})"></p:outputLabel>
+                                        </i></a>
+                                    </p:outputLabel>
+
+                                    <p:outputLabel id="language">
+                                        <a href="#" class="DispInlBlock Fleft Fs16 MarRight20"><i
+                                                class="icon-cog-alt hardblue"> #{lang['dashboard.user.language']} - #{locateBean.selectedLocale.country}</i></a>
+                                    </p:outputLabel>
+
+                                    <p:overlayPanel for="message" style="width:250px; max-height: 500px;overflow: auto">
+                                        <h:outputText value="#{lang['dashboard.user.message']}"
+                                                      styleClass="Fs16"></h:outputText>
+                                        <c:if test="#{notifyResource.runNotify}">
+                                            <p:commandLink onclick="reloadNotification()">
+                                                <i class="icon-align-justify red iconPadTop10"/>
+                                            </p:commandLink>
+                                        </c:if>
+                                        <p:outputPanel id="mailPanel">
+                                            <ui:repeat value="#{notifyController.unreadNotifiContents}"
+                                                       var="notify">
+                                                <div style="padding-top: 5px"/>
+                                                <i class="icon-mail iconPadTop10"></i>
+                                                <i style="float: right">
+                                                    <p:commandLink
+                                                            onclick="removeNotify([{name: 'id',value:'#{notify.id}'}])">
+                                                        <i class="icon-cancel red"></i>
+                                                    </p:commandLink>
+                                                </i>
+
+                                                <i>
+                                                    <p:commandLink styleClass="Unselectable Fs13 TexAlLeft nounderlink"
+                                                                   onclick="selectNotify([{name: 'id',value:'#{notify.id}'}])">
+                                                        <span class="black Fs12">#{notify.subject}</span>
+                                                        <br/>
+                                                        <span class="black Fs9">#{notify.text}</span>
+                                                        <br/>
+                                                        <span class="black Fs9">#{humanTime.format(notify.createdDate)}</span>
+                                                    </p:commandLink>
+                                                </i>
+                                            </ui:repeat>
+                                        </p:outputPanel>
+                                    </p:overlayPanel>
+                                    <p:overlayPanel for="language" style="width: 250px">
+                                        <h:outputText value="#{lang['dashboard.language.list']}"
+                                                      styleClass="Fs16"></h:outputText>
+                                        <p:separator></p:separator>
+                                        <p:outputPanel id="languagePanel" style="height: 100px">
+                                            <c:forEach var="locale" items="#{locateBean.locales}">
+                                                <li class="Animated05">
+                                                    <a onclick="changeLocale([{name: 'language',value:'#{locale.language}'}, {name:'country', value:'#{locale.country}'}])"
+                                                       class="Unselectable TexAlLeft">
+                                                        <p:outputPanel
+                                                                rendered="#{locateBean.selectedLocale.language==locale.language}">
+                                                            <i class="fa icon-flag red"/>
+                                                            <h:outputText value="#{locale.displayLanguage}"
+                                                                          styleClass="red Fs14 PadWithBorder10"/>
+                                                        </p:outputPanel>
+                                                        <p:outputPanel
+                                                                rendered="#{locateBean.selectedLocale.language!=locale.language}">
+                                                            <i class="fa icon-flag yellow"/>
+                                                            <h:outputText value="#{locale.displayLanguage}"
+                                                                          styleClass="black Fs14 PadWithBorder10"/>
+
+                                                        </p:outputPanel>
+                                                    </a>
+                                                </li>
+                                            </c:forEach>
+                                        </p:outputPanel>
+                                    </p:overlayPanel>
+
+                                </div>
+                                <div class="EmptyBox10"></div>
+                                <p:separator styleClass="Wid100"></p:separator>
+                                <i class="icon-bookmark red MarRight10 Fs14"> #{lang['dashboard.user.favorite']}
+                                </i>
+                                <p:commandLink id="moreBtn" style="float: right"
+                                               rendered="#{favoriteActivityController.activeFavoriteActivities.size()>5}">
+                                    <i class="icon-play red i"></i>
+                                </p:commandLink>
+
+                                <div class="EmptyBox5"></div>
+                                <p:outputPanel id="favoriteMenu" style="height: 150px;border: 0px">
+                                    <ui:repeat value="#{favoriteActivityController.getSubFavoriteActivities()}"
+                                               var="favorite"
+                                               varStatus="activityStatus">
+                                        <div style="padding-top: 5px"/>
+                                        <i class="icon-star blue i"></i>
+                                        <i>
+                                            <p:commandLink styleClass="text-softblue-style"
+                                                           actionListener="#{menuBean.redirect(favorite.url)}">
+                                                <h:outputText styleClass="text-softblue-style"
+                                                              title="#{menuBean.getUrlName(favorite.url)}"
+                                                              value=" #{menuBean.getUrlName(favorite.url).length() gt 30? menuBean.getUrlName(favorite.url).substring(0,30).concat('...'):menuBean.getUrlName(favorite.url)}"/>
+                                            </p:commandLink>
+                                        </i>
+                                        <i style="float: right">
+                                            <p:commandLink update="activityForm:userPanel,:topBarForm:favoriteTopBar"
+                                                           actionListener="#{favoriteActivityController.delete(favorite.url)}">
+                                                <i class="icon-cancel red"></i>
+                                            </p:commandLink>
+                                        </i>
+
+                                    </ui:repeat>
+
+                                    <p:overlayPanel for="moreBtn" style="max-height: 500px;overflow: auto">
+                                        <h:outputText value="#{lang['dashboard.user.favorite']}"
+                                                      styleClass="Fs16"></h:outputText>
+                                        <p:separator></p:separator>
+                                        <p:outputPanel id="favoritePanel">
+                                            <ui:repeat value="#{favoriteActivityController.activeFavoriteActivities}"
+                                                       var="favorite"
+                                                       varStatus="activityStatus">
+                                                <div style="padding-top: 5px"/>
+                                                <i class="icon-star blue i"></i>
+                                                <i>
+                                                    <p:commandLink styleClass="text-softblue-style"
+                                                                   actionListener="#{menuBean.redirect(favorite.url)}">
+                                                        <h:outputText styleClass="text-softblue-style"
+                                                                      title="#{menuBean.getUrlName(favorite.url)}"
+                                                                      value=" #{menuBean.getUrlName(favorite.url).length() gt 30? menuBean.getUrlName(favorite.url).substring(0,20).concat('...'):menuBean.getUrlName(favorite.url)}"/>
+                                                    </p:commandLink>
+                                                </i>
+                                                <i style="float: right">
+                                                    <p:commandLink
+                                                            update="activityForm:userPanel,:topBarForm:favoriteTopBar"
+                                                            actionListener="#{favoriteActivityController.delete(favorite.url)}">
+                                                        <i class="icon-cancel red"></i>
+                                                    </p:commandLink>
+                                                </i>
+
+                                            </ui:repeat>
+                                        </p:outputPanel>
+                                    </p:overlayPanel>
+                                </p:outputPanel>
+                            </p:panel>
+                        </div>
+                    </div>
+
+
+                    <!--<div class="Container33 Responsive">-->
+                        <!--<div class="ContainerIndent">-->
+                            <!--<p:panel style="min-height:350px">-->
+                                <!--<div class="Fs24 MarTop10 leaden Wid100 TexAlCenter">#{lang['dashboard.action.recentAction']}</div>-->
+                                <!--<div class="EmptyBox10"></div>-->
+                                <!--<p:separator styleClass="Wid100"></p:separator>-->
+                                <!--<p:outputLabel value="#{lang['dashboard.action.function']}"-->
+                                               <!--style="font-size: 12px!important;"></p:outputLabel>-->
+                                <!--<p:outputLabel style="float: right;font-size: 12px!important;"-->
+                                               <!--value="#{lang['dashboard.action.createTime']}"></p:outputLabel>-->
+                                <!--<ui:repeat value="#{userActivityController.recentUrlActions}" var="activity"-->
+                                           <!--varStatus="activityStatus">-->
+                                    <!--<div style="padding-top: 5px"/>-->
+                                    <!--<p:commandLink styleClass="link-softblue-style"-->
+                                                   <!--actionListener="#{menuBean.redirect(activity.url)}">-->
+                                        <!--<h:outputText styleClass="link-softblue-style"-->
+                                                      <!--title="#{menuBean.getUrlName(activity.url)}"-->
+                                                      <!--value="#{activityStatus.index+1}. #{menuBean.getUrlName(activity.url).length() gt 30? menuBean.getUrlName(activity.url).substring(0,30).concat('...'):menuBean.getUrlName(activity.url)}"/>-->
+                                    <!--</p:commandLink>-->
+                                    <!--<h:outputText value="#{humanTime.format(activity.createDate)}" styleClass="Fs12"-->
+                                                  <!--style="float: right">-->
+                                    <!--</h:outputText>-->
+
+                                <!--</ui:repeat>-->
+                            <!--</p:panel>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <!--<div class="Container33 Responsive">-->
+                        <!--<div class="ContainerIndent">-->
+                            <!--<p:panel style="min-height:350px;">-->
+                                <!--<div class="Fs24 MarTop10 leaden Wid100 TexAlCenter">-->
+                                    <!--<i class="icon-doc-text"></i>#{lang['dashboard.header.frequenceToday']}-->
+                                <!--</div>-->
+                                <!--<div class="EmptyBox10"></div>-->
+                                <!--<p:separator styleClass="Wid100"></p:separator>-->
+
+                                <!--<div class="Container100">-->
+                                    <!--<p:outputLabel value="#{lang['dashboard.group.function']}"-->
+                                                   <!--style="font-size: 12px!important;"></p:outputLabel>-->
+                                    <!--<p:outputLabel style="float: right;font-size: 12px!important;"-->
+                                                   <!--value="#{lang['dashboard.group.frequence']}"></p:outputLabel>-->
+                                    <!--<ui:repeat value="#{userActivityController.todayActionInGroup}" var="activity"-->
+                                               <!--varStatus="activityStatus">-->
+                                        <!--<div style="padding-top: 5px"/>-->
+
+                                        <!--<p:commandLink styleClass="link-softblue-style"-->
+                                                       <!--actionListener="#{menuBean.redirect(activity.url)}">-->
+                                            <!--<i class="icon-link blue  i"></i>-->
+                                            <!--<h:outputText styleClass="link-softblue-style"-->
+                                                          <!--title="#{menuBean.getUrlName(activity.url)}"-->
+                                                          <!--value="#{menuBean.getUrlName(activity.url).length() gt 30? menuBean.getUrlName(activity.url).substring(0,30).concat('...'):menuBean.getUrlName(activity.url)}"/>-->
+                                        <!--</p:commandLink>-->
+                                        <!--<h:outputText value="#{activity.group}" styleClass="Fs12"-->
+                                                      <!--style="float: right">-->
+                                        <!--</h:outputText>-->
+
+                                    <!--</ui:repeat>-->
+                                <!--</div>-->
+                            <!--</p:panel>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <div class="Container66 Responsive">
+                        <div class="ContainerIndent">
+                            <p:panel style="min-height:350px;">
+                                <div class="Container100 Responsive Fs20">
+                                    <i class="icon-chart-bar"></i>#{lang['dashboard.bar.barMode1']}
+                                </div>
+
+                                <div class="EmptyBox10"></div>
+                                <div class="Container100">
+                                    <h:form id="charForm1">
+                                        <p:chart id="grp1" rendered="#{userActivityController.barModel1!=null}" type="pie"
+                                                 model="#{userActivityController.barModel1}"
+                                                 style="height:300px" responsive="true"/>
+                                    </h:form>
+                                </div>
+                            </p:panel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ContainerIndent margin4-10 shadow-bottom bg-panel">
+                <div class="ContainerIndent">
+                    <div class="EmptyBox10"></div>
+
+
+                    <!--<div class="Container60 Responsive50">-->
+                        <!--<div class="ContainerIndent">-->
+                            <!--<p:panel style="min-height:350px;">-->
+                                <!--<div class="Container50 Responsive Fs20">-->
+                                    <!--<i class="icon-chart-bar"></i>#{lang['dashboard.group.title']}-->
+                                <!--</div>-->
+                                <!--<div class="Container50 Responsive Fs12 ui-fluid">-->
+                                    <!--<p:selectOneMenu value="#{userActivityController.rangeTime}"-->
+                                                     <!--label="#{lang['dashboard.bar.range']}">-->
+                                        <!--<f:selectItem itemLabel="#{lang['dashboard.bar.all']}"-->
+                                                      <!--itemValue="#{userActivityController.RANGE_ALL}"/>-->
+                                        <!--<f:selectItem itemLabel="#{lang['dashboard.bar.7day']}"-->
+                                                      <!--itemValue="#{userActivityController.RANGE_WEEK}"/>-->
+                                        <!--<f:selectItem itemLabel="#{lang['dashboard.bar.month']}"-->
+                                                      <!--itemValue="#{userActivityController.RANGE_MONTH}"/>-->
+                                        <!--<p:ajax listener="#{userActivityController.initBarModel}" process="@this"-->
+                                                <!--update="activityForm:charForm:grp"></p:ajax>-->
+                                    <!--</p:selectOneMenu>-->
+
+
+                                <!--</div>-->
+
+                                <!--<div class="EmptyBox10"></div>-->
+                                <!--<div class="Container100">-->
+                                    <!--<h:form id="charForm">-->
+                                        <!--<p:chart id="grp" rendered="#{userActivityController.barModel!=null}" type="pie"-->
+                                                 <!--model="#{userActivityController.barModel}"-->
+                                                 <!--style="height:300px" responsive="true"/>-->
+                                    <!--</h:form>-->
+                                <!--</div>-->
+                            <!--</p:panel>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <div class="Container50 Responsive">
+                        <div class="ContainerIndent">
+                            <p:panel style="min-height:350px;">
+                                <div class="Container100 Responsive Fs20">
+                                    <i class="icon-chart-bar"></i>#{lang['dashboard.bar.barMode2']}
+                                </div>
+
+                                <div class="EmptyBox10"></div>
+                                <div class="Container100">
+                                    <h:form id="charForm2">
+                                        <p:chart id="grp2" rendered="#{userActivityController.barModel2!=null}" type="pie"
+                                                 model="#{userActivityController.barModel2}"
+                                                 style="height:300px" responsive="true"/>
+                                    </h:form>
+                                </div>
+                            </p:panel>
+                        </div>
+                    </div>
+
+                    <div class="Container50 Responsive">
+                        <div class="ContainerIndent">
+                            <p:panel style="min-height:350px;">
+                                <div class="Container100 Responsive Fs20">
+                                    <i class="icon-chart-bar"></i>#{lang['dashboard.bar.barMode3']}
+                                </div>
+
+                                <div class="EmptyBox10"></div>
+                                <div class="Container100">
+                                    <h:form id="charForm3">
+                                        <p:chart id="grp3" rendered="#{userActivityController.barModel3!=null}" type="pie"
+                                                 model="#{userActivityController.barModel3}"
+                                                 style="height:300px" responsive="true"/>
+                                    </h:form>
+                                </div>
+                            </p:panel>
+                        </div>
+                    </div>
+
+                    <!--<div class="Container40 Responsive">-->
+                        <!--<div class="ContainerIndent">-->
+                            <!--<p:panel style="min-height: 350px;">-->
+                                <!--<i class=" icon-data-science-inv Fs50 Fleft Wid25 orange TexAlCenter"></i>-->
+
+                                <!--<div class="Fs24 Fright MarTop10 leaden Wid70">#{lang['dashboard.statistic.title']} </div>-->
+                                <!--<div class="Fs12 Fright leaden Wid70">#{lang['dashboard.statistic.access']} <span-->
+                                        <!--class="red">#{userActivityController.countTodayAction}</span> #{lang['dashboard.statistic.access.sub']}-->
+                                    <!--<br/> #{lang['dashboard.statistic.rate']}-->
+                                    <!--<span class="red">#{userActivityController.getCompareToYesterdayRate()}%</span> #{lang['dashboard.statistic.rate.sub']}-->
+                                <!--</div>-->
+                                <!--<div class="EmptyBox10"></div>-->
+                                <!--<p:separator styleClass="Wid100"></p:separator>-->
+
+                                <!--<div class="EmptyBox10"></div>-->
+                                <!--<div class="Fs12 Fright leaden Wid50 TexAlCenter Responsive">#{lang['dashboard.statistic.yesterday']}-->
+                                    <!--<br/><span-->
+                                            <!--class="Fs24 orange">#{userActivityController.yesterdayTotalActions}</span>-->
+                                <!--</div>-->
+                                <!--<div class="Fs12 Fright leaden Wid50 TexAlCenter Responsive">#{lang['dashboard.statistic.allTime']}-->
+                                    <!--<br/><span-->
+                                            <!--class="Fs24 red">#{userActivityController.allTimeTotalAction}</span>-->
+                                <!--</div>-->
+                                <!--<div class="EmptyBox10"></div>-->
+                                <!--<p:separator styleClass="Wid100"></p:separator>-->
+                                <!--<a href="#" class="DispInlBlock Fs14 Fright MarRight10"><i-->
+                                        <!--class="icon-doc-1 orange">-->
+                                    <!--#{lang['dashboard.statistic.today']}: #{userActivityController.countTodayAction}</i></a>-->
+
+                            <!--</p:panel>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+
+                    <div class="EmptyBox20"></div>
+                </div>
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+</html>

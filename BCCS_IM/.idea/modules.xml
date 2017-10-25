@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/BCCS_IM.iml" filepath="$PROJECT_DIR$/BCCS_IM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../FwjBCCS2_v5/FwjBCCS2_v5.iml" filepath="$PROJECT_DIR$/../FwjBCCS2_v5/FwjBCCS2_v5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../InventoryBusiness/InventoryBusiness.iml" filepath="$PROJECT_DIR$/../InventoryBusiness/InventoryBusiness.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../InventoryService/InventoryService.iml" filepath="$PROJECT_DIR$/../InventoryService/InventoryService.iml" />
+    </modules>
+  </component>
+</project>

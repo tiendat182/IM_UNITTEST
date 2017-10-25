@@ -1,0 +1,74 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:form id="frmviewSerial">
+        <p:outputPanel styleClass="ContainerIndent" id="pnViewListSerial">
+            <cbs:panel classForToggle="lstOrderExport" titleHeader="#{controller.configTagDto.viewIsdn ? lang['mn.isdn.detail.isdn'] : lang['stock.trans.search.serial.stock']}" toggle="false"/>
+            <div class="Container100 lstDataExport">
+                <p:dataTable
+                        value="#{controller.stockTransDetail.lstSerial}"
+                        var="serialDetail"
+                        resizableColumns="true"
+                        paginator="#{lang['common.paging.paginator']}"
+                        rows="#{lang['common.paging.rows.default']}"
+                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                        emptyMessage="#{lang['common.empty.records']}">
+                    <p:column styleClass="col-left" sortBy="#{serialDetail.fromSerial}">
+                        <f:facet name="header">
+                            <h:outputText value="#{controller.configTagDto.viewIsdn ? lang['mn.isdn.from.isdn']: lang['mn.stock.fromSerial']}}"
+                                          title="#{controller.configTagDto.viewIsdn ? lang['mn.isdn.from.isdn']: lang['mn.stock.fromSerial']}}}"/>
+                        </f:facet>
+                        <h:outputText escape="true" value="#{serialDetail.fromSerial}"
+                                      title="#{serialDetail.fromSerial}"/>
+                    </p:column>
+
+                    <!--lbFromSeri="#{lang['mn.isdn.from.isdn']}"
+                    lbToSeri="#{lang['mn.isdn.to.isdn']}"
+                    lbSeriDetail="#{lang['mn.isdn.detail.isdn']}"
+                    lbListSeriDetail="#{lang['list.isdn']}"
+                    lbInfoDetailSeri="#{lang['info.isdn']}"-->
+                    <p:column styleClass="col-left" sortBy="#{serialDetail.toSerial}">
+                        <f:facet name="header">
+                            <h:outputText value="#{controller.configTagDto.viewIsdn ? lang['mn.isdn.to.isdn']: lang['mn.stock.ToSerial']}}"
+                                          title="#{controller.configTagDto.viewIsdn ? lang['mn.isdn.to.isdn']: lang['mn.stock.ToSerial']}}"/>
+                        </f:facet>
+                        <h:outputText escape="true" value="#{serialDetail.toSerial}"
+                                      title="#{serialDetail.toSerial}"/>
+                    </p:column>
+                    <p:column styleClass="col-right" sortBy="#{serialDetail.quantity}">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['common.number']}"
+                                          title="#{lang['common.number']}"/>
+                        </f:facet>
+                        <h:outputText escape="true" value="#{serialDetail.quantity}"
+                                      title="#{serialDetail.quantity}" converter="currencyFormat"/>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+
+        <div class="ContainerIndent TexAlCenter">
+            <p:commandButton value="#{lang['notification.close']}"
+                             immediate="true"
+                             styleClass="btnCloseView"
+                             oncomplete="PF('dlgSerialView').hide()"/>
+            <p:commandButton value="#{lang['mn.stock.export.excel']}"
+                             styleClass="mg-left-5"
+                             immediate="true"
+                             process="@this"
+                             ajax="false"
+                    >
+                <p:fileDownload value="#{controller.exportSerialsDlgView()}"/>
+            </p:commandButton>
+        </div>
+    </h:form>
+</ui:composition>

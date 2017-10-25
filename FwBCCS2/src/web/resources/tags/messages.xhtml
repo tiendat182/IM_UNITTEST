@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:p="http://primefaces.org/ui">
+<composite:interface>
+    <composite:attribute name="mesageId" shortDescription="id message" required="true"/>
+    <composite:attribute name="logicException" shortDescription="doi tuong logicException phia controller"
+                         required="true"/>
+</composite:interface>
+<composite:implementation>
+    <p:outputPanel id="#{cc.attrs.mesageId}" styleClass="Container100">
+        <!-- mesage canh bao -->
+        <p:outputPanel
+                rendered="#{not empty cc.attrs.logicException.errorCode and cc.attrs.logicException.errorCode eq 'WARN'}"
+                styleClass="Container100">
+            <div style="margin:5px 0px;padding:5px 10px;border:1px solid orange;color:orange;font-weight: bold;">
+                <span class="ui-messages-warn-icon"></span>
+                <h:outputText value="#{cc.attrs.logicException.description}"
+                              style="margin-left:10px;" escape="false"/>
+                <a onclick="$(this).parent().slideUp();return false;" class="ui-messages-close Fright" href="#">
+                    <span class="ui-icon fa icon-cancel ui-c Fs15" style="color: orange!important;"></span>
+                    <!-- fa icon-search ui-icon ui-c black Fs12 -->
+                </a>
+            </div>
+        </p:outputPanel>
+        <!-- mesage loi -->
+        <p:outputPanel
+                rendered="#{not empty cc.attrs.logicException.errorCode and cc.attrs.logicException.errorCode ne '' and cc.attrs.logicException.errorCode ne 'WARN'}"
+                styleClass="Container100">
+            <div style="margin:5px 0px;padding:5px 10px;border:1px solid #f03369;color:#F03369;font-weight: bold;">
+                <span class="ui-messages-error-icon"></span>
+                <h:outputText value="#{cc.attrs.logicException.description}"
+                              style="margin-left:10px;" escape="false"/>
+                <a onclick="$(this).parent().slideUp();return false;" class="ui-messages-close Fright" href="#">
+                    <span class="ui-icon fa icon-cancel ui-c Fs15" style="color: #EC018C!important;"></span>
+                    <!-- fa icon-search ui-icon ui-c black Fs12 -->
+                </a>
+            </div>
+        </p:outputPanel>
+        <!-- mesage thanh cong -->
+        <p:outputPanel
+                rendered="#{cc.attrs.logicException.errorCode eq '' and cc.attrs.logicException.description ne '' and not empty cc.attrs.logicException.description}"
+                styleClass="Container100">
+            <div style="margin:5px 0px;padding:5px 10px;border:1px solid #009900;;color: #009900;font-weight: bold;">
+                <span class="ui-messages-info-icon"></span>
+                <h:outputText value="#{cc.attrs.logicException.description}"
+                              style="margin-left:10px;" escape="false"/>
+                <a onclick="$(this).parent().slideUp();return false;" class="ui-messages-close Fright" href="#">
+                    <span class="ui-icon fa icon-cancel ui-c Fs15" style="color: #009900!important;"></span>
+                    <!-- fa icon-search ui-icon ui-c black Fs12 -->
+                </a>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+</composite:implementation>
+</html>
+

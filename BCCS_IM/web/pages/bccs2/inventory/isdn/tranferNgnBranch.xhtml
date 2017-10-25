@@ -1,0 +1,192 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.isdn.manage.ngn.branch']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmTransfer" enctype="multipart/form-data">
+            <p:outputPanel styleClass="container100" id="pnNGNtranfer">
+                <!--Start vung tim kiem NGN-->
+                <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                    <p:messages id="transferMsgs" showDetail="true" showSummary="false" closable="true"/>
+                </div>
+                <p:outputPanel id="pnDeleteOutStock" styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="panelDeleteOutStock" toggle="true"
+                               titleHeader="#{lang['mn.isdn.manage.ngn.branch']}"/>
+
+                    <div class="Container100 panelDeleteOutStock" style="margin-bottom: 10px;margin-top: 10px;">
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container50 Responsive50">
+                                <div class="Container20 Responsive25 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['mn.isdn.manage.code.type.number']}"
+                                                   for="rdTypeNumber"/>
+                                </div>
+                                <div class="Container80 Responsive75 ui-fluid">
+                                    <p:selectOneRadio value="#{tranferNGNBrancheController.type}" id="rdTypeNumber">
+                                        <f:selectItem itemValue="31"
+                                                      itemLabel="#{lang['mn.isdn.manage.trunk.number']}"/>
+                                        <f:selectItem itemValue="23"
+                                                      itemLabel="#{lang['mn.isdn.manage.ngn.number']}"/>
+                                    </p:selectOneRadio>
+                                </div>
+                            </div>
+                            <div class="Container50 Responsive50">
+                            </div>
+
+
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container50 Responsive50">
+                                <div class="Container20 Responsive25 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" for="fileAttach"
+                                                   value="#{lang['attach.file']}"/>
+                                </div>
+                                <div class="Container80 Responsive75 ui-fluid">
+
+                                    <p:inputText id="outputAttachFile"
+                                                 styleClass="outputAttachFile"
+                                                 maxlength="100"
+                                                 placeholder="#{lang['search.number.range.input.fileName']}"
+                                                 value="#{tranferNGNBrancheController.attachFileName}"
+                                                 readonly="true"/>
+                                </div>
+
+                            </div>
+                            <div class="Container50 Responsive50">
+                                <p:fileUpload id="fileAttach"
+                                              requiredMessage="#{lang['mn.stock.status.isdn.update.file.noselect']}"
+                                              update="@this, @([id$=outputAttachFile]), @([id$=transferMsgs]), @([id$=lstListNeedGrant])"
+                                              dragDropSupport="true" required="true" mode="advanced"
+                                              auto="true"
+                                              process="@this"
+                                              value="#{tranferNGNBrancheController.uploadedFile}"
+                                              fileUploadListener="#{tranferNGNBrancheController.fileUploadAction}">
+                                </p:fileUpload>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container80 Responsive75 ui-fluid" style="margin-top: 25px">
+                                <p:commandLink
+                                        value="#{lang['mn.stock.status.isdn.update.status.file_template']}"
+                                        rendered="#{!tranferNGNBrancheController.hasFileError}"
+                                        title="#{lang['create.note.download.file.title']}"
+                                        ajax="false"
+                                        immediate="true"
+                                        style="text-decoration: none!important;">
+                                    <p:fileDownload
+                                            value="#{tranferNGNBrancheController.downloadFileTemplate()}"/>
+                                </p:commandLink>
+                                <p:commandLink
+                                        id="bthDownloadError"
+                                        value="#{lang['mn.stock.status.isdn.update.status.file_error']}"
+                                        rendered="#{tranferNGNBrancheController.hasFileError}"
+                                        title="#{lang['create.note.download.file.title']}"
+                                        ajax="false"
+                                        immediate="true"
+                                        style="text-decoration: none!important;">
+                                    <p:fileDownload
+                                            value="#{tranferNGNBrancheController.downloadFileError()}"/>
+                                </p:commandLink>
+                            </div>
+                        </div>
+                        <div class="Container100 TexAlCenter">
+                            <p:commandButton
+                                    value="#{lang['see.previous']}"
+                                    process="@this, @([id$=frmTransfer])"
+                                    actionListener="#{tranferNGNBrancheController.previewTransfer}"
+                                    update="@this, @([id$=frmTransfer])"/>
+                            <p:commandButton styleClass="mg-left-5"
+                                             value="#{lang['reset.selected']}"
+                                             process="@this"
+                                             actionListener="#{tranferNGNBrancheController.doReset}"
+                                             update="@this, @([id$=frmTransfer])"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <!--End vung tim kiem NGN-->
+
+                <!--Start vung ket qua dai NGN can gan so-->
+                <p:outputPanel id="pnLstNeedDelete" styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="panelListNeedDelete"
+                               toggle="true"
+                               titleHeader="#{lang['mn.isdn.manage.code.NGN.preview']}"/>
+
+                    <div class="Container100 panelListNeedDelete" style="margin-bottom: 10px;margin-top: 5px;">
+                        <!--<div class="Container TexAlLeft">-->
+                        <cbs:confirmDialog
+                                idComponent="btnDelete"
+                                valueButton="#{lang['mn.stock.status.isdn.NGN.btn']}"
+                                headerConfirm="#{lang['mn.stock.status.isdn.NGN.confirm.header']}"
+                                messageConfirm="#{lang['mn.stock.status.isdn.NGN.confirm.msg']}"
+                                actionOK="#{tranferNGNBrancheController.transfer}"
+                                resetValueButton="false"
+                                process="@this"
+                                updateArea="@this, @([id$=lstListNeedGrant]), @([id$=frmTransfer])"
+                                updateOK="@this, @([id$=lstListNeedGrant]), @([id$=frmTransfer])"
+                                titleButton="#{lang['button.delete.digital']}"
+                                actionValidate="#{tranferNGNBrancheController.doConfirmTransfer}"
+                                styleClassButton="fa icon-plus Fs14 blue md-link mg-left-5"
+                                focusCancel="false"
+                                isButton="false"
+                                />
+                        <!--</div>-->
+                        <div class="ContainerIndent">
+                            <p:dataTable
+                                    id="lstListNeedGrant"
+                                    var="item"
+                                    rowKey="#{item.rowKey}"
+                                    reflow="false"
+                                    resizableColumns="true"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.empty.records']}"
+                                    value="#{tranferNGNBrancheController.listTransferAvail}">
+                                <p:column headerText="#{lang['subscriber.number']}" styleClass="col-left"
+                                          style="width: 25%" sortBy="#{item.isdn}">
+                                    <p:outputLabel value="#{item.isdn}" title="#{item.isdn}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.isdn.manage.code.NGN.current']}" styleClass="col-left"
+                                          style="width: 25%" sortBy="#{item.curAreaCode}">
+                                    <p:outputLabel value="#{item.curAreaCode}" title="#{item.curAreaCode}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.isdn.manage.code.NGN.plan.new']}" styleClass="col-left"
+                                          style="width: 25%" sortBy="#{item.newAreaCode.toUpperCase()}">
+                                    <p:outputLabel value="#{item.newAreaCode.toUpperCase()}"
+                                                   title="#{item.newAreaCode.toUpperCase()}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.column.result']}" styleClass="col-left"
+                                          style="width: 20%"
+                                          sortBy="#{tranferNGNBrancheController.getResultDesc(item.result)}">
+                                    <p:outputLabel value="#{tranferNGNBrancheController.getResultDesc(item.result)}"
+                                                   title="#{tranferNGNBrancheController.getResultDesc(item.result)}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </p:outputPanel>
+
+                <!--<div class="Container100 TexAlCenter mg-top-0">-->
+                <!--<p:commandButton-->
+                <!--id="btnTransfer"-->
+                <!--rendered="#{tranferNGNBrancheController.enableTransfer}"-->
+                <!--value="#{lang['mn.isdn.manage.ngn.btn']}"-->
+                <!--style="margin-bottom: 10px"-->
+                <!--update="@this, @([id$=frmTransfer])"-->
+                <!--actionListener="#{tranferNGNBrancheController.transfer}"/>-->
+                <!--</div>-->
+                <!--Start vung ket qua dai NGN can gan so-->
+            </p:outputPanel>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

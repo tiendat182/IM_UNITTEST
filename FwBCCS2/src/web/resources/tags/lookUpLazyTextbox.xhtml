@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <composite:interface >
+        <composite:attribute name="idComponent" shortDescription="id of form" required="true"/>
+        <composite:attribute name="selectMode" shortDescription="status is single or multiple," required="true"/>
+        <composite:attribute name="objectName" shortDescription="model object name" required="true"/>
+        <composite:attribute name="serviceName" shortDescription="interface service name" required="true"/>
+        <composite:attribute name="displayColumnList" shortDescription="display column list" required="true"/>
+        <composite:attribute name="searchColumnList" shortDescription="condition search"/>
+        <composite:attribute name="updateAddArea" shortDescription="area render after click add"/>
+        <composite:attribute name="controller" shortDescription="controller object" required="true"/>
+        <composite:attribute name="setDataMethod" shortDescription="styleClass" required="true"/>
+        <composite:attribute name="oncompleteCancel" default="" />
+        <composite:attribute name="oncompleteAdd" default="" />
+        <composite:attribute name="currentObjectIdList" default="" shortDescription="seperate by comma"/>
+        <composite:attribute name="currentObjectValueList" default="" shortDescription="seperate by comma" />
+        <composite:attribute name="styleClass" default="sale" shortDescription="styleClass dialog, default sale"/>
+        <composite:attribute name="displayInputTextColumnList" default="" required="true" shortDescription="display column name input text"/>
+        <composite:attribute name="excluseCurrentObject" default="false" />
+        <composite:attribute name="filterKeyList" default="" />
+        <composite:attribute name="filterValueList" default="" />
+        <composite:attribute name="disableOpenLookUp" default="true" shortDescription="disable open lookup, default false"/>
+        <composite:attribute name="requireInput" default="false" shortDescription="disable open lookup, default false"/>
+        <composite:attribute name="label" default="" required="true" shortDescription="Key language"/>
+        <composite:attribute name="filterRequestList" default="" />
+        <composite:attribute name="disableIcon" default="false" shortDescription="disable open lookup, default false"/>
+        <composite:attribute name="popup" default="true" shortDescription="default = false, true if show dialog, false show popup"/>
+        <composite:attribute name="hasDeleteIcon" default="false" shortDescription="true if show dialog"/>
+        <composite:attribute name="lookupTitle" default="" shortDescription="title in lookup for:"/>
+        <composite:attribute name="modifier" default="" shortDescription="Testing modifier"/>
+    </composite:interface>
+    <composite:implementation>
+        <cbs:lookUpLazyTextboxWrapper
+                idComponent="#{cc.attrs.idComponent}"
+                modifier="#{cc.attrs.idComponent}"
+                id="#{cc.attrs.idComponent}"
+                selectMode="#{cc.attrs.selectMode}"
+                objectName="#{cc.attrs.objectName}"
+                serviceName="#{cc.attrs.serviceName}"
+                displayColumnList="#{cc.attrs.displayColumnList}"
+                controller="#{cc.attrs.controller}"
+                setDataMethod="#{cc.attrs.setDataMethod}"
+                filterKeyList ="#{cc.attrs.filterKeyList}"
+                filterValueList ="#{cc.attrs.filterValueList}"
+                updateAddArea="#{cc.attrs.updateAddArea}"
+                disableOpenLookUp="#{cc.attrs.disableOpenLookUp}"
+                filterRequestList="#{cc.attrs.filterRequestList}"
+                displayInputTextColumnList="#{cc.attrs.displayInputTextColumnList}"
+                disableIcon="#{cc.attrs.disableIcon}"                
+                label="#{cc.attrs.label}"
+                popup="#{cc.attrs.popup}"
+                currentObjectIdList="#{cc.attrs.currentObjectIdList}"
+                currentObjectValueList="#{cc.attrs.currentObjectValueList}"
+                excluseCurrentObject="#{cc.attrs.excluseCurrentObject}"
+                lookupTitle="#{cc.attrs.lookupTitle}"
+                hasDeleteIcon="#{cc.attrs.hasDeleteIcon}"
+                oncompleteAdd="#{cc.attrs.oncompleteAdd}"
+                oncompleteCancel="#{cc.attrs.oncompleteCancel}"
+                searchColumnList="#{cc.attrs.searchColumnList}"
+                requireInput="#{cc.attrs.requireInput}"
+                styleClass="#{cc.attrs.styleClass}"               
+                resetAllCurrMap="true"/>
+    </composite:implementation>
+</html>
+

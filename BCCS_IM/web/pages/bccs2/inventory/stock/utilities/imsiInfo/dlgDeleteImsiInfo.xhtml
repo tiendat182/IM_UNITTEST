@@ -1,0 +1,83 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://java.sun.com/jsf/core">
+
+    <style>
+        .pe-inputNumber{
+            width: 90% !important;
+        }
+    </style>
+
+    <h:form id="frmDeleteImsiInfo">
+        <p:outputPanel id="pnDeleteImsiInfo" styleClass="Containe100">
+            <div class="ContainerIndent mg-top-0">
+                <p:messages id="mesageDelete" for="pnDeleteImsiInfo" showSummary="false" globalOnly="true" showDetail="true" closable="true"/>
+            </div>
+            <div class="ContainerIndent">
+                <p:outputPanel styleClass="Container33 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="imsiFrom"
+                                       value="#{lang['imsi.info.imsi.from']}"/>
+                        <p:outputLabel value="*" style="color: red"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid ui-relative">
+                        <p:inputText
+                                id="imsiFrom"
+                                maxlength="15"
+                                value="#{imsiInfoController.imsiInfoDTO.fromImsi}">
+                            <p:ajax event="change" process="@this"
+                                    listener="#{imsiInfoController.onChangeImsiFromAddForm('frmDeleteImsiInfo:imsiFrom')}"/>
+                        </p:inputText>
+                        <p:message for="imsiFrom"/>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel styleClass="Container33 Responsive50" id="pnProductAdd">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['imsi.info.imsi.to']}"/>
+                        <p:outputLabel value="*" style="color: red"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid ui-relative">
+                        <p:inputText
+                                id="imsiTo"
+                                maxlength="15"
+                                value="#{imsiInfoController.imsiInfoDTO.toImsi}">
+                            <p:ajax event="change" process="@this"
+                                    listener="#{imsiInfoController.onChangeImsiToAddForm('frmDeleteImsiInfo:imsiTo')}"/>
+                        </p:inputText>
+                        <p:message for="imsiTo"/>
+                    </div>
+                </p:outputPanel>
+            </div>
+            <div class="Container100 TexAlCenter">
+                <cbs:confirmDialog
+                        idComponent="btnDelete"
+                        valueButton="#{lang['imsi.info.delete.button']}"
+                        headerConfirm="#{lang['imsi.info.delete.header']}"
+                        messageConfirm="#{lang['imsi.info.delete.confirm']}"
+                        actionOK="#{imsiInfoController.doDelete}"
+                        resetValueButton="true"
+                        process="@([id$=pnDeleteImsiInfo])"
+                        updateArea="@([id$=pnDeleteImsiInfo])"
+                        updateOK="@([id$=frmSearch]),@([id$=lstImsiInfo])"
+                        oncompleteOK="if(!args.validationFailed) {PF('dlgDeleteImsiInfo').hide();}"
+                        actionValidate="#{imsiInfoController.validateBeforeDelete}"
+                        focusCancel="false"
+                        isButton="true"
+                />
+                <p:commandButton value="#{lang['common.reset']}"
+                                 process="@this"
+                                 immediate="true"
+                                 actionListener="#{imsiInfoController.resetFormDelete}"
+                                 update="@([id$=pnDeleteImsiInfo])"
+                                 styleClass="mg-left-5"/>
+            </div>
+        </p:outputPanel>
+    </h:form>
+
+</ui:composition>

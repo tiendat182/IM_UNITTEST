@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        >
+<composite:interface>
+    <composite:attribute name="idComponent" shortDescription="id of form"/>
+    <composite:attribute name="selectMode" shortDescription="status is single or multiple," required="true"/>
+    <composite:attribute name="styleClass" default="sale" shortDescription="styleClass"/>
+    <composite:attribute name="valueCode" shortDescription="name code" required="true"/>
+    <composite:attribute name="updateAddArea" default="" shortDescription="area render after add data look up"/>
+    <composite:attribute name="controller" shortDescription="controller object" required="true"/>
+    <composite:attribute name="setDataMethod" shortDescription="styleClass" required="true"/>
+    <composite:attribute name="currentObjectIdList" default="" shortDescription="seperate by comma"/>
+    <composite:attribute name="currentObjectValueList" default="" shortDescription="seperate by comma"/>
+    <composite:attribute name="excluseCurrentObject" default="false"/>
+    <composite:attribute name="requireInput" default="false" shortDescription="disable open lookup, default false"/>
+    <composite:attribute name="label" default="" required="true" shortDescription="Key language"/>
+    <composite:attribute name="disableIcon" default="false" shortDescription="disable open lookup, default false"/>
+    <composite:attribute name="filterRequestList" default=""/>
+    <composite:attribute name="passIdComponent" default="false"/>
+</composite:interface>
+<composite:implementation>
+    <cbs:lookUpLazyTextboxWrapper
+            idComponent="#{cc.attrs.idComponent}"
+            id="#{cc.attrs.idComponent}"
+            selectMode="#{cc.attrs.selectMode}"
+            objectName="#{cc.attrs.valueCode}"
+            serviceName="optionSetValueServiceImpl"
+            displayColumnList="id,name,value "
+            controller="#{cc.attrs.controller}"
+            setDataMethod="#{cc.attrs.setDataMethod}"
+            displayInputTextColumnList="name,value"
+            filterKeyList="OPTIONSETCODE"
+            filterValueList="#{cc.attrs.valueCode}"
+            filterRequestList="#{cc.attrs.filterRequestList}"
+            excluseCurrentObject="#{cc.attrs.excluseCurrentObject}"
+            updateAddArea="#{cc.attrs.updateAddArea}"
+            requireInput="#{cc.attrs.requireInput}"
+            label="#{cc.attrs.label}"
+            currentObjectIdList="#{cc.attrs.currentObjectIdList}"
+            currentObjectValueList="#{cc.attrs.currentObjectValueList}"
+            disableIcon="#{cc.attrs.disableIcon}"
+            modifier="#{cc.attrs.idComponent}"
+            passIdComponent="#{cc.attrs.passIdComponent}"/>
+</composite:implementation>
+</html>
+

@@ -1,0 +1,33 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:form id="frmInfoLockStaff">
+        <div class="ContainerIndent">
+            <div class="Container pnInfoLockStaff">
+                <div class="ContainerIndent mg-top-0">
+                    <div class="Container50 Responsive50">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel"
+                                           value="#{lang['view.info.staff.name']}"/>
+                        </div>
+                        <div class="Container60 Responsive50  pd-top-7">
+                            <p:outputLabel value="#{searchIsdnController.staffLock.fullName}"/>
+                        </div>
+                    </div>
+                    <div class="Container50 Responsive50">
+                        <div class="Container40 Responsive50   mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel" value="#{lang['view.info.staff.phone']}"/>
+                        </div>
+                        <div class="Container60 Responsive50  pd-top-7 ">
+                            <p:outputLabel value="#{searchIsdnController.staffLock.tel}"/>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </h:form>
+</ui:composition>

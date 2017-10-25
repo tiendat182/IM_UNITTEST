@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+<composite:interface>
+    <composite:attribute name="dlgWidgetVar" required="true"
+                         shortDescription="gia tri thuoc tinh widgetVar cua confirmDialog"/>
+    <composite:attribute name="updateArea" default="@form"
+                         shortDescription="id vung update lai du lieu sau khi xac nhan OK"/>
+    <composite:attribute name="styleButton" shortDescription="style css inline cua button"/>
+    <composite:attribute name="styleClassButton" shortDescription="style class css cua button"/>
+    <composite:attribute name="valueButton" default="Button" shortDescription="ten hien thi cua button"/>
+    <composite:attribute name="resetValueButton" default="false" shortDescription="thuoc tinh resetValue cua button"/>
+    <composite:attribute name="headerConfirm" default="Confirm" shortDescription="tieu de dialog confirm"/>
+    <composite:attribute name="messageConfirm" default="Are you sure to do action ?"
+                         shortDescription="thong diep dialog confirm"/>
+    <composite:attribute name="action" default="''" method-signature="java.lang.String action()"
+                         shortDescription="method thuc hien khi xac nhan OK"/>
+    <composite:attribute name="actionListener" default="''" method-signature="java.lang.String action()"
+                         shortDescription="method listener thuc hien khi xac nhan OK"/>
+    <composite:attribute name="process" shortDescription="submit du lieu vung nao len server"/>
+    <composite:attribute name="oncompleteOK" shortDescription="method js callback sau khi an OK"/>
+    <composite:attribute name="disableButton" default="false" shortDescription="disable button"/>
+    <composite:attribute name="actionValidate" default="''" method-signature="java.lang.String action()"
+                         shortDescription="method validate khi an nut chuc nang, truoc khi bat confirm"/>
+    <composite:attribute name="focusCancel" required="false" shortDescription="Them icon" default="true"/>
+    <composite:attribute name="titleLink" required="false" shortDescription="title cua link"/>
+    <composite:attribute name="imageLink" required="false" default="''" shortDescription="image cua link"/>
+</composite:interface>
+<composite:implementation>
+    <p:commandLink
+            rendered="#{cc.attrs.focusCancel eq 'true' and cc.attrs.imageLink eq ''}"
+            oncomplete="if(!args.validationFailed){PF('#{cc.attrs.dlgWidgetVar}').show();setTimeout('focusCancelButton()',150);}else {topPage();}"
+            update="#{cc.attrs.updateArea}"
+            process="#{cc.attrs.process}" resetValues="#{cc.attrs.resetValueButton}"
+            style="#{cc.attrs.styleButton}" styleClass="#{cc.attrs.styleClassButton} #{cc.attrs.dlgWidgetVar}"
+            value="#{cc.attrs.valueButton}"
+            disabled="#{cc.attrs.disableButton}"
+            action="#{cc.attrs.actionValidate}"
+            onfocus="jQuery('.#{cc.attrs.dlgWidgetVar}').css('border','1px dotted gray');"
+            onblur="jQuery('.#{cc.attrs.dlgWidgetVar}').css('border','none');"
+            title="#{cc.attrs.titleLink}">
+    </p:commandLink>
+    <p:commandLink
+            rendered="#{cc.attrs.focusCancel eq 'false' and cc.attrs.imageLink eq ''}"
+            oncomplete="if(!args.validationFailed){PF('#{cc.attrs.dlgWidgetVar}').show();setTimeout('focusYesButton()',150);}else {topPage();}"
+            update="#{cc.attrs.updateArea}"
+            process="#{cc.attrs.process}" resetValues="#{cc.attrs.resetValueButton}"
+            style="#{cc.attrs.styleButton}" styleClass="#{cc.attrs.styleClassButton} #{cc.attrs.dlgWidgetVar}"
+            value="#{cc.attrs.valueButton}"
+            disabled="#{cc.attrs.disableButton}"
+            action="#{cc.attrs.actionValidate}"
+            onfocus="jQuery('.#{cc.attrs.dlgWidgetVar}').css('border','1px dotted gray');"
+            onblur="jQuery('.#{cc.attrs.dlgWidgetVar}').css('border','none');"
+            title="#{cc.attrs.titleLink}">
+    </p:commandLink>
+    <!--phuvk bo sung image link-->
+    <p:commandLink
+            rendered="#{cc.attrs.focusCancel eq 'true' and cc.attrs.imageLink ne ''}"
+            oncomplete="if(!args.validationFailed){PF('#{cc.attrs.dlgWidgetVar}').show();setTimeout('focusCancelButton()',150);}else {topPage();}"
+            update="#{cc.attrs.updateArea}"
+            process="#{cc.attrs.process}" resetValues="#{cc.attrs.resetValueButton}"
+            style="#{cc.attrs.styleButton}" styleClass="#{cc.attrs.styleClassButton} #{cc.attrs.dlgWidgetVar}"
+            disabled="#{cc.attrs.disableButton}"
+            action="#{cc.attrs.actionValidate}"
+            onfocus="jQuery('.#{cc.attrs.dlgWidgetVar}').css('border','1px dotted gray');"
+            onblur="jQuery('.#{cc.attrs.dlgWidgetVar}').css('border','none');"
+            title="#{cc.attrs.titleLink}">
+        <p:graphicImage value="#{cc.attrs.imageLink}" alt="" height="16px"/>
+    </p:commandLink>
+    <p:commandLink
+            rendered="#{cc.attrs.focusCancel eq 'false' and cc.attrs.imageLink ne ''}"
+            oncomplete="if(!args.validationFailed){PF('#{cc.attrs.dlgWidgetVar}').show();setTimeout('focusYesButton()',150);}else {topPage();}"
+            update="#{cc.attrs.updateArea}"
+            process="#{cc.attrs.process}" resetValues="#{cc.attrs.resetValueButton}"
+            style="#{cc.attrs.styleButton}" styleClass="#{cc.attrs.styleClassButton} #{cc.attrs.dlgWidgetVar}"
+            disabled="#{cc.attrs.disableButton}"
+            action="#{cc.attrs.actionValidate}"
+            onfocus="jQuery('.#{cc.attrs.dlgWidgetVar}').css('border','1px dotted gray');"
+            onblur="jQuery('.#{cc.attrs.dlgWidgetVar}').css('border','none');"
+            title="#{cc.attrs.titleLink}">
+        <p:graphicImage value="#{cc.attrs.imageLink}" alt="" height="16px"/>
+    </p:commandLink>
+
+    <p:confirmDialog closeOnEscape="true" closable="true"
+                     widgetVar="#{cc.attrs.dlgWidgetVar}"
+                     header="#{cc.attrs.headerConfirm}"
+                     message="#{cc.attrs.messageConfirm}">
+        <p:remoteCommand name="focusCancelButton" process="@this" oncomplete="focusCancelButton1()" global="false"
+                         rendered="#{cc.attrs.focusCancel eq 'true'}"/>
+        <p:remoteCommand name="focusYesButton" process="@this" oncomplete="focusYesButton1()" global="false"
+                         rendered="#{cc.attrs.focusCancel eq 'false'}"/>
+
+        <div align="center">
+            <p:commandButton
+                    id="yesButton"
+                    widgetVar="yesButton"
+                    action="#{cc.attrs.action}"
+                    actionListener="#{cc.attrs.actionListener}"
+                    update="#{cc.attrs.updateArea}"
+                    process="#{cc.attrs.process}"
+                    resetValues="#{cc.attrs.resetValueButton}"
+                    onstart="PF('#{cc.attrs.dlgWidgetVar}').hide();"
+                    oncomplete="#{cc.attrs.oncompleteOK}"
+                    value="#{lang['common.button.YES']}"
+                    icon="ui-icon-check"
+                    ajax="true"
+                    tabindex="1"/>
+            <p:commandButton id="cancelButton" widgetVar="cancelButton"
+                             type="button" onclick="PF('#{cc.attrs.dlgWidgetVar}').hide();"
+                             style="margin-left: 15px;"
+                             value="#{lang['common.button.NO']}"
+                             icon="ui-icon-circle-close"
+                             tabindex="2"/>
+            <script type="text/javascript">
+                function focusCancelButton1() {
+                    try {
+                        PF('cancelButton').getJQ().focus();
+                    } catch (e) {
+                    }
+                }
+                function focusYesButton1() {
+                    try {
+                        PF('yesButton').getJQ().focus();
+                    } catch (e) {
+                    }
+                }
+            </script>
+        </div>
+    </p:confirmDialog>
+</composite:implementation>
+</html>
+

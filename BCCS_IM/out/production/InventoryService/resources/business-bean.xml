@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   		http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+    <!--<bean id="fileUtilBean" class="com.viettel.bccs.inventory.common.ExecuteFileUtils">
+        <property name="serverName" value="${FTP_USER_HOST}"/>
+        <property name="userName" value="${FTP_USER_USERNAME}"/>
+        <property name="password" value="${FTP_USER_PASSWORD}"/>
+        <property name="serverDir" value="${FTP_USER_SERVER_DIR}"/>
+    </bean>-->
+
+
+
+</beans>

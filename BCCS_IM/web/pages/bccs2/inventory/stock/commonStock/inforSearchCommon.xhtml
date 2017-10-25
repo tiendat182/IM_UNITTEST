@@ -1,0 +1,218 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <p:outputPanel id="frmExportSearch">
+        <p:outputPanel styleClass="ContainerIndent">
+            <cbs:panel classForToggle="pnlInforSearch" toggle="true"
+                       titleHeader="#{lang['create.note.export.info.search']}"/>
+
+            <div class="pnlInforSearch Container100 paddingTopBottom10">
+                <p:outputPanel styleClass="Container100">
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive33">
+                            <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['export.stock.code.export.note']}"
+                                               styleClass="lb-sentinel"
+                                               for="txtCodeTrans"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid ">
+                                <p:inputText id="txtCodeTrans"
+                                             value="#{agencyExportStockController.forSearch.actionCode}"
+                                             placeholder="#{lang['export.stock.code.export.note.placeholder']}"
+                                             onblur="this.value=this.value.trim()"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive33">
+                            <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['common.status']}"
+                                               styleClass="lb-sentinel"
+                                               for="cobStatus"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu
+                                        itemLabelEscaped="true"
+                                        id="cobStatus" filter="true" filterMatchMode="contains"
+                                        value="#{agencyExportStockController.forSearch.stockTransStatus}">
+                                    <f:selectItem itemValue=""
+                                                  itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                    <f:selectItems value="#{agencyExportStockController.optionSetValueDTOsList}"
+                                                   var="optionSetValueDTOsList"
+                                                   itemLabel="#{optionSetValueDTOsList.name}"
+                                                   itemValue="#{optionSetValueDTOsList.value}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <cbs:inputShop value="#{agencyExportStockController.shopInfoTagExport}"
+                                           idComponent="ipExportShop"
+                                           methodName="doExportShop"
+                                           update="@this"
+                                           limit="#{agencyExportStockController.limitAutoComplete}"
+                                           label="#{lang['export.order.stock']}"
+                                           require="false"
+                                           classDivLabel="Container40 Responsive50 mg-left-15 pd-top-7"
+                                           classDivInput="Container60 Responsive50 ui-fluid"
+                                           requiredMessage="#{lang['export.order.stock.require.msg']}"
+                                           placeholder="#{lang['export.order.stock.placehoder']}"
+                                           styleClass="lb-sentinel-bold"
+                                    >
+                            </cbs:inputShop>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive">
+                            <cbs:inputShop value="#{agencyExportStockController.shopInfoTagReceive}"
+                                           idComponent="ipReceiveShop"
+                                           methodName="doReceiveShop"
+                                           update="@this"
+                                           limit="#{agencyExportStockController.limitAutoComplete}"
+                                           label="#{lang['create.note.warehouse.import']}"
+                                           require="false"
+                                           forceSelection="false"
+                                           clearMethodName="clearCurrentShop"
+                                           classDivLabel="Container40 Responsive50 mg-left-15 pd-top-7"
+                                           classDivInput="Container60 Responsive50 ui-fluid"
+                                           requiredMessage="#{lang['export.order.stock.require.msg']}"
+                                           placeholder="#{lang['export.order.stock.receive.product']}"
+                                           styleClass="lb-sentinel-bold"
+                                    >
+                            </cbs:inputShop>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.from.date']}"
+                                               for="fromDate"
+                                               styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar id="fromDate"
+                                            value="#{agencyExportStockController.forSearch.startDate}"
+                                            required="true"
+                                            placeholder="#{lang['create.note.from.date.placeholder']}"
+                                            requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                                <cbs:message forId="fromDate"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.to.date']}"
+                                               for="toDate"
+                                               styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar id="toDate"
+                                            required="true"
+                                            value="#{agencyExportStockController.forSearch.endDate}"
+                                            placeholder="#{lang['create.note.to.date.placeholder']}"
+                                            requiredMessage="#{lang['mn.stock.to.date.not.blank']}"/>
+                                <cbs:message forId="toDate"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Conatiner100 TexAlCenter">
+                        <p:commandButton value="#{lang['create.note.search']}"
+                                         process="@([id$=pnSearch])"
+                                         resetValues="true"
+                                         action="#{agencyExportStockController.doSearchStockTrans}"
+                                         update="@form">
+                            <f:actionListener binding="#{agencyExportStockController.doBackPage()}"/>
+                        </p:commandButton>
+                        <p:commandButton value="#{lang['common.reset']}" process="@this" styleClass="mg-left-5"
+                                         resetValues="true"
+                                         action="#{agencyExportStockController.doResetSearhStockTrans}" update="@form"/>
+                    </div>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+        <p:outputPanel styleClass="ContainerIndent">
+            <div class="Container100">
+                <cbs:panel classForToggle="panellstExportNote" toggle="true"
+                           titleHeader="#{lang['export.stock.list.export.note']}"/>
+
+                <div class="Container100 panellstExportNote" style="margin-bottom: 10px;margin-top: 10px;">
+                    <p:dataTable
+                            id="lstDataExport"
+                            selectionMode="single"
+                            value="#{agencyExportStockController.vStockTransDTOList}"
+                            var="stockTran"
+                            rowKey="#{stockTran.stockTransID}"
+                            resizableColumns="true"
+                            paginator="#{lang['common.paging.paginator']}"
+                            rows="#{lang['common.paging.rows.default']}"
+                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                            emptyMessage=""
+                            rowIndexVar="rowIndex">
+
+                        <p:column headerText="#{lang['common.rowIndex']}"
+                                  styleClass="col-left" style="width:60px">
+                            <p:outputLabel value="#{rowIndex+1}" title="#{rowIndex+1}"/>
+                        </p:column>
+                        <p:column headerText="#{lang['export.stock.code.export.note']}"
+                                  styleClass="col-left">
+                            <p:outputLabel value="#{stockTran.actionCode}" title="#{stockTran.actionCode}"/>
+                        </p:column>
+                        <p:column headerText="#{lang['create.note.create.date']}" styleClass="col-left">
+                            <p:outputLabel value="#{stockTran.createDateTrans}" title="#{stockTran.createDateTrans}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="#{lang['create.note.warehouse.export']}" styleClass="col-left">
+                            <p:outputLabel value="#{stockTran.fromOwnerName}" title="#{stockTran.fromOwnerName}"/>
+                        </p:column>
+                        <p:column headerText="#{lang['create.note.warehouse.import']}"
+                                  styleClass="col-left">
+                            <p:outputLabel value="#{stockTran.toOwnerName}" title="#{stockTran.toOwnerName}"/>
+                        </p:column>
+                        <p:column headerText="#{lang['create.note.reason.export']}" styleClass="col-left">
+                            <p:outputLabel value="#{stockTran.reasonName}" title="#{stockTran.reasonName}"/>
+                        </p:column>
+                        <p:column headerText="#{lang['common.status']}" styleClass="col-left">
+                            <p:outputLabel value="#{stockTran.statusName}" title="#{stockTran.statusName}"/>
+                        </p:column>
+
+                        <p:column headerText="#{lang['create.note.note']}" styleClass="col-left">
+                            <p:outputLabel value="#{stockTran.note}" title="#{stockTran.note}"/>
+                        </p:column>
+
+
+                        <p:column headerText="#{lang['create.note.effect']}" style="text-align: center">
+                            <p:commandLink styleClass="fa icon-zoom-in Fs12 black"
+                                           style="text-decoration: none!important;"
+                                           disabled="#{stockTran.stockTransStatus != 2}"
+                                           title="#{lang['common.view.detail']}"
+                                           actionListener="#{agencyExportStockController.doViewStockTransDetail(stockTran)}"
+                                           process="@this"
+                                           update="@([id$=frmExportNote])"/>
+
+                            <cbs:confirmDialog
+                                    idComponent="btnCancelTrans_#{stockTran.actionID}"
+                                    valueButton=""
+                                    disableButton="#{stockTran.stockTransStatus == 3
+                                    or stockTran.stockTransStatus == 6
+                                    or stockTran.stockTransStatus == 7}"
+                                    styleClassButton="fa icon-cancel-2 Fs14 blue "
+                                    headerConfirm="#{lang['export.order.stock.confirm.cancel']}"
+                                    messageConfirm="#{lang['export.order.stock.confirm.cancel.msg']}"
+                                    actionOK="#{agencyExportStockController.doCancelStockTrans(stockTran.actionID)}"
+                                    resetValueButton="false"
+                                    process="@([id$=frmExportNote])"
+                                    updateArea="@([id$=frmExportNote])"
+                                    titleButton="#{lang['common.cancel.trans']}"
+                                    focusCancel="false"
+                                    isButton="false"
+                                    />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+</ui:composition>

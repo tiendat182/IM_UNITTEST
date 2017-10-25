@@ -1,0 +1,391 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:of="http://omnifaces.org/functions"
+        template="../../../sentinel/template.xhtml"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:define name="title">#{lang['BCCS2_IM_QLKHO_THUHOI_DUYET_YC']}</ui:define>
+    <ui:define name="featureName">#{lang['BCCS2_IM_QLKHO_THUHOI_DUYET_YC']}</ui:define>
+    <ui:define name="content">
+        <h:form id="formRequestProduct">
+            <style type="text/css">
+                .pInput input {
+                    width: 95%;
+                }
+                .provinceLink a:hover {
+                    text-decoration: underline;
+                }
+
+            </style>
+            <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"/>
+            </div>
+            <!--Start vung tim kiem yeu thu hoi-->
+            <p:outputPanel styleClass="Container" rendered="#{!recoveryProductApproveRequestController.viewDetaiRequest}">
+                <p:focus for="@form" />
+                <p:outputPanel styleClass="ContainerIndent" >
+                    <cbs:panel classForToggle="pnSearch" toggle="true" titleHeader="#{lang['mn.stock.limit.info.range.time.promotion']}"/>
+                    <p:outputPanel styleClass="Container pnSearch" id="pnSearchOrder">
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['stock.rescue.warranty.stock.rescue.request.code']}"
+                                                   for="requestCodeTxt"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:inputText id="requestCodeTxt"
+                                                 maxlength="50"
+                                                 onblur="this.value = this.value.trim();"
+                                                 value="#{recoveryProductApproveRequestController.requestOrderDTOSearch.orderCode}"
+                                                 placeholder="#{lang['stock.rescue.warranty.stock.rescue.request.code.placeholder']}"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50  mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['create.note.from.date']}" styleClass="lb-sentinel"
+                                                   for="fromDate"/>
+                                </div>
+                                <div class="Container60 Responsive50  ui-fluid">
+                                    <p:calendar
+                                            mask="true"
+                                            pattern="#{lang['common.datetime.format']}"
+                                            converterMessage="#{lang['invalid.date.message']}"
+                                            validatorMessage="#{lang['start.date.validate.message']}"
+                                            value="#{recoveryProductApproveRequestController.requestOrderDTOSearch.fromDate}"
+                                            placeholder="#{lang['common.datetime.format']}"
+                                            required="true"
+                                            requiredMessage="#{lang['mn.stock.from.date.not.blank']}"
+                                            styleClass="fromDate"
+                                            id="fromDate">
+                                        <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                    </p:calendar>
+                                    <p:message for="fromDate"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['create.note.to.date']}" for="toDate"
+                                                   styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:calendar id="toDate"
+                                                mask="true"
+                                                pattern="#{lang['common.datetime.format']}"
+                                                converterMessage="#{lang['invalid.date.message']}"
+                                                validatorMessage="#{lang['start.date.validate.message']}"
+                                                value="#{recoveryProductApproveRequestController.requestOrderDTOSearch.endDate}"
+                                                required="true"
+                                                styleClass="toDate"
+                                                placeholder="#{lang['create.note.to.date.placeholder']}"
+                                                requiredMessage="#{lang['mn.stock.to.date.not.blank']}">
+                                        <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                    </p:calendar>
+                                    <p:message for="toDate"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 pd-top-7 mg-left-15">
+                                    <p:outputLabel value="#{lang['mn.stock.change.product.offering.approve.shop']}" styleClass="lb-sentinel" />
+                                </div>
+                                <p:outputPanel styleClass="Container60 Responsive50 ui-fluid ui-relative" id="pnShop">
+                                    <p:outputLabel id="shopAu_hidden" style="display:none;"
+                                                   value="#{recoveryProductApproveRequestController.vShopStaffDTO.ownerName}"/>
+                                    <pe:keyFilter for="shopAu" preventPaste="false"
+                                                  regEx="/[a-z0-9A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\._\-+]/i"/>
+                                    <p:autoComplete id="shopAu" value="#{recoveryProductApproveRequestController.vShopStaffDTO}" forceSelection="true"
+                                                    completeMethod="#{recoveryProductApproveRequestController.doSelectShop}"
+                                                    placeholder="#{lang['common.search.shop.placehoder']}"
+                                                    onfocus="this.setSelectionRange(0, this.value.length)"
+                                                    var="vShopStaffDTO" required="false"
+                                                    maxResults="#{recoveryProductApproveRequestController.limitAutoComplete}"
+                                                    itemLabel="#{vShopStaffDTO.itemLabel}"
+                                                    title="#{vShopStaffDTO.itemLabel}"
+                                                    label="#{vShopStaffDTO.itemLabel}"
+                                                    itemValue="#{vShopStaffDTO}"
+                                                    styleClass="ui-autocomplete autoCpl"
+                                                    maxlength="100" scrollHeight="300"
+                                    >
+                                        <o:converter converterId="VShopStaffConverter" list="#{recoveryProductApproveRequestController.lsVshopStaffDTO}"/>
+                                        <p:ajax event="itemSelect" update="@none" process="@this"/>
+                                        <p:column headerText="#{lang['common.lb.code']}">
+                                            <h:outputLabel escape="true" value="#{vShopStaffDTO.ownerCode}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['common.lb.name']}"><h:outputLabel escape="true"
+                                                                                                        value="#{vShopStaffDTO.ownerName}"/></p:column>
+                                        <p:ajax event="query" global="false"/>
+                                    </p:autoComplete>
+                                    <p:commandLink styleClass="ui-link-right" update="@this, @([id$=shopAu])"
+                                                   actionListener="#{recoveryProductApproveRequestController.doResetShop}" process="@this">
+                                        <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                    </p:commandLink>
+                                </p:outputPanel>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15  pd-top-4">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['common.status']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid ">
+                                    <p:selectOneMenu id="status" value="#{recoveryProductApproveRequestController.requestOrderDTOSearch.status}">
+                                        <f:selectItem itemValue="" itemLabel="#{lang['common.select.all']}"/>
+                                        <f:selectItem itemValue="0" itemLabel="#{lang['mn.stock.branch.btn.create.request']}"/>
+                                        <f:selectItem itemValue="1" itemLabel="#{lang['import.partner.request.status1']}"/>
+                                        <f:selectItem itemValue="2" itemLabel="#{lang['import.partner.request.status2']}"/>
+                                        <f:selectItem itemValue="3" itemLabel="#{lang['common.cancel']}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive"> </div>
+                        </div>
+                        <div class="Conatiner TexAlCenter">
+                            <p:commandButton value="#{lang['create.note.search']}" process="@this,@([id$=pnSearchOrder])"
+                                             actionListener="#{recoveryProductApproveRequestController.doSearchRequestOrder}" update="@form"/>
+                            <p:commandButton value="#{lang['common.reset']}" process="@this" update="@form" styleClass="mg-left-5"
+                                             actionListener="#{recoveryProductApproveRequestController.doResetSearchRequestOrder}" />
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+                <p:outputPanel id="pnListSearch" styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="pViewSeach" toggle="true" titleHeader="#{lang['mn.stock.list.result.search']}"/>
+                    <div class="pViewSeach Container">
+                        <p:dataTable
+                                var="stockRequest"
+                                resizableColumns="true"
+                                reflow="false"
+                                rowIndexVar="index"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.empty.records']}"
+                                value="#{recoveryProductApproveRequestController.lsStockOrder}">
+
+                            <p:column styleClass="col-left" sortBy="#{stockRequest.orderCode}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['stock.rescue.warranty.stock.rescue.request.code']}" title="#{lang['stock.rescue.warranty.stock.rescue.request.code']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockRequest.orderCode}" title="#{stockRequest.orderCode}"/>
+                            </p:column>
+                            <p:column styleClass="col-left" sortBy="#{stockRequest.ownerFullName}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.balance.stock.request.shop']}" title="#{lang['mn.balance.stock.request.shop']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockRequest.ownerFullName}" title="#{stockRequest.ownerFullName}"/>
+                            </p:column>
+                            <p:column sortBy="#{stockRequest.statusName}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['stock.rescue.warranty.create.status']}" title="#{lang['stock.rescue.warranty.create.status']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockRequest.statusName}" title="#{stockRequest.statusName}"/>
+                            </p:column>
+                            <p:column sortBy="#{stockRequest.strCreateDatetime}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['stock.rescue.warranty.create.date']}" title="#{lang['stock.rescue.warranty.create.date']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockRequest.strCreateDatetime}" title="#{stockRequest.strCreateDatetime}" />
+                            </p:column>
+                            <p:column sortBy="#{stockRequest.createUser}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['export.order.create.whom']}" title="#{lang['export.order.create.whom']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockRequest.createUser}" />
+                            </p:column>
+                            <p:column style="text-align: center">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['create.note.effect']}"
+                                                  title="#{lang['create.note.effect']}"/>
+                                </f:facet>
+                                <p:commandLink styleClass="fa icon-zoom-in Fs16 blue icon-link" resetValues="true"
+                                               update="@form" process="@this"
+                                               title="#{lang['common.view.detail.trans']}"
+                                               actionListener="#{recoveryProductApproveRequestController.doSeachRequestOrderDetail(stockRequest)}"/>
+                            </p:column>
+                        </p:dataTable>
+
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+            <p:outputPanel styleClass="Container" rendered="#{recoveryProductApproveRequestController.viewDetaiRequest}">
+                <p:focus for="@form" />
+                <p:outputPanel id="viewInfor" styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="panelInforRequest" toggle="true" titleHeader="#{lang['mn.stock.request.search.prod.order']}"/>
+                    <div class="Container panelInforRequest" style="margin-bottom: 10px;margin-top: 10px;">
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                    <p:outputLabel value="#{lang['stock.rescue.warranty.stock.rescue.request.code']}" styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 pd-top-4">
+                                    <p:outputLabel value="#{recoveryProductApproveRequestController.stockRequestOrderDTOView.orderCode}" />
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 pd-top-4">
+                                    <p:outputLabel value="#{lang['mn.stock.change.product.offering.approve.shop']}" styleClass="lb-sentinel" />
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                    <p:outputLabel value="#{recoveryProductApproveRequestController.stockRequestOrderDTOView.ownerFullName}" />
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+
+                            </div>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel id="pnlInfoDetailStockModel" styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="panelDetailStock" toggle="true" titleHeader="#{lang['mn.stock.request.product.list']}"/>
+                    <div class="Container panelDetailStock" style="margin-bottom: 10px;margin-top: 10px;">
+                        <p:dataTable
+                                var="stockOrderDetail"
+                                resizableColumns="true"
+                                reflow="false"
+                                rowIndexVar="index"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.empty.records']}"
+                                value="#{recoveryProductApproveRequestController.lsStockRequestOrderDetail}">
+
+                            <p:column style="width: 15%" styleClass="col-left"
+                                      sortBy="#{stockOrderDetail.fromOwnerName}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.stock.change.product.offering.approve.export.shop']}"
+                                                  title="#{lang['mn.stock.change.product.offering.approve.export.shop']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockOrderDetail.fromOwnerName}" title="#{stockOrderDetail.fromOwnerName}"/>
+                            </p:column>
+                            <p:column style="width: 15%" styleClass="col-left" sortBy="#{stockOrderDetail.prodOfferTypeName}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.stock.utilities.view.prod.offer.type']}" title="#{lang['mn.stock.utilities.view.prod.offer.type']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockOrderDetail.prodOfferTypeName}"
+                                               title="#{stockOrderDetail.prodOfferTypeName}"/>
+                            </p:column>
+                            <p:column style="width: 15%" styleClass="col-left"
+                                      sortBy="#{stockOrderDetail.prodOfferName}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['export.order.name.product.type']}"
+                                                  title="#{lang['export.order.name.product.type']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockOrderDetail.prodOfferName}"
+                                               title="#{stockOrderDetail.prodOfferName}"/>
+                            </p:column>
+                            <p:column style="width: 12%" styleClass="col-left" sortBy="#{stockOrderDetail.stateName}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['common.status']}" title="#{lang['common.status']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockOrderDetail.stateName}"
+                                               title="#{stockOrderDetail.stateName}"/>
+                            </p:column>
+                            <p:column  style="text-align: right;width: 10%" sortBy="#{stockOrderDetail.requestQuantity}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.stock.request.product.number.request']}" title="#{lang['mn.stock.request.product.number.request']}"/>
+                                </f:facet>
+                                <h:outputText converter="currencyFormat" styleClass="lb-sentinel" value="#{stockOrderDetail.requestQuantity}"/>
+                            </p:column>
+                            <p:column style="text-align: right;width: 10%" sortBy="#{stockOrderDetail.approvedQuantity}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.stock.request.product.number.request.approve']}"
+                                                  title="#{lang['mn.stock.request.product.number.request.approve']}"/>
+                                </f:facet>
+                                <pe:keyFilter for="requestQuantityInput" regEx="/[0-9]+/i" preventPaste="true"/>
+                                <pe:inputNumber rendered="#{stockOrderDetail.editApproveQuantity}"
+                                                value="#{stockOrderDetail.approvedQuantity}"  decimalPlaces="0" maxValue="9999999999" styleClass="pInput txtNumber#{index}"
+                                                id="requestQuantityInput"  >
+                                    <p:ajax event="blur" process="@this" />
+                                </pe:inputNumber>
+                                <pe:keyFilter for="requestQuantityInput" regEx="/[0-9]+/i" preventPaste="true"/>
+
+
+                                <h:outputText rendered="#{!stockOrderDetail.editApproveQuantity}" escape="true" converter="currencyFormat" styleClass="lb-sentinel" value="#{stockOrderDetail.approvedQuantity}"/>
+                            </p:column>
+                            <p:column styleClass="col-left" style="width: 15%"
+                                      sortBy="#{stockOrderDetail.strCreateDateTime}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['stock.rescue.warranty.create.request.date']}"
+                                                  title="#{lang['stock.rescue.warranty.create.request.dateTC']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockOrderDetail.strCreateDateTime}"
+                                               title="#{stockOrderDetail.strCreateDateTime}"/>
+                            </p:column>
+                            <p:column styleClass="col-left" style="width: 15%" rendered="#{recoveryProductApproveRequestController.loginUserShopVT
+                                                                and !recoveryProductApproveRequestController.disableBtnApprove}"
+                                      sortBy="#{stockOrderDetail.strCreateDateTime}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['range.time.promotion.edit']}"
+                                                  title="#{lang['range.time.promotion.edit']}"/>
+                                </f:facet>
+                                <p:commandLink value="#{lang['range.time.promotion.edit']}" style="text-decoration: none"
+                                               actionListener="#{recoveryProductApproveRequestController.doChangeQuantity(index)}"
+                                               process="@this" update="@([id$=pnlInfoDetailStockModel])" />
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel id="pnVoffice" styleClass="Container" rendered="#{recoveryProductApproveRequestController.loginUserShopVT
+                                                                and !recoveryProductApproveRequestController.disableBtnApprove}">
+                    <cbs:inputSignOffice idComponent="writeOffice" value="#{recoveryProductApproveRequestController.writeOfficeTag}" title="#{lang['export.order.view.office']}"/>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ContainerIndent TexAlCenter mg-top-0" rendered="#{recoveryProductApproveRequestController.viewDetaiRequest}">
+                    <cbs:confirmDialog
+                            disableButton="#{!recoveryProductApproveRequestController.loginUserShopVT or recoveryProductApproveRequestController.disableBtnApprove}"
+                            idComponent="btnConfirm1"
+                            valueButton="#{lang['debit.select.status2']}"
+                            titleButton="#{lang['mn.stock.request.delete']}"
+                            headerConfirm="#{lang['mn.stock.request.approve.header']}"
+                            messageConfirm="#{of:format1(lang['import.partner.confim.approve'],recoveryProductApproveRequestController.stockRequestOrderDTOView.orderCode)}"
+                            actionOK="#{recoveryProductApproveRequestController.doApproveRequest()}"
+                            actionValidate="#{recoveryProductApproveRequestController.doValidateApproveReJectRequest()}"
+                            resetValueButton="false"
+                            process="@this,@([id$=pnVoffice])"
+                            updateArea="@form"
+                            updateOK="@form"
+                            focusCancel="false"
+                            isButton="true"
+                            >
+                    </cbs:confirmDialog>
+                    <cbs:confirmDialog
+                            disableButton="#{!recoveryProductApproveRequestController.loginUserShopVT or recoveryProductApproveRequestController.disableBtnApprove}"
+                            idComponent="btnConfirm2"
+                            valueButton="#{lang['common.reject']}"
+                            titleButton="#{lang['mn.stock.request.reject.header']}"
+                            headerConfirm="#{lang['mn.stock.request.reject.header']}"
+                            messageConfirm="#{of:format1(lang['import.partner.confirm.reject'],recoveryProductApproveRequestController.stockRequestOrderDTOView.orderCode)}"
+                            actionOK="#{recoveryProductApproveRequestController.doRejectRequest()}"
+                            actionValidate="#{recoveryProductApproveRequestController.doValidateApproveReJectRequest()}"
+                            resetValueButton="false"
+                            process="@this"
+                            updateArea="@form"
+                            updateOK="@form"
+                            focusCancel="true"
+                            isButton="true"
+                    >
+                    </cbs:confirmDialog>
+                    <p:commandButton value="#{lang['common.back.page']}"
+                                     process="@this"
+                                     styleClassButton="mg-left-5"
+                                     update="@form"
+                                     actionListener="#{recoveryProductApproveRequestController.doBackPage}">
+                    </p:commandButton>
+                </p:outputPanel>
+            </p:outputPanel>
+            <!--End vung tim kiem yeu thu hoi-->
+        </h:form>
+    </ui:define>
+</ui:composition>

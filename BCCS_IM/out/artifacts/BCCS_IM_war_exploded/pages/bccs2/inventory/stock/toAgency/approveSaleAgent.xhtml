@@ -1,0 +1,361 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.agency.approve.sale']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.agency.approve.sale']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmApproveSale">
+            <p:outputPanel styleClass="Container" id="pnExportNote">
+                <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                    <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel styleClass="Container100">
+                    <p:focus for="frmApproveSale"/>
+                    <!--Start vung thong tin tim kiem-->
+                    <p:outputPanel id="pnInfoSearch" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInforSearch" toggle="true"
+                                   titleHeader="#{lang['create.note.export.info.search']}"/>
+
+                        <div class="Container100 panelInforSearch" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container50 Responsive50">
+                                    <cbs:inputShop value="#{approveSaleAgentController.shopInfoTag}"
+                                                   idComponent="receiveShop"
+                                                   methodName="receiveShop"
+                                                   update="@this"
+                                                   limit="#{approveSaleAgentController.limitAutoComplete}"
+                                                   label="#{lang['mn.stock.agency.approve.sale.agent']}"
+                                                   require="false"
+                                                   forceSelection="false"
+                                                   clearMethodName="clearCurrentShop"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-7"
+                                                   classDivInput="Container60 Responsive50 ui-fluid"
+                                                   placeholder="#{lang['mn.stock.agency.approve.sale.agent.placeholder']}">
+                                    </cbs:inputShop>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['common.status']}" styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu itemLabelEscaped="true" id="cbxStatus" filter="true"
+                                                         filterMatchMode="contains"
+                                                         value="#{approveSaleAgentController.saleAgentSearch.approveStatus}">
+                                            <f:selectItem itemValue=""
+                                                          itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                            <f:selectItems
+                                                    value="#{approveSaleAgentController.listStatus}"
+                                                    var="status"
+                                                    itemLabel="#{status.name}"
+                                                    itemValue="#{status.value}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['create.note.from.date']}" for="fromDate"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:calendar id="fromDate"
+                                                    value="#{approveSaleAgentController.saleAgentSearch.startDate}"
+                                                    placeholder="#{lang['create.note.from.date.placeholder']}"
+                                                    converterMessage="#{lang['mn.stock.from.date.validate.from']}"
+                                                    required="true"
+                                                    requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                                    </div>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['create.note.to.date']}" for="toDate"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:calendar id="toDate"
+                                                    value="#{approveSaleAgentController.saleAgentSearch.endDate}"
+                                                    required="true"
+                                                    converterMessage="#{lang['mn.stock.from.date.validate.to']}"
+                                                    placeholder="#{lang['create.note.to.date.placeholder']}"
+                                                    requiredMessage="#{lang['mn.stock.to.date.not.blank']}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="Container100 TexAlCenter mg-top-0">
+                                <p:commandButton value="#{lang['create.note.search']}"
+                                                 process="@([id$=pnInfoSearch])"
+                                                 action="#{approveSaleAgentController.doSearchSaleTrans}"
+                                                 update="@form"/>
+                                <p:commandButton value="#{lang['common.reset']}" process="@this" styleClass="mg-left-5"
+                                                 action="#{approveSaleAgentController.doReset}"
+                                                 update="@form"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin tim kiem-->
+                    <p:outputPanel id="pnlListApprove" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="pnlListApprove" toggle="true"
+                                   titleHeader="#{lang['mn.stock.agency.approve.sale.agent.search']}"/>
+
+                        <div class="Container100 pnlListApprove paddingTopBottom10">
+                            <div class="ContainerIndent mg-top-0">
+                                <p:dataTable
+                                        id="lstApproveSale"
+                                        var="approveSale"
+                                        value="#{approveSaleAgentController.lstApproveSaleAgentDTOs}"
+                                        rowIndexVar="index"
+                                        rowKey="#{approveSale.saleTransId}"
+                                        selection="#{approveSaleAgentController.lstApproveSaleAgentSelection}"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}">
+
+                                    <p:column sortBy="#{approveSale.saleTransCode}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.agency.approve.sale.agent.code']}"
+                                                          title="#{lang['mn.stock.agency.approve.sale.agent.code']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveSale.saleTransCode}"
+                                                       title="#{approveSale.saleTransCode}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveSale.saleTransDateString}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.agency.approve.sale.agent.date.exp']}"
+                                                          title="#{lang['mn.stock.agency.approve.sale.agent.date.exp']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveSale.saleTransDateString}"
+                                                       title="#{approveSale.saleTransDateString}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveSale.staffCreate}">
+                                        <f:facet name="header">
+                                            <h:outputText
+                                                    value="#{lang['mn.stock.agency.approve.sale.agent.create.staff']}"
+                                                    title="#{lang['mn.stock.agency.approve.sale.agent.create.staff']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveSale.staffCreate}"
+                                                       title="#{approveSale.staffCreate}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveSale.shopExp}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.agency.approve.sale.agent.shop.exp']}"
+                                                          title="#{lang['mn.stock.agency.approve.sale.agent.shop.exp']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveSale.shopExp}"
+                                                       title="#{approveSale.shopExp}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveSale.shopImp}">
+                                        <f:facet name="header">
+                                            <h:outputText
+                                                    value="#{lang['mn.stock.agency.approve.sale.agent.shop.receive']}"
+                                                    title="#{lang['mn.stock.agency.approve.sale.agent.shop.receive']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveSale.shopImp}"
+                                                       title="#{approveSale.shopImp}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveSale.approveStatusName}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.agency.approve.sale.agent.status']}"
+                                                          title="#{lang['mn.stock.agency.approve.sale.agent.status']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveSale.approveStatusName}"
+                                                       title="#{approveSale.approveStatusName}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveSale.totalAmount}"
+                                              style="text-align:right">
+                                        <f:facet name="header">
+                                            <h:outputText
+                                                    value="#{lang['mn.stock.agency.approve.sale.agent.total.amount']}"
+                                                    title="#{lang['mn.stock.agency.approve.sale.agent.total.amount']}"/>
+                                        </f:facet>
+                                        <h:outputLabel value="#{approveSale.totalAmount}"
+                                                       title="#{approveSale.totalAmount}"
+                                                       styleClass="lb-sentinel-bold"
+                                                       converter="currencyFormat">
+                                        </h:outputLabel>
+                                    </p:column>
+                                    <p:column sortBy="#{approveSale.totalDiscount}"
+                                              style="text-align:right">
+                                        <f:facet name="header">
+                                            <h:outputText
+                                                    value="#{lang['mn.stock.agency.approve.sale.agent.discount.amount']}"
+                                                    title="#{lang['mn.stock.agency.approve.sale.agent.discount.amount']}"/>
+                                        </f:facet>
+                                        <h:outputLabel value="#{approveSale.totalDiscount}"
+                                                       title="#{approveSale.totalDiscount}"
+                                                       styleClass="lb-sentinel-bold"
+                                                       converter="currencyFormat">
+                                        </h:outputLabel>
+                                    </p:column>
+                                    <p:column sortBy="#{approveSale.maxMoneyDebit}"
+                                              style="text-align:right">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.agency.approve.sale.agent.debit']}"
+                                                          title="#{lang['mn.stock.agency.approve.sale.agent.debit']}"/>
+                                        </f:facet>
+                                        <h:outputLabel value="#{approveSale.maxMoneyDebit}"
+                                                       title="#{approveSale.maxMoneyDebit}"
+                                                       styleClass="lb-sentinel-bold"
+                                                       converter="currencyFormat">
+                                        </h:outputLabel>
+                                    </p:column>
+                                    <p:column sortBy="#{approveSale.approveDate}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.track.number.browse.time']}"
+                                                          title="#{lang['mn.stock.track.number.browse.time']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveSale.approveDate}"
+                                                       title="#{approveSale.approveDate}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveSale.approveStaff}">
+                                        <f:facet name="header">
+                                            <h:outputText
+                                                    value="#{lang['mn.stock.agency.approve.sale.agent.approve.staff']}"
+                                                    title="#{lang['mn.stock.agency.approve.sale.agent.approve.staff']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveSale.approveStaff}"
+                                                       title="#{approveSale.approveStaff}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveSale.approveDate}">
+                                        <f:facet name="header">
+                                            <h:outputText
+                                                    value="#{lang['mn.stock.agency.approve.sale.agent.approve.date']}"
+                                                    title="#{lang['mn.stock.agency.approve.sale.agent.approve.date']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveSale.approveDate}"
+                                                       title="#{approveSale.approveDate}"/>
+                                    </p:column>
+                                    <p:column style="width: 10%;text-align: center">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.branch.action']}"
+                                                          title="#{lang['mn.stock.branch.action']}"/>
+                                        </f:facet>
+                                        <cbs:confirmDialog
+                                                idComponent="btnApprovess"
+                                                disableButton="#{approveSale.approveStatus != '1'}"
+                                                valueButton=""
+                                                headerConfirm="#{lang['approve.sale.agent.dialog.approve.confirm']}"
+                                                messageConfirm="#{lang['approve.sale.agent.dialog.approve.mgs']}"
+                                                actionOK="#{approveSaleAgentController.approveRequest}"
+                                                resetValueButton="false"
+                                                styleClassButton="fa icon-ok-outline Fs16 blue"
+                                                process="@this"
+                                                updateArea="@this,@([id$=frmApproveSale])"
+                                                actionValidate="#{approveSaleAgentController.validateApproveRequest(approveSale)}"
+                                                focusCancel="true"
+                                                titleButton="#{lang['debit.select.status2']}"
+                                                isButton="false"
+                                                />
+
+                                        <cbs:confirmDialog
+                                                idComponent="btnDelete"
+                                                valueButton=""
+                                                disableButton="#{approveSale.approveStatus != '1'}"
+                                                headerConfirm="#{lang['approve.sale.agent.dialog.delete.confirm']}"
+                                                messageConfirm="#{lang['approve.sale.agent.dialog.delete.mgs']}"
+                                                actionOK="#{approveSaleAgentController.denyRequest}"
+                                                resetValueButton="false"
+                                                styleClassButton="fa icon-trash Fs16 blue"
+                                                process="@this"
+                                                updateArea="@this,@([id$=frmApproveSale])"
+                                                actionValidate="#{approveSaleAgentController.validateDenyRequest(approveSale)}"
+                                                focusCancel="true"
+                                                titleButton="#{lang['debit.select.status0']}"
+                                                isButton="false"
+                                                />
+
+                                        <p:commandLink styleClass="fa icon-zoom-in Fs12 blue"
+                                                       process="@this"
+                                                       title="#{lang['common.view.detail']}"
+                                                       update="@([id$=pnlDetailApprove]), @([id$=msgSearch])"
+                                                       actionListener="#{approveSaleAgentController.showDetail(approveSale.saleTransId)}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung danh sach tim kiem-->
+                    <!--Start vung chi tiet mat hang-->
+                    <p:outputPanel id="pnlDetailApprove" styleClass="ContainerIndent">
+                        <p:outputPanel id="pnlDetail" styleClass="ContainerIndent"
+                                       rendered="#{approveSaleAgentController.detail}">
+                            <cbs:panel classForToggle="pnlDetail" toggle="true"
+                                       titleHeader="#{lang['mn.stock.agency.approve.sale.agent.detail']}"/>
+
+                            <div class="Container100 pnlDetail paddingTopBottom10">
+                                <div class="ContainerIndent mg-top-0">
+                                    <p:dataTable
+                                            id="lstDetail"
+                                            var="approveDetail"
+                                            value="#{approveSaleAgentController.lstApproveSaleDetailDTOs}"
+                                            rowIndexVar="index"
+                                            rowKey="#{approveDetail.saleTransId}"
+                                            resizableColumns="true"
+                                            paginator="#{lang['common.paging.paginator']}"
+                                            rows="#{lang['common.paging.rows.default']}"
+                                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                            emptyMessage="#{lang['common.empty.records']}">
+                                        <p:column headerText="#{lang['common.stt']}" styleClass="TexAlCenter"
+                                                  style="width: 10%">
+                                            <p:outputLabel value="#{index + 1}"/>
+                                        </p:column>
+                                        <p:column
+                                                headerText="#{lang['mn.stock.agency.approve.sale.agent.detail.product']}"
+                                                sortBy="#{approveDetail.name}">
+                                            <p:outputLabel value="#{approveDetail.name}"
+                                                           title="#{approveDetail.name}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['common.number']}" style="text-align:right"
+                                                  sortBy="#{approveDetail.quantity}">
+                                            <h:outputLabel value="#{approveDetail.quantity}"
+                                                           title="#{approveDetail.quantity}"
+                                                           styleClass="lb-sentinel-bold"
+                                                           converter="currencyFormat">
+                                            </h:outputLabel>
+                                        </p:column>
+                                        <p:column
+                                                headerText="#{lang['mn.stock.agency.approve.sale.agent.detail.total']}"
+                                                style="text-align:right"
+                                                sortBy="#{approveDetail.totalAmount}">
+                                            <h:outputLabel value="#{approveDetail.totalAmount}"
+                                                           title="#{approveDetail.totalAmount}"
+                                                           styleClass="lb-sentinel-bold"
+                                                           converter="currencyFormat">
+                                            </h:outputLabel>
+                                        </p:column>
+                                        <p:column
+                                                headerText="#{lang['mn.stock.agency.approve.sale.agent.detail.discount']}"
+                                                style="text-align:right"
+                                                sortBy="#{approveDetail.totalDiscount}">
+                                            <h:outputLabel value="#{approveDetail.totalDiscount}"
+                                                           title="#{approveDetail.totalDiscount}"
+                                                           styleClass="lb-sentinel-bold"
+                                                           converter="currencyFormat">
+                                            </h:outputLabel>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <!--End vung chi tiet mat hang-->
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

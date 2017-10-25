@@ -1,0 +1,381 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['confirm.request.import.from.branch']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmImportPartner">
+            <p:focus for="inRequestCode"/>
+            <!--Start vung duyet yc nhap kho tu chi nhanh -->
+            <p:outputPanel id="pnlImportPartner" styleClass="Container100">
+                <div class="ContainerIndent">
+                    <p:messages id="msgContainer" showSummary="false" showDetail="true"
+                                closable="true"/>
+                </div>
+                <p:outputPanel id="pnlInforRequest" styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="panelInforRequest" toggle="true"
+                               titleHeader="#{lang['mn.stock.limit.info.range.time.promotion']}"/>
+
+                    <div class="Container100 mg-top-10">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50  mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['mn.stock.limit.order.code']}"
+                                               styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="inRequestCode" maxlength="50"
+                                             placeholder="#{lang['mn.stock.limit.order.code.placehoder']}"
+                                             value="#{confirmRequestImportController.requestDTO.requestCode}"/>
+                            </div>
+                        </div>
+
+                        <div class="Container33 Responsive">
+                            <cbs:inputShop
+                                    value="#{confirmRequestImportController.shopInfoNameable}"
+                                    idComponent="inputStore"
+                                    methodName="receiveUnit"
+                                    clearMethodName="clearUnit"
+                                    update="@this, @([id$=inputStaff])"
+                                    label="#{lang['mn.stock.limit.store']}"
+                                    require="false"
+                                    forceSelection="false"
+                                    placeholder="#{lang['mn.stock.limit.store.code.placeholder']}"
+                                    classDivLabel="Container40 Responsive50 mg-left-15 pd-top-7"
+                                    classDivInput="Container60 Responsive50 ui-fluid"
+                                    requiredMessage="#{lang['mn.stock.limit.store.code.require.msg']}"
+                                    oncomplete="">
+                            </cbs:inputShop>
+                        </div>
+
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['common.status']}" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu
+                                        itemLabelEscaped="true"
+                                        value="#{confirmRequestImportController.requestDTO.status}">
+                                    <f:selectItem itemLabel="#{lang['mn.isdn.status.default']}"
+                                                  noSelectionOption="true"/>
+                                    <f:selectItem itemValue="0"
+                                                  itemLabel="#{lang['import.partner.request.status0']}"/>
+                                    <f:selectItem itemValue="1"
+                                                  itemLabel="#{lang['import.partner.request.status1']}"/>
+                                    <f:selectItem itemValue="2"
+                                                  itemLabel="#{lang['import.partner.request.status2']}"/>
+                                    <f:selectItem itemValue="3"
+                                                  itemLabel="#{lang['import.partner.request.status3']}"/>
+                                </p:selectOneMenu>
+                                <p:remoteCommand update="@form" name="updateControls"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Container100 mg-top-10">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50  mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.from.date']}" styleClass="lb-sentinel"
+                                               for="fromDate"/>
+                            </div>
+                            <div class="Container60 Responsive50  ui-fluid">
+                                <p:calendar
+                                        mask="true"
+                                        pattern="#{lang['common.datetime.format']}"
+                                        converterMessage="#{lang['invalid.date.message']}"
+                                        validatorMessage="#{lang['start.date.validate.message']}"
+                                        value="#{confirmRequestImportController.requestDTO.fromDate}"
+                                        placeholder="#{lang['common.datetime.format']}"
+                                        required="true"
+                                        requiredMessage="#{lang['mn.stock.from.date.not.blank']}"
+                                        styleClass="fromDate"
+                                        id="fromDate">
+                                    <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                </p:calendar>
+                                <p:message for="fromDate"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50  mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.to.date']}" styleClass="lb-sentinel"
+                                               for="toDate"/>
+                            </div>
+                            <div class="Container60 Responsive50  ui-fluid">
+                                <p:calendar
+                                        mask="true"
+                                        pattern="#{lang['common.datetime.format']}"
+                                        converterMessage="#{lang['invalid.date.message']}"
+                                        validatorMessage="#{lang['end.date.validate.message']}"
+                                        value="#{confirmRequestImportController.requestDTO.toDate}"
+                                        placeholder="#{lang['common.datetime.format']}"
+                                        required="true"
+                                        styleClass="toDate"
+                                        requiredMessage="#{lang['mn.stock.to.date.not.blank']}"
+                                        id="toDate">
+                                    <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                </p:calendar>
+                                <p:message for="toDate"/>
+                            </div>
+                        </div>
+
+                        <div class="Container33 Responsive">
+
+                        </div>
+
+                    </div>
+
+                    <div class="Container100 TexAlCenter pd-top-10">
+                        <p:commandButton value="#{lang['create.note.search']}"
+                                         process="@form"
+                                         update="@form"
+                                         actionListener="#{confirmRequestImportController.doSearchRequest()}"/>
+                        <p:commandButton value="#{lang['common.reset']}" styleClass="mg-left-5"
+                                         update="@form" resetValues="true" process="@this"
+                                         actionListener="#{confirmRequestImportController.init()}"/>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel id="pnlListRequest" styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="pnlListRequest" titleHeader="#{lang['import.partner.list']}"
+                               toggle="true"></cbs:panel>
+
+                    <div class="Container100 mg-top-10 pnlListRequest">
+                        <p:dataTable
+                                id="listRequest"
+                                var="item"
+                                rowKey=""
+                                rowIndexVar="index"
+                                resizableColumns="true"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.emty.records']}"
+                                value="#{confirmRequestImportController.listImportPartnerRequestDTOs}">
+                            <p:column styleClass=" TexAlLeft" style="width: 10%" sortBy="#{item.toOwnerId}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.invoice.invoiceSerial.unit']}"
+                                            title="#{lang['mn.invoice.invoiceSerial.unit']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{confirmRequestImportController.getOwnerCode(item.toOwnerId, 1)}"
+                                        title="#{confirmRequestImportController.getOwnerCode(item.toOwnerId, 1)}"/>
+                            </p:column>
+                            <p:column styleClass=" TexAlLeft" style="width: 10%" sortBy="#{item.createStaffId}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.limit.men.order']}"
+                                            title="#{lang['mn.stock.limit.men.order']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{confirmRequestImportController.getOwnerCode(item.createStaffId, 2)}"
+                                        title="#{confirmRequestImportController.getOwnerCode(item.createStaffId, 2)}"/>
+                            </p:column>
+                            <p:column styleClass=" TexAlLeft" style="width: 10%" sortBy="#{item.createDate}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.limit.order.day']}"
+                                            title="#{lang['mn.stock.limit.order.day']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{item.createDate}"
+                                               title="#{confirmRequestImportController.formatDateTime(item.createDate)}">
+                                    <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column styleClass=" TexAlLeft" style="width: 10%" sortBy="#{item.requestCode}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.limit.order.code']}"
+                                            title="#{lang['mn.stock.limit.order.code']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{item.requestCode}" title="#{item.requestCode}"/>
+                            </p:column>
+                            <p:column styleClass=" TexAlLeft" style="width: 8%" sortBy="#{item.status}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['common.status']}"
+                                            title="#{lang['common.status']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{confirmRequestImportController.getDisplayName('import.partner.request.status',item.status)}"
+                                        title="#{confirmRequestImportController.getDisplayName('import.partner.request.status',item.status)}"/>
+                            </p:column>
+                            <p:column styleClass="TexAlLeft" style="width: 10%" sortBy="#{item.approveStaffId}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.branch.people.confirm.refuse']}"
+                                            title="#{lang['mn.stock.branch.people.confirm.refuse']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{confirmRequestImportController.getOwnerCode(item.approveStaffId, 2)}"
+                                        title="#{confirmRequestImportController.getOwnerCode(item.approveStaffId, 2)}"/>
+                            </p:column>
+                            <p:column styleClass=" TexAlLeft" style="width: 10%">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['list.order.import.reason.reject']}"
+                                            title="#{lang['list.order.import.reason.reject']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{item.reason}"
+                                        title="#{item.reason}"/>
+                            </p:column>
+                            <p:column styleClass=" TexAlLeft" style="width: 10%" sortBy="#{item.importStaffId}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.branch.people.import.stock']}"
+                                            title="#{lang['mn.stock.branch.people.import.stock']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{confirmRequestImportController.getOwnerCode(item.importStaffId, 2)}"
+                                        title="#{confirmRequestImportController.getOwnerCode(item.importStaffId, 2)}"/>
+                            </p:column>
+
+                            <p:column styleClass="TexAlCenter" style="width: 10%">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['create.note.effect']}"
+                                            title="#{lang['create.note.effect']}"/>
+                                </f:facet>
+                                <p:commandLink styleClass="fa icon-attach Fs14  black mg-left-5"
+                                               style="text-decoration: none!important;"
+                                               title="#{item.documentName}"
+                                               disabled="#{item.status eq 2}"
+                                               process="@this"
+                                               ajax="false">
+                                    <p:fileDownload
+                                            value="#{confirmRequestImportController.downloadAttackFile(item)}"/>
+                                </p:commandLink>
+
+                                <cbs:confirmDialog
+                                        idComponent="btnApprove"
+                                        disableButton="#{!(item.status eq 0)}"
+                                        titleButton="#{lang['limit.stock.approve']}"
+                                        valueButton=""
+                                        headerConfirm="#{lang['limit.stock.approve']}"
+                                        messageConfirm="#{confirmRequestImportController.getConfirmMessage('APPROVE')}"
+                                        actionOK="#{confirmRequestImportController.doApproveRequest(1)}"
+                                        actionValidate="#{confirmRequestImportController.doSelectItem(item)}"
+                                        resetValueButton="true"
+                                        styleClassButton="fa icon-ok Fs14  black mg-left-5"
+                                        process="@this, @form"
+                                        updateArea="@form"
+                                        updateOK="@form"
+                                        isButton="false"
+                                        focusCancel="false"/>
+
+                                <p:commandLink styleClass="fa icon-cancel Fs14  black mg-left-5"
+                                               process="@form"
+                                               update="@form, @([id$=dlgConfirm])"
+                                               disabled="#{!(item.status eq 0)}"
+                                               title="#{lang['import.partner.request.reject']}"
+                                               action="#{confirmRequestImportController.doSelectItem(item)}"
+                                               oncomplete="if(!args.validationFailed){PF('dlgConfirm').show();}"/>
+
+                                <p:commandLink styleClass="fa icon-zoom-out Fs14  black mg-left-5"
+                                               style="text-decoration: none!important; color:red!important;"
+                                               title="#{lang['import.partner.zoom.out']}"
+                                               action="#{confirmRequestImportController.onDetail(null)}"
+                                               rendered="#{!(!confirmRequestImportController.renderedDetail || !(item.importPartnerRequestId eq confirmRequestImportController.selectedImportPartnerRequestDTO.importPartnerRequestId))}"
+                                               process="@this"
+                                               update="@form"/>
+
+                                <p:commandLink styleClass="fa icon-zoom-in Fs14 black mg-left-5"
+                                               style="text-decoration: none!important;"
+                                               title="#{lang['import.partner.zoom.in']}"
+                                               rendered="#{!confirmRequestImportController.renderedDetail || !(item.importPartnerRequestId eq confirmRequestImportController.selectedImportPartnerRequestDTO.importPartnerRequestId)}"
+                                               action="#{confirmRequestImportController.onDetail(item)}"
+                                               process="@this"
+                                               update="@form"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </p:outputPanel>
+                <!--End vung duyet yc nhap kho tu chi nhanh -->
+                <!--Start vung thong tin don hang yeu cau-->
+                <p:outputPanel styleClass="ContainerIndent pnlInfo"
+                               rendered="#{confirmRequestImportController.renderedDetail}"
+                               id="pnlInfo">
+
+
+                    <cbs:panel classForToggle="pnlInfoProduct" toggle="true"
+                               titleHeader="#{lang['mn.stock.branch.information.order']}"/>
+
+                    <div class="Container100 pnlInfoProduct">
+                        <p:dataTable
+                                id="listDetail"
+                                var="detail"
+                                rowKey=""
+                                rowIndexVar="index"
+                                resizableColumns="true"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.emty.records']}"
+                                value="#{confirmRequestImportController.detailDTO}">
+                            <p:column styleClass=" TexAlLeft" style="width: 33%">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.utilities.code.stock']}"
+                                            title="#{lang['mn.stock.utilities.code.stock']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{confirmRequestImportController.getProductOffering(detail.prodOfferId).code}"
+                                        title="#{confirmRequestImportController.getProductOffering(detail.prodOfferId).code}"/>
+                            </p:column>
+                            <p:column styleClass=" TexAlLeft" style="width: 33%">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['import.partner.product.name']}"
+                                            title="#{lang['import.partner.product.name']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{confirmRequestImportController.getProductOffering(detail.prodOfferId).name}"
+                                        title="#{confirmRequestImportController.getProductOffering(detail.prodOfferId).name}"/>
+                            </p:column>
+                            <p:column styleClass=" TexAlRight" style="width: 33%">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.branch.number.request.import']}"
+                                            title="#{lang['mn.stock.branch.number.request.import']}"/>
+                                </f:facet>
+                                <h:outputLabel value="#{detail.quantity}" styleClass="lb-sentinel-bold"
+                                               converter="currencyFormat"
+                                               title="#{detail.quantity}">
+                                </h:outputLabel>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="false"
+                  position="center"
+                  id="dlgConfirm"
+                  widgetVar="dlgConfirm"
+                  header="#{lang['mn.stock.branch.reason.refuse.placeholder']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="600">
+            <ui:include src="sub/dlgConfirm.xhtml">
+                <param name="controller" value="#{confirmRequestImportController}"/>
+                <param name="actor" value="#{confirmRequestImportController.selectedImportPartnerRequestDTO}"/>
+            </ui:include>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

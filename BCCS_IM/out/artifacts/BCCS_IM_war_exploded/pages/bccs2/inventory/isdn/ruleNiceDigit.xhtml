@@ -1,0 +1,364 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.isdn.rule.nice.digit.info']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.isdn.rule.nice.digit.info']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmNiceDigit">
+            <p:outputPanel id="pnUnderExportNote">
+                <p:focus context="pnUnderExportNote"/>
+                <div class="ContainerIndent  mg-top-0">
+                    <p:messages id="msgs" showDetail="true" showSummary="false" closable="true"/>
+                </div>
+                <!--Start vung tra cuu-->
+                <p:outputPanel styleClass="Container100" id="pnInfoExportOrder">
+                    <div class="ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="pnInputSearch" titleHeader="#{lang['mn.isdn.rule.nice.digit.search']}"
+                                   toggle="true"/>
+
+                        <div class="Container100 pnInputSearch pd-top0">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left5 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="inputRuleName"
+                                                       value="#{lang['mn.isdn.rule.nice.digit.name']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="inputRuleName"
+                                                     maxlength="100"
+                                                     onblur="this.value = this.value.trim();"
+                                                     placeholder="#{lang['mn.isdn.rule.nice.digit.name.msg']}"
+                                                     value="#{numberFilerRuleController.searchDto.name}">
+                                            <!--<pe:keyFilter regEx="/[a-z0-9_]/i" />-->
+                                        </p:inputText>
+
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left5 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="cbxRuleList"
+                                                       value="#{lang['mn.isdn.rule.nice.digit.group.list']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="cbxRuleList"
+                                                         value="#{numberFilerRuleController.searchDto.aggregateFilterRuleId}">
+                                            <p:ajax event="change"
+                                                    listener="#{numberFilerRuleController.onChangeSearchGroup}"
+                                                    process="@this"
+                                                    update="cbxRuleGroup"/>
+                                            <f:selectItem itemLabel="#{lang['mn.isdn.rule.nice.digit.group.msg.list']}"
+                                                          itemValue=""/>
+                                            <f:selectItems
+                                                    value="#{numberFilerRuleController.aggregateFilterRuleDTOList}"
+                                                    var="itemAggregate"
+                                                    itemValue="#{itemAggregate.groupFilterRuleId}"
+                                                    itemLabel="#{itemAggregate.name}"
+                                                    itemLabelEscaped="true"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left5 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="cbxRuleGroup"
+                                                       value="#{lang['mn.isdn.rule.nice.digit.group']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="cbxRuleGroup"
+                                                         value="#{numberFilerRuleController.searchDto.groupFilterRuleId}">
+                                            <f:selectItem itemLabel="#{lang['mn.isdn.rule.nice.digit.group.msg']}"
+                                                          itemValue=""/>
+                                            <f:selectItems value="#{numberFilerRuleController.groupFilterRuleDTOList}"
+                                                           var="itemGroup"
+                                                           itemValue="#{itemGroup.groupFilterRuleId}"
+                                                           itemLabel="#{itemGroup.name}"
+                                                           itemLabelEscaped="true"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left5 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="inputRuleMask"
+                                                       value="#{lang['mn.isdn.rule.nice.digit.mask']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="inputRuleMask"
+                                                     maxlength="11"
+                                                     onblur="this.value = this.value.trim();"
+                                                     placeholder="#{lang['mn.isdn.rule.nice.digit.mask.msg']}"
+                                                     value="#{numberFilerRuleController.searchDto.maskMapping}"
+                                                     onkeyup="this.value=this.value.toUpperCase();">
+                                            <pe:keyFilter preventPaste="false" regEx="/[a-z]/i"/>
+                                        </p:inputText>
+                                    </div>
+                                </div>
+
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left5 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="inputRuleOder"
+                                                       value="#{lang['mn.isdn.rule.nice.digit.priorities']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="inputRuleOder"
+                                                     maxlength="10"
+                                                     onblur="this.value = this.value.trim();"
+                                                     onchange="this.value=this.value.replace(new RegExp('[^0-9]','gm'),'')"
+                                                     placeholder="#{lang['mn.isdn.rule.nice.digit.priorities.msg']}"
+                                                     value="#{numberFilerRuleController.searchDto.ruleOrder}">
+                                            <pe:keyFilter preventPaste="false" regEx="/[0-9]/i" />
+                                        </p:inputText>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left5 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="cbxRuleItem"
+                                                       value="#{lang['mn.isdn.rule.nice.digit.item']}"/>
+                                    </div>
+
+
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:autoComplete id="cbxRuleItem" value="#{numberFilerRuleController.searchProductOfferingTotalDTO}" forceSelection="true"
+                                                        completeMethod="#{numberFilerRuleController.doSearchChangeOffering}"
+                                                        placeholder="#{lang['export.order.stock.inputText.search']}"
+                                                        onfocus="this.setSelectionRange(0, this.value.length)"
+                                                        var="productOfferingTotalDTO"
+                                                        maxResults="10"
+                                                        itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                        itemValue="#{productOfferingTotalDTO}"
+                                                        required="false"
+                                                        requiredMessage="#{lang['export.order.stock.inputText.require.msg']}" maxlength="100" scrollHeight="300">
+                                            <o:converter converterId="productOfferingConverter" list="#{numberFilerRuleController.lsProductOfferingTotalDTO}"/>
+                                            <p:ajax event="itemSelect" process="@this" update="@this" />
+                                            <p:column headerText="#{lang['common.lb.code']}"><h:outputText escape="true" value="#{productOfferingTotalDTO.code}"/></p:column>
+                                            <p:column headerText="#{lang['common.lb.name']}"><h:outputText escape="true" value="#{productOfferingTotalDTO.name}"/></p:column>
+                                            <p:ajax event="query" global="false"/>
+                                        </p:autoComplete>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container66 Responsive66">
+                                    <div class="Container20 mg-left5 Responsive25 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="inputRuleCondition"
+                                                       value="#{lang['mn.isdn.rule.nice.digit.condition']}"/>
+                                    </div>
+                                    <div class="Container80 Responsive75 ui-fluid">
+                                        <p:inputText id="inputRuleCondition"
+                                                     maxlength="200"
+                                                     onblur="this.value = this.value.trim();"
+                                                     placeholder="#{lang['mn.isdn.rule.nice.digit.condition.msg']}"
+                                                     value="#{numberFilerRuleController.searchDto.condition}"
+                                                     onkeyup="this.value=this.value.toUpperCase();">
+                                        </p:inputText>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container66 Responsive66">
+                                    <div class="Container20 mg-left5 Responsive25 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       for="inputRuleNote"
+                                                       value="#{lang['mn.isdn.rule.nice.digit.note']}"/>
+                                    </div>
+                                    <div class="Container80 Responsive75 ui-fluid">
+                                        <p:inputText id="inputRuleNote"
+                                                     maxlength="500"
+                                                     onblur="this.value = this.value.trim();"
+                                                     placeholder="#{lang['mn.isdn.rule.nice.digit.note.msg']}"
+                                                     value="#{numberFilerRuleController.searchDto.notes}">
+                                        </p:inputText>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="ContainerIndent TexAlCenter paddingTopBottom10">
+                                <p:commandButton value="#{lang['create.note.search']}"
+                                                 process="@form" update="pnUnderExportNote"
+                                                 action="#{numberFilerRuleController.search()}"/>
+                                <p:commandButton value="#{lang['common.reset']}"
+                                                 actionListener="#{numberFilerRuleController.doResetSearchNumberFilter}"
+                                                 process="@this"
+                                                 update="@form" validateClient="true" styleClass="mg-left-5"/>
+                            </div>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <!--End vung tra cuu-->
+                <!--Start vung lap yeu cau-->
+                <p:outputPanel styleClass="Container100" id="pnTblFinance">
+                    <div class="ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="pnViewExport" titleHeader="#{lang['mn.isdn.rule.nice.digit.list']}"
+                                   toggle="true"></cbs:panel>
+
+                        <div class="Container TexAlLeft">
+                            <p:commandLink value="#{lang['mn.stock.limit.createNew']}"
+                                           resetValues="true"
+                                           styleClass="fa icon-plus Fs14 blue md-link"
+                                           oncomplete="if(!args.validationFailed){PF('dlgUpdateRuleNiceDigit').show();}"
+                                           actionListener="#{numberFilerRuleController.doOpenAddNumberFilter}"
+                                           update="@([id$=frmUpdateRuleList]), @([id$=dlgUpdateRule])"
+                                           process="@this">
+                            </p:commandLink>
+                            <cbs:confirmDialog
+                                    idComponent="btnDelete"
+                                    valueButton="#{lang['common.delete']}"
+                                    headerConfirm="#{lang['mn.stock.limit.financeType.header.delete']}"
+                                    messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                    actionOK="#{numberFilerRuleController.doDeleteListNumberFilterRule}"
+                                    resetValueButton="false"
+                                    process="@([id$=lstOrderExport]), @this"
+                                    updateArea="@([id$=frmNiceDigit])"
+                                    updateOK="@([id$=frmNiceDigit])"
+                                    actionValidate="#{numberFilerRuleController.doConfirmListDelete}"
+                                    styleClassButton="fa icon-trash Fs14 blue md-link mg-left-5"
+                                    focusCancel="true"
+                                    isButton="false"
+                                    />
+                        </div>
+                        <div class="pnViewExport ContainerIndent">
+                            <p:dataTable
+                                    id="lstOrderExport"
+                                    var="itemRule"
+                                    rowIndexVar="index"
+                                    resizableColumns="true"
+                                    reflow="false"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.search.not.record.found']}"
+                                    value="#{numberFilerRuleController.listResultSearch}"
+                                    rowKey="#{itemRule.filterRuleId}"
+                                    selection="#{numberFilerRuleController.listSelectAllDelete}">
+                                <p:column selectionMode="multiple" style="width:5%; text-align:center"/>
+
+                                <p:column headerText="#{lang['mn.isdn.rule.nice.digit.name']}" sortBy="#{itemRule.name}"
+                                          style="width: 10%; text-align:left">
+                                    <p:outputLabel value="#{itemRule.name}"
+                                                   style="text-align: left" title="#{itemRule.name}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.isdn.rule.nice.digit.aggregateRule']}"
+                                          sortBy="#{numberFilerRuleController.getStrNameGroup(itemRule.aggregateFilterRuleId)}"
+                                          style="width: 10%; text-align:left">
+                                    <p:outputLabel
+                                            value="#{numberFilerRuleController.getStrNameGroup(itemRule.aggregateFilterRuleId)}"
+                                            style="text-align: left"
+                                            title="#{numberFilerRuleController.getStrNameGroup(itemRule.aggregateFilterRuleId)}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.isdn.rule.nice.digit.group']}"
+                                          sortBy="#{numberFilerRuleController.getStrNameGroup(itemRule.groupFilterRuleId)}"
+                                          style="width: 10%; text-align:left">
+                                    <p:outputLabel
+                                            value="#{numberFilerRuleController.getStrNameGroup(itemRule.groupFilterRuleId)}"
+                                            style="text-align: left"
+                                            title="#{numberFilerRuleController.getStrNameGroup(itemRule.groupFilterRuleId)}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.isdn.rule.nice.digit.item']}"
+                                          sortBy="#{numberFilerRuleController.getStrNameProduct(itemRule.prodOfferId)}"
+                                          style="width: 10%; text-align:left">
+                                    <p:outputLabel
+                                            value="#{numberFilerRuleController.getStrNameProduct(itemRule.prodOfferId)}"
+                                            style="text-align: left"
+                                            title="#{numberFilerRuleController.getStrNameProduct(itemRule.prodOfferId)}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.isdn.rule.nice.digit.mask']}"
+                                          sortBy="#{itemRule.maskMapping}"
+                                          style="width: 10%;
+                                          text-align:left">
+                                    <p:outputLabel value="#{itemRule.maskMapping}"
+                                                   style="text-align: left" title="#{itemRule.maskMapping}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.isdn.rule.nice.digit.priorities']}"
+                                          sortBy="#{itemRule.ruleOrder}"
+                                          style="width: 10%; text-align:right">
+                                    <div style="text-align: right">
+                                        <h:outputLabel  value="#{(itemRule.ruleOrder)}" styleClass="lb-sentinel-bold"
+                                                        style="text-align: right"
+                                                        title="#{(itemRule.ruleOrder)}" converter="currencyFormat"></h:outputLabel>
+                                    </div>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.isdn.rule.nice.digit.condition']}"
+                                          sortBy="#{itemRule.condition}"
+                                          style="width: 15%; text-align:left">
+                                    <p:outputLabel value="#{itemRule.condition}"
+                                                   style="text-align: left" title="#{itemRule.condition}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.isdn.rule.nice.digit.note']}"
+                                          sortBy="#{itemRule.notes}"
+                                          style="width: 10%; text-align:left">
+                                    <p:outputLabel value="#{itemRule.notes}"
+                                                   style="text-align: left"
+                                                   title="#{itemRule.notes}"/>
+                                </p:column>
+
+                                <p:column headerText="#{lang['common.edit.delete']}" sortBy="" style="width: 10%; text-align:center"
+                                          styleClass="TexAlCenter">
+                                    <p:commandLink styleClass="fa icon-edit"
+                                                   resetValues="true"
+                                                   actionListener="#{numberFilerRuleController.doOpenEditNumberFilter(itemRule.filterRuleId)}"
+                                                   oncomplete="if(!args.validationFailed){PF('dlgUpdateRuleNiceDigit').show()}"
+                                                   update="@([id$=frmUpdateRuleList]), @([id$=dlgUpdateRule]) "
+                                                   process="@this"/>
+                                    <cbs:confirmDialog
+                                            idComponent="btnConfirm2"
+                                            valueButton=""
+                                            headerConfirm="#{lang['mn.stock.limit.financeType.header.delete']}"
+                                            messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                            actionOK="#{numberFilerRuleController.doOneDelete}"
+                                            resetValueButton="false"
+                                            process="@this"
+                                            updateArea="@([id$=frmNiceDigit])"
+                                            updateOK="@([id$=frmNiceDigit])"
+                                            actionValidate="#{numberFilerRuleController.doConfirmOneDelete(itemRule)}"
+                                            styleClassButton="fa icon-trash Fs14 blue"
+                                            styleButton="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                            focusCancel="true"
+                                            oncompleteOK=""
+                                            isButton="false"
+                                            />
+
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <!--End vung lap yeu cau-->
+            </p:outputPanel>
+        </h:form>
+        <p:dialog width="80%"
+                  appendTo="@(body)"
+                  closable="true"
+                  dynamic="true"
+                  id="dlgUpdateRule"
+                  minWidth="900"
+                  widgetVar="dlgUpdateRuleNiceDigit"
+                  closeOnEscape="true"
+                  position="center"
+                  header="#{numberFilerRuleController.titleDlgNiceDigit}"
+                  resizable="false"
+                  maximizable="true"
+                  modal="true"
+                  styleClass="sale">
+            <ui:include src="dlgUpdateRuleNiceDigit.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

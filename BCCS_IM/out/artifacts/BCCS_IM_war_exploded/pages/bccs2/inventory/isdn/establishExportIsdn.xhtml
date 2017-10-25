@@ -1,0 +1,310 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['establish.export.isdn.title']}</ui:define>
+    <ui:define name="featureName">#{lang['establish.export.isdn.title']}</ui:define>
+    <ui:define name="content">
+        <h:form id="establishExport">
+            <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                <p:messages id="msgExport" showDetail="true" showSummary="false" closable="true"/>
+            </div>
+
+            <!--Start TAB VIEW-->
+            <p:tabView id="numberTabView" dynamic="true"
+                       tabindex="#{establishExportIsdnController.tabIndex}">
+                <p:ajax event="tabChange" listener="#{establishExportIsdnController.onTabChange}"
+                        update="@([id$=pnUnderExportOrder]),@([id$=pnCreateField]),@([id$=pnLstField]),@([id$=msgExport])"/>
+                <p:tab id="defineSpaceTab" title="#{lang['im.number.assign.status.by.normal']}">
+                    <p:outputPanel id="pnUnderExportOrder" styleClass="Container100 mg-top-0"
+                                   rendered="#{establishExportIsdnController.tabIndex == 0}">
+                        <p:focus for="pnUnderExportOrder"/>
+                        <!--Start vung thong tin view yeu cau-->
+                        <cbs:inputOrderStock id="exportStockabc" title="#{lang['export.order.view.export']}" mode="4"
+                                             methodNameOffice="receiveWriteOffice" methodNameReceiveShop="doReceiveShop"
+
+                                             lblActionCode="#{lang['export.order.code']}"
+                                             value="#{establishExportIsdnController.orderStockTag}">
+                        </cbs:inputOrderStock>
+
+
+                        <!--End vung thong tin view yeu cau-->
+                        <!--Start vung thong tin vOffice-->
+                        <p:outputPanel id="pnExportOffice" styleClass="Container100">
+                            <p:outputPanel styleClass="Container100"
+                                           rendered="#{establishExportIsdnController.writeOffice}">
+                                <cbs:inputSignOffice value="#{establishExportIsdnController.writeOfficeTag}"
+                                                     title="#{lang['export.order.view.office']}"
+                                                     idComponent="writeOfficeExport"/>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                        <!--End vung thong tin vOffice-->
+                        <!--Start vung thong tin Danh sach hang hoa-->
+                        <div class="Container100">
+                            <cbs:inputListProduct idComponent="listProduct" id="listProduct" idMessage="listProduct"
+                                                  renderRetrieveStock="false"
+                                                  extraValue="false"
+                                                  disableEditStatus="true"
+                                                  value="#{establishExportIsdnController.listProductTag}"></cbs:inputListProduct>
+                        </div>
+                        <!--End vung thong tin danh sach hang hoa-->
+                        <!--Start Vung data button-->
+                        <div class="Container100">
+                            <div class="ContainerIndent TexAlCenter mg-top-0">
+                                <cbs:confirmDialog
+                                        idComponent="submitOrder"
+                                        id="createOrder"
+                                        valueButton="#{lang['export.order.btn.submit']}(F8)"
+                                        headerConfirm="#{lang['export.order.btn.submit.header.confirm']}"
+                                        messageConfirm="#{lang['export.order.btn.submit.header.confirm.msg']}"
+                                        actionOK="#{establishExportIsdnController.doCreateExportIsdn}"
+                                        resetValueButton="false"
+                                        process="@form"
+                                        updateArea="@([id$=establishExport])"
+                                        updateOK="@([id$=establishExport])"
+                                        actionValidate="#{establishExportIsdnController.doValidateUnderlyingOrder}"
+                                        focusCancel="false"
+                                        oncompleteOK=""
+                                        isButton="true"
+                                        />
+
+                                <p:commandButton disabled="#{establishExportIsdnController.printCommand}"
+                                                 ajax="false" process="@this" immediate="true"
+                                                 value="#{lang['export.order.btn.print']}" styleClass="mg-left-5">
+                                    <p:fileDownload value="#{establishExportIsdnController.doPrintStockTransDetail()}"/>
+                                </p:commandButton>
+                                <p:commandButton
+                                        value="#{lang['mn.stock.utilities.view.infor.ware.house']}" process="@this,@([id$=idExportShop])"
+                                        actionListener="#{establishExportIsdnController.viewStockIsdn()}"
+                                        style="margin-left: 9px;"
+                                        update="@form,@([id$=dlgViewStock])"
+                                        oncomplete="if (!args.validationFailed) {PF('dlgViewStock').show();}"
+                                        />
+                                <!--oncomplete="PF('dlgViewStock').show();"-->
+                            </div>
+                        </div>
+                        <!--End Vung data button-->
+                    </p:outputPanel>
+                </p:tab>
+                <p:tab id="openSpaceTab" title="#{lang['im.number.assign.status.by.file']}">
+                    <p:outputPanel id="pnCreateField" styleClass="ContainerIndent"
+                                   rendered="#{establishExportIsdnController.tabIndex != 0}">
+                        <p:focus for="fileAttach"/>
+                        <cbs:panel classForToggle="panelCreateField"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.isdn.manage.create.field.export.isdn.by.file']}"/>
+
+                        <div class="Container100 panelCreateField" style="margin-bottom: 10px;margin-top: 10px;">
+
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7" style="margin-top: 20px">
+                                        <p:outputLabel styleClass="lb-sentinel" for="fileAttach"
+                                                       value="#{lang['attach.file']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid" style="margin-top: 20px">
+                                        <p:inputText id="outputAttachFile"
+                                                     styleClass="outputAttachFile"
+                                                     maxlength="100"
+                                                     placeholder="#{lang['search.number.range.input.fileName']}"
+                                                     value="#{establishExportIsdnController.attachFileName}"
+                                                     readonly="true"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container50 mg-left-15 pd-top-7">
+                                        <p:fileUpload id="fileAttach"
+                                                      requiredMessage="mn.stock.status.isdn.update.file.noselect"
+                                                      update="@form"
+                                                      dragDropSupport="true" required="true" mode="advanced"
+                                                      auto="true"
+                                                      process="@this"
+                                                      value="#{establishExportIsdnController.uploadedFile}"
+                                                      fileUploadListener="#{establishExportIsdnController.fileUploadAction}">
+                                        </p:fileUpload>
+                                    </div>
+                                    <div id="divDownloadFile" class="Container50 ui-fluid" style="margin-top: 25px">
+                                        <p:commandLink
+                                                id="downloadTemplateBtn"
+                                                value="#{lang['mn.stock.status.isdn.update.status.file_template']}"
+                                                rendered="#{!establishExportIsdnController.hasFileError}"
+                                                title="#{lang['create.note.download.file.title']}"
+                                                ajax="false"
+                                                immediate="true"
+                                                style="text-decoration: none!important;">
+                                            <p:fileDownload
+                                                    value="#{establishExportIsdnController.downloadFileTemplate()}"/>
+                                        </p:commandLink>
+                                        <p:commandLink
+                                                id="downloadErrBtn"
+                                                value="#{lang['mn.stock.status.isdn.update.status.file_error']}"
+                                                rendered="#{establishExportIsdnController.hasFileError}"
+                                                title="#{lang['create.note.download.file.title']}"
+                                                ajax="false"
+                                                immediate="true"
+                                                style="text-decoration: none!important;">
+                                            <p:fileDownload
+                                                    value="#{establishExportIsdnController.downloadFileError()}"/>
+                                        </p:commandLink>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive TexAlCenterss">
+                                    <div class="Container100 pd-top-7">
+                                        <p:commandButton
+                                                value="#{lang['see.previous']}"
+                                                process="@this"
+                                                disabled="#{!establishExportIsdnController.selectedFile}"
+                                                actionListener="#{establishExportIsdnController.previewField}"
+                                                update="@form"/>
+                                        <!--<p:commandButton styleClass="mg-left-5"-->
+                                                         <!--value="#{lang['export.order.btn.submit']}"-->
+                                                         <!--process="@this"-->
+                                                         <!--disabled="#{!establishExportIsdnController.previewOrder}"-->
+                                                         <!--actionListener="#{establishExportIsdnController.createField}"-->
+                                                         <!--update="@form"/>-->
+                                        <cbs:confirmDialog
+                                                idComponent="btnConfirm2"
+                                                valueButton="#{lang['export.order.btn.submit']}"
+                                                titleButton="#{lang['export.order.btn.submit']}"
+                                                headerConfirm="#{lang['export.order.btn.submit.header.confirm']}"
+                                                messageConfirm="#{lang['export.order.btn.submit.header.confirm.msg']}"
+                                                actionOK="#{establishExportIsdnController.createField()}"
+                                                resetValueButton="false"
+                                                process="@this"
+                                                disableButton="#{!establishExportIsdnController.previewOrder}"
+                                                updateArea="@([id$=establishExport])"
+                                                updateOK="@([id$=establishExport])"
+                                                actionValidate="#{establishExportIsdnController.validateFileUpload()}"
+                                                focusCancel="false"
+                                                oncompleteOK=""
+                                                isButton="true"
+                                                />
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung chon file lap lenh xuat so-->
+
+                    <!--Start vung ds lenh xuat-->
+                    <p:outputPanel id="pnLstField" styleClass="ContainerIndent"
+                                   rendered="#{establishExportIsdnController.tabIndex != 0}">
+                        <cbs:panel classForToggle="panelListField"
+                                   toggle="true"
+                                   titleHeader="#{lang['create.note.list.order.export']}"/>
+
+                        <div class="Container100 panelListField" style="margin-bottom: 10px;margin-top: 5px;">
+
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        id="lstListNeedDelete"
+                                        var="item"
+                                        rowKey="#{item.rowKey}"
+                                        rowIndexVar="index"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage=""
+                                        value="#{establishExportIsdnController.fieldExportFileDTOs}">
+                                    <p:column headerText="#{lang['common.stt']}" style="width: 10%">
+                                        <p:outputLabel value="#{index + 1}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['export.order.code']}"
+                                              style="width: 15%"
+                                              sortBy="#{item.actionCode}">
+                                        <p:outputLabel value="#{item.actionCode}"
+                                                       title="#{item.actionCode}"
+                                                       style="text-align: left"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['create.order.file.code.export.warehouse']}"
+                                              style="width: 15%"
+                                              sortBy="#{item.fromOwnerCode}">
+                                        <p:outputLabel value="#{item.fromOwnerCode}"
+                                                       title="#{item.fromOwnerCode}"
+                                                       style="text-align: left"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['create.order.file.code.import.warehouse']}"
+                                              style="width: 15%"
+                                              sortBy="#{item.toOwnerCode}">
+                                        <p:outputLabel value="#{item.toOwnerCode}"
+                                                       title="#{item.toOwnerCode}"
+                                                       style="text-align: left"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.utilities.code.stock']}"
+                                              style="width: 15%"
+                                              sortBy="#{(item.productOfferCode)}">
+                                        <p:outputLabel value="#{(item.productOfferCode)}"
+                                                       title="#{(item.productOfferCode)}"
+                                                       style="text-align: left"></p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.number']}"
+                                              style="width: 10%"
+                                              styleClass="TexAlRight"
+                                              sortBy="#{item.quantity}">
+                                        <p:outputLabel value="#{(item.quantity)}"
+                                                       title="#{(item.quantity)}"
+                                                       style="text-align: right"></p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['export.order.note']}"
+                                              style="width: 15%"
+                                              sortBy="#{(item.note)}">
+                                        <p:outputLabel value="#{(item.note)}"
+                                                       title="#{(item.note)}"
+                                                       style="text-align: left"></p:outputLabel>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                        <!--<div class="Container100 TexAlCenter mg-top-0" id="fDelete">-->
+                        <!--<p:commandButton-->
+                        <!--id="btnDelete"-->
+                        <!--rendered="#{establishExportIsdnController.enableDelete}"-->
+                        <!--value="#{lang['button.delete.digital']}"-->
+                        <!--style="margin-bottom: 10px"-->
+                        <!--update="@this, @([id$=frmDelete])"-->
+                        <!--actionListener="#{establishExportIsdnController.deleteNumber}"/>-->
+
+                        <!--</div>-->
+                    </p:outputPanel>
+                </p:tab>
+            </p:tabView>
+            <!--End TAB VIEW-->
+
+            <script type="text/javascript">
+                document.getElementById('establishExport').onkeypress = function (event) {
+                    if (event.keyCode == 119 &amp;&amp; document.getElementById('establishExport:numberTabView:createOrder:submitOrderbtn') != null) {
+                        document.getElementById('establishExport:numberTabView:createOrder:submitOrderbtn').click();
+                        return false;
+                    }
+                    if (event.keyCode == 120 &amp;&amp; document.getElementById('establishExport:numberTabView:listProduct:listProductAddNew') != null) {
+                        document.getElementById('establishExport:numberTabView:listProduct:listProductAddNew').click();
+                        return false;
+                    }
+                }
+            </script>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgViewStock"
+                  widgetVar="dlgViewStock"
+                  header="#{lang['mn.stock.utilities.view.infor.ware.house']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="60%">
+            <ui:include src="viewStockIsdnDlg.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

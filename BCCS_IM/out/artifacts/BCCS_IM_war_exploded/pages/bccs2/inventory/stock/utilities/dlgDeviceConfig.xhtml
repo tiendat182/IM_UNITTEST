@@ -1,0 +1,230 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://java.sun.com/jsf/core">
+    <h:form id="frmAddDeviceConfig">
+        <p:outputPanel id="pnAddDeviceConfig" styleClass="Containe100">
+            <div class="ContainerIndent mg-top-0">
+                <p:messages id="mesageAdd" showSummary="false" showDetail="true" closable="true"/>
+            </div>
+            <div class="ContainerIndent ">
+                <p:outputPanel styleClass="Container50 Responsive50" id="pnProductAdd">
+                    <div class="Container33 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel value="#{lang['create.order.file.stock.model']}"
+                                       for="productOfferTotalAdd" styleClass="lb-sentinel"/>
+                    </div>
+                    <div class="Container66 Responsive50 ui-fluid ui-relative">
+                        <p:autoComplete id="productOfferTotalAdd"
+                                        value="#{deviceConfigController.productOfferingTotalAddDTO}"
+                                        forceSelection="true"
+                                        completeMethod="#{deviceConfigController.doChangeOfferingAdd}"
+                                        disabled="#{(not deviceConfigController.create) or deviceConfigController.preview}"
+                                        placeholder="#{lang['view.warehouse.product.info.holder']}"
+                                        onfocus="this.setSelectionRange(0, this.value.length)"
+                                        var="productOfferingTotalAddDTO"
+                                        maxResults="100"
+                                        styleClass="ignore-confirm"
+                                        inputStyleClass="ignore-confirm"
+                                        itemLabel="#{productOfferingTotalAddDTO.itemLabel}"
+                                        itemValue="#{productOfferingTotalAddDTO}"
+                                        required="false"
+                                        requiredMessage="#{lang['export.order.stock.inputText.require.msg']}"
+                                        maxlength="100" scrollHeight="300">
+                            <o:converter converterId="productOfferingConverter"
+                                         list="#{deviceConfigController.lsProductOfferingTotalAddDTO}"/>
+                            <p:ajax event="itemSelect" listener="#{deviceConfigController.receiveProductAdd}"
+                                    update="@([id$=pnProductAdd]), @([id$=mesageAdd])" process="@this"/>
+                            <p:column headerText="#{lang['common.lb.code']}"><h:outputText escape="true"
+                                                                                           value="#{productOfferingTotalAddDTO.code}"/></p:column>
+                            <p:column headerText="#{lang['common.lb.name']}"><h:outputText escape="true"
+                                                                                           value="#{productOfferingTotalAddDTO.name}"/></p:column>
+                            <p:ajax event="query" global="false"/>
+                        </p:autoComplete>
+                        <p:commandLink styleClass="ui-link-right"
+                                       update="@([id$=pnProductAdd])"
+                                       actionListener="#{deviceConfigController.resetProductAdd}"
+                                       disabled="#{(not deviceConfigController.create) or deviceConfigController.preview}"
+                                       process="@this">
+                            <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                        </p:commandLink>
+                        <p:message for="productOfferTotalAdd"/>
+                    </div>
+                </p:outputPanel>
+
+                <div class="Container50 Responsive50">
+                    <div class="Container33 Responsive ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="cbxTypeInput"
+                                       value="#{lang['deviceConfig.status']}"/>
+                    </div>
+                    <div class="Container66 Responsive ui-fluid">
+                        <p:selectOneMenu id="cbxTypeInput"
+                                         disabled="#{(not deviceConfigController.create) or deviceConfigController.preview}"
+                                         value="#{deviceConfigController.addDeviceConfig.stateId}">
+                            <f:selectItems value="#{deviceConfigController.lsProductStatus}"
+                                           itemLabel="#{status.name}" var="status"
+                                           itemValue="#{status.value}"/>
+                            <p:ajax process="@this" />
+                            <f:converter converterId="javax.faces.Long"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+
+            </div>
+            <div class="Container100 TexAlCenter marT10">
+                <p:outputPanel rendered="#{(not deviceConfigController.create) and (not deviceConfigController.preview)}" styleClass="Container100 TexAlCenter">
+                    <cbs:confirmDialog
+                            idComponent="btnEdit"
+                            valueButton="#{lang['common.edit.record']}"
+                            headerConfirm="#{lang['mn.stock.limit.financeType.header.edit']}"
+                            messageConfirm="#{lang['common.msg.edit.confirm']}"
+                            actionOK="#{deviceConfigController.updateConfigDevice()}"
+                            resetValueButton="true"
+                            process="@this"
+                            updateArea="@form"
+                            updateOK="@form,@([id$=lstDeviceConfig]), @([id$=msgConfigDivideDevice])"
+                            oncompleteOK="if(!args.validationFailed) {PF('dlgAddDeviceConfig').hide();}"
+                            actionValidate="#{deviceConfigController.doConfirmAdd}"
+                            focusCancel="false"
+                            isButton="true"
+                    />
+                </p:outputPanel>
+                <p:outputPanel rendered="#{deviceConfigController.create and (not deviceConfigController.preview)}" styleClass="Container100 TexAlCenter">
+                    <cbs:confirmDialog
+                            idComponent="btnAdd"
+                            valueButton="#{lang['mn.stock.limit.createNew']}"
+                            headerConfirm="#{lang['mn.stock.limit.financeType.header.add']}"
+                            messageConfirm="#{lang['common.msg.add.confirm']}"
+                            actionOK="#{deviceConfigController.addConfigDevice(false)}"
+                            resetValueButton="true"
+                            process="@this"
+                            rendered="#{not deviceConfigController.preview}"
+                            updateArea="@form"
+                            updateOK="@form,@([id$=lstDeviceConfig])"
+                            oncompleteOK=""
+                            actionValidate="#{deviceConfigController.doConfirmAdd}"
+                            focusCancel="false"
+                            isButton="true"
+                    />
+                    <cbs:confirmDialog
+                            idComponent="btnAddAndClose"
+                            valueButton="#{lang['common.add.close']}"
+                            headerConfirm="#{lang['mn.stock.limit.financeType.header.add']}"
+                            messageConfirm="#{lang['common.msg.add.confirm']}"
+                            actionOK="#{deviceConfigController.addConfigDevice(true)}"
+                            resetValueButton="true"
+                            process="@this"
+                            rendered="#{not deviceConfigController.preview}"
+                            updateArea="@form"
+                            updateOK="@form,@([id$=lstDeviceConfig])"
+                            oncompleteOK='if(!args.validationFailed) {PF("dlgAddDeviceConfig").hide();}'
+                            actionValidate="#{deviceConfigController.doConfirmAdd}"
+                            focusCancel="false"
+                            isButton="true"
+                    />
+                </p:outputPanel>
+            </div>
+            <p:outputPanel id="pnListDeviceConfigDetail" styleClass="Container mg-top-0">
+                <cbs:panel classForToggle="pnViewOffice" titleHeader="#{lang['deviceConfig.listDeviceConfigDetail']}"
+                           toggle="true"/>
+
+                <div class="Container100 pnViewOffice" style="margin-bottom: 10px;margin-top: 10px;">
+                    <div class="Container100">
+                        <p:commandLink value="#{lang['mn.stock.limit.createNew']}"
+                                       styleClass="fa icon-plus Fs14 blue md-link" id="AddNew"
+                                       update="@([id$=tblLsDeviceConfigdetail]),@([id$=mesageAdd])"
+                                       rendered="#{not deviceConfigController.preview}"
+                                       actionListener="#{deviceConfigController.doAddItem()}"
+                                       process="@this">
+                        </p:commandLink>
+                    </div>
+                    <div class="Container100 ui-fluid">
+                        <p:dataTable
+                                id="tblLsDeviceConfigdetail"
+                                sortMode="single"
+                                paginator="false"
+                                rows="100"
+                                style="overflow: auto; height: 300px;"
+                                reflow="false"
+                                emptyMessage="#{lang['common.empty.records']}"
+                                styleClass="Width100" value="#{deviceConfigController.listAddDeviceConfigDetail}"
+                                rowIndexVar="index" var="deviceConfigDetail">
+
+                            <p:column style="width:50%;"
+                                      styleClass="col-left pd-top-6">
+                                <f:facet name="header">
+                                    <h:outputText id="name"
+                                                  value="#{lang['deviceConfig.product']}"
+                                                  title="#{lang['deviceConfig.product']}"/>
+                                </f:facet>
+                                    <p:autoComplete id="productOfferTotalAddDetail"
+                                                    value="#{deviceConfigDetail.productOfferingTotalDTO}"
+                                                    forceSelection="true"
+                                                    completeMethod="#{deviceConfigController.doChangeOfferingAddDetail}"
+                                                    placeholder="#{lang['view.warehouse.product.info.holder']}"
+                                                    onfocus="this.setSelectionRange(0, this.value.length)"
+                                                    var="productOfferingTotalAddDetailDTO"
+                                                    maxResults="100"
+                                                    disabled="#{deviceConfigController.preview}"
+                                                    styleClass="ignore-confirm"
+                                                    inputStyleClass="ignore-confirm"
+                                                    itemLabel="#{productOfferingTotalAddDetailDTO.itemLabel}"
+                                                    itemValue="#{productOfferingTotalAddDetailDTO}"
+                                                    required="false"
+                                                    requiredMessage="#{lang['export.order.stock.inputText.require.msg']}"
+                                                    maxlength="100" scrollHeight="300">
+                                        <o:converter converterId="productOfferingConverter"
+                                                     list="#{deviceConfigController.lsProductOfferingTotalAddDetailDTO}"/>
+                                        <p:ajax event="itemSelect" listener="#{deviceConfigController.receiveProductAddDetail}"
+                                                update="@([id$=productOfferTotalAddDetail]), @([id$=mesageAdd])" process="@this"/>
+                                        <f:attribute name="detailIndex" value="#{index}" />
+                                        <p:column headerText="#{lang['common.lb.code']}"><h:outputText escape="true"
+                                                                                                       value="#{productOfferingTotalAddDetailDTO.code}"/></p:column>
+                                        <p:column headerText="#{lang['common.lb.name']}"><h:outputText escape="true"
+                                                                                                       value="#{productOfferingTotalAddDetailDTO.name}"/></p:column>
+                                        <p:ajax event="query" global="false"/>
+                                    </p:autoComplete>
+                                    <p:commandLink styleClass="ui-link-right"
+                                                   update="@([id$=tblLsDeviceConfigdetail])"
+                                                   disabled="#{deviceConfigController.preview}"
+                                                   actionListener="#{deviceConfigController.resetProductAddDetail(index)}"
+                                                   process="@this">
+                                        <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                    </p:commandLink>
+                                    <p:message for="productOfferTotalAddDetail"/>
+                            </p:column>
+                            <p:column headerText="#{lang['common.status']}"
+                                      styleClass=" pd-top-6"
+                                      style="width: 45%;">
+                                <p:outputLabel
+                                        value="#{deviceConfigController.getStrStatus(deviceConfigDetail.status)}"
+                                        title="#{deviceConfigController.getStrStatus(deviceConfigDetail.status)}"/>
+                            </p:column>
+                            <p:column style="width: 5%; " rendered="#{not deviceConfigController.preview}"
+                                      styleClass="col-left  pd-top-10 ">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['common.delete']}"
+                                                  title="#{lang['common.delete']}"/>
+                                </f:facet>
+                                <p:commandLink styleClass="fa icon-trash Fs14 blue link-icon"
+                                               style="font-size: 16px!important;" immediate="true"
+                                               update="@([id$=tblLsDeviceConfigdetail])"
+                                               rendered="#{not deviceConfigController.preview}"
+                                               actionListener="#{deviceConfigController.doRemoveItem(index)}"
+                                               title="#{lang['range.time.promotion.day.header.confirm']}"
+                                               process="@this"/>
+                            </p:column>
+                            <f:facet name="header">
+
+                            </f:facet>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+    </h:form>
+
+</ui:composition>

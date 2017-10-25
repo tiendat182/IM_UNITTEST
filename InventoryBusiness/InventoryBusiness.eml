@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inheritJdk="true">
+	<output-test url="file://$MODULE_DIR$/../BCCS_IM/out/test/InventoryBusiness"/>
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<testFolder url="file://$MODULE_DIR$/unittest"/>
+		<excludeFolder url="file://$MODULE_DIR$/src"/>
+	</contentEntry>
+	<levels>
+		<level name="LibWeb_v5" value="project"/>
+		<level name="log4j2" value="project"/>
+		<level name="unittest" value="project"/>
+	</levels>
+</component>

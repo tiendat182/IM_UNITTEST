@@ -1,0 +1,119 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:o="http://omnifaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+    <h:form id="frmUpdateRuleList">
+        <p:outputPanel id="pnlUpdateRuleList" styleClass="Container100">
+            <div class="Container100 marginTopBottom10">
+                <p:messages id="msgUpdateRuleList" showDetail="true" showSummary="false" closable="true"/>
+                <div class="ContainerIndent mg-top-0">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel clRuleCode" value="#{lang['mn.isdn.rule.code']}"
+                                           for="updateRuleCode"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:inputText
+                                    id="updateRuleCode"
+                                    class="clRuleCode"
+                                    title="#{lang['mn.isdn.rule.title.code']}"
+                                    maxlength="20"
+                                    onblur="this.value = this.value.trim();"
+                                    requiredMessage="#{lang['mn.isdn.rule.req.code']}"
+                                    required="true"
+                                    placeholder="#{lang['mn.isdn.rule.code.msg']}"
+                                    value="#{createRuleListController.editDto.groupFilterRuleCode}">
+                                <pe:keyFilter regEx="/[a-z0-9_]/i" preventPaste="false"/>
+                            </p:inputText>
+                            <cbs:message forId="updateRuleCode"/>
+                        </div>
+                    </div>
+                <div class="ContainerIndent">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel clRuleName"
+                                    value="#{lang['mn.isdn.rule.name']}"
+                                    for="updateRuleName"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                            <p:inputText
+                                    id="updateRuleName"
+                                    class="clRuleName"
+                                    title="#{lang['mn.isdn.rule.title.name']}"
+                                    maxlength="100"
+                                    onblur="this.value = this.value.trim();"
+                                    required="true"
+                                    requiredMessage="#{lang['mn.isdn.rule.req.name']}"
+                                    placeholder="#{lang['mn.isdn.rule.name.msg']}"
+                                    value="#{createRuleListController.editDto.name}">
+                            </p:inputText>
+                            <cbs:message forId="updateRuleName"/>
+                        </div>
+                </div>
+                <div class="ContainerIndent">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.isdn.rule.resource']}"
+                                           for="updateRuleResource"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:selectOneMenu id="updateRuleResource"
+                                             required="true"
+                                             requiredMessage="#{lang['mn.isdn.rule.req.source']}"
+                                             value="#{createRuleListController.editDto.telecomServiceId}">
+                                <f:selectItem itemLabel="#{lang['mn.isdn.rule.resource.msg']}"/>
+                                <f:selectItems value="#{createRuleListController.optionSetValueDTOs}"
+                                               var="item" itemValue="#{item.value}"
+                                               itemLabel="#{item.name}"
+                                               itemLabelEscaped="true"/>
+                            </p:selectOneMenu>
+                            <cbs:message forId="updateRuleResource"/>
+                    </div>
+                </div>
+                    <div class="ContainerIndent">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel"
+                                    value="#{lang['mn.isdn.rule.desc']}"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:inputText
+                                    id="updateRuleNote"
+                                    title="#{lang['mn.isdn.rule.title.note']}"
+                                    maxlength="500"
+                                    onblur="this.value = this.value.trim();"
+                                    placeholder="#{lang['mn.isdn.rule.desc.msg']}"
+                                    value="#{createRuleListController.editDto.notes}"/>
+                            <cbs:message forId="updateRuleNote"/>
+                        </div>
+                    </div>
+                <div class="Container100 TexAlCenter">
+                    <p:commandButton value="#{lang['mn.isdn.rule.edit.header']}"
+                                     process="pnlUpdateRuleList"
+                                     update="pnlUpdateRuleList,frmExportNote:pnInfoExportOrder,frmExportNote:pnLstExportOrder"
+                                     action="#{createRuleListController.validate(createRuleListController.editDto)}"
+                                     oncomplete="if(!args.validationFailed){PF('dlgConfirmUpdate').show()}
+                                      setTimeout(function () {$('.btnbtnAddOnePackageGoods0OK').focus();}, 350);"/>
+                </div>
+            </div>
+        </p:outputPanel>
+        <p:confirmDialog closeOnEscape="true" closable="true"
+                         appendTo="@(body)"
+                         widgetVar="dlgConfirmUpdate"
+                         header="#{lang['mn.isdn.rule.header.update']}"
+                         id="cfmBtn"
+                         width="550"
+                         message="#{lang['mn.isdn.rule.msg.update.confirm']}">
+            <p:commandLink value="#{lang['common.button.NO']}" styleClass="md-button" process="@none"
+                           onstart="PF('dlgConfirmUpdate').hide();"
+                    />
+
+            <p:commandLink process="@this,pnlUpdateRuleList"
+                           update="pnlUpdateRuleList,frmExportNote:pnUnderExportNote,frmExportNote:pnInfoExportOrder,frmExportNote:pnLstExportOrder"
+                           value="#{lang['common.button.YES']}"
+                           styleClass="md-button btnbtnAddOnePackageGoods0OK"
+                           oncomplete="PF('dlgConfirmUpdate').hide();if(!args.validationFailed) {PF('dlgUpdateRuleList').hide();}"
+                           actionListener="#{createRuleListController.save()}"/>
+        </p:confirmDialog>
+    </h:form>
+</ui:composition>

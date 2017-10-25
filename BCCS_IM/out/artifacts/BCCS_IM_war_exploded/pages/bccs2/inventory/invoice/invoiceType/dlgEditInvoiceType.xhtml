@@ -1,0 +1,124 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:pe="http://primefaces.org/ui/extensions">
+    <h:form id="frmEditInvoiceType" styleClass="Container100">
+        <p:outputPanel id="pnlEditInvoiceType" styleClass="Container100">
+            <p:focus for="pnlEditInvoiceType"/>
+            <div class="ContainerIndent mg-top-0">
+                <p:messages showSummary="false" showDetail="true" closable="true"/>
+            </div>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container20 Responsive25 ui-fluid mg-left-15 pd-top-7">
+                    <p:outputLabel styleClass="lb-sentinel" for="selOnRaTypeInvoice"
+                                   value="#{lang['mn.invoice.select.invoiceType']}"/>
+                </div>
+                <div class="Container80 Responsive75 ui-fluid">
+                    <p:selectOneRadio id="selOnRaTypeInvoice"
+                                      value="#{invoiceTypeController.editInvoiceType.invoiceType}">
+                        <f:selectItems value="#{invoiceTypeController.listInvoiceType}"
+                                       itemLabel="#{item.name}" var="item" itemValue="#{item.value}" />
+                    </p:selectOneRadio>
+                </div>
+            </div>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="cobFormInvoice"
+                                       value="#{lang['mn.invoice.invoiceType.type']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:selectOneMenu id="cobFormInvoice" required="true"
+                                         value="#{invoiceTypeController.editInvoiceType.type}">
+                            <f:selectItems value="#{invoiceTypeController.listType}"
+                                           itemLabel="#{item.name}" var="item" itemValue="#{item.value}" />
+                            <p:ajax event="change" process="@this"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="txtTypeInv"
+                                       value="#{lang['mn.invoice.invoiceType.typeInv']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:inputText id="txtTypeInv"
+                                     required="true"
+                                     maxlength="50"
+                                     onblur="this.value = this.value.trim();"
+                                     placeholder="#{lang['mn.invoice.invoiceType.input.typeInv']}"
+                                     requiredMessage="#{lang['mn.invoice.invoiceType.typeInv.require.msg']}"
+                                     value="#{invoiceTypeController.editInvoiceType.typeInv}"
+                                     title=""/>
+                        <cbs:message forId="txtTypeInv" />
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="txtInvoiceName"
+                                       value="#{lang['mn.invoice.invoiceType.invoiceName']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:inputText id="txtInvoiceName"
+                                     required="true"
+                                     maxlength="100"
+                                     onblur="this.value = this.value.trim();"
+                                     placeholder="#{lang['mn.invoice.invoiceType.input.invoiceName']}"
+                                     requiredMessage="#{lang['mn.invoice.invoiceType.invoiceName.require.msg']}"
+                                     value="#{invoiceTypeController.editInvoiceType.invoiceName}"
+                                     title=""/>
+                        <cbs:message forId="txtInvoiceName" />
+                    </div>
+                </div>
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="txtlenghtInvoice"
+                                       value="#{lang['mn.invoice.invoiceType.invoiceNoLength']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:inputText id="txtlenghtInvoice"
+                                     required="true"
+                                     maxlength="2"
+                                     onblur="this.value = this.value.trim();"
+                                     placeholder="#{lang['mn.invoice.invoiceType.input.invoiceNoLength']}"
+                                     requiredMessage="#{lang['mn.invoice.invoiceType.invoiceNoLength.require.msg']}"
+                                     value="#{invoiceTypeController.editInvoiceType.invoiceNoLength}"
+                                     title="">
+                            <f:convertNumber type="number"/>
+                        </p:inputText>
+                        <pe:keyFilter for="txtlenghtInvoice" regEx="/[0-9]/i" />
+                        <cbs:message forId="txtlenghtInvoice" />
+                    </div>
+                </div>
+            </div>
+            <div class="Container100 TexAlCenter marT10">
+                <p:commandButton process="pnlEditInvoiceType" update="pnlEditInvoiceType" value="#{lang['common.edit']}"
+                                 oncomplete="if(!args.validationFailed) {PF('dlgConfirmEdit').show()} setTimeout(function () {$('.btnbtnDeleteOnePackageGoods0OK').focus();}, 350);"
+                                 actionListener="#{invoiceTypeController.doConfirmEdit}" />
+            </div>
+        </p:outputPanel>
+        <p:confirmDialog closeOnEscape="true" closable="true"
+                         appendTo="@(body)"
+                         widgetVar="dlgConfirmEdit"
+                         header="#{lang['mn.invoice.invoiceType.header.edit']}"
+                         id="cfmBtn"
+                         width="550"
+                         message="#{lang['mn.invoice.invoiceType.msg.edit.confirm']}">
+            <p:commandLink value="#{lang['common.button.NO']}" styleClass="md-button " process="@none"
+                           onstart="PF('dlgConfirmEdit').hide();"
+                    />
+            <p:commandLink process="@this,pnlEditInvoiceType"
+                           update="pnlEditInvoiceType,@([id$=pnlInvoiceTypeInfor]),@([id$=pnlInvoiceTypeList])"
+                           value="#{lang['common.button.YES']}" styleClass="md-button btnbtnDeleteOnePackageGoods0OK"
+                           oncomplete="PF('dlgConfirmEdit').hide(); if(!args.validationFailed) {PF('dlgEditInvoice').hide();}"
+                           actionListener="#{invoiceTypeController.editInvoiceTypeProcess}"/>
+
+        </p:confirmDialog>
+    </h:form>
+</ui:composition>

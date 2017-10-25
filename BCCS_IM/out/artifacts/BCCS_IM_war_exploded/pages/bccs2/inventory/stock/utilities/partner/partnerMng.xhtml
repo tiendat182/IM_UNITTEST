@@ -1,0 +1,411 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+<ui:composition template="../../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.utilities.partner.mng']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmSearch">
+            <p:outputPanel styleClass="container100">
+                <p:outputPanel id="pnUnderSearch">
+                    <div class="ContainerIndent">
+                        <p:messages id="messages" for="frmSearch" globalOnly="true" showSummary="false" showDetail="true" closable="true"/>
+                    </div>
+                    <!--Start vung nhap thong tin chi tiet-->
+                    <p:outputPanel id="pnInfoSearch" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInforExport"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.stock.limit.inputDetail']}"/>
+
+                        <div class="Container100 panelInforExport" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['partner.mng.code']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                                        <p:inputText
+                                                id="partnerCode"
+                                                maxlength="25"
+                                                value="#{partnerMngController.partnerInputSearch.partnerCode}">
+                                            <pe:keyFilter regEx="/[a-zA-Z0-9_]/i"></pe:keyFilter>
+                                        </p:inputText>
+                                        <p:message for="partnerCode"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['partner.mng.name']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                                        <p:inputText
+                                                id="partnerName"
+                                                maxlength="100"
+                                                converter="stringTrimmer"
+                                                value="#{partnerMngController.partnerInputSearch.partnerName}">
+                                        </p:inputText>
+                                        <p:message for="partnerName"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['partner.mng.type']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="partnerType"
+                                                         value="#{partnerMngController.partnerInputSearch.partnerType}">
+                                            <f:selectItem itemLabel="#{lang['mn.stock.status.select']}"/>
+                                            <f:selectItem itemLabel="#{lang['partner.mng.type1']}"
+                                                          itemValue="1"/>
+                                            <f:selectItem itemLabel="#{lang['partner.mng.type2']}"
+                                                          itemValue="2"/>
+                                            <f:selectItem itemLabel="#{lang['partner.mng.type3']}"
+                                                          itemValue="3"/>
+                                            <f:selectItem itemLabel="#{lang['partner.mng.type4']}"
+                                                          itemValue="4"/>
+                                            <p:ajax event="change" process="@this" update="a4keyPannel" listener="#{partnerMngController.onChangePartnerTypeFormSearch()}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['partner.mng.address']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                                        <p:inputText
+                                                id="address"
+                                                maxlength="250"
+                                                converter="stringTrimmer"
+                                                value="#{partnerMngController.partnerInputSearch.address}">
+                                        </p:inputText>
+                                        <p:message for="address"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['partner.mng.phone']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                                        <p:inputText
+                                                id="phone"
+                                                maxlength="20"
+                                                value="#{partnerMngController.partnerInputSearch.phone}">
+                                            <pe:keyFilter regEx="/[0-9]/i"></pe:keyFilter>
+                                        </p:inputText>
+                                        <p:message for="phone"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['partner.mng.fax']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                                        <p:inputText
+                                                id="fax"
+                                                maxlength="20"
+                                                value="#{partnerMngController.partnerInputSearch.fax}">
+                                            <pe:keyFilter regEx="/[0-9]/i"></pe:keyFilter>
+                                        </p:inputText>
+                                        <p:message for="fax"/>
+                                    </div>
+                                </div>
+                                </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['partner.mng.startdate']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                                        <p:calendar
+                                                mask="true"
+                                                pattern="#{lang['common.datetime.format']}"
+                                                converterMessage="#{lang['partner.mng.startdate.invalid']}"
+                                                validatorMessage="#{lang['partner.mng.startdate.invalid']}"
+                                                value="#{partnerMngController.partnerInputSearch.startDate}"
+                                                placeholder="#{lang['common.datetime.format']}"
+                                                required="false"
+                                                id="fromDate">
+                                            <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                        </p:calendar>
+                                        <p:message for="fromDate"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['partner.mng.enddate']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                                        <p:calendar
+                                                mask="true"
+                                                pattern="#{lang['common.datetime.format']}"
+                                                converterMessage="#{lang['partner.mng.enddate.invalid']}"
+                                                validatorMessage="#{lang['partner.mng.enddate.invalid']}"
+                                                value="#{partnerMngController.partnerInputSearch.endDate}"
+                                                placeholder="#{lang['common.datetime.format']}"
+                                                required="false"
+                                                id="toDate">
+                                            <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                        </p:calendar>
+                                        <p:message for="toDate"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['partner.mng.status']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="status"
+                                                         value="#{partnerMngController.partnerInputSearch.status}">
+                                            <f:selectItem itemLabel="#{lang['mn.stock.status.select']}"/>
+                                            <f:selectItem itemLabel="#{lang['partner.mng.status1']}"
+                                                          itemValue="1"/>
+                                            <f:selectItem itemLabel="#{lang['partner.mng.status0']}"
+                                                          itemValue="0"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <p:outputPanel id="a4keyPannel">
+                                <p:outputPanel class="Container33 Responsive" rendered="#{partnerMngController.partnerInputSearch.partnerType == 4}">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['partner.mng.a4key']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                                        <p:inputText
+                                                id="a4key"
+                                                maxlength="25"
+                                                converter="stringTrimmer"
+                                                value="#{partnerMngController.partnerInputSearch.a4Key}">
+                                        </p:inputText>
+                                        <p:message for="a4key"/>
+                                    </div>
+                                </p:outputPanel>
+                            </p:outputPanel>
+                                </div>
+                            <div class="Container100 TexAlCenter">
+                                <p:commandButton styleClass="mg-left-5"
+                                                 validateClient="true"
+                                                 value="#{lang['common.button.search']}" process="@form"
+                                                 update="@([id$=frmSearch]),@([id$=lstPartner])"
+                                                 actionListener="#{partnerMngController.search}"/>
+
+                                <p:commandButton value="#{lang['common.reset']}"
+                                                 actionListener="#{partnerMngController.resetSearchFrom()}"
+                                                 process="@this"
+                                                 update="@form"
+                                                 validateClient="true"
+                                                 styleClass="mg-left-5"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung nhap thong tin chi tiet-->
+
+                    <!--Start vung lịch sử tạo dải số-->
+                    <p:outputPanel id="pnLstSearch" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelListOrderExport"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.stock.list.result.search']}"/>
+                        <p:commandLink
+                                value="#{lang['common.add']}"
+                                update="dlgCreateOrUpdate"
+                                resetValues="true"
+                                actionListener="#{partnerMngController.onCreate()}"
+                                oncomplete="PF('dlgCreateOrUpdate').show();"
+                                style="" styleClass="fa icon-plus Fs14 blue md-link"
+                        />
+                        <!--<cbs:confirmDialog
+                                idComponent="btnDelete"
+                                valueButton="#{lang['common.delete']}"
+                                headerConfirm="#{lang['mn.stock.limit.financeType.header.delete']}"
+                                messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                actionOK="#{partnerMngController.doDelete}"
+                                resetValueButton="true"
+                                actionValidate="#{partnerMngController.preToDelete}"
+                                process="@this,@([id$=lstPartner])"
+                                updateArea="@([id$=frmSearch])"
+                                updateOK="@([id$=lstPartner]),@([id$=frmSearch])"
+                                styleClassButton="fa icon-trash Fs14 blue md-link mg-left-5"
+                                focusCancel="true"
+                                isButton="false"/>-->
+                        <div class="Container100 panelListOrderExport">
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        id="lstPartner"
+                                        var="partner"
+                                        rowKey=""
+                                        rowIndexVar="index"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="true"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}"
+                                        value="#{partnerMngController.partnerList}">
+                                    <p:column headerText="STT" styleClass="" style="width: 10%;">
+                                        #{index+1}
+                                    </p:column>
+                                    <p:column headerText="#{lang['partner.mng.code']}"
+                                              sortBy="#{partner.partnerCode}"
+                                              style="width: 17%">
+                                        <p:outputLabel
+                                                value="#{partner.partnerCode}"
+                                                style="text-align: left"
+                                                title="#{partner.partnerCode}"
+                                        >
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['partner.mng.name']}"
+                                              sortBy="#{partner.partnerName}"
+                                              style="width: 25%">
+                                        <p:outputLabel value="#{partner.partnerName}"
+                                                       style="text-align: left"
+                                                       title="#{partner.partnerName}"
+                                        >
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['partner.mng.type']}"
+                                              sortBy="#{partner.partnerType}"
+                                              style="width: 20%">
+                                        <p:outputLabel value="#{partnerMngController.getPartnerTypeName(partner.partnerType)}"
+                                                       style="text-align: left"
+                                                       title="#{partnerMngController.getPartnerTypeName(partner.partnerType)}">
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['partner.mng.address']}"
+                                              sortBy="#{partner.address}"
+                                              style="width: 20%">
+                                        <p:outputLabel value="#{partner.address}"
+                                                       style="text-align: left"
+                                                       title="#{partner.address}">
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['partner.mng.phone']}"
+                                              sortBy="#{partner.phone}"
+                                              style="width: 20%">
+                                        <p:outputLabel value="#{partner.phone}"
+                                                       style="text-align: left"
+                                                       title="#{partner.phone}">
+                                        </p:outputLabel>
+                                    </p:column>
+
+                                    <p:column headerText="#{lang['partner.mng.fax']}"
+                                              sortBy="#{partner.fax}"
+                                              style="width: 20%">
+                                        <p:outputLabel value="#{partner.fax}"
+                                                       style="text-align: left"
+                                                       title="#{partner.fax}">
+                                        </p:outputLabel>
+                                    </p:column>
+
+                                    <p:column headerText="#{lang['partner.mng.a4key']}"
+                                              sortBy="#{partner.a4Key}"
+                                              style="width: 15%">
+                                        <p:outputLabel
+                                                value="#{partner.a4Key}"
+                                                style="text-align: left"
+                                                title="#{partner.a4Key}"
+                                        >
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.status']}"
+                                              sortBy="#{partner.status}"
+                                              style="width: 15%">
+                                        <p:outputLabel
+                                                value="#{partnerMngController.getStatusName(partner.status)}"
+                                                style="text-align: left"
+                                                title="#{partnerMngController.getStatusName(partner.status)}"
+                                        >
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['partner.mng.startdate']}"
+                                              sortBy="#{partner.staDate}"
+                                              style="width: 20%;">
+                                        <p:outputLabel value="#{partner.staDate}" style="text-align: left"
+                                                       title="#{partner.staDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['partner.mng.enddate']}"
+                                              sortBy="#{partner.endDate}"
+                                              style="width: 20%;">
+                                        <p:outputLabel value="#{partner.endDate}" style="text-align: left"
+                                                       title="#{partner.endDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['imsi.info.effect']}"
+                                              style="width: 25%;text-align: center">
+                                        <p:commandLink styleClass="fa  icon-edit Fs14 blue "
+                                                       process="@this"
+                                                       update="dlgCreateOrUpdate"
+                                                       resetValues="true"
+                                                       actionListener="#{partnerMngController.onUpdate(partner)}"
+                                                       oncomplete="PF('dlgCreateOrUpdate').show();"
+                                        >
+                                        </p:commandLink>
+                                        <cbs:confirmDialog
+                                                idComponent="btnDeleteOneRecord"
+                                                valueButton=""
+                                                headerConfirm="#{lang['common.confirm']}"
+                                                messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                                actionValidate="#{partnerMngController.doDeleteOneValidate(partner)}"
+                                                actionOK="#{partnerMngController.doDeleteOne()}"
+                                                resetValueButton="true"
+                                                process="@this"
+                                                titleButton="#{lang['common.delete']}"
+                                                styleClassButton="fa icon-trash Fs14 blue"
+                                                styleButton="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                                updateArea="@([id$=frmSearch])"
+                                                updateOK="@([id$=lstPartner]),@([id$=frmSearch])"
+                                                focusCancel="true"
+                                                oncompleteOK=""
+                                                isButton="false"
+                                        />
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung lịch sử tạo dải số-->
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="false"
+                  position="center"
+                  id="dlgCreateOrUpdate"
+                  widgetVar="dlgCreateOrUpdate"
+                  header="#{partnerMngController.dlgTitle}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="70%">
+            <ui:include src="dlgCreateOrUpdate.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,30 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Base" type="JUnit" factoryName="JUnit" editBeforeRun="true" singleton="true" show_console_on_std_out="true" show_console_on_std_err="true">
+    <log_file path="F:/" checked="true" skipped="true" show_all="true" alias="F:\" />
+    <output_file path="D:/" is_save="true" />
+    <extension name="coverage" enabled="false" merge="false" track_test_folders="true" runner="idea">
+      <pattern>
+        <option name="PATTERN" value="com.viettel.bccs.inventory.service.BaseStock.BaseStockService" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <module name="InventoryBusiness" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <option name="PACKAGE_NAME" value="com.viettel.bccs.inventory.service.BaseStock" />
+    <option name="MAIN_CLASS_NAME" value="com.viettel.bccs.inventory.service.BaseStock.BaseStockServiceTest" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="class" />
+    <option name="VM_PARAMETERS" value="-ea" />
+    <option name="PARAMETERS" value="" />
+    <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$" />
+    <option name="ENV_VARIABLES" />
+    <option name="PASS_PARENT_ENVS" value="true" />
+    <option name="TEST_SEARCH_SCOPE">
+      <value defaultName="singleModule" />
+    </option>
+    <envs />
+    <patterns />
+    <method />
+  </configuration>
+</component>

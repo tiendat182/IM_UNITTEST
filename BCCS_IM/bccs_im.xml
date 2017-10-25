@@ -1,0 +1,687 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="bccs_im" default="all">
+
+
+  <property file="bccs_im.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+
+  <!-- Compiler options -->
+
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.bundle/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.ear"/>
+    <include name="*.apk"/>
+    <include name="*.zip"/>
+    <include name="*.swc"/>
+    <include name="*.ane"/>
+    <include name="*.egg"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+
+  <!-- JDK definitions -->
+
+  <property name="jdk.bin.1.8" value="${jdk.home.1.8}/bin"/>
+  <path id="jdk.classpath.1.8">
+    <fileset dir="${jdk.home.1.8}">
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jfr.jar"/>
+      <include name="jre/lib/jfxswt.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/management-agent.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/resources.jar"/>
+      <include name="jre/lib/rt.jar"/>
+      <include name="jre/lib/ext/access-bridge-64.jar"/>
+      <include name="jre/lib/ext/cldrdata.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/jaccess.jar"/>
+      <include name="jre/lib/ext/jfxrt.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/nashorn.jar"/>
+      <include name="jre/lib/ext/sunec.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunmscapi.jar"/>
+      <include name="jre/lib/ext/sunpkcs11.jar"/>
+      <include name="jre/lib/ext/zipfs.jar"/>
+    </fileset>
+  </path>
+
+  <property name="project.jdk.home" value="${jdk.home.1.8}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.8}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.8"/>
+
+
+  <!-- Global Libraries -->
+  <property name="lib.dir" value="${basedir}/../LibWeb_v5"/>
+
+  <path id="library.libweb_v5.classpath">
+    <fileset dir="${lib.dir}">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+
+
+
+  <!-- Application Server Libraries -->
+
+  <!-- Modules -->
+
+
+  <!-- Module FwjBCCS2_v5 -->
+
+  <dirname property="module.fwjbccs2_v5.basedir" file="${ant.file}"/>
+
+
+  <property name="module.jdk.home.fwjbccs2_v5" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.fwjbccs2_v5" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.fwjbccs2_v5" value="${project.jdk.classpath}"/>
+
+  <property name="compiler.args.fwjbccs2_v5" value="-encoding UTF-8 -source 8 ${compiler.args}"/>
+
+  <property name="fwjbccs2_v5.output.dir" value="${module.fwjbccs2_v5.basedir}/out/production/FwjBCCS2_v5"/>
+  <property name="fwjbccs2_v5.testoutput.dir" value="${module.fwjbccs2_v5.basedir}/out/test/FwjBCCS2_v5"/>
+
+  <path id="fwjbccs2_v5.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+
+  <path id="fwjbccs2_v5.module.production.classpath">
+    <path refid="${module.jdk.classpath.fwjbccs2_v5}"/>
+    <path refid="library.libweb_v5.classpath"/>
+  </path>
+
+  <path id="fwjbccs2_v5.runtime.production.module.classpath">
+    <pathelement location="${fwjbccs2_v5.output.dir}"/>
+    <path refid="library.libweb_v5.classpath"/>
+  </path>
+
+  <path id="fwjbccs2_v5.module.classpath">
+    <path refid="${module.jdk.classpath.fwjbccs2_v5}"/>
+    <pathelement location="${fwjbccs2_v5.output.dir}"/>
+    <path refid="library.libweb_v5.classpath"/>
+  </path>
+
+  <path id="fwjbccs2_v5.runtime.module.classpath">
+    <pathelement location="${fwjbccs2_v5.testoutput.dir}"/>
+    <pathelement location="${fwjbccs2_v5.output.dir}"/>
+    <path refid="library.libweb_v5.classpath"/>
+  </path>
+
+
+  <patternset id="excluded.from.module.fwjbccs2_v5">
+    <patternset refid="ignored.files"/>
+  </patternset>
+
+  <patternset id="excluded.from.compilation.fwjbccs2_v5">
+    <patternset refid="excluded.from.module.fwjbccs2_v5"/>
+  </patternset>
+
+  <path id="fwjbccs2_v5.module.sourcepath">
+    <dirset dir="${module.fwjbccs2_v5.basedir}/../FwjBCCS2_v5">
+      <include name="akka"/>
+      <include name="core"/>
+      <include name="override"/>
+      <include name="resources"/>
+      <include name="solr"/>
+      <include name="web"/>
+      <include name="process"/>
+    </dirset>
+  </path>
+
+
+  <target name="compile.module.fwjbccs2_v5" depends="compile.module.fwjbccs2_v5.production,compile.module.fwjbccs2_v5.tests" description="Compile module FwjBCCS2_v5"/>
+
+  <target name="compile.module.fwjbccs2_v5.production" description="Compile module FwjBCCS2_v5; production classes">
+    <mkdir dir="${fwjbccs2_v5.output.dir}"/>
+    <javac destdir="${fwjbccs2_v5.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.fwjbccs2_v5}/javac">
+      <compilerarg line="${compiler.args.fwjbccs2_v5}"/>
+      <bootclasspath refid="fwjbccs2_v5.module.bootclasspath"/>
+      <classpath refid="fwjbccs2_v5.module.production.classpath"/>
+      <src refid="fwjbccs2_v5.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.fwjbccs2_v5"/>
+    </javac>
+
+    <copy todir="${fwjbccs2_v5.output.dir}">
+      <fileset dir="${module.fwjbccs2_v5.basedir}/../FwjBCCS2_v5/akka">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.fwjbccs2_v5.basedir}/../FwjBCCS2_v5/core">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.fwjbccs2_v5.basedir}/../FwjBCCS2_v5/override">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.fwjbccs2_v5.basedir}/../FwjBCCS2_v5/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.fwjbccs2_v5.basedir}/../FwjBCCS2_v5/solr">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.fwjbccs2_v5.basedir}/../FwjBCCS2_v5/web">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.fwjbccs2_v5.basedir}/../FwjBCCS2_v5/process">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="compile.module.fwjbccs2_v5.tests" depends="compile.module.fwjbccs2_v5.production" description="compile module FwjBCCS2_v5; test classes" unless="skip.tests"/>
+
+  <target name="clean.module.fwjbccs2_v5" description="cleanup module">
+    <delete dir="${fwjbccs2_v5.output.dir}"/>
+    <delete dir="${fwjbccs2_v5.testoutput.dir}"/>
+  </target>
+
+
+  <!-- Module InventoryBusiness -->
+
+  <dirname property="module.inventorybusiness.basedir" file="${ant.file}"/>
+
+
+  <property name="module.jdk.home.inventorybusiness" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.inventorybusiness" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.inventorybusiness" value="${project.jdk.classpath}"/>
+
+  <property name="compiler.args.inventorybusiness" value="-encoding UTF-8 -source 8 ${compiler.args}"/>
+
+  <property name="inventorybusiness.output.dir" value="${module.inventorybusiness.basedir}/out/production/InventoryBusiness"/>
+  <property name="inventorybusiness.testoutput.dir" value="${module.inventorybusiness.basedir}/out/test/InventoryBusiness"/>
+
+  <path id="inventorybusiness.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+
+  <path id="inventorybusiness.module.production.classpath">
+    <path refid="${module.jdk.classpath.inventorybusiness}"/>
+    <path refid="library.libweb_v5.classpath"/>
+    <pathelement location="${fwjbccs2_v5.output.dir}"/>
+  </path>
+
+  <path id="inventorybusiness.runtime.production.module.classpath">
+    <pathelement location="${inventorybusiness.output.dir}"/>
+    <path refid="library.libweb_v5.classpath"/>
+    <path refid="fwjbccs2_v5.runtime.production.module.classpath"/>
+  </path>
+
+  <path id="inventorybusiness.module.classpath">
+    <path refid="${module.jdk.classpath.inventorybusiness}"/>
+    <pathelement location="${inventorybusiness.output.dir}"/>
+    <path refid="library.libweb_v5.classpath"/>
+    <pathelement location="${fwjbccs2_v5.testoutput.dir}"/>
+    <pathelement location="${fwjbccs2_v5.output.dir}"/>
+  </path>
+
+  <path id="inventorybusiness.runtime.module.classpath">
+    <pathelement location="${inventorybusiness.testoutput.dir}"/>
+    <pathelement location="${inventorybusiness.output.dir}"/>
+    <path refid="library.libweb_v5.classpath"/>
+    <path refid="fwjbccs2_v5.runtime.module.classpath"/>
+  </path>
+
+
+  <patternset id="excluded.from.module.inventorybusiness">
+    <patternset refid="ignored.files"/>
+  </patternset>
+
+  <patternset id="excluded.from.compilation.inventorybusiness">
+    <patternset refid="excluded.from.module.inventorybusiness"/>
+  </patternset>
+
+  <path id="inventorybusiness.module.sourcepath">
+    <dirset dir="${module.inventorybusiness.basedir}/../InventoryBusiness">
+      <include name="base"/>
+      <include name="srv-impl"/>
+      <include name="ws-impl"/>
+    </dirset>
+  </path>
+
+
+  <target name="compile.module.inventorybusiness" depends="compile.module.inventorybusiness.production,compile.module.inventorybusiness.tests" description="Compile module InventoryBusiness"/>
+
+  <target name="compile.module.inventorybusiness.production" depends="compile.module.fwjbccs2_v5" description="Compile module InventoryBusiness; production classes">
+    <mkdir dir="${inventorybusiness.output.dir}"/>
+    <javac destdir="${inventorybusiness.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.inventorybusiness}/javac">
+      <compilerarg line="${compiler.args.inventorybusiness}"/>
+      <bootclasspath refid="inventorybusiness.module.bootclasspath"/>
+      <classpath refid="inventorybusiness.module.production.classpath"/>
+      <src refid="inventorybusiness.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.inventorybusiness"/>
+    </javac>
+
+    <copy todir="${inventorybusiness.output.dir}">
+      <fileset dir="${module.inventorybusiness.basedir}/../InventoryBusiness/base">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.inventorybusiness.basedir}/../InventoryBusiness/srv-impl">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.inventorybusiness.basedir}/../InventoryBusiness/ws-impl">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="compile.module.inventorybusiness.tests" depends="compile.module.inventorybusiness.production" description="compile module InventoryBusiness; test classes" unless="skip.tests"/>
+
+  <target name="clean.module.inventorybusiness" description="cleanup module">
+    <delete dir="${inventorybusiness.output.dir}"/>
+    <delete dir="${inventorybusiness.testoutput.dir}"/>
+  </target>
+
+
+  <!-- Module BCCS_IM -->
+
+  <dirname property="module.bccs_im.basedir" file="${ant.file}"/>
+
+
+  <property name="module.jdk.home.bccs_im" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.bccs_im" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.bccs_im" value="${project.jdk.classpath}"/>
+
+  <property name="compiler.args.bccs_im" value="-encoding UTF-8 -source 8 ${compiler.args}"/>
+
+  <property name="bccs_im.output.dir" value="${module.bccs_im.basedir}/out/production/BCCS_IM"/>
+  <property name="bccs_im.testoutput.dir" value="${module.bccs_im.basedir}/out/test/BCCS_IM"/>
+
+  <path id="bccs_im.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+
+  <path id="bccs_im.module.production.classpath">
+    <path refid="${module.jdk.classpath.bccs_im}"/>
+    <path refid="library.libweb_v5.classpath"/>
+    <pathelement location="${fwjbccs2_v5.output.dir}"/>
+    <pathelement location="${inventorybusiness.output.dir}"/>
+  </path>
+
+  <path id="bccs_im.runtime.production.module.classpath">
+    <pathelement location="${bccs_im.output.dir}"/>
+    <path refid="library.libweb_v5.classpath"/>
+    <path refid="fwjbccs2_v5.runtime.production.module.classpath"/>
+    <path refid="inventorybusiness.runtime.production.module.classpath"/>
+  </path>
+
+  <path id="bccs_im.module.classpath">
+    <path refid="${module.jdk.classpath.bccs_im}"/>
+    <pathelement location="${bccs_im.output.dir}"/>
+    <path refid="library.libweb_v5.classpath"/>
+    <pathelement location="${fwjbccs2_v5.testoutput.dir}"/>
+    <pathelement location="${fwjbccs2_v5.output.dir}"/>
+    <pathelement location="${inventorybusiness.testoutput.dir}"/>
+    <pathelement location="${inventorybusiness.output.dir}"/>
+  </path>
+
+  <path id="bccs_im.runtime.module.classpath">
+    <pathelement location="${bccs_im.testoutput.dir}"/>
+    <pathelement location="${bccs_im.output.dir}"/>
+    <path refid="library.libweb_v5.classpath"/>
+    <path refid="fwjbccs2_v5.runtime.module.classpath"/>
+    <path refid="inventorybusiness.runtime.module.classpath"/>
+  </path>
+
+
+  <patternset id="excluded.from.module.bccs_im">
+    <patternset refid="ignored.files"/>
+  </patternset>
+
+  <patternset id="excluded.from.compilation.bccs_im">
+    <patternset refid="excluded.from.module.bccs_im"/>
+  </patternset>
+
+  <path id="bccs_im.module.sourcepath">
+    <dirset dir="${module.bccs_im.basedir}">
+      <include name="src/resources"/>
+      <include name="src/java"/>
+    </dirset>
+  </path>
+
+
+  <target name="compile.module.bccs_im" depends="compile.module.bccs_im.production,compile.module.bccs_im.tests" description="Compile module BCCS_IM"/>
+
+  <target name="compile.module.bccs_im.production" depends="compile.module.fwjbccs2_v5,compile.module.inventorybusiness" description="Compile module BCCS_IM; production classes">
+    <mkdir dir="${bccs_im.output.dir}"/>
+    <javac destdir="${bccs_im.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.bccs_im}/javac">
+      <compilerarg line="${compiler.args.bccs_im}"/>
+      <bootclasspath refid="bccs_im.module.bootclasspath"/>
+      <classpath refid="bccs_im.module.production.classpath"/>
+      <src refid="bccs_im.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.bccs_im"/>
+    </javac>
+
+    <copy todir="${bccs_im.output.dir}">
+      <fileset dir="${module.bccs_im.basedir}/src/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.bccs_im.basedir}/src/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="compile.module.bccs_im.tests" depends="compile.module.bccs_im.production" description="compile module BCCS_IM; test classes" unless="skip.tests"/>
+
+  <target name="clean.module.bccs_im" description="cleanup module">
+    <delete dir="${bccs_im.output.dir}"/>
+    <delete dir="${bccs_im.testoutput.dir}"/>
+  </target>
+
+
+  <!-- Module InventoryService -->
+
+  <dirname property="module.inventoryservice.basedir" file="${ant.file}"/>
+
+
+  <property name="module.jdk.home.inventoryservice" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.inventoryservice" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.inventoryservice" value="${project.jdk.classpath}"/>
+
+  <property name="compiler.args.inventoryservice" value="-encoding UTF-8 -source 8 ${compiler.args}"/>
+
+  <property name="inventoryservice.output.dir" value="${module.inventoryservice.basedir}/out/production/InventoryService"/>
+  <property name="inventoryservice.testoutput.dir" value="${module.inventoryservice.basedir}/out/test/InventoryService"/>
+
+  <path id="inventoryservice.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+
+  <path id="inventoryservice.module.production.classpath">
+    <path refid="${module.jdk.classpath.inventoryservice}"/>
+    <path refid="library.libweb_v5.classpath"/>
+    <pathelement location="${fwjbccs2_v5.output.dir}"/>
+    <pathelement location="${inventorybusiness.output.dir}"/>
+  </path>
+
+  <path id="inventoryservice.runtime.production.module.classpath">
+    <pathelement location="${inventoryservice.output.dir}"/>
+    <path refid="library.libweb_v5.classpath"/>
+    <path refid="fwjbccs2_v5.runtime.production.module.classpath"/>
+    <path refid="inventorybusiness.runtime.production.module.classpath"/>
+  </path>
+
+  <path id="inventoryservice.module.classpath">
+    <path refid="${module.jdk.classpath.inventoryservice}"/>
+    <pathelement location="${inventoryservice.output.dir}"/>
+    <path refid="library.libweb_v5.classpath"/>
+    <pathelement location="${fwjbccs2_v5.testoutput.dir}"/>
+    <pathelement location="${fwjbccs2_v5.output.dir}"/>
+    <pathelement location="${inventorybusiness.testoutput.dir}"/>
+    <pathelement location="${inventorybusiness.output.dir}"/>
+  </path>
+
+  <path id="inventoryservice.runtime.module.classpath">
+    <pathelement location="${inventoryservice.testoutput.dir}"/>
+    <pathelement location="${inventoryservice.output.dir}"/>
+    <path refid="library.libweb_v5.classpath"/>
+    <path refid="fwjbccs2_v5.runtime.module.classpath"/>
+    <path refid="inventorybusiness.runtime.module.classpath"/>
+  </path>
+
+
+  <patternset id="excluded.from.module.inventoryservice">
+    <patternset refid="ignored.files"/>
+  </patternset>
+
+  <patternset id="excluded.from.compilation.inventoryservice">
+    <patternset refid="excluded.from.module.inventoryservice"/>
+  </patternset>
+
+  <path id="inventoryservice.module.sourcepath">
+    <dirset dir="${module.inventoryservice.basedir}/../InventoryService">
+      <include name="src"/>
+      <include name="src/resources"/>
+    </dirset>
+  </path>
+
+  <path id="inventoryservice.module.test.sourcepath">
+    <dirset dir="${module.inventoryservice.basedir}/../InventoryService">
+      <include name="JUnit"/>
+    </dirset>
+  </path>
+
+
+  <target name="compile.module.inventoryservice" depends="compile.module.inventoryservice.production,compile.module.inventoryservice.tests" description="Compile module InventoryService"/>
+
+  <target name="compile.module.inventoryservice.production" depends="compile.module.fwjbccs2_v5,compile.module.inventorybusiness" description="Compile module InventoryService; production classes">
+    <mkdir dir="${inventoryservice.output.dir}"/>
+    <javac destdir="${inventoryservice.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.inventoryservice}/javac">
+      <compilerarg line="${compiler.args.inventoryservice}"/>
+      <bootclasspath refid="inventoryservice.module.bootclasspath"/>
+      <classpath refid="inventoryservice.module.production.classpath"/>
+      <src refid="inventoryservice.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.inventoryservice"/>
+    </javac>
+
+    <copy todir="${inventoryservice.output.dir}">
+      <fileset dir="${module.inventoryservice.basedir}/../InventoryService/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.inventoryservice.basedir}/../InventoryService/src/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="compile.module.inventoryservice.tests" depends="compile.module.inventoryservice.production" description="compile module InventoryService; test classes" unless="skip.tests">
+    <mkdir dir="${inventoryservice.testoutput.dir}"/>
+    <javac destdir="${inventoryservice.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.inventoryservice}/javac">
+      <compilerarg line="${compiler.args.inventoryservice}"/>
+      <bootclasspath refid="inventoryservice.module.bootclasspath"/>
+      <classpath refid="inventoryservice.module.classpath"/>
+      <src refid="inventoryservice.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.inventoryservice"/>
+    </javac>
+
+    <copy todir="${inventoryservice.testoutput.dir}">
+      <fileset dir="${module.inventoryservice.basedir}/../InventoryService/JUnit">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="clean.module.inventoryservice" description="cleanup module">
+    <delete dir="${inventoryservice.output.dir}"/>
+    <delete dir="${inventoryservice.testoutput.dir}"/>
+  </target>
+
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+
+  <target name="clean" depends="clean.module.fwjbccs2_v5, clean.module.inventorybusiness, clean.module.bccs_im, clean.module.inventoryservice, clean.artifact.bccs_im:war_exploded, clean.artifact.inventoryservice:jar, clean.artifact.inventoryservice:war_exploded" description="cleanup all"/>
+
+  <target name="build.modules" depends="init, clean, compile.module.fwjbccs2_v5, compile.module.inventorybusiness, compile.module.bccs_im, compile.module.inventoryservice" description="build all modules"/>
+
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.bccs_im:war" value="${basedir}/out/artifacts/BCCS_IM_war"/>
+    <property name="artifact.output.bccs_im:war_exploded" value="${basedir}/out/artifacts/BCCS_IM_war_exploded"/>
+    <property name="artifact.output.inventoryservice:jar" value="${basedir}/out/artifacts/InventoryService_jar"/>
+    <property name="artifact.output.inventoryservice:war" value="${basedir}/out/artifacts/InventoryService_war"/>
+    <property name="artifact.output.inventoryservice:war_exploded" value="${basedir}/out/artifacts/InventoryService_war_exploded"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.BCCS_IM_war.war" value="${artifacts.temp.dir}/BCCS_IM_war.war"/>
+    <property name="temp.jar.path.InventoryService.jar" value="${artifacts.temp.dir}/InventoryService.jar"/>
+    <property name="temp.jar.path.InventoryService_war.war" value="${artifacts.temp.dir}/InventoryService_war.war"/>
+  </target>
+
+  <target name="clean.artifact.bccs_im:war_exploded" description="clean BCCS_IM:war exploded artifact output">
+    <delete dir="${artifact.output.bccs_im:war_exploded}"/>
+  </target>
+
+  <target name="clean.artifact.inventoryservice:jar" description="clean InventoryService:jar artifact output">
+    <delete dir="${artifact.output.inventoryservice:jar}"/>
+  </target>
+
+  <target name="clean.artifact.inventoryservice:war_exploded" description="clean InventoryService:war exploded artifact output">
+    <delete dir="${artifact.output.inventoryservice:war_exploded}"/>
+  </target>
+
+  <target name="artifact.bccs_im:war" depends="init.artifacts, artifact.bccs_im:war_exploded" description="Build &#39;BCCS_IM:war&#39; artifact">
+    <property name="artifact.temp.output.bccs_im:war" value="${artifacts.temp.dir}/BCCS_IM_war"/>
+    <mkdir dir="${artifact.temp.output.bccs_im:war}"/>
+    <zip destfile="${temp.jar.path.BCCS_IM_war.war}">
+      <zipfileset dir="${artifact.output.bccs_im:war_exploded}"/>
+    </zip>
+    <copy file="${temp.jar.path.BCCS_IM_war.war}" tofile="${artifact.temp.output.bccs_im:war}/BCCS_IM_war.war"/>
+  </target>
+
+  <target name="artifact.bccs_im:war_exploded" depends="init.artifacts, compile.module.bccs_im, compile.module.fwjbccs2_v5, compile.module.inventorybusiness" description="Build &#39;BCCS_IM:war exploded&#39; artifact">
+    <mkdir dir="${artifact.output.bccs_im:war_exploded}"/>
+    <mkdir dir="${artifact.output.bccs_im:war_exploded}/WEB-INF"/>
+    <mkdir dir="${artifact.output.bccs_im:war_exploded}/WEB-INF/classes"/>
+    <copy todir="${artifact.output.bccs_im:war_exploded}/WEB-INF/classes">
+      <fileset dir="${bccs_im.output.dir}"/>
+    </copy>
+    <copy todir="${artifact.output.bccs_im:war_exploded}/WEB-INF/classes">
+      <fileset dir="${fwjbccs2_v5.output.dir}"/>
+    </copy>
+    <copy todir="${artifact.output.bccs_im:war_exploded}/WEB-INF/classes">
+      <fileset dir="${inventorybusiness.output.dir}"/>
+    </copy>
+    <mkdir dir="${artifact.output.bccs_im:war_exploded}/WEB-INF/lib"/>
+    <copy todir="${artifact.output.bccs_im:war_exploded}/WEB-INF/lib">
+      <fileset dir="${lib.dir}" includes="**/*.jar" excludes="**/*sources.jar, **/*javadoc.jar" />
+    </copy>
+    <copy todir="${artifact.output.bccs_im:war_exploded}">
+      <fileset dir="${basedir}/web"/>
+    </copy>
+    <copy todir="${artifact.output.bccs_im:war_exploded}">
+      <fileset dir="${basedir}/../FwBCCS2/src/web"/>
+    </copy>
+    <mkdir dir="${artifact.output.bccs_im:war_exploded}/WEB-INF"/>
+    <copy file="${basedir}/web/WEB-INF/web.xml" tofile="${artifact.output.bccs_im:war_exploded}/WEB-INF/web.xml"/>
+  </target>
+
+  <target name="artifact.inventoryservice:jar" depends="init.artifacts, compile.module.inventoryservice, compile.module.fwjbccs2_v5, compile.module.inventorybusiness" description="Build &#39;InventoryService:jar&#39; artifact">
+    <mkdir dir="${artifact.output.inventoryservice:jar}"/>
+    <jar destfile="${temp.jar.path.InventoryService.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${inventoryservice.output.dir}"/>
+      <zipfileset dir="${fwjbccs2_v5.output.dir}"/>
+      <zipfileset dir="${inventorybusiness.output.dir}"/>
+    </jar>
+    <copy todir="${artifact.output.inventoryservice:jar}">
+      <fileset dir="${lib.dir}" includes="**/*.jar" excludes="**/*sources.jar, **/*javadoc.jar" />
+    </copy>
+    <copy file="${temp.jar.path.InventoryService.jar}" tofile="${artifact.output.inventoryservice:jar}/InventoryService.jar"/>
+  </target>
+
+  <target name="artifact.inventoryservice:war" depends="init.artifacts, artifact.inventoryservice:war_exploded" description="Build &#39;InventoryService:war&#39; artifact">
+    <property name="artifact.temp.output.inventoryservice:war" value="${artifacts.temp.dir}/InventoryService_war"/>
+    <mkdir dir="${artifact.temp.output.inventoryservice:war}"/>
+    <zip destfile="${temp.jar.path.InventoryService_war.war}">
+      <zipfileset dir="${artifact.output.inventoryservice:war_exploded}"/>
+    </zip>
+    <copy file="${temp.jar.path.InventoryService_war.war}" tofile="${artifact.temp.output.inventoryservice:war}/InventoryService_war.war"/>
+  </target>
+
+  <target name="artifact.inventoryservice:war_exploded" depends="init.artifacts, compile.module.inventoryservice, compile.module.fwjbccs2_v5, compile.module.inventorybusiness" description="Build &#39;InventoryService:war exploded&#39; artifact">
+    <mkdir dir="${artifact.output.inventoryservice:war_exploded}"/>
+    <mkdir dir="${artifact.output.inventoryservice:war_exploded}/WEB-INF"/>
+    <mkdir dir="${artifact.output.inventoryservice:war_exploded}/WEB-INF/classes"/>
+    <copy todir="${artifact.output.inventoryservice:war_exploded}/WEB-INF/classes">
+      <fileset dir="${inventoryservice.output.dir}"/>
+    </copy>
+    <copy todir="${artifact.output.inventoryservice:war_exploded}/WEB-INF/classes">
+      <fileset dir="${fwjbccs2_v5.output.dir}"/>
+    </copy>
+    <copy todir="${artifact.output.inventoryservice:war_exploded}/WEB-INF/classes">
+      <fileset dir="${inventorybusiness.output.dir}"/>
+    </copy>
+    <mkdir dir="${artifact.output.inventoryservice:war_exploded}/WEB-INF/lib"/>
+    <copy todir="${artifact.output.inventoryservice:war_exploded}/WEB-INF/lib">
+      <fileset dir="${lib.dir}" includes="**/*.jar" excludes="**/*sources.jar, **/*javadoc.jar" />
+    </copy>
+    <copy todir="${artifact.output.inventoryservice:war_exploded}">
+      <fileset dir="${basedir}/../InventoryService/web"/>
+    </copy>
+    <mkdir dir="${artifact.output.inventoryservice:war_exploded}/WEB-INF"/>
+    <copy file="${basedir}/../InventoryService/web/WEB-INF/web.xml" tofile="${artifact.output.inventoryservice:war_exploded}/WEB-INF/web.xml"/>
+  </target>
+
+  <target name="build.all.artifacts" depends="artifact.bccs_im:war, artifact.bccs_im:war_exploded, artifact.inventoryservice:jar, artifact.inventoryservice:war, artifact.inventoryservice:war_exploded" description="Build all artifacts">
+    <mkdir dir="${artifact.output.bccs_im:war}"/>
+    <copy todir="${artifact.output.bccs_im:war}">
+      <fileset dir="${artifact.temp.output.bccs_im:war}"/>
+    </copy>
+    <mkdir dir="${artifact.output.inventoryservice:war}"/>
+    <copy todir="${artifact.output.inventoryservice:war}">
+      <fileset dir="${artifact.temp.output.inventoryservice:war}"/>
+    </copy>
+
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+
+  <!--<property name="junit.out" value="${module.inventoryservice.basedir}/out/test/report" />-->
+
+  <!--<target name="junit-test" description="Run all junit tests" depends="compile.module.inventoryservice">-->
+  <!--<junit printsummary="yes" haltonfailure="true">-->
+  <!--<classpath refid="inventoryservice.runtime.module.classpath"/>-->
+  <!--<formatter type="xml"/>-->
+  <!--<batchtest fork="yes" todir="${junit.out}">-->
+  <!--<fileset dir="${module.inventoryservice.basedir}/../InventoryService/JUnit">-->
+  <!--<include name="**/*Test.java"/>-->
+  <!--</fileset>-->
+  <!--</batchtest>-->
+  <!--</junit>-->
+  <!--</target>  -->
+</project>

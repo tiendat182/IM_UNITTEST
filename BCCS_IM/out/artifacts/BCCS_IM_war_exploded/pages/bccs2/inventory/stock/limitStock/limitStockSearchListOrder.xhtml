@@ -1,0 +1,465 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.limit.search.list.order']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.limit.search.list.order']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmViewLimitStock">
+            <p:outputPanel id="pnCreateOrder" styleClass="Container100">
+                <div class="ContainerIndent">
+                    <p:messages id="msgComp" showSummary="false" showDetail="true"
+                                closable="true"/>
+                </div>
+                <!--Start vung tra cuu-->
+                <p:outputPanel styleClass="Container100" id="pnAreaSearch">
+                    <div class="ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="pnInputSearch"
+                                   titleHeader="#{lang['mn.stock.limit.information.search']}" toggle="true"/>
+
+                        <div class="Container100 pnInputSearch pd-top-10">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive ui-fluid">
+                                    <cbs:inputStaff value="#{limitStockSearchListOrderController.staffInfoTag}"
+                                                    id="inputMenOrder"
+                                                    methodName="staffChosed"
+                                                    clearMethodName="staffClear"
+                                                    update="@this"
+                                                    require="false"
+                                                    forceSelection="false"
+                                                    placeholder="#{lang['common.search.staff.placehoder']}"
+                                                    label="#{lang['mn.stock.utilities.person.create']}"
+                                                    classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                    classDivInput="Container60 Responsive50 ui-fluid"
+                                                    oncomplete="setFocusByClass('inputOrderCode')">
+                                    </cbs:inputStaff>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="inputOrderCode"
+                                                       value="#{lang['mn.stock.limit.order.code']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:inputText id="inputOrderCode"
+                                                     value="#{limitStockSearchListOrderController.debitRequestDTO.requestCode}"
+                                                     placeholder="#{lang['mn.stock.limit.order.code.placehoder']}"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="cbxStatus"
+                                                       value="#{lang['common.status']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="cbxStatus"
+                                                         value="#{limitStockSearchListOrderController.debitRequestDTO.status}"
+                                                         styleClass="Wid100">
+                                            <f:selectItem itemValue=""
+                                                          itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                            <f:selectItem itemValue="1" itemLabel="#{lang['debit.request.status1']}"/>
+                                            <f:selectItem itemValue="2" itemLabel="#{lang['debit.request.status2']}"/>
+                                            <f:selectItem itemValue="3" itemLabel="#{lang['debit.request.status3']}"/>
+                                            <f:selectItem itemValue="0" itemLabel="#{lang['debit.request.status0']}"/>
+                                        </p:selectOneMenu>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="fromDate"
+                                                       value="#{lang['create.note.from.date']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:calendar
+                                                mask="true"
+                                                pattern="#{lang['common.datetime.format']}"
+                                                converterMessage="#{lang['invalid.date.message']}"
+                                                validatorMessage="#{lang['start.date.validate.message']}"
+                                                value="#{limitStockSearchListOrderController.debitRequestDTO.fromDate}"
+                                                placeholder="#{lang['common.datetime.format']}"
+                                                required="true"
+                                                requiredMessage="#{lang['mn.stock.from.date.not.blank']}"
+                                                id="fromDate">
+                                            <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                        </p:calendar>
+                                        <p:message for="fromDate"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="toDate"
+                                                       value="#{lang['create.note.to.date']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:calendar
+                                                mask="true"
+                                                pattern="#{lang['common.datetime.format']}"
+                                                validatorMessage="#{lang['end.date.validate.message']}"
+                                                converterMessage="#{lang['invalid.date.message']}"
+                                                required="true"
+                                                requiredMessage="#{lang['mn.stock.to.date.not.blank']}"
+                                                value="#{limitStockSearchListOrderController.debitRequestDTO.toDate}"
+                                                placeholder="#{lang['common.datetime.format']}"
+                                                id="toDate">
+                                            <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                        </p:calendar>
+                                        <p:message for="toDate"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="cbxTypeObject"
+                                                       value="#{lang['mn.stock.type.object']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="cbxTypeObject"
+                                                         value="#{limitStockSearchListOrderController.debitRequestDTO.requestObjectType}"
+                                                         styleClass="Wid100">
+                                            <f:selectItem itemValue="1"
+                                                          itemLabel="#{lang['mn.stock.limit.unit.limit.stock']}"/>
+                                            <f:selectItem itemValue="2"
+                                                          itemLabel="#{lang['mn.stock.limit.staff.limit.stock']}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent TexAlCenter">
+                                <p:commandButton value="#{lang['create.note.search']}"
+                                                 process="@this, @([id$=pnAreaSearch])"
+                                                 update="@([id$=frmViewLimitStock])"
+                                                 actionListener="#{limitStockSearchListOrderController.doSearch}">
+                                </p:commandButton>
+                                <p:commandButton value="#{lang['common.reset']}" styleClass="mg-left-5"
+                                                 process="@this"
+                                                 update="@form"
+                                                 resetValues="true"
+                                                 actionListener="#{limitStockSearchListOrderController.doReset}">
+                                </p:commandButton>
+                            </div>
+                        </div>
+                    </div>
+                </p:outputPanel>
+
+                <div class="Container100">
+                    <div class=" ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="pnViewExport" titleHeader="#{lang['mn.stock.limit.view.list.order']}"
+                                   toggle="true"></cbs:panel>
+
+                        <div class="pnViewExport ContainerIndent">
+                            <p:dataTable styleClass="Width100 mg-top-10"
+                                         emptyMessage="#{lang['common.search.not.record.found']}"
+                                         value="#{limitStockSearchListOrderController.debitRequestDTOs}"
+                                         id="tblSearchOrder"
+                                         rowIndexVar="index" var="item">
+                                <p:column headerText="#{lang['mn.stock.limit.order.code']}" sortBy="#{item.requestCode}"
+                                          style="width: 10%;"
+                                          styleClass="col-left">
+                                    <p:outputLabel
+                                            styleClass="lb-sentinel-bold"
+                                            value="#{item.requestCode}" title="#{item.requestCode}"/>
+                                </p:column>
+                                <p:column sortBy="#{item.createDate}" headerText="#{lang['mn.stock.limit.order.day']}"
+                                          style="width: 11%;"
+                                          styleClass="col-left">
+                                    <p:outputLabel value="#{item.createDate}" title="#{item.createDate}">
+                                        <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column sortBy="#{item.createUser}"
+                                          headerText="#{lang['mn.stock.utilities.person.create']}" style="width: 11%;"
+                                          styleClass="col-left">
+                                    <p:outputLabel value="#{item.createUser}"
+                                                   title="#{item.createUser}"></p:outputLabel>
+                                </p:column>
+
+                                <p:column headerText="#{lang['common.status']}" style="width: 11%;"
+                                          styleClass="col-left">
+                                    <p:outputLabel
+                                            value="#{limitStockSearchListOrderController.getDisplayName('debit.request.status',item.status)}"
+                                            title="#{limitStockSearchListOrderController.getDisplayName('debit.request.status',item.status)}"></p:outputLabel>
+                                </p:column>
+                                <p:column headerText="#{lang['export.order.note']}" style="width: 20%;"
+                                          styleClass="col-left">
+                                    <p:outputLabel value="#{item.description}"
+                                                   title="#{item.description}"></p:outputLabel>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.stock.branch.action']}" style="width: 11%;"
+                                          styleClass="col-right">
+                                    <p:commandLink
+                                            rendered="#{limitStockSearchListOrderController.canDelete(item)}"
+                                            oncomplete="if(!args.validationFailed){PF('delRequestDlg').show(); setTimeout('setFocusNO()',350);}"
+                                            update="@this,@form, @([id$=msgComp])"
+                                            process="@this" resetValues="false"
+                                            styleClass="fa icon-trash  Fs13 mg-left-5 black"
+                                            action="#{limitStockSearchListOrderController.validateSelected(item)}"
+                                            id="deleteLink"
+                                            title="#{lang['limit.stock.delete']}"
+                                            validateClient="true">
+                                    </p:commandLink>
+                                    <p:commandLink styleClass="fa icon-download Fs13 mg-right-3 mg-left-5"
+                                                   title="#{lang['create.note.download.file.title']}"
+                                                   ajax="false"
+                                                   style="text-decoration: none!important;">
+                                        <p:fileDownload
+                                                value="#{limitStockSearchListOrderController.downloadFileAttach(item)}"/>
+                                    </p:commandLink>
+                                    <p:commandLink styleClass="fa icon-zoom-in  Fs13 mg-left-5 black"
+                                                   action="#{limitStockSearchListOrderController.onClickDetail(true, item)}"
+                                                   process="@this"
+                                                   update="@([id$=pnlOrderDetail]) , @([id$=tblSearchOrder])"
+                                                   title="#{lang['common.view.detail']}"
+                                                   rendered="#{!limitStockSearchListOrderController.viewDetail || limitStockSearchListOrderController.selectedDebitRequestDTO.requestId!=item.requestId}"
+                                                   style="text-decoration: none!important;"/>
+                                    <p:commandLink styleClass="fa icon-zoom-out Fs13 mg-left-5"
+                                                   action="#{limitStockSearchListOrderController.onClickDetail(false, item)}"
+                                                   process="@this"
+                                                   update="@([id$=pnlOrderDetail]), @([id$=tblSearchOrder])"
+                                                   title="#{lang['common.view.detail']}"
+                                                   rendered="#{!(!limitStockSearchListOrderController.viewDetail || limitStockSearchListOrderController.selectedDebitRequestDTO.requestId!=item.requestId)}"
+                                                   style="text-decoration:none; color:red!important;"/>
+
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </div>
+                <p:outputPanel styleClass="Container100" id="pnlOrderDetail">
+                    <p:outputPanel styleClass="ContainerIndent mg-top-0"
+                                   rendered="#{limitStockSearchListOrderController.viewDetail}">
+                        <cbs:panel classForToggle="pnViewExport"
+                                   titleHeader="#{lang['mn.stock.limit.view.detail.order']}" toggle="true">
+                        </cbs:panel>
+
+                        <div class="pnViewExport ContainerIndent">
+                            <p:dataTable styleClass="Width100 mg-top-10"
+                                         emptyMessage="#{lang['common.search.not.record.found']}"
+                                         value="#{limitStockSearchListOrderController.debitRequestDetailDTOs}"
+                                         id="tblSearchOrder2"
+                                         rendered="#{limitStockSearchListOrderController.limitStockUnit}"
+                                         rowIndexVar="index" var="detail">
+                                <p:column sortBy="#{detail.ownerCode}" headerText="#{lang['mn.stock.limit.store.code']}"
+                                          style="width: 12%;"
+                                          styleClass="col-left">
+                                    <p:outputLabel title="#{detail.ownerCode}" value="#{detail.ownerCode}"/>
+                                </p:column>
+                                <p:column sortBy="#{detail.longOldDebitValue}"
+                                          headerText="#{lang['mn.stock.limit.old']}" style="width: 12%;"
+                                          styleClass="TexAlRight">
+                                    <h:outputLabel styleClass="lb-sentinel-bold"
+                                                   title="#{detail.longOldDebitValue}"
+                                                   converter="currencyFormat"
+                                                   value="#{detail.longOldDebitValue}">
+                                    </h:outputLabel>
+                                </p:column>
+                                <p:column sortBy="#{detail.longDebitValue}" headerText="#{lang['mn.stock.limit.new']}"
+                                          style="width: 12%;"
+                                          styleClass="TexAlRight">
+                                    <h:outputLabel styleClass="lb-sentinel-bold"
+                                                   converter="currencyFormat"
+                                                   title="#{detail.longDebitValue}"
+                                                   value="#{detail.longDebitValue}">
+                                    </h:outputLabel>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.stock.limit.day.use.old']}" style="width: 12%;"
+                                          styleClass="col-left">
+                                    <p:outputLabel
+                                            title="#{limitStockSearchListOrderController.getDisplayName('DEBIT_DAY_TYPE',detail.oldDebitDayType)}"
+                                            value="#{limitStockSearchListOrderController.getDisplayName('DEBIT_DAY_TYPE',detail.oldDebitDayType)}">
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.stock.limit.day.use.new']}" style="width: 12%;"
+                                          styleClass="col-left">
+                                    <p:outputLabel
+                                            title="#{limitStockSearchListOrderController.getDisplayName('DEBIT_DAY_TYPE',detail.debitDayType)}"
+                                            value="#{limitStockSearchListOrderController.getDisplayName('DEBIT_DAY_TYPE',detail.debitDayType)}">
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column headerText="#{lang['export.order.note']}" style="width: 15%;"
+                                          styleClass="col-left">
+                                    <p:outputLabel title="#{detail.note}" value="#{detail.note}"></p:outputLabel>
+                                </p:column>
+                                <p:column headerText="#{lang['common.status']}"
+                                          filterBy="#{item.status}" sortBy="#{item.status}"
+                                          style="width: 12%;"
+                                          styleClass="col-left">
+                                    <f:facet name="filter">
+                                        <p:selectBooleanCheckbox
+                                                rendered="#{limitStockSearchListOrderController.selectedDebitRequestDTO.status==1}"
+                                                value="#{limitStockSearchListOrderController.defaultApproved}">
+                                            <p:ajax process="@this"
+                                                    update=" @([id$=pnlOrderDetail])"
+                                                    listener="#{limitStockSearchListOrderController.onChangeDefaultAction}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{limitStockSearchListOrderController.selectedDebitRequestDTO.status=='0'?limitStockSearchListOrderController.getDisplayName('debit.detail.status',detail.status):limitStockSearchListOrderController.getDisplayName('debit.select.status',detail.status)}"
+                                            rendered="#{!limitStockSearchListOrderController.canApprove()}"></p:outputLabel>
+                                    <p:selectOneMenu value="#{detail.status}"
+                                                     styleClass="Wid100"
+                                                     rendered="#{limitStockSearchListOrderController.canApprove()}">
+                                        <f:selectItem itemValue="2" itemLabel="#{lang['debit.select.status2']}"/>
+                                        <f:selectItem itemValue="0" itemLabel="#{lang['debit.select.status0']}"/>
+                                        <p:ajax
+                                                process="@this, @([id$=pnlOrderDetail])"
+                                                update=" @([id$=pnlOrderDetail])"
+                                                listener="#{limitStockSearchListOrderController.onChangeStatus}"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                            </p:dataTable>
+                            <p:dataTable styleClass="Width100 mg-top-10"
+                                         emptyMessage="#{lang['common.search.not.record.found']}"
+                                         value="#{limitStockSearchListOrderController.debitRequestDetailDTOs}"
+                                         id="tblSearchOrder3"
+                                         rendered="#{!limitStockSearchListOrderController.limitStockUnit}"
+                                         rowIndexVar="index" var="detail">
+                                <p:column sortBy="#{detail.shopCode}" headerText="#{lang['mn.stock.limit.store.code']}"
+                                          style="width: 14%;"
+                                          styleClass="col-left">
+                                    <p:outputLabel title="#{detail.shopCode}" value="#{detail.shopCode}"/>
+                                </p:column>
+                                <p:column sortBy="#{detail.ownerCode}" headerText="#{lang['mn.stock.limit.staff.code']}"
+                                          style="width: 14%;"
+                                          styleClass="col-left">
+                                    <p:outputLabel value="#{detail.ownerCode}" title="#{detail.ownerCode}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.stock.limit.old']}" style="width: 8%;"
+                                          styleClass="col-left">
+                                    <p:outputLabel
+                                            rendered="#{detail.oldDebitValue==0}" value="">
+                                    </p:outputLabel>
+                                    <p:outputLabel
+                                            rendered="#{!( detail.oldDebitValue==0)}"
+                                            value="#{detail.oldDebitLevelName}"
+                                            title="#{detail.oldDebitLevelName}">
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.stock.limit.new']}"
+                                          style="width: 8%;"
+                                          sortBy="#{detail.debitValue}"
+                                          styleClass="col-left">
+                                    <p:outputLabel
+                                            rendered="#{detail.debitValue==0}" value="">
+                                    </p:outputLabel>
+                                    <p:outputLabel
+                                            rendered="#{!(detail.debitValue==0)}"
+                                            value="#{detail.debitLevelName}"
+                                            title="#{detail.debitLevelName}">
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.stock.limit.day.use.old']}" style="width: 8%;"
+                                          styleClass="col-left">
+                                    <p:outputLabel
+                                            title="#{limitStockSearchListOrderController.getDisplayName('DEBIT_DAY_TYPE',detail.oldDebitDayType)}"
+                                            value="#{limitStockSearchListOrderController.getDisplayName('DEBIT_DAY_TYPE',detail.oldDebitDayType)}">
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.stock.limit.day.use.new']}"
+                                          sortBy="#{detail.debitDayType}"
+                                          style="width: 8%;"
+                                          styleClass="col-left">
+                                    <p:outputLabel
+                                            title="#{limitStockSearchListOrderController.getDisplayName('DEBIT_DAY_TYPE',detail.debitDayType)}"
+                                            value="#{limitStockSearchListOrderController.getDisplayName('DEBIT_DAY_TYPE',detail.debitDayType)}">
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.stock.limit.group.offerMoney.old']}" style="width: 8%;"
+                                          styleClass="col-left">
+                                    <p:outputLabel
+                                            title="#{detail.oldFinanceName}"
+                                            value="#{detail.oldFinanceName}"/>
+                                    <!--<p:outputLabel-->
+                                    <!--value="#{limitStockSearchListOrderController.getDisplayName('FINANCE_TYPE',detail.oldFinanceType)}"></p:outputLabel>-->
+                                </p:column>
+                                <p:column headerText="#{lang['mn.stock.limit.group.offerMoney.new']}" style="width: 8%;"
+                                          styleClass="col-left" sortBy="#{detail.financeType}">
+                                    <p:outputLabel
+                                            title="#{detail.financeName}"
+                                            value="#{detail.financeName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['export.order.note']}" style="width: 9%;"
+                                          styleClass="col-left">
+                                    <p:outputLabel title="#{detail.note}"
+                                                   value="#{detail.note}"></p:outputLabel>
+                                </p:column>
+                                <p:column headerText="#{lang['common.status']}"
+                                          style="width: 12%;" sortBy="#{item.status}"
+                                          styleClass="col-left">
+                                    <f:facet name="filter">
+                                        <p:selectBooleanCheckbox
+                                                rendered="#{limitStockSearchListOrderController.selectedDebitRequestDTO.status==1}"
+                                                value="#{limitStockSearchListOrderController.defaultApproved}">
+                                            <p:ajax process="@this"
+                                                    update="@([id$=pnlOrderDetail])"
+                                                    listener="#{limitStockSearchListOrderController.onChangeDefaultAction}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{limitStockSearchListOrderController.selectedDebitRequestDTO.status=='0'?limitStockSearchListOrderController.getDisplayName('debit.detail.status',detail.status):limitStockSearchListOrderController.getDisplayName('debit.select.status',detail.status)}"
+                                            rendered="#{!limitStockSearchListOrderController.canApprove()}"></p:outputLabel>
+                                    <p:selectOneMenu value="#{detail.status}"
+                                                     styleClass="Wid100"
+                                                     rendered="#{limitStockSearchListOrderController.canApprove()}">
+                                        <f:selectItem itemValue="2" itemLabel="#{lang['debit.select.status2']}"/>
+                                        <f:selectItem itemValue="0" itemLabel="#{lang['debit.select.status0']}"/>
+                                        <p:ajax
+                                                process="@this, @([id$=pnlOrderDetail])"
+                                                update=" @([id$=pnlOrderDetail])"
+                                                listener="#{limitStockSearchListOrderController.onChangeStatus}"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                            </p:dataTable>
+
+                            <div class="Wid100 ContainerIndent TexAlCenter">
+                                <p:outputPanel styleClass="Container100 TexAlCenter"
+                                               rendered="#{limitStockSearchListOrderController.canApprove()}">
+                                    <cbs:confirmDialog
+                                            idComponent="cfgApproveRequest"
+                                            rendered="#{limitStockSearchListOrderController.canApprove()}"
+                                            valueButton="#{lang['limit.stock.approve']}"
+                                            headerConfirm="#{lang['limit.stock.approve']}"
+                                            messageConfirm="#{lang['limit.stock.approve.cfg']}"
+                                            actionOK="#{limitStockSearchListOrderController.onApproveRequest()}"
+                                            resetValueButton="false"
+                                            process="@this, @([id$=pnlOrderDetail])"
+                                            updateArea="@([id$=msgComp])"
+                                            updateOK="@form"
+                                            styleButton="text-decoration: none;font-size: 16px!important"
+                                            focusCancel="false"
+                                            oncompleteOK=""
+                                            isButton="true"/>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+            <p:confirmDialog closeOnEscape="true" closable="true"
+                             appendTo="@(body)"
+                             widgetVar="delRequestDlg"
+                             header="#{lang['limit.stock.delete']}"
+                             id="delRequestDlg"
+                             width="550"
+                             message="#{limitStockSearchListOrderController.getMessage('limit.stock.delete.cfg', limitStockSearchListOrderController.selectedDebitRequestDTO.requestCode)}">
+                <p:commandLink id="btnNO" value="#{lang['common.button.NO']}"
+                               styleClass="md-button btnNO" process="@none"
+                               onstart="PF('delRequestDlg').hide();"/>
+                <p:commandLink process="@this" update="@form"
+                               value="#{lang['common.button.YES']}" styleClass="md-button btnOK"
+                               onstart="PF('delRequestDlg').hide();"
+                               id="btnOK"
+                               actionListener="#{limitStockSearchListOrderController.onDelDebitRequest()}"/>
+            </p:confirmDialog>
+        </h:form>
+        <script type="text/javascript">
+            function setFocusNO() {
+                setFocusByClass('btnNO');
+            }
+        </script>
+    </ui:define>
+</ui:composition>

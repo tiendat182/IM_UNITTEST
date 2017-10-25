@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core">
+<composite:interface>
+    <composite:attribute name="updateArea" default="@form"
+                         shortDescription="id vung update lai du lieu sau khi xac nhan OK"/>
+    <composite:attribute name="updateOK" default="@form"
+                         shortDescription="id vung update lai du lieu sau khi xac nhan OK"/>
+    <composite:attribute name="styleButton" shortDescription="style css inline cua button"/>
+    <composite:attribute name="styleClassButton" shortDescription="style class css cua button"/>
+    <composite:attribute name="valueButton" default="Button" shortDescription="ten hien thi cua button"/>
+    <composite:attribute name="resetValueButton" default="false" shortDescription="thuoc tinh resetValue cua button"/>
+    <composite:attribute name="headerConfirm" default="Confirm" shortDescription="tieu de dialog confirm"/>
+    <composite:attribute name="messageConfirm" default="Are you sure to do action ?"
+                         shortDescription="thong diep dialog confirm"/>
+
+    <composite:attribute name="actionOK" default="''" method-signature="java.lang.String action()"
+                         shortDescription="method listener thuc hien khi xac nhan OK"/>
+    <composite:attribute name="actionValidate" default="''" method-signature="java.lang.String action()"
+                         shortDescription="method validate khi an nut chuc nang, truoc khi bat confirm"/>
+
+    <composite:attribute name="process" shortDescription="submit du lieu vung nao len server"/>
+    <composite:attribute name="processOK" shortDescription="submit du lieu vung nao len server" default="@this"/>
+    <composite:attribute name="disableButton" default="false" shortDescription="disable button"/>
+    <composite:attribute name="focusCancel" required="false" shortDescription="Them icon" default="true"/>
+    <composite:attribute name="oncompleteNO" shortDescription="ham oncomple No" default="emptyFunction()"/>
+    <composite:attribute name="oncompleteOK" shortDescription="method js callback sau khi an OK" default="emptyFunction()"/>
+    <composite:attribute name="idComponent" shortDescription="id doi tuong, khong duoc trung lap" required="true"/>
+    <composite:attribute name="isButton" shortDescription="id doi tuong, khong duoc trung lap" default="true" required="true"/>
+    <composite:attribute name="rendered" shortDescription="id doi tuong, khong duoc trung lap" default="true" />
+    <composite:attribute name="renderedBtn" shortDescription="id doi tuong, khong duoc trung lap" default="true" />
+    <composite:attribute name="titleButton" default="false" shortDescription="title cho button"/>
+
+</composite:interface>
+<composite:implementation>
+    <p:inputText style="display: none" value="#{cc.attrs.focusCancel}" styleClass="hd#{cc.attrs.idComponent}"></p:inputText>
+    <c:if test="#{cc.attrs.isButton eq 'true'}">
+        <p:commandButton
+                rendered="#{cc.attrs.renderedBtn}"
+                oncomplete="if(!args.validationFailed){PF('#{cc.attrs.idComponent}Dlg').show();setTimeout('setFocus#{cc.attrs.idComponent}()',350)}"
+                update="#{cc.attrs.updateArea}"
+                process="#{cc.attrs.process}" resetValues="#{cc.attrs.resetValueButton}"
+                style="#{cc.attrs.styleButton}" styleClass="#{cc.attrs.styleClassButton}"
+                value="#{cc.attrs.valueButton}"
+                disabled="#{cc.attrs.disableButton}"
+                action="#{cc.attrs.actionValidate}"
+                id="#{cc.attrs.idComponent}btn"
+                validateClient="true"/>
+    </c:if>
+    <c:if test="#{cc.attrs.isButton eq 'false'}">
+        <p:commandLink
+                rendered="#{cc.attrs.renderedBtn}"
+                oncomplete="if(!args.validationFailed){PF('#{cc.attrs.idComponent}Dlg').show();setTimeout('setFocus#{cc.attrs.idComponent}()',350)}"
+                update="#{cc.attrs.updateArea}"
+                process="#{cc.attrs.process}" resetValues="#{cc.attrs.resetValueButton}"
+                style="#{cc.attrs.styleButton}" styleClass="#{cc.attrs.styleClassButton}"
+                value="#{cc.attrs.valueButton}"
+                disabled="#{cc.attrs.disableButton}"
+                action="#{cc.attrs.actionValidate}"
+                id="#{cc.attrs.idComponent}link"
+                title="#{cc.attrs.titleButton}"
+                validateClient="true"/>
+    </c:if>
+    <p:confirmDialog closeOnEscape="true" closable="true"
+                     appendTo="@(body)"
+                     widgetVar="#{cc.attrs.idComponent}Dlg"
+                     header="#{cc.attrs.headerConfirm}"
+                     id="#{cc.attrs.idComponent}Dlg"
+                     width="550"
+                     message="#{cc.attrs.messageConfirm}">
+            <p:commandLink id="btn#{cc.attrs.idComponent}NO" value="#{lang['common.button.NO']}" styleClass="md-button btn#{cc.attrs.idComponent}NO" process="@none" onstart="PF('#{cc.attrs.idComponent}Dlg').hide();"  />
+            <p:commandLink process="#{cc.attrs.processOK}"  update="#{cc.attrs.updateOK}" value="#{lang['common.button.YES']}" styleClass="md-button btn#{cc.attrs.idComponent}OK" onstart="PF('#{cc.attrs.idComponent}Dlg').hide();"
+                           oncomplete="#{cc.attrs.oncompleteOK}" id="btn#{cc.attrs.idComponent}OK" resetValues="#{cc.attrs.resetValueButton}"
+                           actionListener="#{cc.attrs.actionOK}"/>
+    </p:confirmDialog>
+    <script type="text/javascript">
+        function setFocus#{cc.attrs.idComponent} () {
+            var focusCancel = $('.hd#{cc.attrs.idComponent}').val();
+            console.log(focusCancel);
+            if (focusCancel == 'true') {
+                setFocusByClass('btn#{cc.attrs.idComponent}NO')
+            } else if (focusCancel == 'false') {
+                setFocusByClass('btn#{cc.attrs.idComponent}OK')
+            }
+        }
+    </script>
+</composite:implementation>
+</html>
+

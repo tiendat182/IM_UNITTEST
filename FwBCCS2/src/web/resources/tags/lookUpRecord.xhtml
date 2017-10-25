@@ -1,0 +1,341 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <composite:interface >
+        <composite:attribute name="controller" shortDescription="name controller"/>
+        <composite:attribute name="idForm" shortDescription="id of form"/>
+        <composite:attribute name="oncompleteCancel" default="''" />
+        <composite:attribute name="oncompleteAdd" default="''" />
+        <composite:attribute name="lookUpDto" shortDescription="object dto LookUpDTO" required="true"/>
+        <composite:attribute name="stateLook" shortDescription="status is single or multiple," required="true"/>
+        <composite:attribute name="styleClass" shortDescription="styleClass"/>
+    </composite:interface>
+    <composite:implementation>
+        <p:dialog appendTo="@(body)" closable="true" closeOnEscape="true" onShow="initLookUpCss();"
+                      maximizable="false" position="center"
+                      id="#{cc.attrs.idForm}" widgetVar="#{cc.attrs.idForm}"  
+                      header="#{lang['common.lookup.title.headerDialog']}"
+                      modal="true" resizable="false" 
+                      dynamic="true"
+                      styleClass="sale">
+                <h:form id="#{cc.attrs.idForm}_look">
+                <input type="text" style="display: none;" id="idFormLookUp" value="#{cc.attrs.idForm}" />
+                <p:messages id="msgLookUpDialog" showSummary="false" showDetail="true"  closable="true"/>
+                <p:fieldset id="topLookUp" style="width: 600px; border:none;" rendered="#{cc.attrs.stateLook eq 'multiple'}">
+                    <p:panelGrid styleClass="col3 w100 filterPanel" id="panel_search">
+                        <p:row>                        
+                            <p:column styleClass="evenCol" style="width:15%;">
+                                <p:outputLabel value="#{lang['common.lookup.title.lookfor']}"/>
+                            </p:column>
+                            <p:column styleClass="evenCol" style="width:55%;">
+                                <p:outputLabel value="#{cc.attrs.lookUpDto['enityName']}" style="font-weight: bold;"/>
+                            </p:column>
+                            <p:column rowspan="3" style="width:30%;"></p:column>
+                        </p:row>
+                        <p:row>                        
+                            <p:column styleClass="evenCol">
+                                <p:outputLabel value="#{lang['common.button.search']}"/>
+                            </p:column>
+                            <p:column styleClass="evenCol">
+                                <span style="display:block;float:left;width: 80%;">
+                                    <p:inputText styleClass="form-control" placeholder="Search" id="inputGroup"
+                                                 onblur="this.value = this.value.trim();"
+                                                 value="#{cc.attrs.lookUpDto['strSearch']}" />                        
+                                </span>
+                                
+                                <span style="display:block;float:left;margin-left: 7px;margin-top: -1px;">
+                                    <p:commandButton styleClass="input-group-addon"
+                                                     id="lookup_btn_search"
+                                                     actionListener="#{cc.attrs.controller['doKeyUpSearch']}"
+                                                     update="@([id$=lookUptbl1])"
+                                                     process="@form"
+                                                     resetValues="true"
+                                                     oncomplete="initLookUpCss();"
+                                                     ajax="true"                                               
+                                                     global="false" 
+                                                     icon="ui-icon-search">
+                                    </p:commandButton>
+                                </span>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                    <p:panelGrid styleClass="w100 filterPanel" id="panel_ListTopup1">
+                        <p:row>
+                            <p:column>
+                                <p:dataTable scrollHeight="130"
+                                             paginatorAlwaysVisible="false"
+                                             paginatorPosition="bottom" 
+                                             paginator="true" rows="10"
+                                             scrollable="true"
+                                             id="lookUptbl1"
+                                             rowStyleClass="h25"
+                                             rowKey="#{data.id}"
+                                             value="#{cc.attrs.lookUpDto['lsDataAll']}"
+                                             selection="#{cc.attrs.lookUpDto['lsSelectAllDto']}"
+                                             var="data">
+                                    <p:column id="listone" selectionMode="multiple" style="width:16px"/>
+                                    <p:columns  value="#{cc.attrs.lookUpDto['lsColumnName']}" var="columnName">
+                                        <f:facet name="header">#{cc.attrs.lookUpDto['mapNames'].get(columnName)}</f:facet>
+                                        <h:outputText value="#{data.mapData.get(columnName)}"></h:outputText>
+                                    </p:columns>
+                                </p:dataTable>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                    <p:panelGrid styleClass="w100 filterPanel" id="panel_Select">
+                        <p:row>
+                            <p:column style="vertical-align: middle;text-align: left;width:15%;">
+                                <span style="display: block;width:100%;">
+                                    <p:commandButton id="btnSelect"
+                                                     value="#{lang['common.select']}"
+                                                    actionListener="#{cc.attrs.controller['doSelectLookUp']}"
+                                                    update="@([id$=lookUptbl2]), @([id$=msgLookUpDialog])"
+                                                    process="@form"
+                                                    resetValues="true"
+                                                    oncomplete="initLookUpCss();"
+                                                    ajax="true"                                               
+                                                    global="false"
+                                                    style="width:73px;background-color:#EAEFF2;"
+                                                    >
+                                   </p:commandButton>
+                                </span>
+                                <span style="display: block;width:100%;margin-top: 10px;">
+                                    <p:commandButton id="btnRemove" value="#{lang['common.lookup.button.remove']}"
+                                                     process="@form"
+                                                     global="false"
+                                                     update="@([id$=lookUptbl2]), @([id$=msgLookUpDialog])"
+                                                     resetValues="true"
+                                                     oncomplete="initLookUpCss();"
+                                                     style="width:73px;background-color:#EAEFF2; "
+                                                     actionListener="#{cc.attrs.controller['doRemoveLookUp']}">
+                                    </p:commandButton>
+                                </span>
+                            </p:column>
+                            <p:column>
+                                <p:dataTable scrollHeight="130"
+                                             scrollable="true"
+                                             id="lookUptbl2"
+                                             rowStyleClass="h25"
+                                             sortMode="multiple"
+                                             paginatorAlwaysVisible="false"
+                                             rowKey="#{dataSelect.id}"
+                                             value="#{cc.attrs.lookUpDto['lsDataFilter']}"
+                                             selection="#{cc.attrs.lookUpDto['lsSelectFilterDto']}"
+                                             var="dataSelect" > 
+                                    <p:column id="listTwo" selectionMode="multiple" style="width:16px"/>
+                                    <p:columns  value="#{cc.attrs.lookUpDto['lsColumnName']}" var="columnName">
+                                        <f:facet name="header">#{cc.attrs.lookUpDto['mapNames'].get(columnName)}</f:facet>
+                                        <h:outputText value="#{dataSelect.mapData.get(columnName)}"></h:outputText>
+                                    </p:columns>
+                                </p:dataTable>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column style="vertical-align: middle;text-align: right;" colspan="2">
+                                <span style="display: block;width:100%;">
+                                    <p:commandButton id="btnAddLookUp" value="#{lang['common.button.add']}"
+                                                     process="@form"
+                                                     global="false"
+                                                     oncomplete="#{cc.attrs.oncompleteAdd}"
+                                                     actionListener="#{cc.attrs.controller['doAddLookUp']}"
+                                                     style="width:73px;background-color:#EAEFF2;">
+                                    </p:commandButton>&nbsp;
+                                    <p:commandButton id="btnCanCelLookUp" value="#{lang['common.button.cancel']}"
+                                                     global="false"
+                                                     style="width:73px;background-color:#EAEFF2; "
+                                                     oncomplete="#{cc.attrs.oncompleteCancel}">
+                                    </p:commandButton>
+                                </span>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </p:fieldset>
+                <p:fieldset id="topLookUp1" style="width: 600px; border:none;" rendered="#{cc.attrs.stateLook eq 'single'}">
+                    <p:panelGrid styleClass="col3 w100 filterPanel" id="panel_search2">
+                        <p:row>                        
+                            <p:column styleClass="evenCol" style="width:15%;">
+                                <p:outputLabel value="#{lang['common.lookup.title.lookfor']}"/>
+                            </p:column>
+                            <p:column styleClass="evenCol" style="width:55%;">
+                                <p:outputLabel value="#{cc.attrs.lookUpDto['enityName']}" style="font-weight: bold;"/>
+                            </p:column>
+                            <p:column rowspan="3" style="width:30%;"></p:column>
+                        </p:row>
+                        <p:row>                        
+                            <p:column styleClass="evenCol">
+                                <p:outputLabel value="#{lang['common.button.search']}"/>
+                            </p:column>
+                            <p:column styleClass="evenCol">
+                                <span style="display:block;float:left;width: 80%;">
+                                    <p:inputText styleClass="form-control" placeholder="Search" id="inputGroup2"
+                                                 onblur="this.value = this.value.trim();"
+                                                 value="#{cc.attrs.lookUpDto['strSearch']}" />                        
+                                </span>
+                                
+                                <span style="display:block;float:left;margin-left: 7px;margin-top: -1px;">
+                                    <p:commandButton styleClass="input-group-addon"
+                                                     id="lookup_btn_search2"
+                                                     actionListener="#{cc.attrs.controller['doKeyUpSearch']}"
+                                                     update="@([id$=lookUptbl12])"
+                                                     process="@form"
+                                                     resetValues="true"
+                                                     oncomplete="initLookUpCss();"
+                                                     ajax="true"                                               
+                                                     global="false" 
+                                                     icon="ui-icon-search">
+                                    </p:commandButton>
+                                </span>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                    <p:panelGrid styleClass="w100 filterPanel" id="panel_ListTopup12">
+                        <p:row>
+                            <p:column>
+                                <p:dataTable scrollHeight="130"
+                                             paginatorAlwaysVisible="false"
+                                             paginatorPosition="bottom" 
+                                             paginator="true" rows="10"
+                                             scrollable="true"
+                                             id="lookUptbl12"
+                                             rowStyleClass="h25"
+                                             rowKey="#{data.id}"
+                                             value="#{cc.attrs.lookUpDto['lsDataAll']}"
+                                             selection="#{cc.attrs.lookUpDto['selectedLookUpDto']}"
+                                             var="data">
+                                    <p:column id="listone" selectionMode="single" style="width:16px"/>
+                                    <p:columns  value="#{cc.attrs.lookUpDto['lsColumnName']}" var="columnName">
+                                        <f:facet name="header">#{cc.attrs.lookUpDto['mapNames'].get(columnName)}</f:facet>
+                                        <h:outputText value="#{data.mapData.get(columnName)}"></h:outputText>
+                                    </p:columns>
+                                </p:dataTable>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                    <p:panelGrid styleClass="w100 filterPanel" id="panel_Select2">
+                        <p:row>
+                            <p:column style="vertical-align: middle;text-align: right;" colspan="2">
+                                <span style="display: block;width:100%;">
+                                        <!--process="lookUptbl12"-->
+                                         <!--action="#{cc.attrs.controller['doAddLookUp']}"-->
+                                    <p:commandButton id="btnAddLookUp2" value="#{lang['common.button.add']}"
+                                                     process="@form"
+                                                     global="false"
+                                                     oncomplete="#{cc.attrs.oncompleteAdd}"
+                                                     actionListener="#{cc.attrs.controller['doAddLookUp']}"
+                                                     style="width:73px;background-color:#EAEFF2;">
+                                    </p:commandButton>&nbsp;&nbsp;
+                                    <p:commandButton id="btnCanCelLookUp2aa"
+                                                     value="#{lang['common.button.cancel']}"
+                                                     global="false"
+                                                     style="width:73px;background-color:#EAEFF2; "
+                                                     oncomplete="#{cc.attrs.oncompleteCancel}"
+                                                     >
+                                    </p:commandButton>
+                                </span>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </p:fieldset>
+            </h:form>
+        </p:dialog>
+        
+        <script type="text/javascript">
+            //<![CDATA[
+            $(document).ready(function($) {
+                initLookUpCss();
+            });
+            function initLookUpCss() {
+                var idForm = $("#idFormLookUp").val();
+                $("#" + idForm + "\\:" + idForm).find(".ui-widget-header").addClass("no-bg border-none");
+                $("#" + idForm + "\\:" + idForm).find(".ui-dialog-title").addClass("dialog-title-lookup");
+                $("#" + idForm + "\\:" + idForm + "_look\\:lookUptbl1_paginator_bottom").addClass("edit-paging");
+                $("#" + idForm + "\\:" + idForm + "_look\\:lookUptbl1").find(".ui-datatable-scrollable-body").addClass("border-tbl");
+                $("#" + idForm + "\\:" + idForm + "_look\\:lookUptbl1").find(".ui-widget-content").addClass("border-none");
+                $("#" + idForm + "\\:" + idForm + "_look\\:lookUptbl2").find(".ui-datatable-scrollable-body").addClass("border-tbl");
+                $("#" + idForm + "\\:" + idForm + "_look\\:lookUptbl2").find(".ui-widget-content").addClass("border-none");
+                $("#" + idForm + "\\:" + idForm + "_look\\:lookup_btn_search").addClass("bg-button");
+                $("#" + idForm + "\\:" + idForm + "_look\\:btnAddLookUp").addClass("bg-button");
+                $("#" + idForm + "\\:" + idForm + "_look\\:btnCanCelLookUp").addClass("bg-button");
+                $("#" + idForm + "\\:" + idForm + "_look\\:btnSelect").addClass("bg-button");
+                $("#" + idForm + "\\:" + idForm + "_look\\:btnRemove").addClass("bg-button");
+                $("#" + idForm + "\\:" + idForm + "_look\\:panel_search").find(".ui-panelgrid-cell").addClass("border-none");
+                $("#" + idForm + "\\:" + idForm + "_look\\:panel_search").find(".ui-widget-content").addClass("border-none");
+                $("#" + idForm + "\\:" + idForm + "_look\\:panel_ListTopup1").find(".ui-panelgrid-cell").addClass("border-none");
+                $("#" + idForm + "\\:" + idForm + "_look\\:panel_ListTopup1").find(".ui-widget-content").addClass("border-none");
+                $("#" + idForm + "\\:" + idForm + "_look\\:panel_Select").find(".ui-panelgrid-cell").addClass("border-none");
+                $("#" + idForm + "\\:" + idForm + "_look\\:panel_Select").find(".ui-widget-content").addClass("border-none");
+            }
+            //]]>
+        </script>
+        <style>
+/*            .ui-widget-header {
+                background: none !important;
+            }*/
+            .dialog-title-lookup {
+                font-size: 18px !important;
+                font-family: Verdana,Arial,sans-serif !important;
+                margin-left: 20px !important;
+            }
+            .no-bg {
+                background: none !important;
+            }
+            .bg-button {
+                background: whitesmoke !important;
+            }
+            .border-none {
+                border-width: 0px !important;
+            }
+            .edit-paging {
+                border:none !important;
+                float:right;
+            }
+            .border-tbl {
+                border: 1px solid #EAEFF2;
+            }
+            .form-control {
+                display: block;
+                width: 100%;
+                height: 18px !important;
+                margin-top: 1px;
+                padding: 3px;
+                font-size: 14px;
+                line-height: 1.42857;
+                color: rgb(85, 85, 85);
+                background-color: rgb(255, 255, 255);
+                box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
+                background-image: none;
+                border: 1px solid rgb(204, 204, 204);
+                border-radius: 2px 2px 2px 2px;
+                transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+            }
+
+            .input-group-addon:last-child {
+                border-left: 0px none;
+            }
+            .input-group-addon:last-child {
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
+            }
+            .input-group-addon {
+                padding: 6px 12px;
+                font-size: 14px;
+                font-weight: normal;
+                line-height: 1;
+                height: 26px !important;
+                color: rgb(85, 85, 85);
+                text-align: center;
+                border: 1px solid rgb(204, 204, 204);
+                border-radius: 4px 4px 4px 4px;
+                white-space: nowrap;
+                vertical-align: middle;
+                display: table-cell;
+                float:left;
+            }
+        </style>
+    </composite:implementation>
+</html>
+

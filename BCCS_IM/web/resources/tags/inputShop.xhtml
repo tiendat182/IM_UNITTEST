@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:composite="http://java.sun.com/jsf/composite" xmlns:f="http://java.sun.com/jsf/core">
+<composite:interface>
+    <composite:attribute name="styleClass" shortDescription="styleClass for this component" default=""/>
+    <composite:attribute name="inputStyleClass" shortDescription="class css cua input" default=""/>
+    <composite:attribute name="require" shortDescription="kiểm tra bắt buộc nhập hay , default là true" default="true"/>
+    <composite:attribute name="idComponent" shortDescription="id of this component" required="true"/>
+    <composite:attribute name="update" shortDescription="update for this component" default="@this"/>
+    <composite:attribute name="oncomplete" shortDescription="ham oncomplete js khi chon xong shop"
+                         default="emptyFunction()"/>
+    <composite:attribute name="methodName"
+                         shortDescription="Method nhận giá trị của controller truyền vào, với param của mehtod là object ProductDto giá trị được trả về"
+                         default=""/>
+    <composite:attribute name="requiredMessage" shortDescription="noi dung thong bao bat buoc nhap"/>
+    <composite:attribute name="placeholder" shortDescription="placeholder cua goi cuoc"
+                         default="#{lang['common.search.shop.placehoder']}"/>
+    <composite:attribute name="onStart" shortDescription="onStart khi thuc hien lua chon chon goi cuoc"
+                         default="emptyFunction()"/>
+    <composite:attribute name="value" type="com.viettel.bccs.inventory.tag.ShopInfoNameable" required="true"/>
+    <composite:attribute name="classDivLabel" shortDescription="css class cua div lable" default=""/>
+    <composite:attribute name="classDivInput" shortDescription="css class cua div autocomplete" default=""/>
+    <composite:attribute name="label" shortDescription="label cua goi cuoc"
+                         default="#{lang['common.search.shop.label']}"/>
+    <composite:attribute name="forceSelection" default="true"
+                         shortDescription="Set as false for do not reset value of autoComplete"/>
+    <composite:attribute name="clearMethodName" default=""
+                         shortDescription="Name of method called when clear selected"/>
+    <composite:attribute name="limit" shortDescription="gioi han so bang ghi hien thi, mac dinh la 10" default="10"/>
+    <composite:attribute name="param" shortDescription="param"/>
+</composite:interface>
+<composite:implementation>
+    <p:outputPanel id="pnPro#{cc.attrs.id}" styleClass="Container100 pnPro#{cc.attrs.id}">
+        <p:outputPanel styleClass="#{cc.attrs.classDivLabel}">
+            <p:outputLabel value="#{cc.attrs.label}" styleClass="lb-sentinel" for="#{cc.attrs.id}idComponent"
+                           rendered="#{!cc.attrs.value.isDisableEdit}"/>
+            <p:outputLabel value="#{cc.attrs.label}" styleClass="lb-sentinel"
+                           rendered="#{cc.attrs.value.isDisableEdit}"/>
+        </p:outputPanel>
+        <p:outputPanel
+                styleClass="#{cc.attrs.classDivInput} #{!cc.attrs.value.isDisableEdit ? 'ui-fluid' : 'pd-top-4'} ui-relative">
+            <p:outputLabel id="#{cc.attrs.id}idComponent_hidden" style="display:none;"
+                           value="#{cc.attrs.value.vShopStaffDTO.itemLabel}"/>
+            <pe:keyFilter for="#{cc.attrs.id}idComponent" preventPaste="false"
+                          regEx="/[a-z0-9A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\._\-+]/i"/>
+            <p:outputLabel value="#{cc.attrs.value.vShopStaffDTO.itemLabel}" styleClass="lb-sentinel-bold break-all"
+                           rendered="#{cc.attrs.value.isDisableEdit}"/>
+            <p:tooltip for="#{cc.attrs.id}idComponent" showEvent="focus" hideEvent="blur"/>
+            <p:autoComplete id="#{cc.attrs.id}idComponent" value="#{cc.attrs.value.vShopStaffDTO}" forceSelection="true"
+                            completeMethod="#{cc.attrs.value.doSelectShop}"
+                            rendered="#{!cc.attrs.value.isDisableEdit}"
+                            placeholder="#{cc.attrs.placeholder}"
+                            onfocus="this.setSelectionRange(0, this.value.length)"
+                            var="vShopStaffDTO" required="#{cc.attrs.require}"
+                            maxResults="#{cc.attrs.limit}"
+                            itemLabel="#{vShopStaffDTO.itemLabel}"
+                            title="#{vShopStaffDTO.itemLabel}"
+                            label="#{vShopStaffDTO.itemLabel}"
+                            itemValue="#{vShopStaffDTO}"
+                            styleClass="#{cc.attrs.styleClass} autoCpl"
+                            inputStyleClass="#{cc.attrs.inputStyleClass}"
+                            requiredMessage="#{cc.attrs.requiredMessage}" maxlength="100" scrollHeight="300"
+                            disabled="#{cc.attrs.forceSelection==false?cc.attrs.value.disabledState():cc.attrs.disabled}">
+                <f:attribute name="param" value="#{cc.attrs.param}"/>
+                <o:converter converterId="VShopStaffConverter" list="#{cc.attrs.value.lsShopDto}"/>
+                <p:ajax event="itemSelect" listener="#{cc.attrs.value.doChangeShop(cc.attrs.methodName)}"
+                        oncomplete="#{cc.attrs.oncomplete}"
+                        update="#{cc.attrs.update}" process="@this"/>
+                <p:column headerText="#{lang['common.lb.code']}"><h:outputLabel escape="true"
+                                                                                value="#{vShopStaffDTO.ownerCode}"/></p:column>
+                <p:column headerText="#{lang['common.lb.name']}"><h:outputLabel escape="true"
+                                                                                value="#{vShopStaffDTO.ownerName}"/></p:column>
+                <p:ajax event="query" global="false"/>
+            </p:autoComplete>
+            <p:commandLink id="btn#{cc.attrs.id}Clear"
+                           rendered="#{!cc.attrs.forceSelection and !cc.attrs.value.isDisableEdit}"
+                           styleClass="ui-link-right"
+                           update="#{cc.attrs.id}idComponent_hidden, #{cc.attrs.id}idComponent, #{cc.attrs.update}"
+                           actionListener="#{cc.attrs.value.doClearShop(cc.attrs.clearMethodName)}"
+                           process="@this">
+                <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+            </p:commandLink>
+            <p:message for="#{cc.attrs.id}idComponent"></p:message>
+        </p:outputPanel>
+    </p:outputPanel>
+</composite:implementation>
+</html>
+

@@ -1,0 +1,1666 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.infrastructure.manage.bras.ip.pool']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.infrastructure.manage.bras.ip.pool']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmManageBrasIpPool" styleClass="Container100 ">
+            <p:outputPanel id="pnlInforBrasIpPoolAll">
+                <p:outputPanel styleClass="ContainerIndent mg-left-15 ">
+                    <p:messages id="msgbrasIppool" showDetail="true"
+                                showSummary="false" closable="true"/>
+                </p:outputPanel>
+                <p:remoteCommand name="updateControls" update="@form"/>
+                <p:outputPanel id="pnlInforBrasIpPool">
+                    <!--<p:outputPanel rendered="#{manageBrasIpPoolController.workMode eq '2'}"-->
+                    <!--styleClass="ContainerIndent">-->
+                    <p:outputPanel styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="pnlInforBrasIpPoolAll"
+                                   titleHeader="#{lang['mn.infrastructure.infor.bras.ip.pool']}"/>
+
+                        <div class="Container100 pnlInforBrasIpPool paddingTopBottom10">
+                            <p:outputPanel styleClass="Container100">
+                                <div class="ContainerIndent mg-top-0">
+
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           value="#{lang['mn.infrastructure.ip']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:inputText id="txtIpoolSearch"
+                                                         value="#{manageBrasIpPoolController.brasIppoolSearch.ipPool}"
+                                                         placeholder="#{lang['brasIpPool.input.search']}"
+                                                         maxlength="20"
+                                                         title="#{manageBrasIpPoolController.brasIppoolSearch.ipPool}">
+                                                <pe:keyFilter for="txtIpoolSearch" regEx="/^[0-9.:/]+$/i"
+                                                              preventPaste="false"/>
+                                            </p:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           value="#{lang['mn.infrastructure.pool.name']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:inputText value="#{manageBrasIpPoolController.brasIppoolSearch.poolName}"
+                                                         placeholder="#{lang['brasIpPool.input.pool.name']}"
+                                                         maxlength="20"
+                                                         onblur="this.value=this.value.trim();"
+                                                         title="#{manageBrasIpPoolController.brasIppoolSearch.poolName}"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           value="#{lang['mn.infrastructure.domain']}"/>
+                                        </div>
+
+                                        <div class="Container60 Responsive50 ui-fluid ui-relative">
+                                            <p:autoComplete id="autoDomain"
+                                                            value="#{manageBrasIpPoolController.currentDomain}"
+                                                            disabled="#{!(manageBrasIpPoolController.currentDomain == null || manageBrasIpPoolController.currentDomain =='')}"
+                                                            completeMethod="#{manageBrasIpPoolController.searchListDomain}"
+                                                            placeholder="#{lang['brasIpPool.input.domain']}"
+                                                            var="c" itemValue="#{c}" itemLabel="#{c.domain}"
+                                                            autoHighlight="true"
+                                                            minQueryLength="0"
+                                                            maxResults="10"
+                                                            styleClass="autoCpl"
+                                                            forceSelection="true">
+                                                <o:converter converterId="domainConvert"
+                                                             list="#{manageBrasIpPoolController.filterDomain}"/>
+                                                <p:column style="width: 40%"
+                                                          headerText="#{lang['brasIpPool.input.doamin']}"
+                                                          filterable="true">
+                                                    <p:outputLabel value="#{c.domain}"/>
+                                                </p:column>
+                                                <p:column style="width: 60%"
+                                                          headerText="#{lang['brasIpPool.input.description']}"
+                                                          filterable="true">
+                                                    <p:outputLabel value="#{c.description}"/>
+                                                </p:column>
+                                                <p:ajax event="itemSelect" process="@this"
+                                                        listener="#{manageBrasIpPoolController.selectDomainSearch}"
+                                                        update="@this"/>
+                                                <p:ajax event="query" global="false"/>
+                                            </p:autoComplete>
+                                            <p:commandLink id="btnClearDomain"
+                                                           styleClass="ui-link-right"
+                                                           update="@this,@([id$=autoDomain])"
+                                                           actionListener="#{manageBrasIpPoolController.resetListDomain}"
+                                                           process="@this">
+                                                <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                            </p:commandLink>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           value="#{lang['mn.infrastructure.bras']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid ui-relative">
+                                            <p:autoComplete
+                                                    id="autoBrasIp"
+                                                    disabled="#{!(manageBrasIpPoolController.currentBras == null ||manageBrasIpPoolController.currentBras == '' )}"
+                                                    value="#{manageBrasIpPoolController.currentBras}"
+                                                    completeMethod="#{manageBrasIpPoolController.searchListBras}"
+                                                    placeholder="#{lang['brasIpPool.input.bras.ip']}"
+                                                    var="c" itemValue="#{c}" itemLabel="#{c.ip}"
+                                                    autoHighlight="false"
+                                                    minQueryLength="0"
+                                                    maxResults="10"
+                                                    styleClass="autoCpl"
+                                                    forceSelection="true">
+                                                <o:converter converterId="brasConverter"
+                                                             list="#{manageBrasIpPoolController.filterBras}"/>
+                                                <p:column style="width: 30%"
+                                                          headerText="#{lang['brasIpPool.input.bras.code']}"
+                                                          filterable="true">
+                                                    <p:outputLabel value="#{c.code}"/>
+                                                </p:column>
+                                                <p:column style="width: 30%"
+                                                          headerText="#{lang['brasIpPool.input.bras.name']}"
+                                                          filterable="true">
+                                                    <p:outputLabel value="#{c.name}"/>
+                                                </p:column>
+                                                <p:column style="width: 40%" headerText="#{lang['brasIpPool.bras.ip']}"
+                                                          filterable="true">
+                                                    <p:outputLabel value="#{c.ip}"/>
+                                                </p:column>
+                                                <p:ajax event="itemSelect" process="@this"
+                                                        listener="#{manageBrasIpPoolController.selectBrasSearch}"
+                                                        update="@this"/>
+                                                <p:ajax event="query" global="false"/>
+                                            </p:autoComplete>
+                                            <p:commandLink id="btnClearBrasIP"
+                                                           styleClass="ui-link-right"
+                                                           update="@this,@([id$=autoBrasIp])"
+                                                           actionListener="#{manageBrasIpPoolController.resetListBras}"
+                                                           process="@this">
+                                                <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                            </p:commandLink>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           value="#{lang['common.status']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:selectOneMenu
+                                                    value="#{manageBrasIpPoolController.brasIppoolSearch.status}">
+                                                <f:selectItem itemLabel="#{lang['mn.stock.status.select']}"/>
+                                                <f:selectItems value="#{manageBrasIpPoolController.listBrasStatus}"
+                                                               var="item" itemValue="#{item.value}"
+                                                               itemLabel="#{item.name}"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           value="#{lang['mn.infrastructure.ip.mask']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:inputText value="#{manageBrasIpPoolController.brasIppoolSearch.ipMask}"
+                                                         placeholder="#{lang['brasIpPool.mask.ip']}"
+                                                         maxlength="200"
+                                                         title="#{manageBrasIpPoolController.brasIppoolSearch.ipMask}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p:outputPanel id="pnlIpRenderSearch">
+                                    <p:outputPanel rendered="#{manageBrasIpPoolController.render}">
+                                        <div class="ContainerIndent mg-top-0">
+                                            <div class="Container33 Responsive">
+                                                <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                                    <p:outputLabel styleClass="lb-sentinel"
+                                                                   value="#{lang['mn.infrastructure.pool.unip']}"/>
+                                                </div>
+                                                <div class="Container60 Responsive50 ui-fluid">
+                                                    <p:inputText
+                                                            title="#{manageBrasIpPoolController.brasIppoolSearch.poolUniq}"
+                                                            placeholder="#{lang['brasIpPool.pool.unip']}"
+                                                            maxlength="30"
+                                                            onblur="this.value=this.value.trim();"
+                                                            value="#{manageBrasIpPoolController.brasIppoolSearch.poolUniq}"/>
+                                                </div>
+                                            </div>
+                                            <div class="Container33 Responsive">
+                                                <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                                    <p:outputLabel styleClass="lb-sentinel"
+                                                                   value="#{lang['mn.infrastructure.date.update']}"/>
+                                                </div>
+                                                <div class="Container60 Responsive50 ui-fluid">
+                                                    <p:calendar id="dateUpdate"
+                                                                pattern="dd/MM/yyyy"
+                                                                mask="true"
+                                                                navigator="true"
+                                                                showButtonPanel="true"
+                                                                converterMessage="#{lang['invalid.date.message']}"
+                                                                validatorMessage="#{lang['start.date.validate.message']}"
+                                                                placeholder="#{lang['common.datetime.format']}"
+                                                                value="#{manageBrasIpPoolController.brasIppoolSearch.updateDatetime}">
+                                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                                    </p:calendar>
+                                                    <p:message for="dateUpdate"/>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="ContainerIndent mg-top-0">
+                                            <div class="Container33 Responsive">
+                                                <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                                    <p:outputLabel styleClass="lb-sentinel"
+                                                                   value="#{lang['mn.infrastructure.ip.special']}"/>
+                                                </div>
+                                                <div class="Container60 Responsive50 ui-fluid ">
+                                                    <p:selectBooleanCheckbox styleClass="mg-left-5"
+                                                                             value="#{manageBrasIpPoolController.brasIppoolSearch.specificIp}">
+                                                        <p:ajax event="change"
+                                                                process="@this"
+                                                                update="@([id$=pnlIpSpecialSearch])"/>
+                                                    </p:selectBooleanCheckbox>
+                                                </div>
+                                            </div>
+                                            <p:outputPanel id="pnlIpSpecialSearch">
+                                                <p:outputPanel
+                                                        rendered="#{manageBrasIpPoolController.brasIppoolSearch.specificIp}">
+                                                    <div class="Container33 Responsive">
+                                                        <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                                            <p:outputLabel styleClass="lb-sentinel"
+                                                                           value="#{lang['mn.infrastructure.ip.special.type']}"/>
+                                                        </div>
+                                                        <div class="Container60 Responsive50 ui-fluid">
+                                                            <p:selectOneMenu
+                                                                    value="#{manageBrasIpPoolController.brasIppoolSearch.ipType}">
+                                                                <f:selectItem escape="true"
+                                                                              itemLabel="#{lang['brasIpPool.select.ip.special']}"/>
+                                                                <f:selectItems itemLabelEscaped="true"
+                                                                               value="#{manageBrasIpPoolController.listIpSpecific}"
+                                                                               var="item" itemValue="#{item.value}"
+                                                                               itemLabel="#{item.name}"/>
+                                                                <p:ajax event="change" process="@this"
+                                                                        update="@this"/>
+                                                            </p:selectOneMenu>
+                                                        </div>
+                                                    </div>
+                                                    <div class="Container33 Responsive">
+                                                        <div class="Container40 Responsive50  mg-left-15 ui-fluid pd-top-7">
+                                                            <p:outputLabel styleClass="lb-sentinel"
+                                                                           value="#{lang['mn.infrastructure.ip.label']}"/>
+                                                        </div>
+                                                        <div class="Container60 Responsive50 ui-fluid">
+                                                            <p:inputText
+                                                                    value="#{manageBrasIpPoolController.brasIppoolSearch.ipLabel}"
+                                                                    placeholder="#{lang['brasIpPool.select.ip.label']}"
+                                                                    maxlength="100"
+                                                                    onblur="this.value=this.value.trim();"
+                                                                    title="#{manageBrasIpPoolController.brasIppoolSearch.ipLabel}"/>
+                                                        </div>
+                                                    </div>
+                                                </p:outputPanel>
+                                            </p:outputPanel>
+                                        </div>
+
+                                        <p:outputPanel styleClass="ContainerIndent" id="divChooseArea">
+                                            <div class="ContainerIndent mg-top-0">
+                                                <div class="Container33 Responsive">
+                                                    <div class="Container40 Responsive50 ui-fluid pd-top-7">
+                                                        <p:outputLabel styleClass="lb-sentinel "
+                                                                       style="margin-left: 5px"
+                                                                       value="#{lang['mn.infrastructure.district.city']}"/>
+                                                    </div>
+                                                    <div class="Container60 Responsive50 ui-fluid">
+                                                        <p:selectCheckboxMenu
+                                                                id="selManyArea"
+                                                                filter="true" filterMatchMode="contains"
+                                                                label="#{lang['brasIpPool.select.ip.province']}"
+                                                                value="#{manageBrasIpPoolController.strListArea}"
+                                                                showCheckbox="true">
+                                                            <f:selectItems
+                                                                    value="#{manageBrasIpPoolController.listArea}"
+                                                                    var="area"
+                                                                    itemLabel="#{area.areaCode} - #{area.fullName}"
+                                                                    itemValue="#{area.areaCode}"
+                                                                    />
+                                                            <p:ajax event="toggleSelect" process="@this"
+                                                                    update="@([id$=pnlAreaDetail])"
+                                                                    listener="#{manageBrasIpPoolController.showDetailArea('2', false)}"/>
+                                                            <p:ajax process="@this" update="@([id$=pnlAreaDetail])"
+                                                                    listener="#{manageBrasIpPoolController.showDetailArea('2', false)}"/>
+                                                        </p:selectCheckboxMenu>
+                                                    </div>
+                                                </div>
+                                                <div class="Container33 Responsive">
+                                                    <p:commandLink
+                                                            title="#{lang['invoice.invoiceSerial.showDetailBranch']}"
+                                                            process="@this,@([id$=divChooseArea])"
+                                                            action="#{manageBrasIpPoolController.showDetailArea('2', true)}"
+                                                            resetValues="true"
+                                                            style="margin-left:15px;"
+                                                            update="@([id$=pnlAreaDetail]),@([id$=divChooseArea])">
+                                                        <h:outputText
+                                                                value="#{lang['invoice.invoiceSerial.showDetailBranch']}"/>
+                                                    </p:commandLink>
+                                                    <p:commandLink
+                                                            title="#{lang['invoice.invoiceSerial.hideDetailBranch']}"
+                                                            styleClass="mg-left-5"
+                                                            process="@this"
+                                                            action="#{manageBrasIpPoolController.hideDetailArea('2')}"
+                                                            resetValues="true"
+                                                            update="@([id$=pnlAreaDetail])">
+                                                        <h:outputText
+                                                                value="#{lang['invoice.invoiceSerial.hideDetailBranch']}"/>
+                                                    </p:commandLink>
+                                                </div>
+                                                <div class="Container33 Responsive"/>
+                                            </div>
+                                        </p:outputPanel>
+                                        <p:outputPanel styleClass="ContainerIndent ui-fluid" id="pnlAreaDetail"
+                                                       style="margin-left: 30px !important;">
+                                            <p:dataTable id="tblArea"
+                                                         rowIndexVar="index"
+                                                         scrollable="#{manageBrasIpPoolController.listAreaSearch.size() > 4}"
+                                                         scrollHeight="150"
+                                                         rendered="#{manageBrasIpPoolController.showArea}"
+                                                         var="area" value="#{manageBrasIpPoolController.listAreaSearch}"
+                                                         emptyMessage="#{lang['common.empty.records']}">
+                                                <p:column headerText="#{lang['range.time.promotion.stt']}"
+                                                          style="width: 10%;"
+                                                          styleClass="col-right">
+                                                    <h:outputLabel value="#{index + 1}"
+                                                                   title="#{index + 1}"/>
+                                                </p:column>
+                                                <p:column headerText="#{lang['brasIpPool.select.ip.code.provice']}"
+                                                          style="width: 20%"
+                                                          sortBy="#{area.areaCode}">
+                                                    <p:outputLabel value="#{area.areaCode}"
+                                                                   title="#{area.areaCode}"/>
+                                                </p:column>
+                                                <p:column headerText="#{lang['brasIpPool.select.ip.provice']}"
+                                                          sortBy="#{area.fullName}">
+                                                    <p:outputLabel value="#{area.fullName}"
+                                                                   title="#{area.fullName}"/>
+                                                </p:column>
+                                                <p:column headerText="#{lang['common.delete']}" style="width: 10%"
+                                                          styleClass="TexAlCenter">
+                                                    <p:commandLink
+                                                            actionListener="#{manageBrasIpPoolController.removeArea(area,'2')}"
+                                                            process="@this"
+                                                            update="@this,@([id$=pnlAreaDetail]),@([id$=selManyArea]), @([id$=msgbrasIppool])"
+                                                            styleClass="fa icon-trash blue"/>
+                                                </p:column>
+                                            </p:dataTable>
+                                        </p:outputPanel>
+                                    </p:outputPanel>
+                                </p:outputPanel>
+
+                                <div class="Container100">
+                                    <p:outputPanel id="renderSimple" styleClass="ContainerIndent">
+                                        <p:outputPanel rendered="#{manageBrasIpPoolController.notRender}">
+                                            <p:commandLink
+                                                    actionListener="#{manageBrasIpPoolController.checkRender(true)}"
+                                                    process="@this"
+                                                    immediate="true"
+                                                    update="@([id$=pnlIpRenderSearch]),@([id$=renderSimple]),@([id$=renderAdvance])"
+                                                    value="#{lang['common.advance']}"/>
+                                        </p:outputPanel>
+                                    </p:outputPanel>
+                                    <p:outputPanel id="renderAdvance" styleClass="ContainerIndent">
+                                        <p:outputPanel rendered="#{manageBrasIpPoolController.render}">
+                                            <p:commandLink
+                                                    actionListener="#{manageBrasIpPoolController.checkRender(false)}"
+                                                    process="@this"
+                                                    immediate="true"
+                                                    update="@([id$=pnlIpRenderSearch]),@([id$=renderSimple]),@([id$=renderAdvance])"
+                                                    value="#{lang['common.simple']}"/>
+                                        </p:outputPanel>
+                                    </p:outputPanel>
+                                </div>
+
+                                <div class="Container100 TexAlCenter">
+                                    <p:commandButton actionListener="#{manageBrasIpPoolController.searchIpPool}"
+                                                     process="@([id$=pnlInforBrasIpPool])"
+                                                     update="@form"
+                                                     value="#{lang['create.note.search']}"/>
+                                    <p:commandButton styleClass="mg-left-5"
+                                                     actionListener="#{manageBrasIpPoolController.reset}"
+                                                     process="@([id$=pnlInforBrasIpPool])"
+                                                     update="@form"
+                                                     value="#{lang['common.reset']}"/>
+                                    <p:commandButton styleClass="mg-left-5"
+                                                     value="#{lang['brasIpPool.btn.result.excel']}"
+                                                     process="@this,@([id$=pnlInforBrasIpPool])"
+                                                     actionListener="#{manageBrasIpPoolController.searchIpPoolExcel}"
+                                                     update="@form"
+                                                     oncomplete="if(!args.validationFailed){clickLinkByClass('download');}"
+                                            >
+                                    </p:commandButton>
+                                    <p:commandButton value="#{lang['brasIpPool.btn.result.excel']}"
+                                                     style="display: none;"
+                                                     styleClass="mg-left-5 download"
+                                                     immediate="true"
+                                                     ajax="false">
+                                        <p:fileDownload
+                                                value="#{manageBrasIpPoolController.doExportResultSearch()}"/>
+                                    </p:commandButton>
+                                </div>
+                            </p:outputPanel>
+                        </div>
+
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+
+            <p:outputPanel id="pnlEditBrasIpPool" styleClass="Container100">
+                <p:outputPanel rendered="#{manageBrasIpPoolController.workMode eq '1'}" styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="pnlEditBrasIpPool"
+                               titleHeader="#{lang['brasIpPool.select.edit']}"/>
+
+                    <div class="Container100 pnlEditBrasIpPool paddingTopBottom10">
+                        <p:outputPanel styleClass="Container100">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel lbIppoolEdit"
+                                                       for="txtIppoolEdit"
+                                                       value="#{lang['mn.infrastructure.ip']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="txtIppoolEdit"
+                                                     class="lbIppoolEdit"
+                                                     required="true"
+                                                     placeholder="#{lang['brasIpPool.input.search']}"
+                                                     maxlength="20"
+                                                     requiredMessage="#{lang['brasIpPool.select.edit.validate']}"
+                                                     value="#{manageBrasIpPoolController.brasIppoolEdit.ipPool}"/>
+                                        <pe:keyFilter for="txtIppoolEdit" regEx="/^[0-9.:/]+$/i" preventPaste="false"/>
+                                        <p:message for="txtIppoolEdit"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       for="txtPoolNameEdit"
+                                                       value="#{lang['mn.infrastructure.pool.name']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText required="true" id="txtPoolNameEdit"
+                                                     maxlength="20"
+                                                     onblur="this.value=this.value.trim();"
+                                                     placeholder="#{lang['brasIpPool.input.pool.name']}"
+                                                     requiredMessage="#{lang['brasIpPool.select.pool.name.validate']}"
+                                                     value="#{manageBrasIpPoolController.brasIppoolEdit.poolName}"/>
+                                        <p:message for="txtPoolNameEdit"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" id="lbauCpDomainEdit"
+                                                       for="auCpDomainEdit"
+                                                       value="#{lang['mn.infrastructure.domain']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-relative">
+                                        <p:autoComplete id="auCpDomainEdit"
+                                                        required="true"
+                                                        requiredMessage="#{lang['brasIpPool.select.domain.validate']}"
+                                                        value="#{manageBrasIpPoolController.currentDomainEdit}"
+                                                        disabled="#{!(manageBrasIpPoolController.currentDomainEdit ==null || manageBrasIpPoolController.currentDomainEdit =='')}"
+                                                        completeMethod="#{manageBrasIpPoolController.searchListDomain}"
+                                                        placeholder="#{lang['brasIpPool.input.domain']}"
+                                                        var="c" itemValue="#{c}" itemLabel="#{c.domain}"
+                                                        autoHighlight="false"
+                                                        minQueryLength="0"
+                                                        maxResults="10"
+                                                        styleClass="autoCpl"
+                                                        forceSelection="true">
+                                            <o:converter converterId="domainConvert"
+                                                         list="#{manageBrasIpPoolController.filterDomain}"/>
+                                            <p:column style="width: 40%"
+                                                      headerText="#{lang['brasIpPool.input.doamin']}"
+                                                      filterable="true">
+                                                <p:outputLabel value="#{c.domain}"/>
+                                            </p:column>
+                                            <p:column style="width: 60%"
+                                                      headerText="#{lang['brasIpPool.input.description']}"
+                                                      filterable="true">
+                                                <p:outputLabel value="#{c.description}"/>
+                                            </p:column>
+                                            <p:ajax event="itemSelect" process="@this"
+                                                    listener="#{manageBrasIpPoolController.selectDomainEdit}"
+                                                    update="@this,@([id$=lbauCpDomainEdit])"/>
+                                        </p:autoComplete>
+                                        <p:commandLink
+                                                styleClass="ui-link-right"
+                                                update="@this,@([id$=auCpDomainEdit])"
+                                                actionListener="#{manageBrasIpPoolController.resetListDomainEdit}"
+                                                process="@this">
+                                            <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                        </p:commandLink>
+
+                                        <p:message for="auCpDomainEdit"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" id="lbIpBrasEdit"
+                                                       for="txtIpBrasEdit"
+                                                       value="#{lang['mn.infrastructure.bras']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-relative">
+                                        <p:autoComplete
+                                                id="txtIpBrasEdit"
+                                                required="true"
+                                                requiredMessage="#{lang['brasIpPool.select.domain.not.input']}"
+                                                disabled="#{!(manageBrasIpPoolController.currentBrasEdit == null ||manageBrasIpPoolController.currentBrasEdit == '' )}"
+                                                value="#{manageBrasIpPoolController.currentBrasEdit}"
+                                                completeMethod="#{manageBrasIpPoolController.searchListBras}"
+                                                placeholder="#{lang['brasIpPool.input.bras.ip']}"
+                                                var="c" itemValue="#{c}" itemLabel="#{c.ip}"
+                                                autoHighlight="false"
+                                                minQueryLength="0"
+                                                maxResults="10"
+                                                styleClass="autoCpl"
+                                                forceSelection="true">
+                                            <o:converter converterId="brasConverter"
+                                                         list="#{manageBrasIpPoolController.filterBras}"/>
+                                            <p:column style="width: 30%"
+                                                      headerText="#{lang['brasIpPool.input.bras.code']}"
+                                                      filterable="true">
+                                                <p:outputLabel value="#{c.code}"/>
+                                            </p:column>
+                                            <p:column style="width: 30%"
+                                                      headerText="#{lang['brasIpPool.input.bras.name']}"
+                                                      filterable="true">
+                                                <p:outputLabel value="#{c.name}"/>
+                                            </p:column>
+                                            <p:column style="width: 40%" headerText="#{lang['brasIpPool.bras.ip']}"
+                                                      filterable="true">
+                                                <p:outputLabel value="#{c.ip}"/>
+                                            </p:column>
+                                            <p:ajax event="itemSelect" process="@this"
+                                                    listener="#{manageBrasIpPoolController.selectBrasEdit}"
+                                                    update="@this,@([id$=lbIpBrasEdit])"/>
+                                        </p:autoComplete>
+                                        <p:commandLink id="btnClearBrasIPEdit"
+                                                       styleClass="ui-link-right"
+                                                       update="@this,@([id$=txtIpBrasEdit])"
+                                                       actionListener="#{manageBrasIpPoolController.resetListBrasEdit}"
+                                                       process="@this">
+                                            <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                        </p:commandLink>
+                                        <p:message for="txtIpBrasEdit"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       for="txtStatusEdit"
+                                                       value="#{lang['common.status']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="txtStatusEdit"
+                                                         required="true"
+                                                         requiredMessage="#{lang['brasIpPool.select.input.status']}"
+                                                         value="#{manageBrasIpPoolController.brasIppoolEdit.status}">
+                                            <f:selectItem escape="true" itemLabel="#{lang['mn.stock.status.select']}"/>
+                                            <f:selectItems value="#{manageBrasIpPoolController.listBrasStatus}"
+                                                           itemLabelEscaped="true"
+                                                           var="item" itemValue="#{item.value}"
+                                                           itemLabel="#{item.name}"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="txtStatusEdit"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['mn.infrastructure.ip.mask']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText value="#{manageBrasIpPoolController.brasIppoolEdit.ipMask}"
+                                                     placeholder="#{lang['brasIpPool.mask.ip']}"
+                                                     maxlength="200"
+                                                     onblur="this.value=this.value.trim();"
+                                                     title="#{manageBrasIpPoolController.brasIppoolEdit.ipMask}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['mn.infrastructure.pool.unip']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText title="#{manageBrasIpPoolController.brasIppoolEdit.poolUniq}"
+                                                     placeholder="#{lang['brasIpPool.pool.unip']}"
+                                                     maxlength="30"
+                                                     onblur="this.value=this.value.trim();"
+                                                     value="#{manageBrasIpPoolController.brasIppoolEdit.poolUniq}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['mn.infrastructure.ip.special']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-3">
+                                        <p:selectBooleanCheckbox styleClass="mg-left-5"
+                                                                 value="#{manageBrasIpPoolController.brasIppoolEdit.specificIp}">
+                                            <p:ajax event="change" process="@this"
+                                                    update="@([id$=pnlIpSpecialEdit])"/>
+                                        </p:selectBooleanCheckbox>
+                                    </div>
+                                </div>
+                                <p:outputPanel id="pnlIpSpecialEdit">
+                                    <p:outputPanel rendered="#{manageBrasIpPoolController.brasIppoolEdit.specificIp}">
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               for="txtIpTypeEdit"
+                                                               value="#{lang['mn.infrastructure.ip.special.type']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:selectOneMenu id="txtIpTypeEdit"
+                                                                 required="true"
+                                                                 requiredMessage="#{lang['brasIpPool.select.input.ip.specific']}"
+                                                                 value="#{manageBrasIpPoolController.brasIppoolEdit.ipType}">
+                                                    <f:selectItem escape="true"
+                                                                  itemLabel="#{lang['brasIpPool.select.ip.special']}"/>
+                                                    <f:selectItems value="#{manageBrasIpPoolController.listIpSpecific}"
+                                                                   itemLabelEscaped="true"
+                                                                   var="item" itemValue="#{item.value}"
+                                                                   itemLabel="#{item.name}"/>
+                                                    <p:ajax event="change" process="@this"
+                                                            update="@this"/>
+                                                </p:selectOneMenu>
+                                                <p:message for="txtIpTypeEdit"/>
+                                            </div>
+                                        </div>
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50  mg-left-15 ui-fluid pd-top-7">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               for="txtIplabelEdit"
+                                                               value="#{lang['mn.infrastructure.ip.label']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:inputText placeholder="#{lang['brasIpPool.select.ip.label']}"
+                                                             id="txtIplabelEdit"
+                                                             required="true"
+                                                             requiredMessage="#{lang['brasIpPool.not.ip.label']}"
+                                                             maxlength="100"
+                                                             onblur="this.value=this.value.trim();"
+                                                             value="#{manageBrasIpPoolController.brasIppoolEdit.ipLabel}"/>
+                                                <p:message for="txtIplabelEdit"/>
+                                            </div>
+                                        </div>
+                                    </p:outputPanel>
+                                </p:outputPanel>
+                            </div>
+
+                            <p:outputPanel styleClass="ContainerIndent" id="divChooseAreaEdit">
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 ui-fluid pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel clAreaEdit" for="selManyAreaEdit"
+                                                           style="margin-left: 5px"
+                                                           value="#{lang['mn.infrastructure.district.city']}"/>
+                                            <p:outputLabel value="*" style="color: red"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid clAreaEdit">
+                                            <p:selectCheckboxMenu
+                                                    id="selManyAreaEdit"
+                                                    filter="true" filterMatchMode="contains"
+                                                    label="#{lang['brasIpPool.select.ip.province']}"
+                                                    styleClass="clAreaEdit"
+                                                    value="#{manageBrasIpPoolController.strListAreaEdit}"
+                                                    showCheckbox="true">
+                                                <f:selectItems
+                                                        value="#{manageBrasIpPoolController.listArea}"
+                                                        var="area"
+                                                        itemLabel="#{area.areaCode} - #{area.fullName}"
+                                                        itemValue="#{area.areaCode}"
+                                                        />
+                                                <p:ajax event="toggleSelect" process="@this"
+                                                        update="@([id$=pnlAreaDetailEdit])"
+                                                        listener="#{manageBrasIpPoolController.showDetailArea('1', false)}"/>
+                                                <p:ajax process="@this" update="@([id$=pnlAreaDetailEdit])"
+                                                        listener="#{manageBrasIpPoolController.showDetailArea('1', false)}"/>
+                                            </p:selectCheckboxMenu>
+                                            <p:message for="selManyAreaEdit"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <p:commandLink
+                                                title="#{lang['invoice.invoiceSerial.showDetailBranch']}"
+                                                process="@this,@([id$=divChooseAreaEdit])"
+                                                action="#{manageBrasIpPoolController.showDetailArea('1', true)}"
+                                                resetValues="true"
+                                                style="margin-left:15px;"
+                                                update="@([id$=pnlAreaDetailEdit]),@([id$=divChooseAreaEdit])">
+                                            <h:outputText
+                                                    value="#{lang['invoice.invoiceSerial.showDetailBranch']}"/>
+                                        </p:commandLink>
+                                        <p:commandLink
+                                                title="#{lang['invoice.invoiceSerial.hideDetailBranch']}"
+                                                styleClass="mg-left-5"
+                                                process="@this"
+                                                action="#{manageBrasIpPoolController.hideDetailArea('1')}"
+                                                resetValues="true"
+                                                update="@([id$=pnlAreaDetailEdit])">
+                                            <h:outputText
+                                                    value="#{lang['invoice.invoiceSerial.hideDetailBranch']}"/>
+                                        </p:commandLink>
+                                    </div>
+                                    <div class="Container33 Responsive"/>
+                                </div>
+                            </p:outputPanel>
+                            <p:outputPanel styleClass="ContainerIndent ui-fluid" id="pnlAreaDetailEdit"
+                                           style="margin-left: 30px !important;">
+                                <p:dataTable id="tblAreaEdit"
+                                             rowIndexVar="index"
+                                             scrollable="#{manageBrasIpPoolController.listAreaEdit.size() > 4}"
+                                             scrollHeight="150"
+                                             rendered="#{manageBrasIpPoolController.showAreaEdit}"
+                                             var="area" value="#{manageBrasIpPoolController.listAreaEdit}"
+                                             emptyMessage="#{lang['common.empty.records']}">
+                                    <p:column headerText="#{lang['range.time.promotion.stt']}"
+                                              style="width: 10%;"
+                                              styleClass="col-right">
+                                        <h:outputLabel value="#{index + 1}"
+                                                       title="#{index + 1}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['brasIpPool.select.ip.code.provice']}"
+                                              style="width: 20%"
+                                              sortBy="#{area.areaCode}">
+                                        <p:outputLabel value="#{area.areaCode}"
+                                                       title="#{area.areaCode}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['brasIpPool.select.ip.provice']}"
+                                              sortBy="#{area.fullName}">
+                                        <p:outputLabel value="#{area.fullName}"
+                                                       title="#{area.fullName}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.delete']}" style="width: 10%"
+                                              styleClass="TexAlCenter">
+                                        <p:commandLink
+                                                actionListener="#{manageBrasIpPoolController.removeArea(area,'1')}"
+                                                process="@this"
+                                                update="@this,@([id$=pnlAreaDetailEdit]),@([id$=selManyAreaEdit]), @([id$=msgbrasIppool])"
+                                                styleClass="fa icon-trash blue"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+
+                            <!--<div class="ContainerIndent mg-top-0">-->
+                            <!--<div class="Container33 Responsive">-->
+                            <!--<div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">-->
+                            <!--<p:outputLabel styleClass="lb-sentinel lbProvinceEdit"-->
+                            <!--for="txtProvinceEdit"-->
+                            <!--value="#{lang['mn.infrastructure.district.city']}"/>-->
+                            <!--<p:outputLabel value="*" style="color: red"/>-->
+                            <!--</div>-->
+                            <!--<div class="Container60 Responsive50 ui-fluid ">-->
+                            <!--<p:autoComplete id="txtProvinceEdit"-->
+                            <!--value="#{manageBrasIpPoolController.curentAreaEdit}"-->
+                            <!--completeMethod="#{manageBrasIpPoolController.searchListArea}"-->
+                            <!--placeholder="#{lang['brasIpPool.select.ip.province']}"-->
+                            <!--var="c" itemValue="#{c}" itemLabel="#{c.name}"-->
+                            <!--autoHighlight="false"-->
+                            <!--maxResults="10"-->
+                            <!--styleClass="autoCpl lbProvinceEdit"-->
+                            <!--forceSelection="true">-->
+                            <!--<o:converter converterId="areaConverter"-->
+                            <!--list="#{manageBrasIpPoolController.filterListArea}"/>-->
+                            <!--<p:column style="width: 40%"-->
+                            <!--headerText="#{lang['brasIpPool.select.ip.code.provice']}"-->
+                            <!--filterable="true">-->
+                            <!--<p:outputLabel value="#{c.areaCode}"/>-->
+                            <!--</p:column>-->
+                            <!--<p:column style="width: 60%"-->
+                            <!--headerText="#{lang['brasIpPool.select.ip.provice']}"-->
+                            <!--filterable="true">-->
+                            <!--<p:outputLabel value="#{c.fullName}"/>-->
+                            <!--</p:column>-->
+                            <!--<p:ajax event="itemSelect" process="@this"-->
+                            <!--listener="#{manageBrasIpPoolController.selectAreaEdit}"-->
+                            <!--update="@this,@([id$=tblAreaEdit]),@([id$=msgbrasIppool])"/>-->
+                            <!--</p:autoComplete>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="Container66 Responsive">-->
+                            <!--<div class="Container80 Responsive75 ui-fluid" style="float: right">-->
+                            <!--<p:dataTable id="tblAreaEdit" styleClass="mg-left-10"-->
+                            <!--scrollable="#{manageBrasIpPoolController.listAreaEdit.size() > 5}"-->
+                            <!--scrollHeight="150"-->
+                            <!--var="item" value="#{manageBrasIpPoolController.listAreaEdit}"-->
+                            <!--emptyMessage="#{lang['common.empty.records']}">-->
+                            <!--<p:column headerText="#{lang['mn.infrastructure.city.district']}">-->
+                            <!--<p:outputLabel styleClass="lb-sentinel" value="#{item.name}"/>-->
+                            <!--</p:column>-->
+                            <!--<p:column headerText="#{lang['common.delete']}">-->
+                            <!--<p:commandLink styleClass="fa icon-trash Fs14 blue"-->
+                            <!--actionListener="#{manageBrasIpPoolController.removeArea(item,'1')}"-->
+                            <!--process="@this" update="tblAreaEdit"-->
+                            <!--style="text-decoration: none;"/>-->
+                            <!--</p:column>-->
+                            <!--</p:dataTable>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <div class="Container100 TexAlCenter">
+                                <cbs:confirmDialog
+                                        idComponent="pnConfirmEdit"
+                                        valueButton="#{lang['common.edit']}"
+                                        headerConfirm="#{lang['brasIpPool.edit.confirm.title']}"
+                                        messageConfirm="#{lang['common.msg.edit.confirm']}"
+                                        actionOK="#{manageBrasIpPoolController.editBrasIppool}"
+                                        resetValueButton="true"
+                                        process="@([id$=pnlEditBrasIpPool])"
+                                        updateArea="@([id$=pnlListBrasIpPool]), @([id$=msgbrasIppool]),@([id$=pnlEditBrasIpPool])"
+                                        processOK="@([id$=pnlEditBrasIpPool]), @([id$=msgbrasIppool])"
+                                        updateOK="@form"
+                                        actionValidate="#{manageBrasIpPoolController.validateForEditOrUpdate}"
+                                        focusCancel="false"
+                                        isButton="true"
+                                        />
+                                <p:commandButton styleClass="mg-left-5"
+                                                 actionListener="#{manageBrasIpPoolController.back}"
+                                                 process="@this"
+                                                 update="@form "
+                                                 value="#{lang['common.next']}"/>
+                            </div>
+                        </p:outputPanel>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+
+            <p:outputPanel id="pnlAddBrasIpPool" styleClass="Container100">
+                <p:outputPanel
+                        rendered="#{(manageBrasIpPoolController.workMode eq '0') and  (not manageBrasIpPoolController.addfile)}"
+                        styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="pnlAddBrasIpPool"
+                               titleHeader="#{lang[manageBrasIpPoolController.titleAddOrCoppy]}"/>
+
+                    <div class="Container100 pnlAddBrasIpPool paddingTopBottom10">
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   for="txtIppool"
+                                                   value="#{lang['mn.infrastructure.ip']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:inputText id="txtIppool"
+                                                 required="true"
+                                                 maxlength="20"
+                                                 onblur="this.value=this.value.trim();"
+                                                 placeholder="#{lang['brasIpPool.input.search']}"
+                                                 requiredMessage="#{lang['brasIpPool.select.edit.validate']}"
+                                                 value="#{manageBrasIpPoolController.brasIppoolEdit.ipPool}">
+                                    </p:inputText>
+                                    <pe:keyFilter for="txtIppool" regEx="/^[0-9.:/]+$/i " preventPaste="false"/>
+                                    <p:message for="txtIppool"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" for="txtPoolName"
+                                                   value="#{lang['mn.infrastructure.pool.name']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid ">
+                                    <p:inputText id="txtPoolName"
+                                                 required="true"
+                                                 maxlength="20"
+                                                 onblur="this.value = this.value.trim();"
+                                                 placeholder="#{lang['brasIpPool.input.pool.name']}"
+                                                 requiredMessage="#{lang['brasIpPool.select.pool.name.validate']}"
+                                                 value="#{manageBrasIpPoolController.brasIppoolEdit.poolName}"
+                                                 title=""/>
+                                    <p:message for="txtPoolName"/>
+                                </div>
+
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" id="lbauCpDomain"
+                                                   for="auCpDomain"
+                                                   value="#{lang['mn.infrastructure.domain']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid ui-relative">
+                                    <p:autoComplete id="auCpDomain"
+                                                    required="true"
+                                                    requiredMessage="#{lang['brasIpPool.select.domain.validate']}"
+                                                    value="#{manageBrasIpPoolController.currentDomainEdit}"
+                                                    disabled="#{!(manageBrasIpPoolController.currentDomainEdit ==null || manageBrasIpPoolController.currentDomainEdit =='')}"
+                                                    completeMethod="#{manageBrasIpPoolController.searchListDomain}"
+                                                    placeholder="#{lang['brasIpPool.input.domain']}"
+                                                    var="c" itemValue="#{c}" itemLabel="#{c.domain}"
+                                                    autoHighlight="false"
+                                                    minQueryLength="0"
+                                                    maxResults="10"
+                                                    styleClass="autoCpl"
+                                                    forceSelection="true">
+                                        <o:converter converterId="domainConvert"
+                                                     list="#{manageBrasIpPoolController.filterDomain}"/>
+                                        <p:column style="width: 40%"
+                                                  headerText="#{lang['brasIpPool.input.doamin']}"
+                                                  filterable="true">
+                                            <p:outputLabel value="#{c.domain}"/>
+                                        </p:column>
+                                        <p:column style="width: 60%"
+                                                  headerText="#{lang['brasIpPool.input.description']}"
+                                                  filterable="true">
+                                            <p:outputLabel value="#{c.description}"/>
+                                        </p:column>
+                                        <p:ajax event="itemSelect" process="@this"
+                                                listener="#{manageBrasIpPoolController.selectDomainEdit}"
+                                                update="@this,@([id$=lbauCpDomain])"/>
+                                    </p:autoComplete>
+                                    <p:commandLink
+                                            styleClass="ui-link-right"
+                                            update="@this,@([id$=auCpDomain])"
+                                            actionListener="#{manageBrasIpPoolController.resetListDomainEdit}"
+                                            process="@this">
+                                        <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                    </p:commandLink>
+
+                                    <p:message for="auCpDomain"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" id="lbIpBras"
+                                                   for="txtIpBras"
+                                                   value="#{lang['mn.infrastructure.bras']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid ui-relative">
+                                    <p:autoComplete
+                                            id="txtIpBras"
+                                            required="true"
+                                            requiredMessage="#{lang['brasIpPool.select.domain.not.input']}"
+                                            disabled="#{!(manageBrasIpPoolController.currentBrasEdit == null ||manageBrasIpPoolController.currentBrasEdit == '' )}"
+                                            value="#{manageBrasIpPoolController.currentBrasEdit}"
+                                            completeMethod="#{manageBrasIpPoolController.searchListBras}"
+                                            placeholder="#{lang['brasIpPool.input.bras.ip']}"
+                                            var="c" itemValue="#{c}" itemLabel="#{c.ip}"
+                                            autoHighlight="false"
+                                            minQueryLength="0"
+                                            maxResults="10"
+                                            styleClass="autoCpl"
+                                            forceSelection="true">
+                                        <o:converter converterId="brasConverter"
+                                                     list="#{manageBrasIpPoolController.filterBras}"/>
+                                        <p:column style="width: 30%"
+                                                  headerText="#{lang['brasIpPool.input.bras.code']}"
+                                                  filterable="true">
+                                            <p:outputLabel value="#{c.code}"/>
+                                        </p:column>
+                                        <p:column style="width: 30%"
+                                                  headerText="#{lang['brasIpPool.input.bras.name']}"
+                                                  filterable="true">
+                                            <p:outputLabel value="#{c.name}"/>
+                                        </p:column>
+                                        <p:column style="width: 40%" headerText="#{lang['brasIpPool.bras.ip']}"
+                                                  filterable="true">
+                                            <p:outputLabel value="#{c.ip}"/>
+                                        </p:column>
+                                        <p:ajax event="itemSelect" process="@this"
+                                                listener="#{manageBrasIpPoolController.selectBrasEdit}"
+                                                update="@this,@([id$=lbIpBras])"/>
+                                    </p:autoComplete>
+                                    <p:commandLink id="btnClearBrasIPAdd"
+                                                   styleClass="ui-link-right"
+                                                   update="@this,@([id$=txtIpBras])"
+                                                   actionListener="#{manageBrasIpPoolController.resetListBrasEdit}"
+                                                   process="@this">
+                                        <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                    </p:commandLink>
+                                    <p:message for="txtIpBras"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   for="txtStatus"
+                                                   value="#{lang['common.status']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:selectOneMenu id="txtStatus"
+                                                     required="true"
+                                                     requiredMessage="#{lang['brasIpPool.select.input.status']}"
+                                                     value="#{manageBrasIpPoolController.brasIppoolEdit.status}">
+                                        <f:selectItem itemLabel="#{lang['mn.stock.status.select']}"/>
+                                        <f:selectItems value="#{manageBrasIpPoolController.listBrasStatus}"
+                                                       var="item" itemValue="#{item.value}" itemLabel="#{item.name}"/>
+                                    </p:selectOneMenu>
+                                    <p:message for="txtStatus"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['mn.infrastructure.ip.mask']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:inputText maxlength="200"
+                                                 onblur="this.value=this.value.trim();"
+                                                 value="#{manageBrasIpPoolController.brasIppoolEdit.ipMask}"
+                                                 placeholder="#{lang['brasIpPool.mask.ip']}"
+                                                 title="#{manageBrasIpPoolController.brasIppoolEdit.ipMask}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['mn.infrastructure.pool.unip']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:inputText maxlength="30"
+                                                 onblur="this.value=this.value.trim();"
+                                                 title="#{manageBrasIpPoolController.brasIppoolEdit.poolUniq}"
+                                                 placeholder="#{lang['brasIpPool.pool.unip']}"
+                                                 value="#{manageBrasIpPoolController.brasIppoolEdit.poolUniq}"/>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['mn.infrastructure.ip.special']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid pd-top-3">
+                                    <p:selectBooleanCheckbox styleClass="mg-left-5"
+                                                             value="#{manageBrasIpPoolController.brasIppoolEdit.specificIp}">
+                                        <p:ajax event="change" process="@this"
+                                                update="@([id$=pnlIpSpecialAdd])"/>
+                                    </p:selectBooleanCheckbox>
+                                </div>
+                            </div>
+                            <p:outputPanel id="pnlIpSpecialAdd">
+                                <p:outputPanel rendered="#{manageBrasIpPoolController.brasIppoolEdit.specificIp}">
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           for="txtIpType"
+                                                           value="#{lang['mn.infrastructure.ip.special.type']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:selectOneMenu id="txtIpType"
+                                                             required="true"
+                                                             requiredMessage="#{lang['brasIpPool.select.input.ip.specific']}"
+                                                             value="#{manageBrasIpPoolController.brasIppoolEdit.ipType}">
+                                                <f:selectItem itemLabel="#{lang['brasIpPool.select.ip.special']}"/>
+                                                <f:selectItems value="#{manageBrasIpPoolController.listIpSpecific}"
+                                                               var="item" itemValue="#{item.value}"
+                                                               itemLabel="#{item.name}"/>
+                                                <p:ajax event="change" process="@this"
+                                                        update="@this"/>
+                                            </p:selectOneMenu>
+                                            <p:message for="txtIpType"/>
+                                        </div>
+
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50  mg-left-15 ui-fluid pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           for="txtIplabel"
+                                                           value="#{lang['mn.infrastructure.ip.label']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:inputText value="#{manageBrasIpPoolController.brasIppoolEdit.ipLabel}"
+                                                         id="txtIplabel" required="true"
+                                                         maxlength="100"
+                                                         placeholder="#{lang['brasIpPool.select.ip.label']}"
+                                                         requiredMessage="#{lang['brasIpPool.not.ip.label']}"
+                                                         onblur="this.value=this.value.trim();"
+                                                         title="#{manageBrasIpPoolController.brasIppoolEdit.ipLabel}"/>
+                                            <p:message for="txtIplabel"/>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+                            </p:outputPanel>
+                        </div>
+                        <p:outputPanel styleClass="ContainerIndent" id="divChooseAreaAdd">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 ui-fluid pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel clAreaAdd" for="selManyAreaAdd"
+                                                       style="margin-left: 5px"
+                                                       value="#{lang['mn.infrastructure.district.city']}"/>
+                                        <p:outputLabel value="*" style="color: red"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid clAreaAdd">
+                                        <p:selectCheckboxMenu
+                                                id="selManyAreaAdd"
+                                                filter="true" filterMatchMode="contains"
+                                                label="#{lang['brasIpPool.select.ip.province']}"
+                                                styleClass="clAreaAdd"
+                                                value="#{manageBrasIpPoolController.strListAreaEdit}"
+                                                showCheckbox="true">
+                                            <f:selectItems
+                                                    value="#{manageBrasIpPoolController.listArea}"
+                                                    var="area"
+                                                    itemLabel="#{area.areaCode} - #{area.fullName}"
+                                                    itemValue="#{area.areaCode}"
+                                                    />
+                                            <p:ajax event="toggleSelect" process="@this"
+                                                    update="@([id$=pnlAreaDetailAdd])"
+                                                    listener="#{manageBrasIpPoolController.showDetailArea('0', false)}"/>
+                                            <p:ajax process="@this" update="@([id$=pnlAreaDetailAdd])"
+                                                    listener="#{manageBrasIpPoolController.showDetailArea('0', false)}"/>
+                                        </p:selectCheckboxMenu>
+                                        <p:message for="selManyAreaAdd"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <p:commandLink
+                                            title="#{lang['invoice.invoiceSerial.showDetailBranch']}"
+                                            process="@this,@([id$=divChooseAreaAdd])"
+                                            action="#{manageBrasIpPoolController.showDetailArea('0', true)}"
+                                            resetValues="true"
+                                            style="margin-left:15px;"
+                                            update="@([id$=pnlAreaDetailAdd]),@([id$=divChooseAreaAdd])">
+                                        <h:outputText
+                                                value="#{lang['invoice.invoiceSerial.showDetailBranch']}"/>
+                                    </p:commandLink>
+                                    <p:commandLink
+                                            title="#{lang['invoice.invoiceSerial.hideDetailBranch']}"
+                                            styleClass="mg-left-5"
+                                            process="@this"
+                                            action="#{manageBrasIpPoolController.hideDetailArea('0')}"
+                                            resetValues="true"
+                                            update="@([id$=pnlAreaDetailAdd])">
+                                        <h:outputText
+                                                value="#{lang['invoice.invoiceSerial.hideDetailBranch']}"/>
+                                    </p:commandLink>
+                                </div>
+                                <div class="Container33 Responsive"/>
+                            </div>
+                        </p:outputPanel>
+                        <p:outputPanel styleClass="ContainerIndent ui-fluid" id="pnlAreaDetailAdd"
+                                       style="margin-left: 30px !important;">
+                            <p:dataTable id="tblAreaAdd"
+                                         rowIndexVar="index"
+                                         scrollable="#{manageBrasIpPoolController.listAreaEdit.size() > 4}"
+                                         scrollHeight="150"
+                                         rendered="#{manageBrasIpPoolController.showAreaEdit}"
+                                         var="area" value="#{manageBrasIpPoolController.listAreaEdit}"
+                                         emptyMessage="#{lang['common.empty.records']}">
+                                <p:column headerText="#{lang['range.time.promotion.stt']}"
+                                          style="width: 10%;"
+                                          styleClass="col-right">
+                                    <h:outputLabel value="#{index + 1}"
+                                                   title="#{index + 1}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['brasIpPool.select.ip.code.provice']}"
+                                          style="width: 20%"
+                                          sortBy="#{area.areaCode}">
+                                    <p:outputLabel value="#{area.areaCode}"
+                                                   title="#{area.areaCode}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['brasIpPool.select.ip.provice']}"
+                                          sortBy="#{area.fullName}">
+                                    <p:outputLabel value="#{area.fullName}"
+                                                   title="#{area.fullName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.delete']}" style="width: 10%"
+                                          styleClass="TexAlCenter">
+                                    <p:commandLink
+                                            actionListener="#{manageBrasIpPoolController.removeArea(area,'0')}"
+                                            process="@this"
+                                            update="@this,@([id$=pnlAreaDetailAdd]),@([id$=selManyAreaAdd]), @([id$=msgbrasIppool])"
+                                            styleClass="fa icon-trash blue"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+
+                        <!--<div class="ContainerIndent mg-top-0">-->
+                        <!--<div class="Container33 Responsive">-->
+                        <!--<div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">-->
+                        <!--<p:outputLabel styleClass="lb-sentinel clAreaEdit"-->
+                        <!--for="txtProvince"-->
+                        <!--value="#{lang['mn.infrastructure.district.city']}s"/>-->
+                        <!--<p:outputLabel value="*" style="color: red"/>-->
+                        <!--</div>-->
+                        <!--<div class="Container60 Responsive50 ui-fluid ">-->
+                        <!--<p:autoComplete id="txtProvince"-->
+
+                        <!--value="#{manageBrasIpPoolController.curentAreaEdit}"-->
+                        <!--completeMethod="#{manageBrasIpPoolController.searchListArea}"-->
+                        <!--placeholder="#{lang['brasIpPool.select.ip.province']}"-->
+                        <!--var="c" itemValue="#{c}" itemLabel="#{c.name}"-->
+                        <!--autoHighlight="false"-->
+                        <!--maxResults="10"-->
+                        <!--styleClass="autoCpl clAreaEdit"-->
+                        <!--forceSelection="true">-->
+                        <!--<o:converter converterId="areaConverter"-->
+                        <!--list="#{manageBrasIpPoolController.filterListArea}"/>-->
+                        <!--<p:ajax event="itemSelect" process="@this,@([id$=txtProvince])"-->
+                        <!--listener="#{manageBrasIpPoolController.selectAreaEdit}"-->
+                        <!--update="@this,@([id$=tblAreaAdd]),@([id$=msgbrasIppool])"/>-->
+                        <!--<p:column style="width: 40%"-->
+                        <!--headerText="#{lang['brasIpPool.select.ip.code.provice']}"-->
+                        <!--filterable="true">-->
+                        <!--<p:outputLabel value="#{c.areaCode}"/>-->
+                        <!--</p:column>-->
+                        <!--<p:column style="width: 60%"-->
+                        <!--headerText="#{lang['brasIpPool.select.ip.provice']}"-->
+                        <!--filterable="true">-->
+                        <!--<p:outputLabel value="#{c.fullName}"/>-->
+                        <!--</p:column>-->
+                        <!--</p:autoComplete>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="Container66 Responsive">-->
+                        <!--<div class="Container80 Responsive75 ui-fluid" style="float: right">-->
+                        <!--<p:dataTable id="tblAreaAdd" styleClass="mg-left-10"-->
+                        <!--scrollable="#{manageBrasIpPoolController.listAreaEdit.size() > 5}"-->
+                        <!--scrollHeight="150"-->
+                        <!--var="item" value="#{manageBrasIpPoolController.listAreaEdit}"-->
+                        <!--emptyMessage="#{lang['common.empty.records']}">-->
+                        <!--<p:column headerText="#{lang['mn.infrastructure.city.district']}">-->
+                        <!--<p:outputLabel styleClass="lb-sentinel" value="#{item.name}"/>-->
+                        <!--</p:column>-->
+                        <!--<p:column headerText="#{lang['common.delete']}">-->
+                        <!--<p:commandLink styleClass="fa icon-trash Fs14 blue"-->
+                        <!--actionListener="#{manageBrasIpPoolController.removeArea(item,'0')}"-->
+                        <!--process="@this" update="tblAreaAdd"-->
+                        <!--style="text-decoration: none;"/>-->
+                        <!--</p:column>-->
+                        <!--</p:dataTable>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <div class="Container100 TexAlCenter">
+                            <cbs:confirmDialog
+                                    idComponent="pnConfirmAdd"
+                                    valueButton="#{lang[manageBrasIpPoolController.buttonAddOrCoppy]}"
+                                    headerConfirm="#{lang['brasIpPool.add.confirm.title']}"
+                                    messageConfirm="#{lang['common.msg.add.confirm']}"
+                                    actionOK="#{manageBrasIpPoolController.addBrasIppool}"
+                                    resetValueButton="true"
+                                    process="@([id$=pnlAddBrasIpPool])"
+                                    updateArea="@([id$=pnlAddBrasIpPool]), @([id$=msgbrasIppool])"
+                                    processOK="@([id$=pnlAddBrasIpPool]), @([id$=msgbrasIppool])"
+                                    updateOK="@([id$=frmManageBrasIpPool])"
+                                    actionValidate="#{manageBrasIpPoolController.validateForEditOrUpdate}"
+                                    focusCancel="false"
+                                    isButton="true"
+                                    />
+                            <p:commandButton styleClass="mg-left-5"
+                                             process="@this"
+                                             actionListener="#{manageBrasIpPoolController.back}"
+                                             update="@form"
+                                             value="#{lang['common.next']}"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+
+            <p:outputPanel id="pnlListBrasIpPool" styleClass="Container100">
+                <p:outputPanel
+                        rendered="#{ !(manageBrasIpPoolController.addfile)}"
+                        styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="pnlListBrasIpPool"
+                               titleHeader="#{lang['mn.infrastructure.bras.ip.pool']}"/>
+
+                    <div class="Container100 pnlListBrasIpPool paddingTopBottom10">
+                        <div class="ContainerIndent mg-top-0 TexAlLeft">
+                            <p:commandLink title="#{lang['common.add']}"
+                                           process="@this"
+                                           actionListener="#{manageBrasIpPoolController.prepareAdd}"
+                                           update="@form"
+                                           styleClass="fa icon-plus Fs14 blue md-link mg-left-5">
+                                <h:outputText value="#{lang['common.add']}"/>
+                            </p:commandLink>
+
+                            <p:commandLink title="#{lang['common.add.file']}"
+                                           process="@this"
+                                           actionListener="#{manageBrasIpPoolController.prepareAddFile}"
+                                           update="@form "
+                                           styleClass="fa icon-plus Fs14 blue md-link mg-left-5">
+                                <h:outputText value="#{lang['common.add.file']}"/>
+                            </p:commandLink>
+
+                            <cbs:confirmDialog
+                                    valueButton="#{lang['common.delete']}"
+                                    headerConfirm="#{lang['common.confirm']}"
+                                    messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                    resetValueButton="true"
+                                    actionOK="#{manageBrasIpPoolController.deleteBrasIppoolList}"
+                                    actionValidate="#{manageBrasIpPoolController.validateDeleteList}"
+                                    process="@([id$=tblListBrasIpPoolSingle]), @this"
+                                    updateArea="@([id$=tblListBrasIpPoolSingle]), @([id$=msgbrasIppool])"
+                                    updateOK="@form"
+                                    styleClassButton="fa icon-trash Fs14 blue md-link mg-left-5"
+                                    focusCancel="true"
+                                    isButton="false"
+                                    idComponent="btnDeleteIpPool"/>
+
+                            <p:commandLink title="#{lang['brasIpPool.delete.bras.ippool.file']}"
+                                           process="@this"
+                                           actionListener="#{manageBrasIpPoolController.prepareDeleteFile}"
+                                           update="@form "
+                                           styleClass="fa icon-trash Fs14 blue md-link mg-left-5">
+                                <h:outputText value="#{lang['brasIpPool.delete.bras.ippool.file']}"/>
+                            </p:commandLink>
+                            <p:commandLink title="#{lang['brasIpPool.edit.bras.ippool.file']}"
+                                           process="@this"
+                                           actionListener="#{manageBrasIpPoolController.prepareEditFile}"
+                                           update="@form "
+                                           styleClass="fa icon-edit Fs14 blue md-link mg-left-5">
+                                <h:outputText value="#{lang['brasIpPool.edit.bras.ippool.file']}"/>
+                            </p:commandLink>
+                            <p:commandLink title="#{lang['brasIpPool.view.bras.ippool']}"
+                                           process="@this"
+                                           actionListener="#{manageBrasIpPoolController.prepareViewFile}"
+                                           update="@form "
+                                           styleClass="fa icon-edit Fs14 blue md-link mg-left-5">
+                                <h:outputText value="#{lang['brasIpPool.view.bras.ippool']}"/>
+                            </p:commandLink>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <p:dataTable id="tblListBrasIpPoolSingle"
+                                         var="bras" value="#{manageBrasIpPoolController.listSearchBrasIppool}"
+                                         rowKey="#{bras.poolId}"
+                                         rowIndexVar="index"
+                                         selection="#{manageBrasIpPoolController.listSearchBrasIppoolSelecttion}"
+                                         resizableColumns="true"
+                                         paginator="#{lang['common.paging.paginator']}"
+                                         rows="#{lang['common.paging.rows.default']}"
+                                         rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                         paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                         paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                         paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                         currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                         emptyMessage="#{lang['common.empty.records']}">
+
+                                <p:column selectionMode="multiple" styleClass="width3 "/>
+                                <p:column headerText="#{lang['mn.infrastructure.ip']}" sortBy="#{bras.ipPool}"
+                                          styleClass="width8">
+                                    <p:outputLabel value="#{bras.ipPool}" title="#{bras.ipPool}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.infrastructure.pool.name']}" sortBy="#{bras.poolName}"
+                                          styleClass="width8">
+                                    <p:outputLabel value="#{bras.poolName}"
+                                                   title="#{bras.poolName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.infrastructure.bras.do.main']}"
+                                          sortBy="#{manageBrasIpPoolController.getDomain(bras.domainId)}"
+                                          styleClass="width7">
+                                    <p:outputLabel value="#{manageBrasIpPoolController.getDomain(bras.domainId)}"
+                                                   title="#{manageBrasIpPoolController.getDomain(bras.domainId)}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.infrastructure.bras']}"
+                                          sortBy="#{manageBrasIpPoolController.getBrasIp(bras.brasId)}"
+                                          styleClass="width8 ">
+                                    <p:outputLabel value="#{manageBrasIpPoolController.getBrasIp(bras.brasId)}"
+                                                   title="#{manageBrasIpPoolController.getBrasIp(bras.brasId)}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.status']}"
+                                          sortBy="#{manageBrasIpPoolController.getStatus(bras.status)}"
+                                          styleClass="width7">
+                                    <p:outputLabel value="#{manageBrasIpPoolController.getStatus(bras.status)}"
+                                                   title="#{manageBrasIpPoolController.getStatus(bras.status)}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.infrastructure.ip.mask']}" sortBy="#{bras.ipMask}"
+                                          styleClass="width8">
+                                    <p:outputLabel value="#{bras.ipMask}"
+                                                   title="#{bras.ipMask}"/>
+                                </p:column>
+                                <!--<p:column headerText="#{lang['mn.infrastructure.bras.pool.uniq']}"-->
+                                <!--sortBy="#{bras.poolUniq}">-->
+                                <!--<p:outputLabel value="#{bras.poolUniq}"-->
+                                <!--title="#{bras.poolUniq}"/>-->
+                                <!--</p:column>-->
+                                <p:column headerText="#{lang['mn.infrastructure.date.update']}"
+                                          sortBy="#{bras.updateDatetime}" styleClass="width8">
+                                    <p:outputLabel value="#{bras.updateDatetime}" title="">
+                                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                    </p:outputLabel>
+                                </p:column>
+                                <!--<p:column headerText="#{lang['mn.infrastructure.area']}" sortBy="#{bras.center}">-->
+                                <!--<p:outputLabel  value="#{bras.center}"-->
+                                <!--title="#{bras.center}"/>-->
+                                <!--</p:column>-->
+                                <p:column headerText="#{lang['mn.infrastructure.district']}"
+                                          sortBy="#{manageBrasIpPoolController.getProvince(bras.province)}"
+                                          styleClass="width10 ">
+                                    <p:outputLabel value="#{manageBrasIpPoolController.getProvince(bras.province)}"
+                                                   title="#{manageBrasIpPoolController.getProvince(bras.province)}"/>
+                                </p:column>
+                                <!--<p:column headerText="#{lang['mn.infrastructure.ip.special']}" sortBy="#{bras.ipType}">-->
+                                <!--<p:outputLabel styleClass="lb-sentinel" value="#{bras.ipType}"-->
+                                <!--title="#{bras.ipType}"/>-->
+                                <!--</p:column>-->
+                                <!--<p:column headerText="#{lang['mn.infrastructure.ip.label']}" sortBy="#{bras.ipLabel}">-->
+                                <!--<p:outputLabel styleClass="lb-sentinel" value="#{bras.ipLabel}"-->
+                                <!--title="#{bras.ipLabel}"/>-->
+                                <!--</p:column>-->
+                                <p:column headerText="#{lang['mn.stock.utilities.action']}" styleClass="width7">
+                                    <p:commandLink styleClass="fa icon-edit"
+                                                   actionListener="#{manageBrasIpPoolController.prepareEdit(bras)}"
+                                                   process="@this"
+                                                   update="@form"
+                                                   title="#{lang['common.edit']}"
+                                                   style="text-decoration: none;"/>
+                                    <p:commandLink styleClass="fa icon-docs Fs14s blue"
+                                                   style="text-decoration: none!important;"
+                                                   action="#{manageBrasIpPoolController.prepareCopy(bras)}"
+                                                   process="@this"
+                                                   update="@([id$=pnlAddBrasIpPool]),@([id$=pnlEditBrasIpPool])"
+                                                   title="#{lang['common.copy']}"/>
+
+                                    <cbs:confirmDialog
+                                            idComponent="btnDeleteOne#{index}"
+                                            valueButton=""
+                                            headerConfirm="#{lang['common.confirm']}"
+                                            messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                            actionOK="#{manageBrasIpPoolController.deleteBrasIppool}"
+                                            resetValueButton="true"
+                                            process="@this,@([id$=tblListBrasIpPoolSingle])"
+                                            titleButton="#{lang['common.delete']}"
+                                            actionValidate="#{manageBrasIpPoolController.validateDelete(bras)}"
+                                            updateArea="@([id$=tblListBrasIpPoolSingle]),@([id$=msgbrasIppool])"
+                                            updateOK="@([id$=tblListBrasIpPoolSingle]),@([id$=msgbrasIppool])"
+                                            styleClassButton="fa icon-trash Fs14 blue #{index}"
+                                            styleButton="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                            focusCancel="true"
+                                            oncompleteOK=""
+                                            isButton="false"
+                                            />
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+
+            <p:outputPanel id="pnlBrasIppoolAddFile" styleClass="Container100">
+                <p:outputPanel
+                        rendered="#{(manageBrasIpPoolController.workMode eq '0') and manageBrasIpPoolController.addfile}"
+                        styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="pnlBrasIppoolFile"
+                               titleHeader="#{lang[manageBrasIpPoolController.titleHeaderByFile]}"/>
+
+                    <div class="pnlBrasIppoolFile ContainerIndent ">
+                        <!--<div class="Container20 Responsive25 ui-fluid mg-left-15" style="width: 14%">-->
+                        <!--<p:outputLabel styleClass="lb-sentinel" for="upLoadFile" value="#{lang['create.order.file.data']}"/>-->
+                        <!--<p:outputLabel value="*" style="color: red"/>-->
+                        <!--</div>-->
+                        <div class="Container50 Responsive50 ui-fluid mg-left-15">
+                            <div class="Container40 Responsive50">
+                                <div class="Container50 Responsive50 ui-fluid mg-left-15">
+                                    <p:outputLabel styleClass="lb-sentinel" for="upLoadFile"
+                                                   value="#{lang['mn.stock.limit.createFile']}"/>
+                                    <p:outputLabel value="*" style="color: red"/>
+                                </div>
+
+                                <div class="Container50 Responsive50 ui-fluid TexAlCenter">
+                                    <p:fileUpload id="upLoadFile"
+                                                  update="@this, @([id$=pnlListFileBrasIpPool]), @([id$=outputAttach]), @([id$=msgbrasIppool]), @([id$=exportErrorExcel])"
+                                                  dragDropSupport="true"
+                                                  mode="advanced"
+                                                  auto="true"
+                                                  widgetVar="wgUploadFile"
+                                                  fileUploadListener="#{manageBrasIpPoolController.previewImport}">
+                                    </p:fileUpload>
+                                </div>
+                            </div>
+                            <div class="Container60 Responsive50">
+                                <p:outputPanel id="outputAttach" styleClass="Container100">
+                                    <p:outputPanel
+                                            rendered="#{manageBrasIpPoolController.showAttachFile}">
+                                        <div class="Container100">
+                                            <p:outputLabel
+                                                    value="#{manageBrasIpPoolController.attachFileName}"/>
+                                        </div>
+                                    </p:outputPanel>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+                        <div class="Container50 Responsive50 ui-fluid mg-left-15">
+                            <p:commandLink id="txtTemplateName" value="#{lang['create.note.download.file']}"
+                                           ajax="false">
+                                <p:fileDownload value="#{manageBrasIpPoolController.addTemplateFile}"/>
+                            </p:commandLink>
+                            <br/>
+                            <p:outputLabel value="(#{lang['mn.infrastructure.bras.pool.requiteFile']})"
+                                           styleClass="FontBold"/>
+                        </div>
+                    </div>
+                    <div class="Container100 TexAlCenter">
+                        <div class=" ContainerIndent mg-top-0">
+                            <p:commandButton styleClass="mg-left-5"
+                                             actionListener="#{manageBrasIpPoolController.preViewImportFile}"
+                                             process="@this"
+                                             rendered="#{!manageBrasIpPoolController.viewIp}"
+                                             update="@([id$=pnlListFileBrasIpPool])"
+                                             value="#{lang['mn.isdn.manage.code.NGN.preview']}"/>
+                            <cbs:confirmDialog styleClassButton="mg-left-5"
+                                               idComponent="pnConfirmAddFile"
+                                               valueButton="#{lang[manageBrasIpPoolController.buttonFile]}"
+                                               headerConfirm="#{lang[manageBrasIpPoolController.headerConfirm]}"
+                                               messageConfirm="#{lang[manageBrasIpPoolController.messageConfirm]}"
+                                               actionOK="#{manageBrasIpPoolController.importBrasIppoolFromFile}"
+                                               resetValueButton="true"
+                                               process="@this"
+                                               renderedBtn="#{!manageBrasIpPoolController.viewIp}"
+                                               updateArea="@this, @([id$=msgbrasIppool]),@([id$=pnlListFileBrasIpPool]), @([id$=exportErrorExcel])"
+                                               processOK="@this"
+                                               updateOK="@([id$=msgbrasIppool]), @([id$=pnlListFileBrasIpPool]),@([id$=exportErrorExcel])"
+                                               actionValidate="#{manageBrasIpPoolController.validateImportBrasIppool}"
+                                               focusCancel="false"
+                                               isButton="true"
+                                    />
+                            <p:commandButton disabled="#{manageBrasIpPoolController.enableExprotFileError}"
+                                             id="exportErrorExcel"
+                                             value="#{lang['mn.stock.status.isdn.update.status.file_error']}"
+                                             styleClass="mg-left-5"
+                                             ajax="false"
+                                             rendered="#{!manageBrasIpPoolController.viewIp}"
+                                             immediate="true"
+                                    >
+                                <p:fileDownload
+                                        value="#{manageBrasIpPoolController.exportExcelError()}"/>
+                            </p:commandButton>
+                            <p:commandButton id="exportViewIp"
+                                             value="#{lang['brasIpPool.view.bras.ippool']}"
+                                             ajax="false"
+                                             rendered="#{manageBrasIpPoolController.viewIp}"
+                                             immediate="true"
+                                    >
+                                <p:fileDownload
+                                        value="#{manageBrasIpPoolController.exportViewIp()}"/>
+                            </p:commandButton>
+                            <p:commandButton styleClass="mg-left-5"
+                                             actionListener="#{manageBrasIpPoolController.reset}"
+                                             process="@this"
+                                             update="@form, @([id$=pnlInforBrasIpPool])"
+                                             value="#{lang['common.next']}"/>
+                        </div>
+
+
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel id="pnlListFileBrasIpPool">
+                    <p:outputPanel
+                            rendered="#{manageBrasIpPoolController.renderAddFile}"
+                            styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="pnlListFileBrasIpPool"
+                                   titleHeader="#{lang['mn.infrastructure.bras.ip.pool']}"/>
+
+                        <div class="Container100 pnlListFileBrasIpPool paddingTopBottom10">
+                            <p:dataTable
+                                    id="tblListBrasIpPoolFile"
+                                    rowIndexVar="index"
+                                    var="brasImport" value="#{manageBrasIpPoolController.listImportBrasIppool}"
+                                    resizableColumns="true"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.empty.records']}">
+                                <p:column headerText="#{lang['range.time.promotion.stt']}"
+                                          styleClass="width3">
+                                    <p:outputLabel value="#{index+1}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.infrastructure.ip']}" sortBy="#{brasImport.ipPool}"
+                                          styleClass="width5">
+                                    <p:outputLabel value="#{brasImport.ipPool}" title="#{brasImport.ipPool}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.infrastructure.pool.name']}"
+                                          sortBy="#{brasImport.poolName}" styleClass="width6">
+                                    <p:outputLabel value="#{brasImport.poolName}"
+                                                   title="#{brasImport.poolName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.infrastructure.bras.do.main']}"
+                                          sortBy="#{brasImport.strDomain}" styleClass="width6">
+                                    <p:outputLabel value="#{brasImport.strDomain}" title="#{bras.strDomain}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.infrastructure.bras']}"
+                                          sortBy="#{brasImport.strBrasIp}"
+                                          styleClass="width6 ">
+                                    <p:outputLabel value="#{brasImport.strBrasIp}" title="#{brasImport.strBrasIp}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.status']}"
+                                          sortBy="#{brasImport.status}"
+                                          styleClass="width6">
+                                    <p:outputLabel value="#{brasImport.status}" style="text-align: center"
+                                                   title="#{brasImport.status}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.infrastructure.ip.mask']}"
+                                          sortBy="#{brasImport.ipMask}"
+                                          styleClass="width6">
+                                    <p:outputLabel value="#{brasImport.ipMask}"
+                                                   title="#{brasImport.ipMask}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.infrastructure.bras.pool.uniq']}" styleClass="width6"
+                                          sortBy="#{brasImport.poolUniq}">
+                                    <p:outputLabel value="#{brasImport.poolUniq}"
+                                                   title="#{brasImport.poolUniq}"/>
+                                </p:column>
+                                <!--<p:column headerText="#{lang['mn.infrastructure.date.update']}"-->
+                                <!--sortBy="#{brasImport.strDateUpdate}" styleClass="width6">-->
+                                <!--<p:outputLabel value="#{brasImport.updateDatetime}" title="">-->
+                                <!--<f:convertDateTime pattern="dd/MM/yyyy"/>-->
+                                <!--</p:outputLabel>-->
+                                <!--</p:column>-->
+                                <p:column headerText="#{lang['mn.infrastructure.district']}"
+                                          sortBy="#{brasImport.province}"
+                                          styleClass="width6 ">
+                                    <p:outputLabel value="#{brasImport.province}"
+                                                   title="#{brasImport.province}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.infrastructure.ip.special']}" styleClass="width6"
+                                          sortBy="#{brasImport.ipType}">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{brasImport.ipType}"
+                                                   title="#{brasImport.ipType}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.infrastructure.ip.label']}" styleClass="width6"
+                                          sortBy="#{brasImport.ipLabel}">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{brasImport.ipLabel}"
+                                                   title="#{brasImport.ipLabel}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.invoiceSerial.description']}"
+                                          styleClass="width10 "
+                                          sortBy="#{brasImport.msgError}">
+                                    <p:outputLabel value="#{brasImport.msgError}"
+                                                   title="#{brasImport.msgError}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

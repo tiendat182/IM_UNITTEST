@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="base"/>
+	<classpathentry kind="src" path="srv-impl"/>
+	<classpathentry kind="src" path="ws-impl"/>
+	<classpathentry kind="src" path="unittest"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/FwjBCCS2_v5"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/LibWeb_v5"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/log4j2"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/unittest"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

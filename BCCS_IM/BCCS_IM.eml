@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inherit-compiler-output="true" inheritJdk="true">
+	<output-test url="file://$MODULE_DIR$/out/test/BCCS_IM"/>
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<excludeFolder url="file://$MODULE_DIR$/.idea"/>
+		<excludeFolder url="file://$MODULE_DIR$/cobertura-2.1.1"/>
+		<excludeFolder url="file://$MODULE_DIR$/pmd"/>
+	</contentEntry>
+	<contentEntry url="file://$MODULE_DIR$/../FwBCCS2"/>
+	<levels>
+		<level name="LibWeb_v5" value="project"/>
+		<level name="log4j2" value="project"/>
+	</levels>
+</component>

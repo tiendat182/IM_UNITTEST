@@ -1,0 +1,383 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:o="http://omnifaces.org/ui"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['utilities.update.license.key.anti.virus']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmUpdateLicense">
+            <p:outputPanel styleClass="container100">
+                <div class="ContainerIndent">
+                    <p:messages id="messages" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel id="panelImport" styleClass="ContainerIndent">
+                    <p:focus for="panelImport"/>
+                    <cbs:panel classForToggle="panelImport"
+                               toggle="true"
+                               titleHeader="#{lang['utilities.update.license.key.anti.virus']}"/>
+
+                    <div class="Container100 panelImport" style="margin-bottom: 10px;margin-top: 10px;">
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-4">
+                                    <p:outputLabel value="#{lang['utilities.update.license.key.anti.virus.shop']}"
+                                                   for="txtShop"
+                                                   styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                    <p:outputLabel id="txtShop"
+                                                   value="#{updateLicensekeyController.shopAnti.staffCode} - #{updateLicensekeyController.shopAnti.name}"
+                                                   title="#{updateLicensekeyController.shopAnti.staffCode} - #{updateLicensekeyController.shopAnti.name}"
+                                                   readonly="true">
+                                    </p:outputLabel>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-4">
+                                    <p:outputLabel value="#{lang['utilities.update.pincode.card.date']}"
+                                                   for="txtDateImport"
+                                                   styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                    <p:outputLabel id="txtDateImport"
+                                                   value="#{updateLicensekeyController.updateLicenseDTO.dateImport}"
+                                                   title="#{updateLicensekeyController.updateLicenseDTO.dateImport}"
+                                                   readonly="true">
+                                        <f:convertDateTime type="date"
+                                                           pattern="#{lang['common.datetime.format']}"/>
+                                    </p:outputLabel>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-4">
+                                    <p:outputLabel value="#{lang['common.status']}"
+                                                   for="txtStatus"
+                                                   styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                    <p:outputLabel id="txtStatus"
+                                                   value="#{lang['utilities.update.pincode.card.status.new']}"
+                                                   title="#{lang['utilities.update.pincode.card.status.new']}"
+                                                   readonly="true">
+                                    </p:outputLabel>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container66 Responsive66">
+                                <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['mn.stock.liquidate.model']}"
+                                                   for="cplProductOffer" styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container80 Responsive75 ui-fluid ui-relative">
+                                    <p:autoComplete id="cplProductOffer"
+                                                    required="true"
+                                                    requiredMessage="#{lang['mn.stock.liquidate.model.required']}"
+                                                    value="#{updateLicensekeyController.productOfferingTotalDTO}"
+                                                    disabled="#{!(updateLicensekeyController.productOfferingTotalDTO == null || updateLicensekeyController.productOfferingTotalDTO == '')}"
+                                                    completeMethod="#{updateLicensekeyController.searchListProductOffering}"
+                                                    placeholder="#{lang['mn.stock.liquidate.model.placeholder']}"
+                                                    var="productOfferingTotalDTO"
+                                                    itemValue="#{productOfferingTotalDTO}"
+                                                    itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                    autoHighlight="true"
+                                                    maxResults="10"
+                                                    forceSelection="true">
+                                        <o:converter converterId="productOfferingConverter"
+                                                     list="#{updateLicensekeyController.lstProductOfferingTotalDTO}"/>
+                                        <p:ajax event="itemSelect"
+                                                listener="#{updateLicensekeyController.doSelectProductOffering}"
+                                                process="@([id$=cplProductOffer])"
+                                                update="@([id$=cplProductOffer]),@([id$=messages])"/>
+                                        <p:column style="width: 40%"
+                                                  headerText="#{lang['common.lb.code']}"
+                                                  filterable="true">
+                                            <p:outputLabel value="#{productOfferingTotalDTO.code}"/>
+                                        </p:column>
+                                        <p:column style="width: 60%"
+                                                  headerText="#{lang['common.lb.name']}"
+                                                  filterable="true">
+                                            <p:outputLabel value="#{productOfferingTotalDTO.name}"/>
+                                        </p:column>
+                                        <p:ajax event="query" global="false"/>
+                                    </p:autoComplete>
+                                    <p:commandLink id="btnResetLstProduct"
+                                                   styleClass="ui-link-right"
+                                                   update="@this, @([id$=cplProductOffer]),@([id$=outputAttachFile])"
+                                                   actionListener="#{updateLicensekeyController.resetLstProductOfferingTotal}"
+                                                   process="@this">
+                                        <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                    </p:commandLink>
+                                    <p:message for="cplProductOffer"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container66 Responsive66">
+                                <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['utilities.update.pincode.card.update.type']}"
+                                                   for="typeImport"/>
+                                </div>
+                                <div class="Container80 Responsive75 ui-fluid">
+                                    <p:selectOneRadio id="typeImport"
+                                                      value="#{updateLicensekeyController.updateLicenseDTO.updateType}"
+                                                      required="true">
+                                        <f:selectItem
+                                                itemLabel="#{lang['utilities.update.pincode.card.update.type.old']}"
+                                                itemValue="2"/>
+                                        <f:selectItem
+                                                itemLabel="#{lang['utilities.update.pincode.card.update.type.new']}"
+                                                itemValue="1"/>
+                                    </p:selectOneRadio>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container66 Responsive66">
+                                <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['utilities.update.pincode.card.update.style']}"
+                                                   for="styleImport"/>
+                                </div>
+                                <div class="Container80 Responsive75 ui-fluid">
+                                    <p:selectOneRadio id="styleImport"
+                                                      value="#{updateLicensekeyController.updateLicenseDTO.updateStyle}"
+                                                      required="true">
+                                        <f:selectItem
+                                                itemLabel="#{lang['utilities.update.pincode.card.update.style.file']}"
+                                                itemValue="2"/>
+                                        <f:selectItem
+                                                itemLabel="#{lang['utilities.update.pincode.card.update.style.single']}"
+                                                itemValue="1"/>
+                                        <p:ajax event="change" process="@this"
+                                                listener="#{updateLicensekeyController.changeUpdateStyle}"
+                                                update="@([id$=pnlSingle]),@([id$=pnlFile]),@([id$=pnlButton])"/>
+                                    </p:selectOneRadio>
+                                </div>
+                            </div>
+                        </div>
+                        <p:outputPanel id="pnlSingle" styleClass="Container">
+                            <p:outputPanel styleClass="ContainerIndent"
+                                           rendered="#{updateLicensekeyController.single}">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4 txtSerial_col">
+                                        <p:outputLabel value="#{lang['utilities.update.pincode.card.serial']}"
+                                                       for="txtSerial" styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid txtSerial">
+                                        <p:inputText id="txtSerial"
+                                                     required="true"
+                                                     onblur="this.value = this.value.trim()"
+                                                     requiredMessage="#{lang['utilities.update.pincode.card.serial.require']}"
+                                                     placeholder="#{lang['utilities.update.pincode.card.serial.placeholder']}"
+                                                     maxlength="20"
+                                                     value="#{updateLicensekeyController.updateLicenseDTO.serial}"/>
+                                        <pe:keyFilter for="txtSerial" regEx="/^[0-9a-zA-Z_]+$/i" preventPaste="false"/>
+                                        <p:message for="txtSerial"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4 txtPincode_col">
+                                        <p:outputLabel
+                                                value="#{lang['utilities.update.license.key.anti.virus.license']}"
+                                                for="txtPincode" styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid txtPincode">
+                                        <p:inputText id="txtPincode"
+                                                     required="true"
+                                                     onblur="this.value = this.value.trim()"
+                                                     requiredMessage="#{lang['utilities.update.license.key.anti.virus.require']}"
+                                                     placeholder="#{lang['utilities.update.license.key.anti.virus.placeholder']}"
+                                                     maxlength="100"
+                                                     value="#{updateLicensekeyController.updateLicenseDTO.licenseKey}"/>
+                                        <pe:keyFilter for="txtPincode" regEx="/^[0-9a-zA-Z_]+$/i" preventPaste="false"/>
+                                        <p:message for="txtPincode"/>
+                                    </div>
+                                </div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                        <p:outputPanel id="pnlFile" styleClass="Container">
+                            <p:outputPanel styleClass="ContainerIndent"
+                                           rendered="#{!updateLicensekeyController.single}">
+                                <div class="Container66 Responsive66">
+                                    <div class="Container20 Responsive25 mg-left-15 pd-top-7 outputAttachFile_col">
+                                        <p:outputLabel styleClass="lb-sentinel" for="outputAttachFile"
+                                                       value="#{lang['create.order.file.data']}"/>
+                                    </div>
+                                    <div class="Container80 Responsive75 ui-fluid outputAttachFile">
+                                        <p:inputText id="outputAttachFile"
+                                                     styleClass="outputAttachFile"
+                                                     maxlength="100"
+                                                     required="true"
+                                                     placeholder="#{lang['search.number.range.input.fileName']}"
+                                                     value="#{updateLicensekeyController.fileName}"
+                                                     readonly="true"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container100">
+                                        <p:fileUpload id="fileAttach"
+                                                      process="@this"
+                                                      label="#{lang['mn.stock.limit.createFile']}"
+                                                      update="@this, @([id$=outputAttachFile]),@([id$=messages]),@([id$=pnDown])"
+                                                      dragDropSupport="true" required="true" mode="advanced"
+                                                      auto="true"
+                                                      allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                                      invalidFileMessage="#{lang['mn.isdn.rule.invalid.file.type']}"
+                                                      value="#{updateLicensekeyController.uploadedFile}"
+                                                      fileUploadListener="#{updateLicensekeyController.fileUploadAction}">
+                                        </p:fileUpload>
+                                    </div>
+                                </div>
+                            </p:outputPanel>
+
+                            <p:outputPanel styleClass="ContainerIndent"
+                                           rendered="#{!updateLicensekeyController.single}">
+                                <div class="Container100">
+                                    <p:outputPanel id="pnDown" style="margin-left: 20px">
+                                        <p:commandLink
+                                                id="btnDownloadTemplate"
+                                                rendered="#{!updateLicensekeyController.resultUpdate}"
+                                                value="#{lang['mn.stock.status.isdn.update.status.file_template']}"
+                                                title="#{lang['create.note.download.file.title']}"
+                                                ajax="false"
+                                                immediate="true"
+                                                style="text-decoration: none!important;">
+                                            <p:fileDownload
+                                                    value="#{updateLicensekeyController.downloadFileTemplate()}"/>
+                                        </p:commandLink>
+                                        <p:commandLink
+                                                id="bthDownloadResult"
+                                                value="#{lang['button.export.excel.result']}"
+                                                rendered="#{updateLicensekeyController.resultUpdate}"
+                                                title="#{lang['create.note.download.file.title']}"
+                                                ajax="false"
+                                                immediate="true"
+                                                style="text-decoration: none!important;color: red !important;">
+                                            <p:fileDownload
+                                                    value="#{updateLicensekeyController.downloadFileError()}"/>
+                                        </p:commandLink>
+                                    </p:outputPanel>
+                                </div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                    </div>
+
+                    <p:outputPanel id="pnlButton" styleClass="ContainerIndent TexAlCenter">
+                        <p:commandButton styleClass="mg-left-5"
+                                         id="btnCheckFile"
+                                         rendered="#{!updateLicensekeyController.single}"
+                                         value="#{lang['utilities.update.pincode.card.update.review.file']}"
+                                         process="@this,@([id$=frmUpdateLicense])"
+                                         update="@this,@([id$=frmUpdateLicense])"
+                                         action="#{updateLicensekeyController.previewFile}"/>
+                        <cbs:confirmDialog
+                                idComponent="update"
+                                id="update"
+                                styleClassButton="mg-left-5"
+                                valueButton="#{lang['list.update.serial.gpon.btn.update']}"
+                                headerConfirm="#{lang['utilities.update.license.key.update.btn.header']}"
+                                messageConfirm="#{lang['utilities.update.license.key.update.btn.mgs']}"
+                                actionOK="#{updateLicensekeyController.importData()}"
+                                resetValueButton="true"
+                                process="@this,@([id$=frmUpdateLicense])"
+                                updateArea="@this,@([id$=frmUpdateLicense])"
+                                processOK="@this,@([id$=frmUpdateLicense])"
+                                updateOK="@([id$=frmUpdateLicense])"
+                                actionValidate="#{updateLicensekeyController.validateImport()}"
+                                focusCancel="false"
+                                isButton="true"/>
+                        <p:commandButton styleClass="mg-left-5" value="#{lang['common.reset']}"
+                                         immediate="true"
+                                         resetValues="true"
+                                         process="@form"
+                                         update="@form"
+                                         action="#{updateLicensekeyController.doReset}"/>
+                    </p:outputPanel>
+                </p:outputPanel>
+                <p:outputPanel id="pnlPincodeDetail" styleClass="ContainerIndent">
+                    <p:outputPanel styleClass="Container"
+                                   rendered="#{updateLicensekeyController.checkFile}">
+                        <cbs:panel classForToggle="pnlListPincode"
+                                   titleHeader="#{lang['utilities.update.license.key.anti.virus.list.license']}"></cbs:panel>
+                        <p:outputPanel styleClass="Container pnlListSerial" id="pnlListPincode">
+                            <p:dataTable
+                                    id="lstDetailPincode"
+                                    var="licenseKey"
+                                    rowKey=""
+                                    rowIndexVar="index"
+                                    resizableColumns="true"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.emty.records']}"
+                                    value="#{updateLicensekeyController.lstLicenseDTOs}">
+                                <p:column styleClass=" TexAlCenter" style="width: 10%">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['utilities.update.pincode.card.update.list.pincode.stt']}"
+                                                title="#{lang['utilities.update.pincode.card.update.list.pincode.stt']}"/>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{index + 1}"
+                                            title="#{index + 1}"/>
+                                </p:column>
+                                <p:column styleClass=" TexAlCenter" style="width: 20%">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['utilities.update.pincode.card.update.list.pincode.serial']}"
+                                                title="#{lang['utilities.update.pincode.card.update.list.pincode.serial']}"/>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{licenseKey.serial}"
+                                            title="#{licenseKey.serial}"/>
+                                </p:column>
+                                <p:column styleClass="TexAlCenter" style="width: 15%">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['utilities.update.license.key.anti.virus.license']}"
+                                                title="#{lang['utilities.update.license.key.anti.virus.license']}"/>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{licenseKey.licenseKey}"
+                                            title="#{licenseKey.licenseKey}"/>
+                                </p:column>
+                                <p:column styleClass="TexAlLeft" style="width: 20%">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['utilities.update.pincode.card.update.list.pincode.status']}"
+                                                title="#{lang['utilities.update.pincode.card.update.list.pincode.status']}"/>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{licenseKey.status}"
+                                            title="#{licenseKey.status}"/>
+                                </p:column>
+                                <p:column styleClass="TexAlLeft" style="width: 25%">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['utilities.update.pincode.card.update.list.pincode.desc']}"
+                                                title="#{lang['utilities.update.pincode.card.update.list.pincode.desc']}"/>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{licenseKey.desc}"
+                                            title="#{licenseKey.desc}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

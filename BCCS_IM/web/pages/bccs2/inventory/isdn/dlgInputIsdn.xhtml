@@ -1,0 +1,203 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions">
+    <h:form id="frmInputIsdn" styleClass="Container100">
+        <p:outputPanel id="pnlInputIsdn" styleClass="Container100">
+                       <!--rendered="#{!creatFieldExportIsdnController.selectStockTransFull.hasSerial}">-->
+            <p:focus context="pnlInputIsdn"/>
+            <div class="Container100 marginTopBottom10">
+                <p:messages id="msgInputIsdn" showDetail="true" showSummary="false" closable="true"/>
+
+                <div class="ContainerIndent">
+                    <div class="Container50">
+                        <div class="Container40 Responsive50">
+                            <p:outputLabel styleClass="lb-sentinel"
+                                           value="#{lang['common.status']}"/>
+                        </div>
+                        <div class="Container60 Responsive50">
+                            <p:outputLabel value="#{creatFieldExportIsdnController.selectStockTransFull.stateName}"/>
+                        </div>
+                    </div>
+                    <div class="Container50">
+                        <div class="Container40 Responsive50">
+                            <p:outputLabel styleClass="lb-sentinel"
+                                           value="#{lang['common.number']}"/>
+                        </div>
+                        <div class="Container60 Responsive50">
+                            <p:outputLabel value="#{creatFieldExportIsdnController.selectStockTransFull.quantity}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="ContainerIndent">
+                    <!--<div class="Container50">-->
+                        <div class="Container20 Responsive25 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel"
+                                           value="#{lang['type.entered']}"/>
+                        </div>
+                        <div class="Container80 Responsive75">
+                            <p:selectOneRadio id="selOnRaTypeInvoice"
+                                              value="#{creatFieldExportIsdnController.inputByFile}">
+                                <f:selectItem itemLabel="#{lang['mn.stock.import.with.file']}" itemValue="true"/>
+                                <f:selectItem itemLabel="#{lang['entered.from.digital.ranges']}" itemValue="false"/>
+                                <p:ajax event="change" process="@this"
+                                        listener="#{creatFieldExportIsdnController.changeTypeInput()}"
+                                        update="@form"
+                                        />
+                            </p:selectOneRadio>
+                        </div>
+                    <!--</div>-->
+                </div>
+
+                <div class="ContainerIndent" id="selectType">
+                    <p:outputPanel rendered="#{!creatFieldExportIsdnController.inputByFile}">
+                        <pe:keyFilter mask="num" for="digitalStartRanges,digitalEndRanges" preventPaste="false"/>
+                        <div class="Container50">
+                            <div class="Container40 Responsive50">
+                                <p:outputLabel styleClass="lb-sentinel digitalStartRanges"
+                                               value="#{lang['mn.isdn.from.isdn']}"
+                                               for="digitalStartRanges"/>
+                            </div>
+                            <div class="Container60 Responsive50">
+                                <p:inputText
+                                            id="digitalStartRanges" maxlength="11"
+                                            styleClass="digitalStartRanges"
+                                            onchange="this.value=this.value.replace(new RegExp('[^0-9]|^0+','gm'),'')"
+                                            required="true"
+                                            requiredMessage="#{lang['mn.isdn.from.isdn']} #{lang['is.not.null']}"
+                                             value="#{creatFieldExportIsdnController.stockTransSerial.fromSerial}"
+                                             placeholder="#{lang['from.number.placeholder']}"/>
+                                <p:message for="digitalStartRanges"/>
+                            </div>
+                        </div>
+
+                        <div class="Container50">
+                            <div class="Container40 Responsive50">
+                                <p:outputLabel styleClass="lb-sentinel digitalEndRanges"
+                                               value="#{lang['mn.isdn.to.isdn']}"
+                                               for="digitalEndRanges"/>
+                            </div>
+                            <div class="Container60 Responsive50">
+                                <p:inputText id="digitalEndRanges" maxlength="11"
+                                             styleClass="digitalEndRanges"
+                                             onchange="this.value=this.value.replace(new RegExp('[^0-9]|^0+','gm'),'')"
+                                             required="true"
+                                             requiredMessage="#{lang['mn.isdn.to.isdn']} #{lang['is.not.null']}"
+                                             value="#{creatFieldExportIsdnController.stockTransSerial.toSerial}"
+                                             placeholder="#{lang['to.number.placeholder']}"/>
+                                <p:message for="digitalEndRanges"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+
+                    <p:outputPanel rendered="#{creatFieldExportIsdnController.inputByFile}">
+                            <div class="Container50 Responsive">
+                                <div class="Container40 Responsive50 pd-top-7" >
+                                    <p:outputLabel styleClass="lb-sentinel fileAtt" for="fileAttach"
+                                                   value="#{lang['attach.file']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid" >
+                                    <p:inputText id="outputAttachFile"
+                                                 styleClass="outputAttachFile fileAtt"
+                                                 maxlength="100"
+                                                 placeholder="#{lang['search.number.range.input.fileName']}"
+                                                 value="#{creatFieldExportIsdnController.attachFileName}"
+                                                 readonly="true"/>
+                                    <p:commandLink
+                                            id="downloadTemplateBtn"
+                                            value="#{lang['create.order.file.download.file.template']}"
+                                            title="#{lang['create.order.file.download.file.template']}"
+                                            rendered="#{creatFieldExportIsdnController.inputByFile}"
+                                            ajax="false"
+                                            immediate="true"
+                                            style="text-decoration: none!important;">
+                                        <p:fileDownload value="#{creatFieldExportIsdnController.downloadFileTemplate()}"/>
+                                    </p:commandLink>
+                                </div>
+                            </div>
+                        <!--style="margin-top: 20px"-->
+
+                        <div class="Container50 Responsive">
+                            <div class="Container100 mg-left-15">
+                                    <p:fileUpload id="fileAttach"
+                                                  requiredMessage="#{lang['mn.stock.status.isdn.update.file.noselect']}"
+                                                  update="@this, @([id$=outputAttachFile]),@([id$=msgInputIsdn])"
+                                                  dragDropSupport="true" required="true" mode="advanced"
+                                                  auto="true"
+                                                  process="@this"
+                                                  value="#{creatFieldExportIsdnController.uploadedFile}"
+                                                  fileUploadListener="#{creatFieldExportIsdnController.fileUploadAction}">
+                                    </p:fileUpload>
+                                </div>
+                            </div>
+                    </p:outputPanel>
+                </div>
+                <div class="Container100 TexAlCenter">
+                    <p:commandButton process="@form"
+                                     value="#{lang['common.select']}"
+                                     update="@form"
+                                     actionListener="#{creatFieldExportIsdnController.selectIsdn}"/>
+                </div>
+            </div>
+        </p:outputPanel>
+
+        <p:outputPanel id="pnlResultIsdn" styleClass="Container100">
+            <cbs:panel classForToggle="panelDetailIsdn" toggle="true"
+                       titleHeader="#{lang['common.detail.isdn']}"/>
+            <div class="ContainerIndent panelDetailIsdn ">
+                <div class="Container100 " style="margin-bottom: 10px;">
+                    <div class="ContainerIndent">
+                        <p:dataTable id="lstIsdnStock"
+                                     styleClass="mg-top-10 mg-bottom-10"
+                                     var="serial"
+                                     scrollable="true"
+                                     scrollHeight="100"
+                                     rowIndexVar="index"
+                                     value="#{creatFieldExportIsdnController.lstStockTransSerialDTO}">
+                            <p:column headerText="#{lang['common.stt']}" style="width: 10%">
+                                <p:outputLabel value="#{index+1}" title="#{index+1}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.isdn.from.isdn']}" style="width: 30%" sortBy="#{serial.fromSerial}">
+                                <p:outputLabel value="#{serial.fromSerial}" title="#{serial.fromSerial}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.isdn.to.isdn']}" style="width: 30%" sortBy="#{serial.toSerial}">
+                                <p:outputLabel value="#{serial.toSerial}" title="#{serial.toSerial}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['common.number']}" style="width: 20%;text-align: right" sortBy="#{serial.quantity}">
+                                <p:outputLabel value="#{serial.quantity}" title="#{serial.quantity}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['common.button.NO']}"  style="width: 10%">
+                                <p:commandLink styleClass="fa icon-cancel-2 Fs14 blue "
+                                               style="text-decoration: none;"
+                                               actionListener="#{creatFieldExportIsdnController.doRemoveIsdn(index)}"
+                                               process="@this"
+                                               update="frmInputIsdn:pnlResultIsdn"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+
+                <div class="ContainerIndent TexAlCenter">
+                    <p:commandButton value="#{lang['rule.button.yes']}"
+                                     process="@this" update="@form, frmExportIsdn:pnDetail"
+                                     actionListener="#{creatFieldExportIsdnController.acceptIsdn}"
+                                     oncomplete="if(!args.validationFailed) {PF('dlgInputIsdn').hide()}"
+                                     rendered="#{creatFieldExportIsdnController.isEnought}"
+                            />
+                    <p:commandButton styleClass="mg-left-5"
+                                     value="#{lang['mn.stock.utilities.export.file']}"
+                                     process="@form" update="@form" ajax="false" immediate="true    "
+                                     rendered="#{creatFieldExportIsdnController.isEnought}">
+                                     <!--disabled="#{creatFieldExportIsdnController.lstStockTransSerialDTO.size() == 0}">-->
+                        <p:fileDownload value="#{creatFieldExportIsdnController.exportDetailSerial()}"/>
+                            </p:commandButton>
+                </div>
+            </div>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

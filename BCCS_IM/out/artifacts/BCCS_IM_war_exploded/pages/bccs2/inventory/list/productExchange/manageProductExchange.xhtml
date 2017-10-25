@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:of="http://omnifaces.org/functions" xmlns:pe="http://primefaces.org/ui/extensions"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.list.product.exchange.kit']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.list.product.exchange.kit']}</ui:define>
+    <ui:define name="content">
+
+        <h:form id="frmProductExchange" styleClass="Container100">
+            <p:outputPanel styleClass="Container100" id="pnlProductExchange">
+
+                <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                    <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel styleClass="Container100">
+                    <p:focus for="frmProductExchange"/>
+                    <p:outputPanel id="pnlInforManageExchange" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="pnlInforManageExchange"
+                                   titleHeader="#{lang['mn.stock.partner.update.sim.info']}"/>
+
+                        <div class="pnlInforManageExchange Container100">
+                            <div class="ContainerIndent  mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                        <p:outputLabel value="#{lang['mn.list.product.exchange.oldProd']}"
+                                                       for="cplProductOfferOld" styleClass="lb-sentinel"/>
+                                        <p:outputLabel style="color: red;" value="*"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-relative">
+                                        <p:autoComplete id="cplProductOfferOld"
+                                                        styleClass="requireProductOfferId"
+                                                        required="false"
+                                                        requiredMessage="#{lang['mn.stock.liquidate.model.required']}"
+                                                        value="#{manageProductExchangeController.productOfferingTotalDTO}"
+                                                        completeMethod="#{manageProductExchangeController.searchListProductOffering}"
+                                                        placeholder="#{lang['mn.stock.liquidate.model.placeholder']}"
+                                                        var="productOfferingTotalDTO"
+                                                        itemValue="#{productOfferingTotalDTO}"
+                                                        itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                        autoHighlight="true"
+                                                        maxResults="10"
+                                                        forceSelection="true">
+                                            <o:converter converterId="productOfferingConverter"
+                                                         list="#{manageProductExchangeController.lstProductOfferingTotalDTO}"/>
+                                            <p:ajax event="itemSelect"
+                                                    listener="#{manageProductExchangeController.doSelectProductOffering}"
+                                                    process="@([id$=cplProductOfferOld])"
+                                                    update="@([id$=cplProductOfferOld]),@([id$=msgSearch])"/>
+                                            <p:column style="width: 40%"
+                                                      headerText="#{lang['common.lb.code']}"
+                                                      filterable="true">
+                                                <p:outputLabel value="#{productOfferingTotalDTO.code}"/>
+                                            </p:column>
+                                            <p:column style="width: 60%"
+                                                      headerText="#{lang['common.lb.name']}"
+                                                      filterable="true">
+                                                <p:outputLabel value="#{productOfferingTotalDTO.name}"/>
+                                            </p:column>
+                                            <p:ajax event="query" global="false"/>
+                                        </p:autoComplete>
+                                        <p:commandLink id="btnResetLstProductOld"
+                                                       styleClass="ui-link-right"
+                                                       update="@this, @([id$=cplProductOfferOld])"
+                                                       actionListener="#{manageProductExchangeController.resetLstProductOfferingTotal}"
+                                                       process="@this">
+                                            <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                        </p:commandLink>
+                                        <p:message for="cplProductOfferOld"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                        <p:outputLabel value="#{lang['mn.list.product.exchange.Prod']}"
+                                                       for="cplProductOffer" styleClass="lb-sentinel"/>
+                                        <p:outputLabel style="color: red;" value="*"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-relative">
+                                        <p:autoComplete id="cplProductOffer"
+                                                        styleClass="requireProductOfferIdNew"
+                                                        required="false"
+                                                        requiredMessage="#{lang['mn.stock.liquidate.model.required']}"
+                                                        value="#{manageProductExchangeController.productOfferingTotalNewDTO}"
+                                                        completeMethod="#{manageProductExchangeController.searchListProductOffering}"
+                                                        placeholder="#{lang['mn.stock.liquidate.model.placeholder']}"
+                                                        var="productOfferingTotalDTO"
+                                                        itemValue="#{productOfferingTotalDTO}"
+                                                        itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                        autoHighlight="true"
+                                                        maxResults="10"
+                                                        forceSelection="true">
+                                            <o:converter converterId="productOfferingConverter"
+                                                         list="#{manageProductExchangeController.lstProductOfferingTotalDTO}"/>
+                                            <p:ajax event="itemSelect"
+                                                    listener="#{manageProductExchangeController.doSelectProductOfferingNew}"
+                                                    process="@([id$=cplProductOffer])"
+                                                    update="@([id$=cplProductOffer]),@([id$=txtProfile]),@([id$=msgSearch])"/>
+                                            <p:column style="width: 40%"
+                                                      headerText="#{lang['common.lb.code']}"
+                                                      filterable="true">
+                                                <p:outputLabel value="#{productOfferingTotalDTO.code}"/>
+                                            </p:column>
+                                            <p:column style="width: 60%"
+                                                      headerText="#{lang['common.lb.name']}"
+                                                      filterable="true">
+                                                <p:outputLabel value="#{productOfferingTotalDTO.name}"/>
+                                            </p:column>
+                                            <p:ajax event="query" global="false"/>
+                                        </p:autoComplete>
+                                        <p:commandLink id="btnResetLstProduct"
+                                                       styleClass="ui-link-right"
+                                                       update="@this, @([id$=cplProductOffer])"
+                                                       actionListener="#{manageProductExchangeController.resetLstProductOfferingNewTotal}"
+                                                       process="@this">
+                                            <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                        </p:commandLink>
+                                        <p:message for="cplProductOffer"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <!--<div class="Container40 Responsive50 mg-left-15 pd-top-4">-->
+                                    <!--<p:outputLabel value="#{lang['mn.list.product.exchange.status']}"-->
+                                    <!--for="cbxProductStatus" styleClass="lb-sentinel"/>-->
+                                    <!--</div>-->
+                                    <!--<div class="Container60 Responsive50 ui-fluid">-->
+                                    <!--<p:selectOneMenu id="cbxProductStatus"-->
+                                    <!--required="false"-->
+                                    <!--styleClass="Wid100"-->
+                                    <!--filter="true"-->
+                                    <!--filterMatchMode="contains"-->
+                                    <!--value="#{manageProductExchangeController.productExchangeInputDTO.status}"-->
+                                    <!-->-->
+                                    <!--<f:selectItem itemValue=""-->
+                                    <!--itemLabel="#{lang['common.choose.value']}"/>-->
+                                    <!--<f:selectItem itemValue="1"-->
+                                    <!--itemLabel="#{lang['mn.list.product.exchange.status.1']}"/>-->
+                                    <!--<f:selectItem itemValue="0"-->
+                                    <!--itemLabel="#{lang['mn.list.product.exchange.status.0']}"/>-->
+                                    <!--</p:selectOneMenu>-->
+                                    <!--<p:message for="cbxProductStatus"/>-->
+                                    <!--</div>-->
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                        <p:outputLabel value="#{lang['mn.list.product.exchange.startDate']}"
+                                                       for="txtStartDate" styleClass="lb-sentinel"/>
+                                        <p:outputLabel style="color: red;" value="*"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid requireStartDate">
+                                        <p:calendar id="txtStartDate"
+                                                    mask="true"
+                                                    pattern="#{lang['common.datetime.format']}"
+                                                    converterMessage="#{lang['invalid.date.message']}"
+                                                    validatorMessage="#{lang['request.date.validate.message']}"
+                                                    placeholder="#{lang['common.datetime.format']}"
+                                                    required="false"
+                                                    requiredMessage="#{lang['mn.stock.branch.sign.po.date.msg.require']}"
+                                                    value="#{manageProductExchangeController.productExchangeInputDTO.startDatetime}">
+                                        </p:calendar>
+                                        <p:message for="txtStartDate"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                        <p:outputLabel value="#{lang['mn.list.product.exchange.endDate']}"
+                                                       for="txtEndDate" styleClass="lb-sentinel"/>
+                                        <p:outputLabel style="color: red;" value="*"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid requireEndDate">
+                                        <p:calendar id="txtEndDate"
+                                                    mask="true"
+                                                    pattern="#{lang['common.datetime.format']}"
+                                                    converterMessage="#{lang['invalid.date.message']}"
+                                                    validatorMessage="#{lang['request.date.validate.message']}"
+                                                    placeholder="#{lang['common.datetime.format']}"
+                                                    required="false"
+                                                    requiredMessage="#{lang['mn.stock.branch.sign.contract.date.msg.require']}"
+                                                    value="#{manageProductExchangeController.productExchangeInputDTO.endDatetime}">
+                                        </p:calendar>
+                                        <p:message for="txtEndDate"/>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <p:outputPanel styleClass="Container100 TexAlCenter" id="pnlCallAction">
+
+                            <p:commandButton styleClass="mg-left-5"
+                                             value="#{lang['common.button.search']}"
+                                             process="@this, @form"
+                                             update="@this, @([id$=pnlSerialDetail]),@([id$=msgSearch]) ,@([id$=pnlInforManageExchange])"
+                                             action="#{manageProductExchangeController.doSearch}"/>
+                            <cbs:confirmButton
+                                    dlgWidgetVar="btnAction"
+                                    id="btnAction"
+                                    valueButton="#{lang['mn.list.product.exchange.add']}"
+                                    headerConfirm="#{lang['mn.list.product.exchange.create']}"
+                                    messageConfirm="#{lang['mn.list.product.exchange.create.confirm']}"
+                                    action="#{manageProductExchangeController.doCreate}"
+                                    resetValueButton="false"
+                                    process="@form"
+                                    updateArea="@form"
+                                    actionValidate="#{manageProductExchangeController.doValidate}"
+                                    isButton="true"
+                                    focusCancel="false"/>
+                            <p:commandButton styleClass="mg-left-5" value="#{lang['common.reset']}"
+                                             immediate="true"
+                                             resetValues="true"
+                                             process="@form"
+                                             update="@form"
+                                             action="#{manageProductExchangeController.doReset}"/>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <p:outputPanel id="pnlSerialDetail" styleClass="ContainerIndent">
+                        <p:outputPanel styleClass="Container">
+                            <cbs:panel classForToggle="pnlListSerial"
+                                       titleHeader="#{lang['mn.invoice.invoiceSerial.view']}"/>
+                            <p:outputPanel styleClass="Container pnlListSerial" id="pnlListSerial">
+                                <p:dataTable
+                                        id="lstDetailSerial"
+                                        var="prodExchange"
+                                        rowKey=""
+                                        rowIndexVar="index"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        scrollable="#{manageProductExchangeController.lstProductExchangeDTOs.size() > 10 ? true : false}"
+                                        emptyMessage="#{lang['common.emty.records']}"
+                                        value="#{manageProductExchangeController.lstProductExchangeDTOs}">
+                                    <p:column headerText="#{lang['common.STT']}" style="width: 10%;"
+                                              styleClass="col-right">
+                                        <h:outputLabel value="#{index + 1}"
+                                                       title="#{index + 1}"/>
+                                    </p:column>
+                                    <p:column styleClass="TexAlLeft" sortBy="#{prodExchange.productExchangeId}">
+                                        <f:facet name="header">
+                                            <h:outputText
+                                                    value="#{lang['mn.list.product.exchange.oldProd']}"
+                                                    title="#{lang['mn.list.product.exchange.oldProd']}"/>
+                                        </f:facet>
+                                        <p:outputLabel
+                                                value="#{prodExchange.prodExchangeName}"
+                                                title="#{prodExchange.prodExchangeName}"/>
+                                    </p:column>
+                                    <p:column styleClass=" TexAlLeft">
+                                        <f:facet name="header">
+                                            <h:outputText
+                                                    value="#{lang['mn.list.product.exchange.Prod']}"
+                                                    title="#{lang['mn.list.product.exchange.Prod']}"/>
+                                        </f:facet>
+                                        <p:outputLabel
+                                                value="#{prodExchange.prodExchangeNameNew}"
+                                                title="#{prodExchange.prodExchangeNameNew}"/>
+                                    </p:column>
+                                    <p:column styleClass="TexAlRight">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.list.product.exchange.startDate']}"
+                                                          title="#{lang['mn.list.product.exchange.startDate']}"/>
+                                        </f:facet>
+                                        <p:outputLabel styleClass="lb-sentinel-bold"
+                                                       title="#{of:formatDate(prodExchange.startDatetime, 'dd/MM/yyyy')}"
+                                                       value="#{of:formatDate(prodExchange.startDatetime, 'dd/MM/yyyy')}"/>
+                                    </p:column>
+                                    <p:column styleClass="TexAlRight">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.list.product.exchange.endDate']}"
+                                                          title="#{lang['mn.list.product.exchange.endDate']}"/>
+                                        </f:facet>
+                                        <p:outputLabel styleClass="lb-sentinel-bold"
+                                                       title="#{of:formatDate(prodExchange.endDatetime, 'dd/MM/yyyy')}"
+                                                       value="#{of:formatDate(prodExchange.endDatetime,'dd/MM/yyyy')}"/>
+                                    </p:column>
+                                    <p:column styleClass=" TexAlCenter">
+                                        <f:facet name="header">
+                                            <h:outputText
+                                                    value="#{lang['mn.list.product.exchange.required.action']}"
+                                                    title="#{lang['mn.list.product.exchange.required.action']}"/>
+                                        </f:facet>
+                                        <cbs:confirmButton dlgWidgetVar="btnRemoveProductExchange"
+                                                           title="Hủy YC"
+                                                           process="@this, @([id$=pnlSerialDetail])"
+                                                           valueButton=""
+                                                           headerConfirm="#{lang['common.confirm']}"
+                                                           messageConfirm="#{lang['mn.list.product.exchange.remove.confirm']}"
+                                                           resetValueButton="true"
+                                                           updateArea="@([id$=pnlSerialDetail]), @([id$=msgSearch])"
+                                                           action="#{manageProductExchangeController.doRemove()}"
+                                                           actionValidate="#{manageProductExchangeController.doValidateRemove(prodExchange)}"
+                                                           styleClassButton="fa icon-cancel Fs16"
+                                                           isButton="false"
+                                                ></cbs:confirmButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

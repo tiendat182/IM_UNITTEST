@@ -1,0 +1,174 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.balance.request']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.balance.request']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmRequestBalanceStock" styleClass="Container100">
+            <p:outputPanel styleClass="Container100" id="pnlRequestBalance">
+                <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                    <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel styleClass="Container100">
+                    <p:focus for="frmRequestBalanceStock"/>
+                    <!--Start vung thong tin don vi-->
+                    <p:outputPanel id="pnInfoRequestBalance" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInforRequest" toggle="true"
+                                   titleHeader="#{lang['mn.balance.stock.request.search']}"/>
+
+                        <div class="Container100 panelInforRequest" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                        <p:outputLabel
+                                                value="#{lang['stock.rescue.warranty.stock.rescue.request.code']}"
+                                                for="txtCode"
+                                                styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-relative pd-top-4">
+                                        <h:outputText
+                                                id="txtCode"
+                                                value="#{requestBalanceStockController.stockBalanceRequestDTO.requestCode}"
+                                                escape="true"
+                                                styleClass="lb-sentinel-bold break-all">
+                                        </h:outputText>
+                                        <p:commandLink id="btnResetRequestCode"
+                                                       styleClass="ui-link-right"
+                                                       update="@this, @([id$=txtCode])"
+                                                       actionListener="#{requestBalanceStockController.resetRequestCode}"
+                                                       process="@this">
+                                            <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                        </p:commandLink>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <cbs:inputShop value="#{requestBalanceStockController.shopInfoTag}"
+                                                   idComponent="inputStore"
+                                                   methodName="receiveShop"
+                                                   clearMethodName="clearShop"
+                                                   update="@this,@([id$=pnlListProduct])"
+                                                   label="#{lang['mn.balance.stock.request.shop']}"
+                                                   placeholder="#{lang['mn.balance.stock.request.shop.placeholder']}"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                   classDivInput="Container60 Responsive50 ui-fluid"
+                                                   require="true"
+                                                   requiredMessage="#{lang['mn.balance.stock.request.shop.require']}"
+                                                   forceSelection="false"
+                                                   limit="#{requestBalanceStockController.limitAutoComplete}">
+                                    </cbs:inputShop>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                        <p:outputLabel value="#{lang['mn.balance.stock.request.type']}" for="cobState"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu filter="true" filterMatchMode="contains"
+                                                         id="cobState"
+                                                         value="#{requestBalanceStockController.type}"
+                                                         required="true"
+                                                         requiredMessage="#{lang['mn.balance.stock.request.type.require']}">
+                                            <f:selectItems
+                                                    value="#{requestBalanceStockController.listType}"
+                                                    itemLabelEscaped="true"
+                                                    var="state" itemValue="#{state.value}"
+                                                    itemLabel="#{state.name}"/>
+                                            <p:ajax event="change" process="@this"
+                                                    listener="#{requestBalanceStockController.doChangeType}"
+                                                    update="@([id$=pnlListProduct]),@([id$=pnlOffice])"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="cobState"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin don vi-->
+                    <!--Start vung thong tin mat hang-->
+                    <p:outputPanel id="pnlListProduct">
+                        <div class="Container100">
+                            <cbs:inputListProduct idComponent="listProduct" id="listProduct"
+                                                  updateCheckSerial="@([id$=dlgDetailSerial]),@([id$=msgSearch])"
+                                                  onCompleteCheckSerial="if(!args.validationFailed){PF('dlgDetailSerial').show();}"
+                                                  value="#{requestBalanceStockController.listProductTag}"
+                                                  idMessage="msgSearch"
+                                                  balanceStock="true"/>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin mat hang-->
+                    <!--Start vung thong tin ky view office-->
+                    <p:outputPanel id="pnlOffice" styleClass="Container100">
+                        <p:outputPanel styleClass="Container100">
+                            <cbs:inputSignOffice value="#{requestBalanceStockController.writeOfficeTag}"
+                                                 title="#{lang['export.order.view.office']}"
+                                                 idComponent="writeOfficeExport"/>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <!--Start Vung data button-->
+                    <div class="Container100">
+                        <div class="ContainerIndent TexAlCenter mg-top-0">
+                            <cbs:confirmDialog
+                                    idComponent="btnSend"
+                                    id="btnSendRequest"
+                                    valueButton="#{lang['mn.balance.stock.request.btn.send']}(F8)"
+                                    headerConfirm="#{lang['mn.balance.stock.request.btn.send.header']}"
+                                    messageConfirm="#{lang['mn.balance.stock.request.btn.send.confirm']}"
+                                    actionOK="#{requestBalanceStockController.doSendRequest}"
+                                    resetValueButton="false"
+                                    process="@([id$=frmRequestBalanceStock])"
+                                    updateArea="@([id$=frmRequestBalanceStock])"
+                                    updateOK="@([id$=frmRequestBalanceStock])"
+                                    focusCancel="false"
+                                    actionValidate="#{requestBalanceStockController.doValidateSendRequest}"
+                                    oncompleteOK=""
+                                    isButton="true"
+                                    />
+                            <p:commandButton value="#{lang['reset.selected']}"
+                                             process="@this"
+                                             update="@form"
+                                             styleClass="mg-left-5"
+                                             actionListener="#{requestBalanceStockController.doReset}">
+                            </p:commandButton>
+                        </div>
+                    </div>
+                    <!--End Vung data button-->
+                </p:outputPanel>
+            </p:outputPanel>
+            <script type="text/javascript">
+                document.getElementById('frmRequestBalanceStock').onkeypress = function (event) {
+                    if (event.keyCode == 119 &amp;&amp; document.getElementById('frmRequestBalanceStock:btnSendRequest:btnSendbtn') != null) {
+                        document.getElementById('frmRequestBalanceStock:btnSendRequest:btnSendbtn').click();
+                        return false;
+                    }
+                    if (event.keyCode == 120 &amp;&amp; document.getElementById('frmRequestBalanceStock:listProduct:listProductAddNew') != null) {
+                        document.getElementById('frmRequestBalanceStock:listProduct:listProductAddNew').click();
+                        return false;
+                    }
+                }
+            </script>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailSerial"
+                  widgetVar="dlgDetailSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <ui:include src="../../../../../resources/tags/dlgDetailSerial.xhtml">
+                <ui:param name="controller" value="#{requestBalanceStockController.listProductTag}"/>
+                <ui:param name="idComponent" value="inputListProduct"/>
+            </ui:include>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

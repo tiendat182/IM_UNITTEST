@@ -1,0 +1,455 @@
+<ui:composition
+        template="../../../sentinel/template.xhtml"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://xmlns.jcp.org/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:pe="http://primefaces.org/ui/extensions">
+    <ui:define name="title">Bán hàng cho đại lý</ui:define>
+    <ui:define name="featureName">Bán hàng cho đại lý</ui:define>
+    <ui:define name="content">
+        <style type="text/css">
+            .fieldSet {
+                border-top: solid 1px rgba(113, 76, 143, 0.4);
+            }
+
+            .ui-selectonemenu-trigger .ui-state-default .ui-corner-right {
+                background-color: lightcyan;
+            }
+        </style>
+        <script type="text/javascript">
+            jQuery(document).ready(function () {
+                PF('txtSingleSellSerial').getJQ().focus()
+            });
+        </script>
+        <h:form id="frmRetailStore">
+            <p:outputPanel styleClass="Container" id="pnExportNote">
+            <p:messages id="msgRetail" showDetail="true" showSummary="false" closable="true"/>
+            <p:outputPanel id="pnInfoExportOrderSearch" styleClass="ContainerIndent" style="background: white!important;">
+                <cbs:panel classForToggle="panelInforExport" toggle="true" titleHeader="#{lang['create.note.export.info.search']}"/>
+                <div class="Container100 panelInforExport" style="margin-bottom: 0px;margin-top: 10px;">
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="Kho xuất hàng" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText disabled="true" value="VTT - Viettel telecom"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="Mã lệnh nhập" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText placeholder="Nhập mã lệnh nhập"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="Mã đại lý" styleClass="lb-sentinel" for="agentCode"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="agentCode" placeholder="Tìm kiếm mã đại lý" required="true"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.from.date']}" for="fromDate" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar id="fromDate"
+                                            value="#{agentSaleFromExpCommandController.forSearch.startDate}"
+                                            placeholder="#{lang['create.note.from.date.placeholder']}" required="true"
+                                            requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.to.date']}" for="toDate" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar id="toDate"
+                                            required="true"
+                                            value="#{agentSaleFromExpCommandController.forSearch.endDate}"
+                                            placeholder="#{lang['create.note.to.date.placeholder']}"
+                                            requiredMessage="#{lang['mn.stock.to.date.not.blank']}"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50  mg-left-15 pd-top-7">
+                            <p:commandButton value="#{lang['create.note.search']}" process="@([id$=pnInfoExportOrderSearch])" style="margin-left: 20px!important;"
+                                             action="#{agentSaleFromExpCommandController.doSearchStockTrans}" update="@form" />
+                        </div>
+                    </div>
+                </div>
+            </p:outputPanel>
+
+                <p:outputPanel id="pnLstExportOrder" styleClass="ContainerIndent" style="background: white!important;">
+                    <cbs:panel classForToggle="panelListOrderExport" toggle="true" titleHeader="#{lang['create.note.list.order.export']}"/>
+                    <div class="Container100 panelListOrderExport" style="margin-bottom: 10px;margin-top: 10px;">
+                        <p:dataTable
+                                id="lstOrderExport"
+                                var="stockTrans"
+                                rowKey="#{stockTrans.stockTransID}"
+                                resizableColumns="true"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.empty.records']}"
+                                value="#{agentSaleFromExpCommandController.vStockTransDTOList}">
+                            <p:column headerText="#{lang['create.note.code']}" styleClass="col-left" sortBy="#{stockTrans.actionCode}">
+                                <p:outputLabel value="#{stockTrans.actionCode}" title="#{stockTrans.actionCode}" />
+                            </p:column>
+                            <p:column headerText="#{lang['create.note.create.date']}" sortBy="#{stockTrans.createDateTrans}">
+                                <h:outputText escape="true" value="#{stockTrans.createDateTrans}" styleClass="lb-sentinel-bold" title="#{stockTrans.createDateTrans}" >
+                                    <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Người lập" sortBy="#{stockTrans.userCreate}">
+                                <p:outputLabel value="#{stockTrans.userCreate}" title="#{stockTrans.userCreate}" />
+                            </p:column>
+                            <p:column headerText="#{lang['create.note.warehouse.export']}" sortBy="#{stockTrans.fromOwnerName}">
+                                <p:outputLabel value="#{stockTrans.fromOwnerName}" title="#{stockTrans.fromOwnerName}" />
+                            </p:column>
+                            <p:column headerText="#{lang['create.note.warehouse.import']}" sortBy="#{stockTrans.toOwnerName}">
+                                <p:outputLabel value="#{stockTrans.toOwnerName}" title="#{stockTrans.toOwnerName}" />
+                            </p:column>
+                            <p:column headerText="#{lang['common.status']}" sortBy="#{stockTrans.statusName}">
+                                <p:outputLabel value="#{stockTrans.statusName}" title="#{stockTrans.statusName}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['create.note.effect']}" style="text-align: center">
+                                <p:commandLink styleClass="fa icon-zoom-in Fs16 blue" style="text-decoration: none!important;" resetValues="true"
+                                               update="@form" process="@this" title="#{lang['common.view.detail']}" disabled="#{stockTrans.stockTransStatus != '1'}"
+                                               actionListener="#{underExportNoteController.doShowInfoOrderDetail(stockTrans.actionID)}"/>
+                            </p:column>
+
+                        </p:dataTable>
+                    </div>
+                </p:outputPanel>
+
+            <p:outputPanel id="pnlCustomer"
+                           styleClass="#{agentSaleFromExpCommandController.hideCustomer ? 'Container5' : 'Container33 Responsive ui-fluid'}"
+                    >
+                <p:outputPanel rendered="#{!agentSaleFromExpCommandController.hideCustomer}">
+                    <div class=" ContainerIndent bg-panel mg-top-0">
+                        <div class="Container100" style="height: 600px">
+                            <fieldset style="" class="mg-top-8">
+                                <legend style="font-weight: bold;">
+                                    <h:outputText value="Thông tin giao dịch" styleClass="ui-panel-title FontBold"
+                                                  style="font-size: small;"/>
+                                </legend>
+                                <div class="Container100">
+                                    <div class="Container40 Responsive50 pd-top-5">
+                                        <p:outputLabel styleClass="lb-sentinel" value="Ngày bán"/>
+                                    </div>
+                                    <div class="Container60 Responsive50">
+                                        <p:inputText disabled="true">
+                                            <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                        </p:inputText>
+                                    </div>
+                                    <div class="Container40 Responsive50 pd-top-5">
+                                        <p:outputLabel styleClass="lb-sentinel" value="Họ tên người nhận"/>
+                                    </div>
+                                    <div class="Container60 Responsive50">
+                                        <p:inputText id="txtCustName" required="false"/>
+                                    </div>
+                                    <div class="Container40 Responsive50 pd-top-5">
+                                        <p:outputLabel styleClass="lb-sentinel" value="Mã số thuế"/>
+                                    </div>
+                                    <div class="Container60 Responsive50">
+                                        <p:inputText id="txtCustTin" required="false"/>
+                                    </div>
+                                    <div class="Container40 Responsive50 pd-top-5">
+                                        <p:outputLabel styleClass="lb-sentinel" value="Địa chỉ"/>
+                                    </div>
+                                    <div class="Container60 Responsive50">
+                                        <p:inputText id="txtCustAddress" required="false"/>
+                                    </div>
+
+                                    <div class="Container40 Responsive50 pd-top-5">
+                                        <p:outputLabel styleClass="lb-sentinel" value="Lý do bán" for="cbxReason"/>
+                                    </div>
+                                    <div class="Container60 Responsive50">
+                                        <p:selectOneMenu id="cbxReason"
+                                                         required="true"
+                                                         filter="true" filterMatchMode="contains"
+                                                         converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem itemValue="" itemLabel="#{lang['common.select.one']}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <div class="Container40 Responsive50 pd-top-5">
+                                        <p:outputLabel styleClass="lb-sentinel" value="Hình thức TT"
+                                                       for="cbxPaymethod"/>
+                                    </div>
+                                    <div class="Container60 Responsive50">
+                                        <p:selectOneMenu id="cbxPaymethod" required="true"
+                                                         filter="true" filterMatchMode="contains"
+                                                         converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem itemValue="" itemLabel="#{lang['common.select.one']}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <div class="Container40 Responsive50 pd-top-5">
+                                        <p:outputLabel styleClass="lb-sentinel" value="CT bán hàng"/>
+                                    </div>
+                                    <div class="Container60 Responsive50">
+                                        <p:selectOneMenu
+                                                filter="true" filterMatchMode="contains"
+                                                converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem itemValue="" itemLabel="#{lang['common.select.one']}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel rendered="#{agentSaleFromExpCommandController.hideCustomer}">
+                    <div class="ContainerIndent TexAlCenter">
+                        <p:commandLink process="@this" update="frmRetailStore"
+                                       action="#{agentSaleFromExpCommandController.showCustomer}">
+                            <span class="fa fa-plus Fs16"/>
+                        </p:commandLink>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+            <!--bg-panel bottom-shadow-->
+            <p:outputPanel
+                    styleClass="#{agentSaleFromExpCommandController.hideCustomer ? 'Container95' : 'Container66 Responsive66'}">
+                <div class="ContainerIndent bg-panel mg-top-0" style="margin-left: 0;">
+                    <cbs:panel iconHeader="/resources/images/newUI/iconSubInfo.png"
+                               classForToggle="pnlSingleSell"
+                               toggle="true"
+                               defaultToggle="false"
+                               shadow="true"
+                               titleHeader="Các chiết khấu áp dụng"/>
+
+                    <div class="Container100 ui-fluid pnlSingleSell">
+                        <div class="Container100 mg-top-10">
+                            <p:dataTable value="#{agentSaleFromExpCommandController.productOfferingDTOs}"
+                                         var="productOffering" id="tblSingleSell">
+                                <p:column sortBy="#{productOffering.name}">
+                                    <f:facet name="header">
+                                        <h:outputText value="STT" title="STT"/>
+                                    </f:facet>
+                                </p:column>
+                                <p:column sortBy="#{productOffering.name}">
+                                    <f:facet name="header">
+                                        <h:outputText value="Tên chính sách" title="Tên chính sách"/>
+                                    </f:facet>
+                                </p:column>
+                                <p:column sortBy="#{productOffering.name}">
+                                    <f:facet name="header">
+                                        <h:outputText value="Tỷ lệ CK" title="Tỷ lệ CK"/>
+                                    </f:facet>
+                                </p:column>
+                                <p:column sortBy="#{productOffering.name}">
+                                    <f:facet name="header">
+                                        <h:outputText value="Số tiền CK" title="Số tiền CK"/>
+                                    </f:facet>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                <div class="Container100  mg-top-10">
+                <div class="Container60 Responsive50 ui-fluid">
+                <div class="ContainerIndent bg-panel mg-top-0" style="margin-left: 0">
+                    <p:outputPanel id="pnlDiscountInfo" class="Container100">
+                    <div class="Container100">
+                        <div class="Container50 Responsive50 pdt5">
+                            <p:outputLabel styleClass="lb-sentinel"
+                                           value="Tổng tiền chiết khấu sau thuế"/>
+                        </div>
+                        <div class="Container50 Responsive50 TexAlRight">
+                            <pe:inputNumber styleClass="txtAmount currency"
+                                            minValue="0" maxValue="9999999999"
+                                            decimalSeparator="#{lang['common.currency.decimalSeparator']}"
+                                            thousandSeparator="#{lang['common.currency.thousandSeparator']}"
+                                            converterMessage="#{lang['common.sale.payment.amount']}"
+
+                                            maxlength="10" disabled="true">
+                            </pe:inputNumber>
+                        </div>
+                    </div>
+                    </p:outputPanel>
+                    </div>
+                    </div>
+                    </div>
+
+                    <cbs:panel iconHeader="/resources/images/newUI/iconSubInfo.png"
+                               classForToggle="productOffering"
+                               toggle="true"
+                               defaultToggle="false"
+                               shadow="true"
+                               titleHeader="Danh sách hàng hóa"/>
+
+                    <div class="Container100 ui-fluid banhangtheobo">
+                        <div class="Container100 mg-top-10">
+                            <p:dataTable value="#{agentSaleFromExpCommandController.productOfferingDTOs}"
+                                         var="productOffering" id="tblProductOffering">
+                                <p:column sortBy="#{productOffering.name}">
+                                    <f:facet name="header">
+                                        <h:outputText value="STT" title="STT"/>
+                                    </f:facet>
+                                </p:column>
+                                <p:column sortBy="#{productOffering.name}">
+                                    <f:facet name="header">
+                                        <h:outputText value="Mã hàng" title="Mã hàng"/>
+                                    </f:facet>
+                                </p:column>
+                                <p:column sortBy="#{productOffering.name}">
+                                    <f:facet name="header">
+                                        <h:outputText value="Tên hàng hóa" title="Tên hàng hóa"/>
+                                    </f:facet>
+                                </p:column>
+                                <p:column sortBy="#{productOffering.name}">
+                                    <f:facet name="header">
+                                        <h:outputText value="ĐVT" title="ĐVT"/>
+                                    </f:facet>
+                                </p:column>
+                                <p:column sortBy="#{productOffering.name}">
+                                    <f:facet name="header">
+                                        <h:outputText value="Số lượng (1)" title="Số lượng (1)"/>
+                                    </f:facet>
+                                </p:column>
+                                <p:column sortBy="#{productOffering.name}">
+                                    <f:facet name="header">
+                                        <h:outputText value="Đơn giá (2)" title="Đơn giá (2)"/>
+                                    </f:facet>
+                                </p:column>
+                                <p:column sortBy="#{productOffering.name}">
+                                    <f:facet name="header">
+                                        <h:outputText value="Thành tiền (3)" title="Thành tiền (3)"/>
+                                    </f:facet>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                    <div class="Container100  mg-top-10">
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <div class="ContainerIndent bg-panel mg-top-0" style="margin-left: 0">
+                                <div class="Container100">
+                                    <h:outputText value="Thông tin thanh toán"
+                                                  styleClass="ui-panel-title FontBold"
+                                                  style="font-size: small;"/>
+                                </div>
+                                <p:outputPanel id="pnlPaymentInfo" class="Container100">
+                                    <div class="Container100">
+                                        <div class="Container50 Responsive50 pdt5">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           value="Tổng tiền chưa thuế (3)"/>
+                                        </div>
+                                        <div class="Container50 Responsive50 TexAlRight">
+                                            <pe:inputNumber styleClass="txtAmount currency"
+                                                            minValue="0" maxValue="9999999999"
+                                                            decimalSeparator="#{lang['common.currency.decimalSeparator']}"
+                                                            thousandSeparator="#{lang['common.currency.thousandSeparator']}"
+                                                            converterMessage="#{lang['common.sale.payment.amount']}"
+
+                                                            maxlength="10" disabled="true">
+                                            </pe:inputNumber>
+                                        </div>
+                                    </div>
+
+                                    <div class="Container100">
+                                        <div class="Container50 Responsive50 pdt5">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           value="Tiền thuế (4)"/>
+                                        </div>
+                                        <div class="Container50 Responsive50 TexAlRight">
+                                            <pe:inputNumber styleClass="txtAmount currency"
+                                                            minValue="0" maxValue="9999999999"
+                                                            decimalSeparator="#{lang['common.currency.decimalSeparator']}"
+                                                            thousandSeparator="#{lang['common.currency.thousandSeparator']}"
+                                                            converterMessage="#{lang['common.sale.payment.amount']}"
+
+                                                            maxlength="10" disabled="true">
+                                            </pe:inputNumber>
+                                        </div>
+                                    </div>
+                                    <div class="Container100">
+                                        <div class="Container50 Responsive50 pdt5">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           value="Tiền chiết khấu trước thuế (5)"/>
+                                        </div>
+                                        <div class="Container50 Responsive50 TexAlRight">
+                                            <pe:inputNumber styleClass="txtAmount currency"
+                                                            minValue="0" maxValue="9999999999"
+                                                            decimalSeparator="#{lang['common.currency.decimalSeparator']}"
+                                                            thousandSeparator="#{lang['common.currency.thousandSeparator']}"
+                                                            converterMessage="#{lang['common.sale.payment.amount']}"
+
+                                                            maxlength="10" disabled="true">
+                                            </pe:inputNumber>
+                                        </div>
+                                    </div>
+
+                                    <div class="Container100">
+                                        <div class="Container50 Responsive50 pdt5">
+                                            <p:outputLabel styleClass="FontBold" value="Tổng tiền phải TT (3+4)"
+                                                           style="font-weight: bold"/>
+                                        </div>
+                                        <div class="Container50 Responsive50 TexAlRight">
+                                            <pe:inputNumber styleClass="txtAmount currency"
+                                                            minValue="0" maxValue="9999999999"
+                                                            decimalSeparator="#{lang['common.currency.decimalSeparator']}"
+                                                            thousandSeparator="#{lang['common.currency.thousandSeparator']}"
+                                                            converterMessage="#{lang['common.sale.payment.amount']}"
+
+                                                            maxlength="10" disabled="true">
+                                            </pe:inputNumber>
+                                        </div>
+                                    </div>
+
+                                    <div class="Container50">
+                                        <p:outputLabel styleClass="lb-sentinel" value="Tiền khách hàng TT"/>
+                                    </div>
+                                    <div class="Container50 TexAlRight">
+                                        <pe:inputNumber styleClass="txtAmount currency"
+                                                        minValue="0" maxValue="9999999999"
+                                                        decimalSeparator="#{lang['common.currency.decimalSeparator']}"
+                                                        thousandSeparator="#{lang['common.currency.thousandSeparator']}"
+                                                        converterMessage="#{lang['common.sale.payment.amount']}"
+
+                                                        maxlength="10">
+                                        </pe:inputNumber>
+                                    </div>
+                                    <div class="Container50">
+                                        <p:outputLabel styleClass="lb-sentinel" value="Tiền thừa"/>
+                                    </div>
+                                    <div class="Container50 TexAlRight">
+                                        <pe:inputNumber id="txtChangeMoney"
+                                                        styleClass="txtAmount currency"
+                                                        minValue="0" maxValue="9999999999"
+                                                        decimalSeparator="#{lang['common.currency.decimalSeparator']}"
+                                                        thousandSeparator="#{lang['common.currency.thousandSeparator']}"
+                                                        converterMessage="#{lang['common.sale.payment.amount']}"
+
+                                                        maxlength="10" disabled="true">
+                                        </pe:inputNumber>
+                                    </div>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+
+                        <div class="Container100 TexAlCenter">
+                            <div class="ContainerIndent mg-top-0">
+                                <p:selectBooleanCheckbox itemLabel="In hóa đơn"/>
+                                <p:commandButton value="Tạo giao dịch" styleClass="mg-left-5"/>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </p:outputPanel>
+
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,213 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.liquidate.propose']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.liquidate.propose']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmLiquidatePropose" enctype="multipart/form-data">
+            <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                <p:messages id="msgLiquidatePropose" showDetail="true" showSummary="false" closable="true"/>
+            </div>
+            <!--Start vung thong tin yeu cau-->
+            <p:outputPanel id="pnlInfoPropose" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="panelInfoPropose" toggle="true"
+                           titleHeader="#{lang['information.propose']}"/>
+
+                <div class="Container100 panelInfoRequest">
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.liquidate.propose.code']}"
+                                               for="txtProposeCode" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid ui-relative pd-top-4">
+                                <p:outputLabel id="txtProposeCode"
+                                               required="true"
+                                               requiredMessage="#{lang['mn.stock.liquidate.propose.code.require.msg']}"
+                                               value="#{liquidateProposeController.requestLiquidateDTO.requestCode}"
+                                               readonly="true"
+                                               maxlength="50"/>
+                                <p:commandLink id="btnResetProposeCode"
+                                               styleClass="ui-link-right"
+                                               update="@this, @([id$=txtProposeCode])"
+                                               actionListener="#{liquidateProposeController.resetProposeCode}"
+                                               process="@this">
+                                    <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                </p:commandLink>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.liquidate.create.user']}"
+                                               for="txtCreateUser" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                <p:outputLabel id="txtCreateUser"
+                                               required="true"
+                                               value="#{liquidateProposeController.staffDTO.staffCode}"
+                                               readonly="true"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.liquidate.order.day']}"
+                                               for="requestDate" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                <p:outputLabel id="requestDate"
+                                               required="true"
+                                               value="#{liquidateProposeController.requestLiquidateDTO.createDatetime}"
+                                               readonly="true">
+                                    <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                </p:outputLabel>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive">
+                            <cbs:inputShop value="#{liquidateProposeController.shopInfoExportTag}"
+                                           idComponent="ipExportShop"
+                                           methodName="doExportShop"
+                                           update="@this"
+                                           limit="#{liquidateProposeController.limitAutoComplete}"
+                                           label="#{lang['mn.stock.liquidate.export.stock']}"
+                                           require="true"
+                                           classDivLabel="Container40 mg-left-15 Responsive50 pd-top-7"
+                                           classDivInput="Container60 Responsive50 ui-fluid"
+                                           requiredMessage="#{lang['mn.stock.liquidate.export.stock.required']}"
+                                           placeholder="#{lang['mn.stock.liquidate.export.stock.placeholder']}">
+                            </cbs:inputShop>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.liquidate.receive.stock']}"
+                                               for="txtReceiveStock" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                <p:outputLabel id="txtReceiveStock"
+                                               required="true"
+                                               requiredMessage="#{lang['mn.stock.liquidate.receive.stock.required']}"
+                                               value="#{liquidateProposeController.partnerDTO.partnerName}"
+                                               readonly="true"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive"></div>
+                        <p:remoteCommand name="updateControls" process="@this" update="@form"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <!--End vung thong tin yeu cau-->
+
+            <!--Start vung thong tin file dinh kem-->
+            <p:outputPanel id="pnlFileUpload" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="divUpload" toggle="true"
+                           titleHeader="#{lang['mn.stock.liquidate.info.profile']}"/>
+
+                <div class="ContainerIndent mg-top-0 divUpload">
+                    <div class="Container66 Responsive66">
+                        <div class="Container20 mg-left-15 Responsive25 pd-top-4">
+                            <p:outputLabel value="#{lang['mn.stock.liquidate.profile']}"
+                                           for="fileUpload" styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container80 Responsive75 ui-fluid">
+                            <p:inputText id="outputAttach"
+                                         maxlength="100"
+                                         placeholder="#{lang['mn.stock.liquidate.profile.placeholder']}"
+                                         value="#{liquidateProposeController.attachFileName}"
+                                         title="#{liquidateProposeController.attachFileName}"
+                                         readonly="true"/>
+                        </div>
+                    </div>
+                    <div class="Container33 Responsive">
+                        <p:fileUpload id="fileUpload"
+                                      validatorMessage="abc"
+                                      label="#{lang['mn.stock.liquidate.file.choice']}"
+                                      invalidFileMessage="#{lang['mn.stock.liquidate.file.msg.format']}"
+                                      requiredMessage="#{lang['mn.stock.liquidate.file.msg.require']}"
+                                      invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                      update="@this, @([id$=messageAttach]), @([id$=outputAttach]), @([id$=msgCreateRequestImport]),@([id$=msgLiquidatePropose])"
+                                      process="@this"
+                                      dragDropSupport="true" required="true" mode="advanced"
+                                      auto="true"
+                                      widgetVar="wgUploadFile"
+                                      allowTypes="/(\.|\/)(xls|xlsx|jpe?g|png|bmp|doc|docx|pdf)$/"
+                                      sizeLimit="5242880"
+                                      fileUploadListener="#{liquidateProposeController.handleFileUpload}">
+                        </p:fileUpload>
+                        <p:message id="messageAttach" for="fileUpload"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <!--End vung thong tin file dinh kem-->
+
+            <!--Start vung danh sach hang hoa-->
+            <p:outputPanel id="pnlListProduct" styleClass="Container100">
+                <cbs:inputListProduct idMessage="msgLiquidatePropose" idComponent="inputListProduct" id="listProduct"
+                                      value="#{liquidateProposeController.listProductTag}"
+                                      extraValue="false" renderRetrieveStock="true"
+                                      updateCheckSerial="@([id$=dlgDetailSerial]), @([id$=msgLiquidatePropose])"
+                                      onCompleteCheckSerial="if(!args.validationFailed){PF('dlgDetailSerial').show()}"/>
+            </p:outputPanel>
+            <!--End vung danh sach hang hoa-->
+
+            <!--Start vung button-->
+            <p:outputPanel id="pnlButton" styleClass="Container100">
+                <div class="ContainerIndent TexAlCenter">
+                    <cbs:confirmDialog
+                            idComponent="btnCreateLiquidatePropose"
+                            titleButton="#{lang['mn.stock.liquidate.btn.create.propose']}"
+                            valueButton="#{lang['mn.stock.liquidate.btn.create.propose']}"
+                            headerConfirm="#{lang['mn.stock.liquidate.btn.create.propose']}"
+                            messageConfirm="#{lang['mn.stock.liquidate.create.msg.confirm']}"
+                            actionOK="#{liquidateProposeController.onCreateLiquidatePropose()}"
+                            resetValueButton="true"
+                            process="@this, @([id$=pnlInfoPropose]), @([id$=pnlListProduct])"
+                            updateArea="@this, @([id$=pnlInfoPropose]), @([id$=pnlListProduct]), @([id$=msgLiquidatePropose])"
+                            updateOK="@form"
+                            actionValidate="#{liquidateProposeController.doValidate()}"
+                            isButton="true"
+                            focusCancel="false"/>
+                    <!--<p:commandButton value="#{lang['common.reset']}" styleClass="mg-left-5"-->
+                                     <!--action="#{liquidateProposeController.doReset()}"-->
+                                     <!--process="@this"-->
+                                     <!--update="@form"/>-->
+                </div>
+            </p:outputPanel>
+            <!--End vung button-->
+
+            <script type="text/javascript">
+                document.getElementById('frmLiquidatePropose').onkeypress = function (event) {
+                    if (event.keyCode == 120 &amp;&amp; document.getElementById('frmLiquidatePropose:listProduct:listProductAddNew') != null) {
+                        document.getElementById("frmLiquidatePropose:listProduct:listProductAddNew").click();
+                        return false;
+                    }
+                }
+            </script>
+        </h:form>
+
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailSerial"
+                  widgetVar="dlgDetailSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <ui:include src="../../../../../resources/tags/dlgDetailSerial.xhtml">
+                <ui:param name="controller" value="#{liquidateProposeController.listProductTag}"/>
+                <ui:param name="idComponent" value="inputListProduct"/>
+            </ui:include>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

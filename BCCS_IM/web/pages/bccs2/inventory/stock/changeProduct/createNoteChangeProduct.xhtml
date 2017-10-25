@@ -1,0 +1,235 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.change.product.offering.create.note']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.change.product.offering.create.note']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmChangeProduct">
+            <p:outputPanel id="pnlTabChange" styleClass="Container100">
+                <div class="ContainerIndent  mg-bottom-0">
+                    <p:messages id="changeMessage" showDetail="true" showSummary="false" closable="true"/>
+                </div>
+                <p:outputPanel id="pnlInfoChange">
+                    <p:focus for="frmChangeProduct"/>
+                    <p:outputPanel styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInfoChangeProduct"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.stock.change.product.offering.create.note.info']}"/>
+
+                        <div class="Container100 panelInfoChangeProduct marginTopBottom10">
+                            <!--Start vung thong tin view lenh xuat-->
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive33">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4 lb-sentinel">
+                                        <p:outputLabel styleClass="lb-sentinel" for="actionCode"
+                                                       value="#{lang['mn.stock.change.product.offering.create.note.actionCode']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 pd-top-4 ui-fluid">
+                                        <p:inputText
+                                                placeholder="#{lang['mn.stock.change.product.offering.create.note.actionCode.placeholder']}"
+                                                required="true"
+                                                id="actionCode"
+                                                maxlength="20"
+                                                requiredMessage="#{lang['mn.stock.change.product.offering.create.note.actionCode.require']}"
+                                                value="#{createNoteChangeProductController.transInputDTO.actionCode}"
+                                                validatorMessage="#{lang['mn.stock.change.product.offering.create.note.actionCode.format.msg']}"/>
+                                        <p:message for="actionCode" style="font-size: 11px!important;"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive33">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['mn.stock.change.product.offering.create.note.date']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                        <h:outputText
+                                                value="#{createNoteChangeProductController.transInputDTO.createDatetime}"
+                                                escape="true"
+                                                styleClass="lb-sentinel-bold">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive33">
+                                    <div class="Container40 Responsive50 ui-fluid pd-top-4 mg-left-15">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['stock.rescue.warranty.create.reason']}"
+                                                       for="cobReason"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="cobReason" filter="true" required="true"
+                                                         requiredMessage="#{lang['mn.stock.change.product.offering.create.note.reason.require']}"
+                                                         value="#{createNoteChangeProductController.transInputDTO.reasonId}">
+                                            <f:selectItem
+                                                    itemLabel="#{lang['mn.stock.agency.retrieve.select.reason']}"/>
+                                            <f:selectItems value="#{createNoteChangeProductController.lstReason}"
+                                                           var="reason"
+                                                           itemLabel="#{reason.reasonName}"
+                                                           itemLabelEscaped="true"
+                                                           itemValue="#{reason.reasonId}"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="cobReason"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive33">
+                                    <cbs:inputShop value="#{createNoteChangeProductController.shopInfoExportTag}"
+                                                   idComponent="ipExportShop"
+                                                   methodName="exportShop"
+                                                   update="@this"
+                                                   limit="#{createNoteChangeProductController.limitAutoComplete}"
+                                                   label="#{lang['mn.invoice.invoiceSerial.unit']}"
+                                                   require="false"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                   classDivInput="Container60 Responsive50 ui-fluid pd-top-4"
+                                                   requiredMessage="#{lang['export.order.stock.require.msg']}"
+                                                   placeholder="#{lang['export.order.stock.placehoder']}"
+                                            >
+                                    </cbs:inputShop>
+                                </div>
+                                <div class="Container66 Responsive66">
+                                    <div class="Container20 mg-left-15 Responsive25 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="changeNote"
+                                                       value="#{lang['export.order.note']}"/>
+                                    </div>
+                                    <div class="Container80 Responsive75 ui-fluid">
+                                        <p:inputText value="#{createNoteChangeProductController.transInputDTO.note}"
+                                                     maxlength="500"
+                                                     onblur="this.value = this.value.trim()"
+                                                     validatorMessage="#{lang['export.order.note.validate.maxlength']}"
+                                                     placeholder="#{lang['export.order.note.placehoder']}"
+                                                     id="changeNote"/>
+                                        <p:message for="changeNote"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50">
+                                        <p:outputLabel styleClass="lb-sentinel" for="ipWriteOffice"
+                                                       value="#{lang['export.order.write.office']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectBooleanCheckbox id="ipWriteOffice" styleClass="mg-left-5"
+                                                                 value="#{createNoteChangeProductController.writeOffice}">
+                                            <p:ajax event="change" process="@this" update="@([id$=pnExportOffice])"
+                                                    listener="#{createNoteChangeProductController.receiveWriteOffice}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50">
+                                        <p:outputLabel styleClass="lb-sentinel" for="checkErp" rendered="#{createNoteChangeProductController.showCheckErp}"
+                                                       value="#{lang['export.order.not.synchronize.ERP']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectBooleanCheckbox styleClass="mg-left-5" id="checkErp" rendered="#{createNoteChangeProductController.showCheckErp}"
+                                                                 value="#{createNoteChangeProductController.transInputDTO.checkErp}"
+                                                />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin view lenh xuat-->
+                    <p:outputPanel id="pnExportOffice" styleClass="Container100">
+                        <p:outputPanel styleClass="Container100"
+                                       rendered="#{createNoteChangeProductController.writeOffice}">
+                            <cbs:inputSignOffice value="#{createNoteChangeProductController.writeOfficeTag}"
+                                                 title="#{lang['export.order.view.office']}"
+                                                 idComponent="writeOfficeExport"/>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <!--Start vung thong tin Danh sach hang hoa-->
+                    <p:outputPanel id="pnlProductXXX" styleClass="Container100">
+                        <div class="Container100">
+                            <cbs:inputListProduct idComponent="changelistProduct" id="changelistProduct"
+                                                  value="#{createNoteChangeProductController.listProductTag}"
+                                                  changeProduct="true"
+                                                  idMessage="changeMessage"
+                                                  updateCheckSerial="@([id$=dlgDetailSerial]), @([id$=changeMessage])"
+                                                  onCompleteCheckSerial="if(!args.validationFailed){PF('dlgDetailSerial').show()}"/>
+                        </div>
+                    </p:outputPanel>
+
+                    <!--End vung thong tin danh sach hang hoa-->
+                    <!--Start Vung data button-->
+                    <div class="Container100">
+                        <div class="ContainerIndent TexAlCenter mg-top-0">
+                            <cbs:confirmDialog
+                                    idComponent="createNote"
+                                    id="createNote"
+                                    valueButton="#{lang['mn.stock.change.product.offering.create.note.value']}(F8)"
+                                    headerConfirm="#{lang['mn.stock.change.product.offering.create.note.value.header']}"
+                                    messageConfirm="#{lang['mn.stock.change.product.offering.create.note.value.mgs']}"
+                                    actionOK="#{createNoteChangeProductController.doCreateNote}"
+                                    resetValueButton="false"
+                                    process="@([id$=frmChangeProduct])"
+                                    updateArea="@([id$=frmChangeProduct])"
+                                    updateOK="@([id$=frmChangeProduct])"
+                                    focusCancel="false"
+                                    actionValidate="#{createNoteChangeProductController.doValidateCreateNote}"
+                                    oncompleteOK=""
+                                    disableButton="#{createNoteChangeProductController.canPrint}"
+                                    isButton="true"
+                                    />
+                            <p:commandButton value="#{lang['mn.stock.change.product.offering.create.note.print']}"
+                                             process="@this"
+                                             disabled="#{!createNoteChangeProductController.canPrint}"
+                                             update="@form"
+                                             ajax="false"
+                                             immediate="true"
+                                             styleClass="mg-left-5">
+                                <p:fileDownload value="#{createNoteChangeProductController.exportStockTransDetail()}"/>
+                            </p:commandButton>
+                            <p:commandButton value="#{lang['reset.selected']}"
+                                             process="@this"
+                                             update="@form"
+                                             styleClass="mg-left-5"
+                                             actionListener="#{createNoteChangeProductController.doReset}">
+                            </p:commandButton>
+                        </div>
+                    </div>
+                    <!--End Vung data button-->
+                </p:outputPanel>
+            </p:outputPanel>
+            <script type="text/javascript">
+                document.getElementById('frmChangeProduct').onkeypress = function (event) {
+                    if (event.keyCode == 119 &amp;&amp; document.getElementById('frmChangeProduct:createNote:createNotebtn') != null) {
+                        document.getElementById('frmChangeProduct:createNote:createNotebtn').click();
+                        return false;
+                    }
+                    if (event.keyCode == 120 &amp;&amp; document.getElementById('frmChangeProduct:changelistProduct:changelistProductAddNew') != null) {
+                        document.getElementById('frmChangeProduct:changelistProduct:changelistProductAddNew').click();
+                        return false;
+                    }
+                }
+            </script>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailSerial"
+                  widgetVar="dlgDetailSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <ui:include src="../../../../../resources/tags/dlgDetailSerial.xhtml">
+                <ui:param name="controller" value="#{createNoteChangeProductController.listProductTag}"/>
+                <ui:param name="idComponent" value="changelistProduct"/>
+            </ui:include>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

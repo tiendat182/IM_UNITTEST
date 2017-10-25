@@ -1,0 +1,62 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.invoice.confirmInvoiceTemplate']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.invoice.confirmInvoiceTemplate']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmExportNote">
+            <p:outputPanel styleClass="container100">
+                <p:outputPanel id="pnUnderExportNote">
+                    <!--Start vung xac nhan-->
+                    <p:outputPanel id="pnLstExportOrder" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelListOrderExport"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.invoice.confirmInvoiceTemplate.confirm.have.received']}"/>
+
+                        <div class="Container100 panelListOrderExport" style="margin-bottom: 10px;margin-top: 10px;">
+                            <p:dataTable
+                                    id="lstOrderExport"
+                                    var=""
+                                    rowKey=""
+                                    resizableColumns="true"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage=""
+                                    value="#{confirmInvoiceTemplateController.lsTest}">
+                                <p:column headerText="#{lang['mn.invoice.type.form.invoice']}" styleClass="col-left">
+                                    <p:outputLabel value="Phôi hóa đơn tự in bán hàng"
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.unit.staff']}" styleClass="col-left">
+                                    <p:outputLabel value="VTT - Tổng công ty viễn thông Viettel"
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.quantity.ship']}" style="text-align: right">
+                                    <p:outputLabel value="1,000,000"/>
+                                </p:column>
+                                <p:column selectionMode="multiple" style="text-align: center">
+                                </p:column>
+                            </p:dataTable>
+
+                            <div class="ContainerIndent TexAlCenter">
+                                <p:commandButton value="#{lang['common.confirm']}"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung xac nhan-->
+                </p:outputPanel>
+            </p:outputPanel>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

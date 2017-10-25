@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:f="http://java.sun.com/jsf/core"
+>
+<composite:interface>
+    <composite:attribute name="idComponent" shortDescription="id of this component" required="true"/>
+    <composite:attribute name="renderGuide" shortDescription="renderGuide an hien huong dan nghiep vu" default="true"/>
+    <composite:attribute name="tootip" shortDescription="tootip cua icon an hien huong dan nghiep vu" default="#{lang['common.guide']}"/>
+    <composite:attribute name="datalist" shortDescription="list danh sach text huong dan" default="#{lang['common.guide']}"/>
+    <composite:attribute name="headerDlg" shortDescription="header dialog cua HDNV" default="#{lang['common.guide']}"/>
+    <composite:attribute name="immediate" default="false" shortDescription="thuoc tinh imediate" />
+    <composite:attribute name="styleClass" shortDescription="class icon" />
+    <composite:attribute name="style" shortDescription="style css cua icon"/>
+</composite:interface>
+<composite:implementation>
+    <style type="text/css">
+        .a#{cc.attrs.idComponent} .ui-datalist {
+            background-color: transparent;
+            border: 0px;
+            color: black;
+        }
+        .a#{cc.attrs.idComponent} .ui-datalist .ui-datalist-data {
+            margin-bottom: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 10px;
+        }
+
+        .a#{cc.attrs.idComponent} .ui-datalist-item {
+            list-style: none !important;
+        }
+    </style>
+    <p:commandLink title="#{cc.attrs.tootip}" styleClass="guide_#{cc.attrs.idComponent} #{cc.attrs.styleClass}" immediate="#{cc.attrs.immediate}"
+                   onclick="PF('#{cc.attrs.idComponent}').show()" rendered="#{cc.attrs.renderGuide}" style="#{cc.attrs.style}"
+                   >
+        <p:graphicImage value="resources/images/view_details.png" width="25"/>
+    </p:commandLink>
+    <p:dialog width="500" height="200" appendTo="@(body)" closable="true" rendered="#{cc.attrs.renderGuide}"
+              closeOnEscape="true" resizable="false" id="dlgUserGuide#{cc.attrs.idComponent}"
+              draggable="true" dynamic="true" maximizable="false" modal="false"
+              position="right bottom" header="#{cc.attrs.headerDlg}"
+              widgetVar="#{cc.attrs.idComponent}"
+              >
+        <div class="Container a#{cc.attrs.idComponent}">
+            <p:dataList value="#{cc.attrs.datalist}" var="item">
+                <p:outputLabel escape="false" value="#{item}" styleClass="lb-sentinel-bold"/>
+            </p:dataList>
+
+        </div>
+    </p:dialog>
+</composite:implementation>
+</html>
+

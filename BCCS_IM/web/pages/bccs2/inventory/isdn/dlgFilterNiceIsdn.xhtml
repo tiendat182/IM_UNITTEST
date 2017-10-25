@@ -1,0 +1,80 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:form id="dlgFilterNiceIsdnPanel">
+        <p:outputPanel styleClass="container100">
+            <div class="ContainerIndent">
+                <p:messages id="messagesDlg" showSummary="false" showDetail="true" closable="true"/>
+            </div>
+
+            <div class="Container100 marginTopBottom10">
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container33 Responsive">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.isdn.rule.nice.digit.mask']}: #{selectionViewController.resultFilterRule.maskMapping}"/>
+                </div>
+                <div class="Container33 Responsive">
+                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.isdn.rule.nice.digit.condition']}: #{selectionViewController.resultFilterRule.condition}"/>
+                </div>
+                <div class="Container33 Responsive">
+                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.isdn.rule.nice.digit.priorities']}: #{selectionViewController.resultFilterRule.ruleOrder}"/>
+                </div>
+            </div>
+            <div class="ContainerIndent">
+            <p:dataTable
+                    id="lstRuleSuitable"
+                    var="item"
+                    rowIndexVar="index"
+                    rowKey="#{item.filterSpecialNumberId}"
+                    resizableColumns="true"
+                    paginator="#{lang['common.paging.paginator']}"
+                    rows="#{lang['common.paging.rows.default']}"
+                    rowsPerPageTemplate="#{lang['common.paging.rows.default']}"
+                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                    emptyMessage="#{lang['common.empty.records']}"
+                    value="#{selectionViewController.listSpecialNumber}">
+                <!--<p:column headerText="#{lang['rule.nice.digit']}" style="width: 33%" sortBy="#{item.ruleNameSelected}">-->
+                    <!--<p:outputLabel value="#{selectionViewController.ruleNameSelected}" style="text-align: left"-->
+                                   <!--title="#{selectionViewController.ruleNameSelected}"/>-->
+                <!--</p:column>-->
+                <p:column headerText="#{lang['mn.infrastructure.number']}" style="width: 10%" sortBy="#{item.isdn}">
+                    <p:outputLabel value="#{item.isdn}" title="#{item.isdn}"/>
+                </p:column>
+                <p:column headerText="#{lang['export.order.name']} " style="width: 25%" sortBy="#{item.productCode}">
+                    <p:outputLabel rendered="#{not empty item.productCode}" value="#{item.productCode} - #{item.productName}"
+                                   title="#{item.productCode} - #{item.productName}"/>
+                </p:column>
+                <p:column headerText="#{lang['common.status']}" style="width: 25%" sortBy="#{item.status}">
+                    <p:outputLabel value="#{selectionViewController.getStatusName(item.status)}"
+                                   title="#{selectionViewController.getStatusName(item.status)}"/>
+                </p:column>
+                <p:column headerText="#{lang['mn.invoice.invoiceType.dateCreate']}"
+                          sortBy="#{item.createDatetime}"
+                          style="width: 25%;">
+                    <p:outputLabel value="#{item.createDatetime}" style="text-align: left"
+                                   title="#{item.createDatetime}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </p:outputLabel>
+                </p:column>
+            </p:dataTable>
+            </div>
+            </div>
+            <div class="ContainerIndent TexAlCenter">
+                <p:commandButton value="#{lang['notification.close']}"
+                                 actionListener="sss"
+                                 process="@form"
+                                 resetValues="true"
+                                 oncomplete="PF('dlgFilterNiceIsdn').hide();"
+                                 styleClass="mg-left-5"/>
+                <p:remoteCommand update="@form" process="@this" delay="1000" name="kakaka" actionListener="#{selectionViewController.succc}"  />
+            </div>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

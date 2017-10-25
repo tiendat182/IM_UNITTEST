@@ -1,0 +1,185 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://java.sun.com/jsf/core">
+    <h:form id="frmInsertDebit" prependId="false" enctype="multipart/form-data">
+        <p:outputPanel id="pnlInsertTimePromotion" styleClass="Container100">
+            <div class="ContainerIndent mg-top-0">
+                <p:messages id="messagePop" showSummary="false" showDetail="true" closable="true"/>
+            </div>
+            <div class="ContainerIndent mg-bottom-0 mg-bottom-0">
+                <p:outputPanel styleClass="ContainerIndent" id="pnLimitType">
+                    <div class="Container40 Responsive pd-top-4">
+                        <p:outputLabel styleClass="lb-sentinel" for="limitType"
+                                       value="#{lang['range.time.promotion.limit.type']}"/>
+                    </div>
+                    <div class="Container60 Responsive ui-fluid">
+                        <p:selectOneMenu id="limitType"
+                                         styleClass="limitType"
+                                         value="#{rangeTimePromotionController.forEditDTO.debitDayType}"
+                                         disabled="#{rangeTimePromotionController.forEditDTO.id != null}"
+                                         required="true"
+                                         requiredMessage="#{lang['require.messenge.type.limit']}">
+                            <f:selectItem itemValue=""
+                                          itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                            <f:selectItems value="#{rangeTimePromotionController.optionSetValueDTOs}"
+                                           var="optionsetDTO"
+                                           itemLabel="#{optionsetDTO.name}"
+                                           itemValue="#{optionsetDTO.value}"/>
+                        </p:selectOneMenu>
+                        <p:message for="limitType"/>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ContainerIndent" id="pnStartDate">
+                    <div class="Container100">
+                        <div class="Container40 Responsive pd-top-4">
+                            <p:outputLabel styleClass="lb-sentinel" for="limitStartDate"
+                                           value="#{lang['range.time.promotion.startdate']}"/>
+                        </div>
+                        <div class="Container60 Responsive ui-fluid">
+                            <p:calendar value="#{rangeTimePromotionController.forEditDTO.startDate}"
+                                        id="limitStartDate" required="true"
+                                        pattern="dd/MM/yyyy"
+                                        mask="true"
+                                        converterMessage="#{lang['invalid.date.message']}"
+                                        validatorMessage="#{lang['range.time.promotion.validate.message.date']}"
+                                        requiredMessage="#{lang['require.messenge.start.date']}"
+                                        placeholder="#{lang['export.order.day.placehoder']}">
+                                <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                            </p:calendar>
+                            <p:message for="limitStartDate"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ContainerIndent" id="pnEndDate">
+                    <div class="Container100">
+                        <div class="Container40 Responsive pd-top-4">
+                            <p:outputLabel styleClass="lb-sentinel" for="limitEndDateAdd"
+                                           value="#{lang['range.time.promotion.enddate']}"/>
+                        </div>
+                        <div class="Container60 Responsive ui-fluid">
+                            <p:calendar value="#{rangeTimePromotionController.forEditDTO.endDate}"
+                                        id="limitEndDateAdd" required="true"
+                                        pattern="dd/MM/yyyy"
+                                        mask="true"
+                                        converterMessage="#{lang['invalid.date.message']}"
+                                        validatorMessage="#{lang['range.time.promotion.validate.message.date']}"
+                                        requiredMessage="#{lang['require.messenge.end.date']}"
+                                        placeholder="#{lang['export.order.day.placehoder']}">
+                                <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                            </p:calendar>
+                            <p:message for="limitEndDateAdd"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+
+                <p:outputPanel styleClass="ContainerIndent" id="pnUpload">
+                    <div class="Container40 Responsive pd-top-10">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['range.time.promotion.fileselect']}"
+                                       for="uploadFile"/>
+                    </div>
+                    <div class="Container60 Responsive ">
+                        <p:fileUpload id="uploadFile"
+                                      validatorMessage="#{lang['lb.approval.file.chooseFile']}"
+                                      invalidFileMessage="#{lang['msg.error.file.format']}"
+                                      invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                      value="#{rangeTimePromotionController.fileUpload}"
+                                      fileUploadListener="#{rangeTimePromotionController.handleFileUpload}"
+                                      auto="true" widgetVar="wgUploadFile"
+                                      update="@([id$=messageUpload]),@([id$=messagePop]),@([id$=outputUploadFile])"
+                                      mode="advanced" dragDropSupport="true" multiple="false"
+                                      label="#{lang['common.choose.file']}" sizeLimit="5242880"
+                                      allowTypes="/(\.|\/)(xls|xlsx|doc|docx|pdf|jpe?g|png|gif|txt|bmp|txt)$/">
+                        </p:fileUpload>
+                        <p:message id="messageUpload" for="uploadFile"/>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel id="outputUploadFile" styleClass="Container100">
+                    <p:outputPanel styleClass="Container100"
+                                   rendered="#{rangeTimePromotionController.renderFileName}">
+                        <div class="Container40">
+                            <p:outputLabel value="." style="color: #ffffff"/>
+                        </div>
+                        <div class="Container60 Responsive">
+                            <p:outputLabel
+                                    value="#{rangeTimePromotionController.forEditDTO.detailFileUpload}"/>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+
+                <div class="Container100 TexAlCenter pd-top-10">
+                    <p:outputPanel rendered="#{rangeTimePromotionController.forEditDTO.id != null}">
+                        <cbs:confirmDialog idComponent="btnConfirmEdit"
+                                           valueButton="#{lang['common.edit.record']}"
+                                           headerConfirm="#{lang['mn.invoice.invoiceType.header.edit']}"
+                                           messageConfirm="#{lang['mn.invoice.invoiceType.msg.edit.confirm']}"
+                                           actionOK="#{rangeTimePromotionController.updateDebitDayType}"
+                                           resetValueButton="true"
+                                           actionValidate="#{rangeTimePromotionController.validateBeforeAdd}"
+                                           updateArea="@form" updateOK="@form"
+                                           oncompleteOK="if(!args.validationFailed) {PF('dlgAddDebitDayType').hide();}"
+                                           process="@this,@([id$=frmInsertDebit])"
+                                           focusCancel="false"
+                                           isButton="true"/>
+                    </p:outputPanel>
+                    <p:outputPanel rendered="#{rangeTimePromotionController.forEditDTO.id == null}">
+                        <p:commandButton partialSubmit="false" value="#{lang['mn.stock.limit.createNew']}"
+                                         update="@form" process="@form" resetValueButton="true"
+                                         oncomplete="if(!args.validationFailed) {PF('confirmDlg').show();setTimeout(setFocusOK(),1500)}"
+                                         actionListener="#{rangeTimePromotionController.validateBeforeAdd}"/>
+                        <p:confirmDialog closeOnEscape="true" closable="true"
+                                         appendTo="@(body)"
+                                         widgetVar="confirmDlg"
+                                         header="#{lang['mn.stock.limit.financeType.header.add']}"
+                                         id="confirmDlg"
+                                         width="550"
+                                         message="#{lang['common.msg.add.confirm']}">
+                            <p:commandLink id="btnNO" value="#{lang['common.button.NO']}"
+                                           styleClass="md-button btnNO"
+                                           process="@none" onstart="PF('confirmDlg').hide();"/>
+                            <p:commandLink process="@this" value="#{lang['common.button.YES']}"
+                                           styleClass="md-button btnOK" onstart="PF('confirmDlg').hide();"
+                                           update="@form"
+                                           id="btnOK" resetValues="false"
+                                           actionListener="#{rangeTimePromotionController.doAddNew(false)}"/>
+                        </p:confirmDialog>
+                        <p:commandButton partialSubmit="false" value="#{lang['common.add.close']}" update="@form"
+                                         process="@form"
+                                         resetValueButton="true"
+                                         oncomplete="if(!args.validationFailed) {PF('confirmDlg2').show();setTimeout(setFocusOK2(),1500)}"
+                                         actionListener="#{rangeTimePromotionController.validateBeforeAdd}"
+                                         styleClass="mg-left-5"/>
+                        <p:confirmDialog closeOnEscape="true" closable="true"
+                                         appendTo="@(body)"
+                                         widgetVar="confirmDlg2"
+                                         header="#{lang['mn.stock.limit.financeType.header.add']}"
+                                         id="confirmDlg2"
+                                         width="550"
+                                         message="#{lang['common.msg.add.confirm']}">
+                            <p:commandLink id="btnNO2" value="#{lang['common.button.NO']}" styleClass="md-button btnNO2"
+                                           process="@none" onstart="PF('confirmDlg2').hide();"/>
+                            <p:commandLink process="@this" value="#{lang['common.button.YES']}"
+                                           styleClass="md-button btnOK2" onstart="PF('confirmDlg2').hide();"
+                                           id="btnOK2" resetValues="false"
+                                           oncomplete="if(!args.validationFailed) {PF('dlgAddDebitDayType').hide();}"
+                                           actionListener="#{rangeTimePromotionController.doAddNew(true)}"/>
+                        </p:confirmDialog>
+                    </p:outputPanel>
+                </div>
+            </div>
+        </p:outputPanel>
+        <script type="text/javascript">
+            function setFocusOK() {
+                setFocusByClass('btnOK');
+            }
+            function setFocusOK2() {
+                setFocusByClass('btnOK2');
+            }
+        </script>
+    </h:form>
+
+</ui:composition>

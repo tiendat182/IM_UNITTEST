@@ -1,0 +1,166 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:form id="dlgRuleGroupPanel">
+        <p:outputPanel id="pnInsertFinanceDlg" styleClass="Containe100">
+            <!--<pe:keyFilter mask="alphanum" preventPaste="false" for="txtRuleGroupCode,txtRuleGroupName"/>-->
+            <p:messages id="messages" showSummary="false" showDetail="true" closable="true"/>
+            <p:focus for="txtRuleGroupCode"/>
+
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7 txtRuleGroupCode">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['rule.group.code']}"
+                                       for="txtRuleGroupCode"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid txtRuleGroupCode">
+                        <p:inputText
+                                id="txtRuleGroupCode"
+                                requiredMessage="#{lang['ws.group.code.not.null']}"
+                                maxlength="20"
+                                onchange="this.value=this.value.trim()"
+                                required="true"
+                                value="#{ruleGroupManagerController.currentGroup.groupFilterRuleCode}"
+                                placeholder="#{lang['rule.group.code.holder']}">
+                            <pe:keyFilter regEx="/[a-z0-9_]/i" preventPaste="false"/>
+                        </p:inputText>
+                        <cbs:message forId="txtRuleGroupCode"/>
+                    </div>
+                </div>
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7 txtRuleGroupName_col">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['rule.group.name']}"
+                                       for="txtRuleGroupName"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid txtRuleGroupName">
+                        <p:inputText
+                                id="txtRuleGroupName"
+                                requiredMessage="#{lang['ws.group.name.not.null']}"
+                                styleClass="txtRuleGroupName"
+                                onchange="this.value=this.value.trim()"
+                                maxlength="100"
+                                required="true"
+                                value="#{ruleGroupManagerController.currentGroup.name}"
+                                placeholder="#{lang['rule.group.name.holder']}">
+                        </p:inputText>
+                        <cbs:message forId="txtRuleGroupName"/>
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7 cbxRule_col">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['rule.group.rule']}"
+                                       for="cbxRule"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid cbxRule">
+                        <p:selectOneMenu
+                                id="cbxRule"
+                                required="true"
+                                requiredMessage="#{lang['ws.rule.not.null']}"
+                                value="#{ruleGroupManagerController.currentGroup.parentId}">
+                            <f:selectItem itemLabel="#{lang['rule.group.select.rule']}"
+                                          noSelectionOption="true"/>
+                            <f:selectItems value="#{ruleGroupManagerController.listRule}" var="rule"
+                                           itemLabel="#{rule.name}"
+                                           itemValue="#{rule.groupFilterRuleId}"/>
+                        </p:selectOneMenu>
+                        <cbs:message forId="cbxRule"/>
+                    </div>
+                </div>
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7 cbxRuleGroupType_col">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['rule.group.type']}"
+                                       for="cbxRuleGroupType"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid cbxRuleGroupType">
+                        <p:selectOneMenu
+                                id="cbxRuleGroupType"
+                                required="true"
+                                value="#{ruleGroupManagerController.currentGroup.groupType}"
+                                requiredMessage="#{lang['ws.group.type.not.null']}">
+                            <f:selectItem itemLabel="#{lang['rule.group.type.select']}"/>
+                            <f:selectItem itemLabel="#{lang['rule.group.type.1']}" itemValue="1"/>
+                            <f:selectItem itemLabel="#{lang['rule.group.type.2']}" itemValue="2"/>
+                            <f:selectItem itemLabel="#{lang['rule.group.type.3']}" itemValue="3"/>
+                            <f:selectItem itemLabel="#{lang['rule.group.type.4']}" itemValue="4"/>
+                        </p:selectOneMenu>
+                        <cbs:message forId="cbxRuleGroupType"/>
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container100">
+                    <div class="Container20 Responsive25 mg-left-15 pd-top-7 txtDescription_col">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['rule.group.description']}"/>
+                    </div>
+                    <div class="Container80 Responsive75 ui-fluid txtDescription">
+                        <p:inputText
+                                id="txtDescription"
+                                maxlength="500"
+                                onblur="this.value=this.value.trim()"
+                                placeholder="#{lang['mn.isdn.rule.desc.msg']}"
+                                rows="3"
+                                value="#{ruleGroupManagerController.currentGroup.notes}">
+                        </p:inputText>
+                    </div>
+                </div>
+            </div>
+            <div class="Container100 TexAlCenter marT10">
+                <p:commandButton process="pnInsertFinanceDlg" update="pnInsertFinanceDlg,@([id$=lstRule])"
+                                 value="#{lang['common.add']}"
+                                 actionListener="#{ruleGroupManagerController.validDataBeforeCreateRange()}"
+                                 oncomplete="if(!args.validationFailed) {PF('dlgConfirmAdd').show(); setTimeout(function () {$('.btnOKDlg').focus();}, 350);}">
+                </p:commandButton>
+                <p:commandButton process="pnInsertFinanceDlg" update="@form"
+                                 value="#{lang['common.add.close']}" styleClass="mg-left-5"
+                                 actionListener="#{ruleGroupManagerController.validDataBeforeCreateRange()}"
+                                 oncomplete="if(!args.validationFailed) {PF('dlgConfirmAddClose').show(); setTimeout(function () {$('.btnOKDlg').focus();}, 350);}">
+                </p:commandButton>
+            </div>
+        </p:outputPanel>
+        <p:confirmDialog closeOnEscape="true" closable="true"
+                         appendTo="@(body)"
+                         widgetVar="dlgConfirmAdd"
+                         header="#{lang['mn.stock.limit.financeType.header.add']}"
+                         id="cfmBtn"
+                         width="550"
+                         message="#{lang['common.msg.add.confirm']}">
+            <p:commandLink value="#{lang['common.button.no']}" styleClass="md-button" process="@none"
+                           onstart="PF('dlgConfirmAdd').hide();"
+                    />
+            <p:commandLink process="@this,@form"
+                           update="pnInsertFinanceDlg,@([id$=lstRule])"
+                           value="#{lang['common.button.yes']}" styleClass="md-button btnOKDlg"
+                           oncomplete=" PF('dlgConfirmAdd').hide();"
+                           actionListener="#{ruleGroupManagerController.actionSave(false)}"
+                    />
+
+        </p:confirmDialog>
+        <p:confirmDialog closeOnEscape="true" closable="true"
+                         appendTo="@(body)"
+                         widgetVar="dlgConfirmAddClose"
+                         header="#{lang['mn.stock.limit.financeType.header.add']}"
+                         id="cfmBtnclose"
+                         width="550"
+                         message="#{lang['common.msg.add.confirm']}">
+            <p:commandLink value="#{lang['common.button.no']}" styleClass="md-button" process="@none"
+                           onstart="PF('dlgConfirmAddClose').hide();"
+                    />
+            <p:commandLink process="@this,@form"
+                           update="pnInsertFinanceDlg,@([id$=lstRule])"
+                           value="#{lang['common.button.yes']}" styleClass="md-button btnOKDlg mg-left-5"
+                           oncomplete=" PF('dlgConfirmAddClose').hide(); if(!args.validationFailed ){PF('dlgRuleGroup').hide();} "
+                           actionListener="#{ruleGroupManagerController.actionSave(true)}"
+                    />
+
+        </p:confirmDialog>
+    </h:form>
+</ui:composition>

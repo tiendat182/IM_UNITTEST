@@ -1,0 +1,429 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.change.product.offering.approve']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.change.product.offering.approve']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmApproveChange">
+            <p:outputPanel id="pnlTabApprove" styleClass="Container100">
+
+                <div class="ContainerIndent  mg-bottom-0">
+                    <p:messages id="approveMessage" showDetail="true" showSummary="false" closable="true"/>
+                </div>
+                <p:outputPanel styleClass="Container100"
+                               rendered="#{!approveChangeProductController.showDetail}">
+                    <p:focus for="pnInfoApproveChange"/>
+                    <p:outputPanel id="pnInfoApproveChange" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="pnInfoApproveChange" toggle="true"
+                                   titleHeader="#{lang['create.note.export.info.search']}"/>
+
+                        <div class="Container100 pnInfoApproveChange" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container50 Responsive50">
+                                    <cbs:inputShop value="#{approveChangeProductController.shopInfoTag}"
+                                                   idComponent="ipReceiveShop"
+                                                   methodName="receiveShop"
+                                                   update="@this,@([id$=approveMessage])"
+                                                   label="#{lang['mn.stock.change.product.offering.approve.shop']}"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                   classDivInput="Container60 Responsive50 ui-fluid"
+                                                   placeholder="#{lang['mn.stock.change.product.offering.approve.shop.holder']}"
+                                                   forceSelection="false"
+                                                   require="false"
+                                                   clearMethodName="clearCurrentShop"
+                                            >
+                                    </cbs:inputShop>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel
+                                                value="#{lang['mn.stock.change.product.offering.approve.status']}"
+                                                for="cobState"
+                                                styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu filter="true" filterMatchMode="contains"
+                                                         id="cobState"
+                                                         value="#{approveChangeProductController.searchInputDTO.status}">
+                                            <f:selectItem itemEscaped="true"
+                                                          itemValue=""
+                                                          itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                            <f:selectItems
+                                                    value="#{approveChangeProductController.statusList}"
+                                                    itemLabelEscaped="true"
+                                                    var="state" itemValue="#{state.value}"
+                                                    itemLabel="#{state.name}"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="cobState"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['create.note.from.date']}" for="fromDate"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:calendar id="fromDate"
+                                                    value="#{approveChangeProductController.searchInputDTO.startDate}"
+                                                    placeholder="#{lang['create.note.from.date.placeholder']}"
+                                                    converterMessage="#{lang['stock.rescue.warranty.date.validate']}"
+                                                    required="true"
+                                                    requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                                        <p:message for="fromDate"/>
+                                    </div>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['create.note.to.date']}" for="toDate"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:calendar id="toDate"
+                                                    value="#{approveChangeProductController.searchInputDTO.endDate}"
+                                                    required="true"
+                                                    converterMessage="#{lang['stock.rescue.warranty.date.validate']}"
+                                                    placeholder="#{lang['create.note.to.date.placeholder']}"
+                                                    requiredMessage="#{lang['mn.stock.to.date.not.blank']}"/>
+                                        <p:message for="toDate"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="Container100 TexAlCenter mg-top-0">
+                                <p:commandButton value="#{lang['create.note.search']}"
+                                                 process="@([id$=pnInfoApproveChange])"
+                                                 action="#{approveChangeProductController.doSearch}"
+                                                 update="@form"/>
+                                <p:commandButton value="#{lang['reset.selected']}"
+                                                 process="@this"
+                                                 styleClass="mg-left-5"
+                                                 action="#{approveChangeProductController.doReset}"
+                                                 update="@form"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+
+                    <!--Start vung ket qua-->
+                    <p:outputPanel styleClass="ContainerIndent" id="pnlListRequest">
+                        <cbs:panel classForToggle="pnlListRequest" toggle="true"
+                                   titleHeader="#{lang['mn.stock.change.product.offering.approve.table']}"/>
+
+                        <div class="ContainerIndent pnlListRequest">
+                            <p:dataTable
+                                    id="tblListRequestChange"
+                                    var="approveChange" value="#{approveChangeProductController.lstSearch}"
+                                    rowIndexVar="index"
+                                    resizableColumns="true"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.empty.records']}">
+                                <p:column headerText="#{lang['common.stt']}" styleClass="TexAlCenter"
+                                          style="width: 7%">
+                                    <p:outputLabel value="#{index + 1}"/>
+                                </p:column>
+                                <p:column style="width: 10%;" sortBy="#{approveChange.fromOwnerName}">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['mn.stock.change.product.offering.approve.shop']}"
+                                                title="#{lang['mn.stock.change.product.offering.approve.shop']}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{approveChange.fromOwnerName}"
+                                                  title="#{approveChange.fromOwnerName}"/>
+                                </p:column>
+                                <p:column style="width: 10%;" sortBy="#{approveChange.toOwnerName}">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['mn.stock.change.product.offering.approve.table.shop.approve']}"
+                                                title="#{lang['mn.stock.change.product.offering.approve.table.shop.approve']}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{approveChange.toOwnerName}"
+                                                  title="#{approveChange.toOwnerName}"/>
+                                </p:column>
+                                <p:column style="width: 7%;" sortBy="#{approveChange.createUser}">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['mn.stock.change.product.offering.approve.table.create.user']}"
+                                                title="#{lang['mn.stock.change.product.offering.approve.table.create.user']}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{approveChange.createUser}"
+                                                  title="#{approveChange.createUser}"/>
+                                </p:column>
+                                <p:column style="width: 7%;" sortBy="#{approveChange.createDateStr}">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['mn.stock.change.product.offering.approve.table.create.date']}"
+                                                title="#{lang['mn.stock.change.product.offering.approve.table.create.date']}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{approveChange.createDateStr}"
+                                                  title="#{approveChange.createDateStr}">
+                                    </h:outputText>
+                                </p:column>
+                                <p:column style="width: 10%;" sortBy="#{approveChange.actionCode}">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['mn.stock.change.product.offering.approve.table.action.code']}"
+                                                title="#{lang['mn.stock.change.product.offering.approve.table.action.code']}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{approveChange.actionCode}"
+                                                  title="#{approveChange.actionCode}"/>
+                                </p:column>
+                                <p:column style="width: 7%;" sortBy="#{approveChange.statusStr}">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['mn.stock.change.product.offering.approve.table.status']}"
+                                                title="#{lang['mn.stock.change.product.offering.approve.table.status']}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{approveChange.statusStr}"
+                                                  title="#{approveChange.statusStr}"/>
+                                </p:column>
+                                <p:column style="width: 10%;" sortBy="#{approveChange.approveUser}">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['mn.stock.change.product.offering.approve.table.approve.user']}"
+                                                title="#{lang['mn.stock.change.product.offering.approve.table.approve.user']}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{approveChange.approveUser}"
+                                                  title="#{approveChange.approveUser}"/>
+                                </p:column>
+                                <p:column style="width: 7%;" sortBy="#{approveChange.lastUpdateTimeStr}">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['mn.stock.change.product.offering.approve.table.approve.date']}"
+                                                title="#{lang['mn.stock.change.product.offering.approve.table.approve.date']}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{approveChange.lastUpdateTimeStr}"
+                                                  title="#{approveChange.lastUpdateTimeStr}">
+                                    </h:outputText>
+                                </p:column>
+                                <p:column style="width: 8%;text-align: center">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['create.note.detail']}"
+                                                      title="#{lang['create.note.detail']}"/>
+                                    </f:facet>
+                                    <p:commandLink styleClass="fa icon-zoom-in Fs16 blue"
+                                                   process="@this" update="@([id$=frmApproveChange])"
+                                                   title="#{lang['create.note.detail.serial']}"
+                                                   actionListener="#{approveChangeProductController.doViewDetail(approveChange.changeModelTransId)}"/>
+                                </p:column>
+                                <p:column style="width: 10%;text-align: center">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['stock.rescue.warranty.create.action']}"
+                                                      title="#{lang['stock.rescue.warranty.create.action']}"/>
+                                    </f:facet>
+                                    <cbs:confirmDialog
+                                            idComponent="btnApprove"
+                                            valueButton=""
+                                            disableButton="#{approveChange.status != 0}"
+                                            headerConfirm="#{lang['mn.stock.change.product.offering.approve.btn.approve.confirm']}"
+                                            messageConfirm="#{lang['mn.stock.change.product.offering.approve.btn.approve.mgs']}"
+                                            actionOK="#{approveChangeProductController.doApprove}"
+                                            actionValidate="#{approveChangeProductController.doValidate(approveChange.changeModelTransId,'1')}"
+                                            resetValueButton="false"
+                                            styleClassButton="fa icon-ok Fs16 blue"
+                                            process="@this,@([id$=pnExportOffice]),@([id$=pnInfoOption])"
+                                            processOK="@this"
+                                            updateArea="@this,@([id$=frmApproveChange])"
+                                            focusCancel="false"
+                                            titleButton="#{lang['mn.stock.change.product.offering.approve.btn.approve']}"
+                                            isButton="false"
+                                            />
+                                    <cbs:confirmDialog
+                                            idComponent="btnCancel"
+                                            valueButton=""
+                                            disableButton="#{approveChange.status != 0}"
+                                            headerConfirm="#{lang['mn.stock.change.product.offering.approve.btn.cancel.confirm']}"
+                                            messageConfirm="#{lang['mn.stock.change.product.offering.approve.btn.cancel.mgs']}"
+                                            actionOK="#{approveChangeProductController.doCancel}"
+                                            actionValidate="#{approveChangeProductController.doValidate(approveChange.changeModelTransId,'2')}"
+                                            resetValueButton="false"
+                                            styleClassButton="fa icon-cancel Fs16 blue"
+                                            process="@this,@([id$=pnInfoOption])"
+                                            processOK="@this,@([id$=pnInfoOption])"
+                                            updateArea="@this"
+                                            focusCancel="true"
+                                            titleButton="#{lang['mn.stock.change.product.offering.approve.btn.cancel']}"
+                                            isButton="false"
+                                            />
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung ket qua-->
+                    <!--End chi tiet serial-->
+                    <p:outputPanel id="pnInfoOption" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="pnInfoOption" toggle="true"
+                                   titleHeader="#{lang['mn.stock.change.product.offering.approve.option']}"/>
+
+                        <div class="ContainerIndent pnInfoOption">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 mg-left-15 Responsive50">
+                                    <p:outputLabel styleClass="lb-sentinel" for="ipWriteOffice"
+                                                   value="#{lang['export.order.write.office']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:selectBooleanCheckbox id="ipWriteOffice" styleClass="mg-left-5"
+                                                             value="#{approveChangeProductController.writeOffice}">
+                                        <p:ajax event="change" process="@this" update="@([id$=pnExportOffice])"
+                                                listener="#{approveChangeProductController.receiveWriteOffice}"/>
+                                    </p:selectBooleanCheckbox>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 mg-left-15 Responsive50">
+                                    <p:outputLabel styleClass="lb-sentinel" for="checkErp"
+                                                   rendered="#{approveChangeProductController.showCheckErp}"
+                                                   value="#{lang['export.order.not.synchronize.ERP']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:selectBooleanCheckbox styleClass="mg-left-5" id="checkErp"
+                                                             rendered="#{approveChangeProductController.showCheckErp}"
+                                                             value="#{approveChangeProductController.checkErp}"
+                                            />
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <p:outputPanel id="pnExportOffice" styleClass="Container100">
+                        <p:outputPanel styleClass="Container100"
+                                       rendered="#{approveChangeProductController.writeOffice}">
+                            <cbs:inputSignOffice value="#{approveChangeProductController.writeOfficeTag}"
+                                                 title="#{lang['export.order.view.office']}"
+                                                 idComponent="writeOfficeExport"/>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                </p:outputPanel>
+                <!--Start chi tiet serial-->
+                <p:outputPanel id="pnlDetail" styleClass="Container100"
+                               rendered="#{approveChangeProductController.showDetail}">
+                    <p:outputPanel id="pnInfoDetail" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="pnlViewDetail" toggle="true"
+                                   titleHeader="#{lang['mn.stock.change.product.offering.approve.detail']}"/>
+                        <p:outputPanel id="pnlViewDetail" styleClass="Container100">
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        id="tblListDetail"
+                                        var="item" value="#{approveChangeProductController.lstChangeDetail}"
+                                        rowIndexVar="index"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}">
+                                    <p:column headerText="#{lang['common.stt']}" styleClass="TexAlCenter"
+                                              style="width: 10%">
+                                        <p:outputLabel value="#{index + 1}"/>
+                                    </p:column>
+                                    <p:column
+                                            headerText="#{lang['mn.stock.change.product.offering.approve.detail.old.offer']}"
+                                            sortBy="#{item.oldProdOfferName}">
+                                        <p:outputLabel value="#{item.oldProdOfferName}"
+                                                       title="#{item.oldProdOfferName}"/>
+                                    </p:column>
+                                    <p:column
+                                            headerText="#{lang['mn.stock.change.product.offering.approve.detail.new.offer']}"
+                                            sortBy="#{item.newProdOfferName}">
+                                        <p:outputLabel value="#{item.newProdOfferName}"
+                                                       title="#{item.newProdOfferName}"/>
+                                    </p:column>
+                                    <p:column
+                                            headerText="#{lang['mn.stock.change.product.offering.approve.detail.status']}"
+                                            sortBy="#{item.stateStr}">
+                                        <p:outputLabel value="#{item.stateStr}"
+                                                       title="#{item.stateStr}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.number']}" style="text-align:right"
+                                              sortBy="#{item.quantity}">
+                                        <h:outputLabel value="#{item.quantity}"
+                                                       title="#{item.quantity}"
+                                                       styleClass="lb-sentinel-bold"
+                                                       converter="currencyFormat">
+                                        </h:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['create.note.detail.serial']}"
+                                              style="width: 10%;text-align:center">
+                                        <p:commandLink styleClass="fa icon-zoom-in Fs16 blue"
+                                                       process="@this" update="@([id$=pnlDetail])"
+                                                       title="#{lang['create.note.detail.serial']}"
+                                                       actionListener="#{approveChangeProductController.doViewDetailSerial(item.changeModelTransDetailId)}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                            <div class="Container100 TexAlCenter marT10">
+                                <p:outputPanel styleClass="Container100">
+                                    <p:commandButton value="#{lang['common.back.page']}" process="@this"
+                                                     styleClass="mg-left-5"
+                                                     actionListener="#{approveChangeProductController.doComeBack}"
+                                                     update="@form"/>
+                                </p:outputPanel>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <p:outputPanel id="pnInfoDetailSerial" styleClass="ContainerIndent"
+                                   rendered="#{approveChangeProductController.showDetailSerial}">
+                        <cbs:panel classForToggle="pnlViewDetailSerial" toggle="true"
+                                   titleHeader="#{lang['create.note.detail.serial']}"/>
+                        <p:outputPanel id="pnlViewDetailSerial" styleClass="Container100">
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        id="tblListSerial"
+                                        var="detailSerial"
+                                        value="#{approveChangeProductController.lstChangeDetailSerial}"
+                                        rowIndexVar="index"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}">
+                                    <p:column headerText="#{lang['common.stt']}" styleClass="TexAlCenter"
+                                              style="width: 10%">
+                                        <p:outputLabel value="#{index + 1}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.fromSerial']}"
+                                              sortBy="#{detailSerial.fromSerial}">
+                                        <p:outputLabel value="#{detailSerial.fromSerial}"
+                                                       title="#{detailSerial.fromSerial}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.ToSerial']}"
+                                              sortBy="#{detailSerial.toSerial}">
+                                        <p:outputLabel value="#{detailSerial.toSerial}"
+                                                       title="#{detailSerial.toSerial}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.number']}" style="text-align:right"
+                                              sortBy="#{detailSerial.quantity}">
+                                        <h:outputLabel value="#{detailSerial.quantity}"
+                                                       title="#{detailSerial.quantity}"
+                                                       styleClass="lb-sentinel-bold"
+                                                       converter="currencyFormat">
+                                        </h:outputLabel>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

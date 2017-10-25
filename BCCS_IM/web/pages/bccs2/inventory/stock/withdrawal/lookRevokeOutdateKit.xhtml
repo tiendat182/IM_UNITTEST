@@ -1,0 +1,74 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['look.revoke.outdate.kit']}</ui:define>
+    <ui:define name="featureName">#{lang['look.revoke.outdate.kit']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmLookRevokeKITOutdate" styleClass="Container100">
+            <p:outputPanel id="pnlInforLookSerial" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="pnlInforLookSerial"
+                           titleHeader="#{lang['mn.stock.infor.look.serial']}"/>
+                <div class="pnlInforLookSerial Container100 paddingTopBottom10">
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container20 Responsive mg-left-15 ui-fluid">
+                            <p:outputLabel value="#{lang['mn.stock.input.serial.kit']}"/>
+                        </div>
+                        <div class="Container80 Responsive ui-fluid">
+                            <p:selectOneRadio value="#{lookRevokeOutdateKITController.typeInputSerial}" >
+                                <f:selectItem itemLabel="#{lang['mn.stock.import.with.file']}"
+                                              itemValue="0" escape="true"/>
+                                <f:selectItem itemLabel="#{lang['mn.stock.input.serial.imei']}"
+                                              itemValue="1" escape="true"/>
+                                <p:ajax event="change" process="@this"
+                                        update="@([id$=pnlUploadFile])"/>
+                            </p:selectOneRadio>
+                        </div>
+                    </div>
+                    <p:outputPanel styleClass="Container100" id="pnlUploadFile">
+                        <p:outputPanel rendered="#{lookRevokeOutdateKITController.typeInputSerial eq '0'}"
+                                       styleClass="ContainerIndent mg-top-0">
+                            <div class="Container20 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.order.file.data']}"/>
+                            </div>
+                            <div class="Container80 Responsive ui-fluid">
+                                <p:fileUpload dragDropSupport="true"
+                                              mode="simple"
+                                              id="uploadedFile"/>
+                                <p:commandLink styleClass="mg-left-5" value="#{lang['create.order.file.download.file.template']}"/>
+                            </div>
+                        </p:outputPanel>
+                        <p:outputPanel rendered="#{lookRevokeOutdateKITController.typeInputSerial eq '1'}" styleClass="ContainerIndent mg-top-0">
+                            <div class="Container50 Responsive">
+                                <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['mn.stock.fromSerial']}" for="txtFromSerial"/>
+                                </div>
+                                <div class="Container60 Responsive ui-fluid">
+                                    <p:inputText id="txtFromSerial" required="true"
+                                                 requiredMessage="#{lang['mn.stock.from.serial.not.blank']}"/>
+                                </div>
+                            </div>
+                            <div class="Container50 Responsive">
+                                <div class="Container40 Responsive mg-left-15 ui-fluid pd-top-7">
+                                    <p:outputLabel value="#{lang['mn.stock.utilities.from.serial.imei']}" for="txtToSerial"/>
+                                </div>
+                                <div class="Container60 Responsive ui-fluid">
+                                    <p:inputText id="txtToSerial" required="true"
+                                                 requiredMessage="#{lang['mn.stock.to.serial.not.blank']}"/>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <div class="Container100 TexAlCenter">
+                        <p:commandButton value="#{lang['mn.stock.look.up']}"/>
+                        <p:commandButton styleClass="mg-left-5" value="#{lang['common.reset']}"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

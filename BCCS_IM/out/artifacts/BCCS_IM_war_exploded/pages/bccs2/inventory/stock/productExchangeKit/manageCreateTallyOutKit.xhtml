@@ -1,0 +1,401 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.change.product.offering.create.note']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.change.product.offering.create.note']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmChangeProduct">
+            <p:outputPanel id="pnlTabChange" styleClass="Container100">
+                <div class="Container">
+                    <p:messages id="changeMessage" showDetail="true" showSummary="false" closable="true"/>
+                </div>
+                <p:outputPanel id="pnlInfoChange">
+                    <p:focus for="frmChangeProduct"/>
+                    <p:outputPanel styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInfoChangeProduct"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.stock.change.product.offering.create.note.info']}"/>
+
+                        <div class="Container100 panelInfoChangeProduct marginTopBottom10">
+                            <!--Start vung thong tin view lenh xuat-->
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive33">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4 lb-sentinel">
+                                        <p:outputLabel styleClass="lb-sentinel" for="actionCode"
+                                                       value="#{lang['mn.stock.change.product.offering.create.note.actionCode']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 pd-top-4 ui-fluid">
+                                        <p:inputText
+                                                placeholder="#{lang['mn.stock.change.product.offering.create.note.actionCode.placeholder']}"
+                                                required="true"
+                                                id="actionCode"
+                                                maxlength="20"
+                                                requiredMessage="#{lang['mn.stock.change.product.offering.create.note.actionCode.require']}"
+                                                value="#{manageCreateTallyOutKitController.transInputDTO.actionCode}"
+                                                validatorMessage="#{lang['mn.stock.change.product.offering.create.note.actionCode.format.msg']}"/>
+                                        <p:message for="actionCode" style="font-size: 11px!important;"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive33">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['mn.stock.change.product.offering.create.note.date']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                        <h:outputText
+                                                value="#{manageCreateTallyOutKitController.transInputDTO.createDatetime}"
+                                                escape="true"
+                                                styleClass="lb-sentinel-bold">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive33">
+                                    <div class="Container40 Responsive50 ui-fluid pd-top-4 mg-left-15">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['stock.rescue.warranty.create.reason']}"
+                                                       for="cobReason"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="cobReason" filter="true" required="true"
+                                                         requiredMessage="#{lang['mn.stock.change.product.offering.create.note.reason.require']}"
+                                                         value="#{manageCreateTallyOutKitController.transInputDTO.reasonId}">
+                                            <f:selectItem
+                                                    itemLabel="#{lang['mn.stock.agency.retrieve.select.reason']}"/>
+                                            <f:selectItems value="#{manageCreateTallyOutKitController.lstReason}"
+                                                           var="reason"
+                                                           itemLabel="#{reason.reasonName}"
+                                                           itemLabelEscaped="true"
+                                                           itemValue="#{reason.reasonId}"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="cobReason"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive33">
+                                    <cbs:inputShop value="#{manageCreateTallyOutKitController.shopInfoExportTag}"
+                                                   idComponent="ipExportShop"
+                                                   methodName="exportShop"
+                                                   update="@this"
+                                                   limit="#{manageCreateTallyOutKitController.limitAutoComplete}"
+                                                   label="#{lang['mn.invoice.invoiceSerial.unit']}"
+                                                   require="false"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                   classDivInput="Container60 Responsive50 ui-fluid pd-top-4"
+                                                   requiredMessage="#{lang['export.order.stock.require.msg']}"
+                                                   placeholder="#{lang['export.order.stock.placehoder']}"
+                                            >
+                                    </cbs:inputShop>
+                                </div>
+                                <div class="Container66 Responsive66">
+                                    <div class="Container20 mg-left-15 Responsive25 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="changeNote"
+                                                       value="#{lang['export.order.note']}"/>
+                                    </div>
+                                    <div class="Container80 Responsive75 ui-fluid">
+                                        <p:inputText value="#{manageCreateTallyOutKitController.transInputDTO.note}"
+                                                     maxlength="500"
+                                                     onblur="this.value = this.value.trim()"
+                                                     validatorMessage="#{lang['export.order.note.validate.maxlength']}"
+                                                     placeholder="#{lang['export.order.note.placehoder']}"
+                                                     id="changeNote"/>
+                                        <p:message for="changeNote"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50">
+                                        <p:outputLabel styleClass="lb-sentinel" for="ipWriteOffice"
+                                                       value="#{lang['export.order.write.office']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectBooleanCheckbox id="ipWriteOffice" styleClass="mg-left-5"
+                                                                 value="#{manageCreateTallyOutKitController.writeOffice}">
+                                            <p:ajax event="change" process="@this" update="@([id$=pnExportOffice])"
+                                                    listener="#{manageCreateTallyOutKitController.receiveWriteOffice}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </div>
+                                </div>
+                                <c:if test="#{manageCreateTallyOutKitController.showCheckErp()}">
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 mg-left-15 Responsive50">
+                                            <p:outputLabel styleClass="lb-sentinel" for="checkErp"
+                                                           value="#{lang['export.order.not.synchronize.ERP']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:selectBooleanCheckbox styleClass="mg-left-5" id="checkErp"
+                                                                     value="#{manageCreateTallyOutKitController.transInputDTO.checkErp}"
+                                                    />
+                                        </div>
+                                    </div>
+                                </c:if>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+
+                    <p:outputPanel id="pnExportOffice" styleClass="Container100">
+                        <p:outputPanel styleClass="Container100"
+                                       rendered="#{manageCreateTallyOutKitController.writeOffice}">
+                            <cbs:inputSignOffice value="#{manageCreateTallyOutKitController.writeOfficeTag}"
+                                                 title="#{lang['export.order.view.office']}"
+                                                 idComponent="writeOfficeExport"/>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <!--End vung thong tin view lenh xuat-->
+
+                    <!--Start vung thong tin Danh sach hang hoa-->
+
+
+                    <!--End vung thong tin danh sach hang hoa-->
+                    <!--Start Vung data button-->
+
+                    <!--End Vung data button-->
+                </p:outputPanel>
+            </p:outputPanel>
+            <p:outputPanel id="tab2" styleClass="Container100">
+
+                <p:outputPanel id="pnUnderExportOrderFile" styleClass="Container100">
+                    <p:outputPanel id="pnCreateField" styleClass="ContainerIndent mg-top-0">
+                        <p:focus for="upLoadFile"/>
+                        <cbs:panel classForToggle="panelCreateField" toggle="true"
+                                   titleHeader="#{lang['mn.list.create.tally.out.kit.file']}"/>
+
+                        <div class="Container panelCreateField">
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50">
+                                        <p:outputLabel styleClass="lb-sentinel" for="logicstic"
+                                                       value="#{lang['export.order.logicstics']}"
+                                                       rendered="#{manageCreateTallyOutKitController.showLogistic}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectBooleanCheckbox styleClass="mg-left-5" id="logicstic"
+                                                                 value="#{manageCreateTallyOutKitController.tranLogistics}"
+                                                                 disabled="#{manageCreateTallyOutKitController.autoCreateNoteFile}"
+                                                                 rendered="#{manageCreateTallyOutKitController.showLogistic}"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+
+                                </div>
+                                <div class="Container33 Responsive">
+
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <p:outputPanel styleClass="Container33 Responsive" id="divFileName">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7"
+                                         style="margin-top: 20px">
+                                        <p:outputLabel styleClass="lb-sentinel" for="outputAttachFile"
+                                                       value="#{lang['attach.file']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid" style="margin-top: 20px">
+                                        <p:inputText id="outputAttachFile" styleClass="outputAttachFile"
+                                                     maxlength="100"
+                                                     placeholder="#{lang['search.number.range.input.fileName']}"
+                                                     value="#{manageCreateTallyOutKitController.attachFileName}"
+                                                     readonly="true"/>
+                                    </div>
+                                </p:outputPanel>
+
+                                <div class="Container33 Responsive">
+                                    <p:fileUpload id="upLoadFile"
+                                                  styleClass="Fleft"
+                                                  label="#{lang['select.file']}"
+                                                  invalidFileMessage="#{lang['mn.stock.limit.importFile.msg.format']}"
+                                                  requiredMessage="#{lang['mn.stock.limit.attachFile.msg.require']}"
+                                                  invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                  fileLimitMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                  update="@([id$=divFileName]),@([id$=pnViewFile]), @([id$=divDownloadFile]),@([id$=changeMessage])"
+                                                  dragDropSupport="true" required="true" mode="advanced"
+                                                  auto="true"
+                                                  process="@this"
+                                                  allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                                  sizeLimit="5242880"
+                                                  fileUploadListener="#{manageCreateTallyOutKitController.doFileUploadAction}">
+                                    </p:fileUpload>
+                                </div>
+                                <p:outputPanel id="divDownloadFile" class="Container33">
+                                    <p:commandLink
+                                            id="downloadTemplateBtn"
+                                            value="#{lang['mn.stock.status.isdn.update.status.file_template']}"
+                                            title="#{lang['create.note.download.file.title']}"
+                                            ajax="false"
+                                            immediate="true">
+                                        <p:fileDownload
+                                                value="#{manageCreateTallyOutKitController.downloadFileTemplate()}"/>
+                                    </p:commandLink>
+                                    <p:commandLink
+                                            id="downloadErrBtn" styleClass="mg-left-5" process="@this"
+                                            value="#{lang['mn.stock.status.isdn.update.status.file_error']}"
+                                            rendered="#{manageCreateTallyOutKitController.hasFileError}"
+                                            title="#{lang['create.note.download.file.title']}"
+                                            ajax="false"
+                                            immediate="true" style="color: #e90c45!important;">
+                                        <p:fileDownload
+                                                value="#{manageCreateTallyOutKitController.downloadFileError()}"/>
+                                    </p:commandLink>
+                                    <p:commandLink
+                                            styleClass="mg-left-5" style="color: #e90c45!important;"
+                                            value="#{lang['mn.stock.status.isdn.downfile_result']}"
+                                            rendered="#{manageCreateTallyOutKitController.showDownResult}"
+                                            title="#{lang['create.note.download.file.title']}"
+                                            ajax="false"
+                                            immediate="true">
+                                        <p:fileDownload
+                                                value="#{manageCreateTallyOutKitController.downloadFileCreateOrder()}"/>
+                                    </p:commandLink>
+                                </p:outputPanel>
+                            </div>
+                            <p:outputPanel styleClass="ContainerIndent TexAlCenter" id="pnViewFile">
+                                <!--<cbs:confirmDialog-->
+                                <!--idComponent="submitOrderFile"-->
+                                <!--id="submitOrderFile"-->
+                                <!--valueButton="#{!manageCreateTallyOutKitController.showAutoOrderNote ? lang['export.order.btn.submit'] : lang['export.order.btn.submit.field']}(F8)"-->
+                                <!--headerConfirm="#{lang['export.order.btn.submit.header.confirm']}"-->
+                                <!--messageConfirm="#{lang['export.order.btn.submit.header.confirm.msg']}"-->
+                                <!--actionOK="#{manageCreateTallyOutKitController.doCreateUnderlyingOrderByFile}"-->
+                                <!--disableButton="#{!manageCreateTallyOutKitController.showCreateOrder}"-->
+                                <!--resetValueButton="false"-->
+                                <!--styleClassButton="mg-left-5"-->
+                                <!--process="@this,@([id$=pnExportOfficeFile])"-->
+                                <!--updateArea="@this,@([id$=pnExportOfficeFile])"-->
+                                <!--updateOK="@form"-->
+                                <!--actionValidate="#{manageCreateTallyOutKitController.doValdiateCreateUnderlyingOrderByFile}"-->
+                                <!--focusCancel="false"-->
+                                <!--oncompleteOK=""-->
+                                <!--isButton="true"-->
+                                <!--/>-->
+                                <div class="ContainerIndent">
+                                    <div class="ContainerIndent TexAlCenter mg-top-0">
+                                        <p:commandButton value="#{lang['see.previous']}"
+                                                         process="@this, @([id$=logicstic]),@([id$=tranfer])"
+                                                         update="@this, @([id$=pnLstField]), @([id$=pnUnderExportOrderFile]), @([id$=changeMessage])"
+                                                         disabled="#{!manageCreateTallyOutKitController.selectedFile}"
+                                                         actionListener="#{manageCreateTallyOutKitController.doPreviewField}"/>
+                                        <cbs:confirmDialog
+                                                idComponent="createNote"
+                                                id="createNote"
+                                                valueButton="#{lang['mn.stock.change.product.offering.create.note.value']}"
+                                                headerConfirm="#{lang['mn.stock.change.product.offering.create.note.value.header']}"
+                                                messageConfirm="#{lang['mn.stock.change.product.offering.create.note.value.mgs']}"
+                                                actionOK="#{manageCreateTallyOutKitController.doCreateNote}"
+                                                resetValueButton="false"
+                                                process="@this, @form"
+                                                updateArea=" @([id$=changeMessage])"
+                                                updateOK="@([id$=frmChangeProduct]), @([id$=changeMessage])"
+                                                focusCancel="false"
+                                                actionValidate="#{manageCreateTallyOutKitController.doValidateCreateNote}"
+                                                oncompleteOK=""
+                                                disableButton="#{manageCreateTallyOutKitController.canPrint}"
+                                                isButton="true"
+                                                styleClassButton="mg-left-5"
+                                                />
+                                        <p:commandButton
+                                                value="#{lang['mn.stock.change.product.offering.create.note.print']}"
+                                                process="@this"
+                                                disabled="#{!manageCreateTallyOutKitController.canPrint}"
+                                                update="@form"
+                                                ajax="false"
+                                                immediate="true"
+                                                styleClass="mg-left-5">
+                                            <p:fileDownload
+                                                    value="#{manageCreateTallyOutKitController.exportStockTransDetail()}"/>
+                                        </p:commandButton>
+                                        <p:commandButton value="#{lang['reset.selected']}"
+                                                         process="@this"
+                                                         update="@form"
+                                                         styleClass="mg-left-5"
+                                                         actionListener="#{manageCreateTallyOutKitController.doReset}">
+                                        </p:commandButton>
+
+                                    </div>
+                                </div>
+                            </p:outputPanel>
+                        </div>
+                    </p:outputPanel>
+
+                    <p:outputPanel id="pnLstField" styleClass="ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="panelListField" toggle="true"
+                                   titleHeader="#{lang['mn.list.create.tally.out.kit.file.list']}"/>
+
+                        <div class="Container panelListField" style="margin-bottom: 10px;margin-top: 5px;">
+
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        id="lstListNeedDelete"
+                                        var="item"
+                                        rowKey="#{item.rowKey}"
+                                        rowIndexVar="index"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage=""
+                                        value="#{manageCreateTallyOutKitController.fieldExportFileDTOs}">
+                                    <p:column headerText="#{lang['common.stt']}" style="width: 8%">
+                                        <p:outputLabel value="#{index + 1}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['create.order.file.code.export.warehouse']}"
+                                              style="width: 15%" sortBy="#{item.fromOwnerCode}">
+                                        <p:outputLabel value="#{item.fromOwnerCode}"
+                                                       title="#{item.fromOwnerCode}" style="text-align: left"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.utilities.code.stock']}"
+                                              style="width: 15%" sortBy="#{(item.productOfferCode)}">
+                                        <p:outputLabel value="#{(item.productOfferCode)}"
+                                                       title="#{(item.productOfferCode)}"
+                                                       style="text-align: left"/>
+                                    </p:column>
+                                    <p:column styleClass="col-left" style="width: 10%"
+                                              headerText="#{lang['common.status']}">
+                                        <p:outputLabel value="#{item.stateName}" title="#{item.stateName}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.number']}" style="width: 10%"
+                                              styleClass="TexAlRight" sortBy="#{item.quantity}">
+                                        <p:outputLabel value="#{(item.quantity)}" title="#{(item.quantity)}"
+                                                       style="text-align: right"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['export.order.note']}" style="width: 15%">
+                                        <p:outputLabel value="#{(item.note)}" title="#{(item.note)}"
+                                                       style="text-align: left"></p:outputLabel>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailSerial"
+                  widgetVar="dlgDetailSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <ui:include src="../../../../../resources/tags/dlgDetailSerial.xhtml">
+                <ui:param name="controller" value="#{manageCreateTallyOutKitController.listProductTag}"/>
+                <ui:param name="idComponent" value="changelistProduct"/>
+            </ui:include>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

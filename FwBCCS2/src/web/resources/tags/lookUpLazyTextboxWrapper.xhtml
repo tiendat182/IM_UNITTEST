@@ -1,0 +1,593 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+<composite:interface>
+    <composite:attribute name="idComponent" shortDescription="id of form" required="true"/>
+    <composite:attribute name="selectMode" shortDescription="status is single or multiple," required="true"/>
+    <composite:attribute name="objectName" shortDescription="model object name" required="true"/>
+    <composite:attribute name="serviceName" shortDescription="interface service name" required="true"/>
+    <composite:attribute name="displayColumnList" shortDescription="display column list" required="true"/>
+    <composite:attribute name="searchColumnList" shortDescription="condition search"/>
+    <composite:attribute name="updateAddArea" shortDescription="area render after click add"/>
+    <composite:attribute name="controller" shortDescription="controller object" required="true"/>
+    <composite:attribute name="setDataMethod" shortDescription="styleClass" required="true"/>
+    <composite:attribute name="oncompleteCancel" default=""/>
+    <composite:attribute name="oncompleteAdd" default=""/>
+    <composite:attribute name="currentObjectIdList" default="" shortDescription="seperate by comma"/>
+    <composite:attribute name="currentObjectValueList" default="" shortDescription="seperate by comma"/>
+    <composite:attribute name="styleClass" default="sale" shortDescription="styleClass dialog, default sale"/>
+    <composite:attribute name="displayInputTextColumnList" default="" required="true"
+                         shortDescription="display column name input text"/>
+    <composite:attribute name="excluseCurrentObject" default="false"/>
+    <composite:attribute name="filterKeyList" default=""/>
+    <composite:attribute name="filterValueList" default=""/>
+    <composite:attribute name="disableOpenLookUp" default="true" shortDescription="disable open lookup, default false"/>
+    <composite:attribute name="requireInput" default="false" shortDescription="disable open lookup, default false"/>
+    <composite:attribute name="label" default="" required="true" shortDescription="Key language"/>
+    <composite:attribute name="filterRequestList" default=""/>
+    <composite:attribute name="disableIcon" default="false" shortDescription="disable open lookup, default false"/>
+    <composite:attribute name="popup" default="true"
+                         shortDescription="default = false, true if show dialog, false show popup"/>
+    <composite:attribute name="hasDeleteIcon" default="false" shortDescription="true if show dialog"/>
+    <composite:attribute name="lookupTitle" default="" shortDescription="title in lookup for:"/>
+    <composite:attribute name="modifier" default="" shortDescription="Testing modifier" required="true"/>
+    <composite:attribute name="passIdComponent" default="false" shortDescription="Testing modifier"/>
+    <composite:attribute name="resetAllCurrMap" default="true"
+                         shortDescription="Reset all data in objCurrMap"/>
+</composite:interface>
+<composite:implementation>
+    <script type="text/javascript">
+        //<![CDATA[
+        var delay = (function () {
+            var timer = 0;
+            return function (callback, ms) {
+                clearTimeout(timer);
+                timer = setTimeout(callback, ms);
+            };
+        })();
+
+        $(document).ready(function () {
+            $(".overPanel-lookup").width($(".inputLookupClass").width());
+            $(document).on("keyup", ".inputSearchLazy#{cc.attrs.modifier}", function (event) {
+                delay(function () {
+                    $(".inputSearchLazy#{cc.attrs.modifier}").val($(".inputSearchLazy#{cc.attrs.modifier}").val().trim());
+                    window['keyupSearchTextbox#{cc.attrs.modifier}a']();
+                }, 1000);
+
+            });
+            $(document).on("keyup", ".inputSearchLazy2#{cc.attrs.modifier}", function (event) {
+                delay(function () {
+                    $(".inputSearchLazy2#{cc.attrs.modifier}").val($(".inputSearchLazy2#{cc.attrs.modifier}").val().trim());
+                    window['keyupSearchTextbox2#{cc.attrs.modifier}a']();
+                }, 1000);
+
+            });
+            $(document).on("keyup", ".inputSearchLazy3#{cc.attrs.modifier}", function (event) {
+                delay(function () {
+                    $(".inputSearchLazy3#{cc.attrs.modifier}").val($(".inputSearchLazy3#{cc.attrs.modifier}").val().trim());
+                    window['keyupSearchTextbox3#{cc.attrs.modifier}a']();
+                }, 1000);
+
+            });
+            $(document).on("keyup", ".inputLookupClass", function (event) {
+                if (event.which === 13) {
+                    clickLinkByClass('#{cc.attrs.modifier}btn_over_pn');
+                }
+
+            });
+            $("." + "#{cc.attrs.modifier}overClass").focus();
+            $("." + "#{cc.attrs.modifier}overClass").click();
+            $(document).on("keydown", "." + "#{cc.attrs.modifier}overClass", function (event) {
+
+                if (event.which == 38) {
+                    up();
+                    event.reset();
+                }
+
+                if (event.which == 27) {
+                    clickLinkByClass('#{cc.attrs.modifier}btn_over_pn');
+                    event.reset();
+                }
+
+                if (event.which == 40) {
+                    down();
+                    event.reset();
+                }
+                if (event.which == 13) {
+                    window['overtblSingleEnter#{cc.attrs.modifier}']();
+                    event.reset();
+                }
+            });
+        });
+
+        //]]>
+    </script>
+    <p:remoteCommand
+            action="#{lookUpLazyController.doInitLoopUp(cc.attrs.serviceName,cc.attrs.displayColumnList, cc.attrs.currentObjectIdList, cc.attrs.currentObjectValueList, cc.attrs.displayInputTextColumnList, cc.attrs.modifier)}"
+            update="@([id$=#{cc.attrs.idComponent}panelInput])"
+            resetValues="true"
+            autoRun="true"
+            global="false"
+            process="@this"
+            immediate="true"
+            />
+    <p:remoteCommand
+            name="overPanel#{cc.attrs.modifier}"
+            update="@([id$=#{cc.attrs.idComponent}_look])"
+            action="#{lookUpLazyController.doInitLoopUp(cc.attrs.objectName, cc.attrs.serviceName, cc.attrs.searchColumnList,
+                      cc.attrs.displayColumnList, cc.attrs.currentObjectIdList, cc.attrs.currentObjectValueList, cc.attrs.displayInputTextColumnList,
+                      cc.attrs.excluseCurrentObject, cc.attrs.filterKeyList, cc.attrs.filterValueList, cc.attrs.filterRequestList, cc.attrs.modifier)}"
+            resetValues="true"
+            global="false"
+            process="@this"
+            immediate="true"
+            >
+    </p:remoteCommand>
+    <p:remoteCommand name="overtblSingleEnter#{cc.attrs.modifier}"
+                     process="@this"
+                     global="false"
+                     update="@([id$=#{cc.attrs.modifier}panelInput]), #{cc.attrs.updateAddArea}"
+                     immediate="true"
+                     oncomplete="clickLinkByClass('#{cc.attrs.modifier}btn_over_pn');"
+                     action="#{lookUpLazyController.doAddDialog(cc.attrs.controller,cc.attrs.setDataMethod ,cc.attrs.selectMode, cc.attrs.modifier, cc.attrs.passIdComponent, cc.attrs.resetAllCurrMap)}"
+            />
+    <p:remoteCommand
+            name="rmF9#{cc.attrs.modifier}"
+            update="@([id$=#{cc.attrs.idComponent}_lookDialog])"
+            oncomplete="PF('#{cc.attrs.modifier}').show();"
+            action="#{lookUpLazyController.doInitLoopUp(cc.attrs.objectName, cc.attrs.serviceName, cc.attrs.searchColumnList,
+                      cc.attrs.displayColumnList, cc.attrs.currentObjectIdList, cc.attrs.currentObjectValueList, cc.attrs.displayInputTextColumnList,
+                      cc.attrs.excluseCurrentObject, cc.attrs.filterKeyList, cc.attrs.filterValueList, cc.attrs.filterRequestList, cc.attrs.modifier)}"
+            resetValues="true"
+            global="false"
+            immediate="true"
+            >
+    </p:remoteCommand>
+
+    <div style="width: 100%">
+        <p:outputPanel style="float: left;width:75%;" id="#{cc.attrs.idComponent}panelInput">
+
+            <p:inputText value="#{lookUpLazyController.getObjectCurrentContainer(cc.attrs.modifier).displayName}"
+                         id="#{cc.attrs.idComponent}displayName"
+                         required="#{cc.attrs.requireInput}"
+                         label="#{cc.attrs.label}"
+                         onclick="if(#{cc.attrs.disableIcon}){return;}else{setHotkeyLookUpOverpanel('#{cc.attrs.modifier}');clickLinkByClass('#{cc.attrs.modifier}btn_over_pn');initWidgetTable('overtblSingle#{cc.attrs.modifier}');}"
+                         styleClass="inputLookupClass"
+                         style="width:95% !important;"
+                         rendered="#{!cc.attrs.popup}"
+                    >
+            </p:inputText>
+            <p:inputText value="#{lookUpLazyController.getObjectCurrentContainer(cc.attrs.modifier).displayName}"
+                         id="#{cc.attrs.idComponent}displayNameDialog"
+                         readonly="#{cc.attrs.disableOpenLookUp}"
+                         required="#{cc.attrs.requireInput}"
+                         label="#{cc.attrs.label}"
+                         onclick="if(#{cc.attrs.disableIcon == true}){return;}else{setHotkeyLookUp('#{cc.attrs.modifier}', this.value);}"
+                         styleClass="inputLookupClass"
+                         style="width:95% !important;"
+                         rendered="#{cc.attrs.popup}"
+                    >
+            </p:inputText>
+        </p:outputPanel>
+
+        <div style="float:left;width:25%;" class="sale">
+            <div style="float:left;margin-right: 5px;" class="sale">
+                <p:commandLink
+                        update="@([id$=#{cc.attrs.idComponent}_lookDialog])"
+                        oncomplete="rmF9#{cc.attrs.modifier}()"
+                        resetValues="true"
+                        ajax="true"
+                        global="false"
+                        immediate="true"
+                        style="border: none"
+                        styleClass="ui-icon ui-icon-search2"
+                        disabled="#{cc.attrs.disableIcon}">
+                </p:commandLink>
+            </div>
+            <div style="float:left;" class="sale">
+                <p:commandLink
+                        update="@([id$=#{cc.attrs.idComponent}panelInput])"
+                        action="#{lookUpLazyController.doDeleteDialog(cc.attrs.controller,cc.attrs.setDataMethod ,cc.attrs.selectMode, cc.attrs.modifier)}"
+                        resetValues="true"
+                        ajax="true"
+                        global="false"
+                        immediate="true"
+                        style="border: none"
+                        styleClass="ui-icon ui-icon-delete"
+                        disabled="#{cc.attrs.disableIcon}"
+                        rendered="#{cc.attrs.hasDeleteIcon}">
+                </p:commandLink>
+            </div>
+        </div>
+    </div>
+    <div align="left" style="height: 0px;width: 100%;clear: both;">
+        <p:commandLink id="testLink" styleClass="#{cc.attrs.modifier}btn_over_pn" style="height: 0px;"/>
+    </div>
+    <p:overlayPanel for="testLink" hideEffect="fade" showEffect="fade"
+                    styleClass="overPanel-lookup" at="center top" my="left top" rendered="#{!cc.attrs.popup}">
+        <p:outputPanel id="#{cc.attrs.idComponent}_look" style="padding: 0px;">
+            <div tabindex="1" class="#{cc.attrs.modifier}overClass">
+                <p:messages id="overmsgLookUpDialog#{cc.attrs.modifier}" showSummary="false" showDetail="true"
+                            closable="true"/>
+                <p:fieldset id="oversingle#{cc.attrs.modifier}" style="border:0px;padding: 0px;"
+                            rendered="#{cc.attrs.selectMode eq 'single'}">
+                    <p:panelGrid styleClass="col3 w100 filterPanel">
+                        <p:row>
+
+                            <p:column styleClass="evenCol">
+                                <span style="display:block;float:left;width: 80%;">
+                                    <p:inputText styleClass="form-control inputSearchLazy#{cc.attrs.modifier}" placeholder="Search"
+                                                 onblur="this.value = this.value.trim();"
+                                                 value="#{lookUpLazyController.strSearch}" />
+                                    <p:remoteCommand
+                                            name="keyupSearchTextbox#{cc.attrs.modifier}a"
+                                            actionListener="#{lookUpLazyController.doKeyUpSearch}"
+                                            update="@([id$=overtblSingle#{cc.attrs.modifier}]),@([id$=overmsgLookUpDialog#{cc.attrs.modifier}])"
+                                            process="@([id$=oversingle#{cc.attrs.modifier}])"
+                                            resetValues="true"
+                                            global="false"
+                                            />
+                                </span>
+                                <span style="display:block;float:left;margin-left: 7px;margin-top: 1px;">
+                                    <p:commandButton styleClass="input-group-addon bg-button"
+                                                     actionListener="#{lookUpLazyController.doKeyUpSearch}"
+                                                     update="@([id$=overtblSingle#{cc.attrs.modifier}]),@([id$=overmsgLookUpDialog#{cc.attrs.modifier}])"
+                                                     process="@([id$=oversingle#{cc.attrs.modifier}])"
+                                                     resetValues="true"
+                                                     ajax="true"
+                                                     global="false"
+                                                     icon="ui-icon-search">
+                                    </p:commandButton>
+                                </span>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                    <p:panelGrid styleClass="w100 filterPanel">
+                        <p:row>
+                            <p:column>
+                                <p:dataTable
+                                        widgetVar="overtblSingle#{cc.attrs.modifier}"
+                                        scrollable="true"
+                                        scrollHeight="130"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rowIndexVar="rowIndex"
+                                        rows="#{lang['common.paging.rows.default.lookup']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate.overPanel']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        id="overtblSingle#{cc.attrs.modifier}"
+                                        resizableColumns="true"
+                                        styleClass="none-show-th"
+                                        rowStyleClass="h25"
+                                        rowKey="#{data.id}"
+                                        value="#{lookUpLazyController.lsDataDetailAll}"
+                                        selection="#{lookUpLazyController.selectedOneDetailDto}"
+                                        var="data"
+                                        lazy="true"
+                                        selectionMode="single"
+                                        >
+                                    <p:ajax event="rowSelect" global="false"
+                                            listener="#{lookUpLazyController.onRowSelect}"/>
+                                    <p:ajax event="rowUnselect" global="false"/>
+                                    <p:ajax event="page" oncomplete="PF(widgetTable).selectRow(0);"/>
+                                    <p:ajax event="rowDblselect" global="false"
+                                            listener="#{lookUpLazyController.onRowSelect}"
+                                            onsuccess="window['overtblSingleEnter#{cc.attrs.modifier}']();"/>
+                                    <p:column>
+                                        <h:outputText value="#{data.mainInfor}" escape="true"/><br/>
+                                        <span style="font-size: 10px;"><h:outputText value="#{data.id}" escape="true"/> - <h:outputText
+                                                value="#{data.subInfor}" escape="true"/>
+                                        </span>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </p:fieldset>
+            </div>
+        </p:outputPanel>
+    </p:overlayPanel>
+    <p:dialog appendTo="@(body)" closable="true" closeOnEscape="true"
+              maximizable="false" position="center"
+              id="dl#{cc.attrs.modifier}" widgetVar="#{cc.attrs.modifier}"
+              header="#{lang['common.lookup.title.headerDialog']}"
+              modal="true" resizable="false"
+              onHide="#{cc.attrs.oncompleteCancel}"
+              dynamic="true"
+              styleClass="sale">
+        <p:outputPanel id="#{cc.attrs.idComponent}_lookDialog" style="border:none !important;padding:0;">
+            <p:messages id="msgLookUpDialog#{cc.attrs.idComponent}" showSummary="false" showDetail="true"
+                        closable="true"/>
+            <p:fieldset id="single#{cc.attrs.idComponent}" style="width: 800px; border:0px;"
+                        rendered="#{cc.attrs.selectMode eq 'single'}">
+                <p:panelGrid styleClass="col3 w100 filterPanel">
+                    <p:row>
+                        <p:column styleClass="evenCol" style="width:15%;text-align: right">
+                            <p:outputLabel value="#{lang['common.lookup.title.lookfor']}"/>
+                        </p:column>
+                        <p:column styleClass="evenCol" style="width:55%;">
+
+                            <p:outputLabel value="#{lookUpLazyController.objectName}" style="font-weight: bold;"
+                                           rendered="#{empty cc.attrs.lookupTitle}"/>
+                            <p:outputLabel value="#{cc.attrs.lookupTitle}" style="font-weight: bold;"
+                                           rendered="#{!empty cc.attrs.lookupTitle}"/>
+                        </p:column>
+                        <p:column rowspan="3" style="width:30%;"></p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column styleClass="evenCol" style="text-align: right">
+                            <p:outputLabel value="#{lang['common.button.search']}"/>
+                        </p:column>
+                        <p:column styleClass="evenCol">
+                                    <span style="display:block;float:left;width: 80%;">
+                                        <p:inputText styleClass="form-control inputSearchLazy2#{cc.attrs.modifier}"
+                                                     placeholder="Search"
+                                                     onblur="this.value = this.value.trim();"
+                                                     value="#{lookUpLazyController.strSearch}"/>
+                                        <p:remoteCommand
+                                                name="keyupSearchTextbox2#{cc.attrs.modifier}a"
+                                                actionListener="#{lookUpLazyController.doKeyUpSearch}"
+                                                update="@([id$=tblSingle#{cc.attrs.idComponent}]),@([id$=msgLookUpDialog#{cc.attrs.idComponent}])"
+                                                process="@([id$=single#{cc.attrs.idComponent}])"
+                                                resetValues="true"
+                                                global="false"
+                                                />
+                                    </span>
+                                    <span style="display:block;float:left;margin-left: 7px;margin-top: 1px;">
+                                        <p:commandButton styleClass="input-group-addon bg-button"
+                                                         actionListener="#{lookUpLazyController.doKeyUpSearch}"
+                                                         update="@([id$=tblSingle#{cc.attrs.idComponent}]),@([id$=msgLookUpDialog#{cc.attrs.idComponent}])"
+                                                         process="@([id$=single#{cc.attrs.idComponent}])"
+                                                         resetValues="true"
+                                                         ajax="true"
+                                                         global="false"
+                                                         icon="ui-icon-search">
+                                        </p:commandButton>
+                                    </span>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+                <p:panelGrid styleClass="w100 filterPanel">
+                    <p:row>
+                        <p:column>
+                            <p:dataTable scrollHeight="130"
+                                         scrollable="true"
+                                         rowIndexVar="rowIndex"
+                                         widgetVar="varSingleDialog"
+                                         paginator="#{lang['common.paging.paginator']}"
+                                         rows="#{lang['common.paging.rows.default']}"
+                                         rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                         paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                         paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                         paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                         currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                         id="tblSingle#{cc.attrs.idComponent}"
+                                         resizableColumns="true"
+                                         rowStyleClass="h25"
+                                         rowKey="#{data.id}"
+                                         value="#{lookUpLazyController.lsDataDetailAll}"
+                                         selection="#{lookUpLazyController.selectedOneDetailDto}"
+                                         var="data"
+                                         lazy="true"
+                                         selectionMode="single"
+                                    >
+                                <p:ajax event="rowSelect" global="false"
+                                        listener="#{lookUpLazyController.onRowSelect}"/>
+                                <p:ajax event="rowUnselect" global="false"/>
+                                <!--<p:ajax event="rowDblselect" global="false"-->
+                                        <!--listener="#{lookUpLazyController.onRowSelect}"-->
+                                        <!--onsuccess="clickLinkByClass('doAdd#{cc.attrs.modifier}');"/>-->
+                                <p:columns value="#{lookUpLazyController.lsDisplayColumn}" var="columnName">
+                                    <f:facet name="header">#{lookUpLazyController.mapNames.get(columnName)}</f:facet>
+                                    <h:outputText escape="true" title="#{data.mapData.get(columnName)}" value="#{data.mapData.get(columnName)}" />
+                                </p:columns>
+                            </p:dataTable>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+                <p:panelGrid styleClass="w100 filterPanel">
+                    <p:row>
+                        <p:column style="vertical-align: middle;text-align: right;" colspan="2">
+                                    <span style="display: block;width:100%;">
+                                        <p:remoteCommand name="updateInput#{cc.attrs.idComponent}a2" process="@this"
+                                                         global="false"
+                                                         update="@([id$=#{cc.attrs.idComponent}panelInput])"/>
+                                        <p:remoteCommand name="updateArea#{cc.attrs.idComponent}a2" process="@this"
+                                                         global="false" update="#{cc.attrs.updateAddArea}"/>
+                                        <p:commandButton value="#{lang['common.button.add']}"
+                                                         process="@this"
+                                                         global="false"
+                                                         update="@([id$=msgLookUpDialog#{cc.attrs.idComponent}])"
+                                                         oncomplete="if (!args.validationFailed) {PF('#{cc.attrs.modifier}').hide();#{cc.attrs.oncompleteAdd};updateInput#{cc.attrs.idComponent}a2();updateArea#{cc.attrs.idComponent}a2();}"
+                                                         actionListener="#{lookUpLazyController.doAddDialog(cc.attrs.controller,cc.attrs.setDataMethod ,cc.attrs.selectMode, cc.attrs.modifier, cc.attrs.passIdComponent, cc.attrs.resetAllCurrMap)}"
+                                                         style="width:73px;margin-right: 5px;"
+                                                         styleClass="bg-button doAdd#{cc.attrs.idComponent}"
+                                                >
+                                        </p:commandButton>&nbsp;
+                                        <p:commandButton value="#{lang['common.button.cancel']}"
+                                                         global="false"
+                                                         style="width:73px;"
+                                                         styleClass="bg-button"
+                                                         oncomplete="PF('#{cc.attrs.modifier}').hide();#{cc.attrs.oncompleteCancel}">
+                                        </p:commandButton>
+                                    </span>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:fieldset>
+            <p:fieldset id="multipleField#{cc.attrs.idComponent}" style="width: 800px; border:0px;"
+                        rendered="#{cc.attrs.selectMode eq 'multiple'}">
+                <p:panelGrid styleClass="col3 w100 filterPanel">
+                    <p:row>
+                        <p:column styleClass="evenCol" style="width:15%;text-align: right">
+                            <p:outputLabel value="#{lang['common.lookup.title.lookfor']}"/>
+                        </p:column>
+                        <p:column styleClass="evenCol" style="width:55%;">
+                            <p:outputLabel value="#{lookUpLazyController.objectName}" style="font-weight: bold;"
+                                           rendered="#{empty cc.attrs.lookupTitle}"/>
+                            <p:outputLabel value="#{cc.attrs.lookupTitle}" style="font-weight: bold;"
+                                           rendered="#{!empty cc.attrs.lookupTitle}"/>
+                        </p:column>
+                        <p:column rowspan="3" style="width:30%;"></p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column styleClass="evenCol" style="text-align: right">
+                            <p:outputLabel value="#{lang['common.button.search']}"/>
+                        </p:column>
+                        <p:column styleClass="evenCol">
+                                <span style="display:block;float:left;width: 80%;">
+                                    <p:inputText styleClass="form-control inputSearchLazy3#{cc.attrs.modifier}"
+                                                 placeholder="Search"
+                                                 onblur="this.value = this.value.trim();"
+                                                 value="#{lookUpLazyController.strSearch}"/>
+                                    <p:remoteCommand
+                                            name="keyupSearchTextbox3#{cc.attrs.modifier}a"
+                                            actionListener="#{lookUpLazyController.doKeyUpSearch}"
+                                            update="@([id$=lookUptbl1#{cc.attrs.idComponent}]),@([id$=msgLookUpDialog#{cc.attrs.idComponent}])"
+                                            process="@([id$=multipleField#{cc.attrs.idComponent}])"
+                                            resetValues="true"
+                                            global="false"
+                                            />
+                                </span>
+                                <span style="display:block;float:left;margin-left: 7px;margin-top: 1px;">
+                                    <p:commandButton styleClass="input-group-addon bg-button"
+                                                     actionListener="#{lookUpLazyController.doKeyUpSearch}"
+                                                     update="@([id$=lookUptbl1#{cc.attrs.idComponent}]),@([id$=msgLookUpDialog#{cc.attrs.idComponent}])"
+                                                     process="@([id$=multipleField#{cc.attrs.idComponent}])"
+                                                     resetValues="true"
+                                                     ajax="true"
+                                                     global="false"
+                                                     icon="ui-icon-search">
+                                    </p:commandButton>
+                                </span>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+                <p:panelGrid styleClass="w100 filterPanel">
+                    <p:row>
+                        <p:column>
+                            <p:dataTable scrollHeight="130"
+                                         scrollable="true"
+                                         paginator="#{lang['common.paging.paginator']}"
+                                         rows="#{lang['common.paging.rows.default']}"
+                                         rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                         paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                         paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                         paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                         currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                         id="lookUptbl1#{cc.attrs.idComponent}"
+                                         resizableColumns="true"
+                                         rowStyleClass="h25"
+                                         rowKey="#{data.id}"
+                                         value="#{lookUpLazyController.lsDataDetailAll}"
+                                         selection="#{lookUpLazyController.upTableSelectLst}"
+                                         var="data"
+                                         lazy="true"
+                                    >
+                                <p:column id="listone" selectionMode="multiple" style="width:16px"/>
+                                <p:columns value="#{lookUpLazyController.lsDisplayColumn}" var="columnName">
+                                    <f:facet name="header">#{lookUpLazyController.mapNames.get(columnName)}</f:facet>
+                                    <h:outputText value="#{data.mapData.get(columnName)}"></h:outputText>
+                                </p:columns>
+                            </p:dataTable>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+                <p:panelGrid styleClass="w100 filterPanel">
+                    <p:row>
+                        <p:column style="vertical-align: middle;text-align: left;width:15%;">
+                                <span style="display: block;width:100%;">
+                                    <p:commandButton
+                                            style="width:73px;"
+                                            value="#{lang['common.select']}"
+                                            actionListener="#{lookUpLazyController.doSelectLookUp()}"
+                                            update="@([id$=lookUptbl2#{cc.attrs.idComponent}]), @([id$=msgLookUpDialog#{cc.attrs.idComponent}])"
+                                            process="@([id$=multipleField#{cc.attrs.idComponent}])"
+                                            resetValues="true"
+                                            ajax="true"
+                                            global="false"
+                                            styleClass="bg-button"
+                                            >
+                                    </p:commandButton>
+                                </span>
+                                <span style="display: block;width:100%;margin-top: 10px;">
+                                    <p:commandButton
+                                            style="width:73px;"
+                                            value="#{lang['common.lookup.button.remove']}"
+                                            actionListener="#{lookUpLazyController.doRemoveLookUp}"
+                                            update="@([id$=lookUptbl2#{cc.attrs.idComponent}]), @([id$=msgLookUpDialog#{cc.attrs.idComponent}])"
+                                            process="@([id$=multipleField#{cc.attrs.idComponent}])"
+                                            resetValues="true"
+                                            ajax="true"
+                                            global="false"
+                                            styleClass="bg-button"
+                                            >
+                                    </p:commandButton>
+                                </span>
+                        </p:column>
+                        <p:column>
+                            <p:dataTable scrollHeight="130"
+                                         scrollable="true"
+                                         id="lookUptbl2#{cc.attrs.idComponent}"
+                                         rowStyleClass="h25"
+                                         sortMode="multiple"
+                                         paginator="#{lang['common.paging.paginator']}"
+                                         rows="#{lang['common.paging.rows.default']}"
+                                         rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                         paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                         paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                         paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                         currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                         rowKey="#{dataSelect.id}"
+                                         resizableColumns="true"
+                                         value="#{lookUpLazyController.selectedDTOLst}"
+                                         selection="#{lookUpLazyController.downTablSelectLst}"
+                                         var="dataSelect">
+                                <p:column id="listTwo" selectionMode="multiple" style="width:16px"/>
+                                <p:columns value="#{lookUpLazyController.lsDisplayColumn}" var="columnName">
+                                    <f:facet name="header">#{lookUpLazyController.mapNames.get(columnName)}</f:facet>
+                                    <h:outputText value="#{dataSelect.mapData.get(columnName)}" escape="true" title="#{dataSelect.mapData.get(columnName)}"/>
+                                </p:columns>
+                            </p:dataTable>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column style="vertical-align: middle;text-align: right;" colspan="2">
+                                <span style="display: block;width:100%;">
+                                    <p:remoteCommand name="updateMsg#{cc.attrs.idComponent}a" process="@this"
+                                                     global="false"
+                                                     update="@([id$=#{cc.attrs.idComponent}panelInput])"/>
+                                    <p:remoteCommand name="updateArea#{cc.attrs.idComponent}a" process="@this"
+                                                     global="false" update="#{cc.attrs.updateAddArea}"/>
+                                    <p:commandButton value="#{lang['common.button.add']}"
+                                                     process="@this"
+                                                     global="false"
+                                                     update="@([id$=msgLookUpDialog#{cc.attrs.idComponent}])"
+                                                     oncomplete="if (!args.validationFailed) {PF('#{cc.attrs.modifier}').hide();#{cc.attrs.oncompleteAdd};updateMsg#{cc.attrs.idComponent}a();updateArea#{cc.attrs.idComponent}a();}"
+                                                     actionListener="#{lookUpLazyController.doAddDialog(cc.attrs.controller,cc.attrs.setDataMethod ,cc.attrs.selectMode, cc.attrs.modifier, cc.attrs.passIdComponent, cc.attrs.resetAllCurrMap)}"
+                                                     style="width:73px;margin-right: 5px;"
+                                                     styleClass="bg-button"
+                                            >
+                                    </p:commandButton>&nbsp;
+                                    <p:commandButton value="#{lang['common.button.cancel']}"
+                                                     global="false"
+                                                     style="width:73px;"
+                                                     styleClass="bg-button"
+                                                     oncomplete="PF('#{cc.attrs.modifier}').hide();#{cc.attrs.oncompleteCancel}">
+                                    </p:commandButton>
+                                </span>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:fieldset>
+        </p:outputPanel>
+    </p:dialog>
+</composite:implementation>
+</html>
+

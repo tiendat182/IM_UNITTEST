@@ -1,0 +1,284 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.utilities.gather.transfer.order']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.utilities.gather.transfer.order']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmViewStockOffer">
+            <!--start vung thong tin tim kiem-->
+            <p:outputPanel styleClass="Container">
+                <div class="Container pd-bottom-0 mg-bottom-0">
+                    <p:messages id="msgExport" showDetail="true" showSummary="false" closable="true" />
+                </div>
+                <!--vung tim kiem-->
+                <p:outputPanel styleClass="Container" id="pnInputSearch">
+                    <cbs:panel classForToggle="pnInputSearchPn" titleHeader="#{lang['create.note.export.info.search']}"/>
+
+                    <div class="pnlSearchTrans Container">
+                        <div class="ContainerIndent">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 pd-top-7 mg-left-15 ui-fluid">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['mn.stock.utilities.manage.trans.warehouse.code.note']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:inputText value="#{gatherTransferOrderController.actionCode}"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7 ui-fluid">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['mn.stock.utilities.manage.trans.warehouse.type.trans']}"
+                                                   for="cobTransType"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:selectOneMenu
+                                            value="#{gatherTransferOrderController.transType}"
+                                            id="cobTransType">
+                                        <f:selectItem itemValue=""
+                                                      itemLabel="#{lang['mn.stock.utilities.manage.trans.warehouse.type.trans.select']}"
+                                                      escape="true"/>
+                                        <f:selectItem itemLabel="#{lang['stock.trans.ui.transtype.export']}"
+                                                      itemValue="1"
+                                                      escape="true"/>
+                                        <f:selectItem itemLabel="#{lang['stock.trans.ui.transtype.import']}"
+                                                      itemValue="2"
+                                                      escape="true"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7 ui-fluid">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.utilities.type.note']}"
+                                                   for="cobTypeNote"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:selectOneMenu value="#{gatherTransferOrderController.typeOrderNote}"
+                                                     id="cobTypeNote">
+                                        <f:selectItem itemValue="" noSelectionOption="true"
+                                                      itemLabel="#{lang['mn.stock.utilities.type.note.select']}"/>
+                                        <f:selectItem itemLabel="#{lang['stock.trans.ui.type.command']}"
+                                                      itemValue="1"
+                                                      escape="true"/>
+                                        <f:selectItem itemLabel="#{lang['stock.trans.ui.type.note']}"
+                                                      itemValue="2"
+                                                      escape="true"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['create.note.from.date']}"
+                                                   for="fromDate"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:calendar
+                                            mask="true"
+                                            pattern="#{lang['common.datetime.format']}"
+                                            converterMessage="#{lang['invalid.date.message']}"
+                                            validatorMessage="#{lang['start.date.validate.message']}"
+                                            value="#{gatherTransferOrderController.fromDate}"
+                                            placeholder="#{lang['common.datetime.format']}"
+                                            required="true"
+                                            requiredMessage="#{lang['mn.stock.from.date.not.blank']}"
+                                            id="fromDate">
+                                        <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                    </p:calendar>
+                                </div>
+                                <p:message for="fromDate"/>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['create.note.to.date']}"
+                                                   for="toDate"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:calendar
+                                            mask="true"
+                                            pattern="#{lang['common.datetime.format']}"
+                                            converterMessage="#{lang['invalid.date.message']}"
+                                            validatorMessage="#{lang['start.date.validate.message']}"
+                                            value="#{gatherTransferOrderController.endDate}"
+                                            placeholder="#{lang['common.datetime.format']}"
+                                            required="true"
+                                            requiredMessage="#{lang['mn.stock.from.date.not.blank']}"
+                                            id="toDate">
+                                        <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                    </p:calendar>
+                                </div>
+                                <p:message for="toDate"/>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['type.stock']}"
+                                                   for="cobTypeWarehouse"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:selectOneMenu id="cobTypeWarehouse"
+                                                     value="#{gatherTransferOrderController.ownerTypeExport}">
+                                        <f:selectItem itemLabel="#{lang['select.stock.type']}"
+                                                      itemValue=""/>
+                                        <f:selectItem itemLabel="#{lang['stock.trans.ui.stocktype.unit']}"
+                                                      itemValue="1"/>
+                                        <f:selectItem itemLabel="#{lang['stock.trans.ui.stocktype.staff']}"
+                                                      itemValue="2"/>
+                                        <p:ajax event="change"
+                                                listener="#{gatherTransferOrderController.changeOwnerTypeExport()}"
+                                                process="@this"
+                                                update="@([id$=pnlOwner])"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <p:outputPanel styleClass="Container " id="pnlOwner">
+                                    <p:outputPanel styleClass="Container"
+                                                   rendered="#{gatherTransferOrderController.ownerTypeExport eq 1}">
+                                        <cbs:inputShop value="#{gatherTransferOrderController.shopInfoTagExport}"
+                                                       idComponent="auCplWarehouse"
+                                                       id="auCplWarehouse"
+                                                       forceSelection="false"
+                                                       clearMethodName="clearExport"
+                                                       methodName="receiveExport"
+                                                       update="@this"
+                                                       require="false"
+                                                       label="#{lang['lookup.limit.stock.label.shop']}"
+                                                       classDivLabel="Container40 Responsive50 pd-top-4 mg-left-15"
+                                                       placeholder="#{lang['mn.stock.limit.store.code.placeholder']}"
+                                                       classDivInput="Container60 Responsive50 ui-fluid"
+                                                       requiredMessage="#{lang['mn.stock.limit.store.code.require.msg']}"
+                                                       oncomplete="">
+                                        </cbs:inputShop>
+                                        <p:message for="auCplWarehouse"/>
+                                    </p:outputPanel>
+                                    <p:outputPanel styleClass="Container"
+                                                   rendered="#{gatherTransferOrderController.ownerTypeExport eq 2}">
+                                        <cbs:inputStaff value="#{gatherTransferOrderController.staffInfoTagExport}"
+                                                        id="auCplStaff"
+                                                        methodName="receiveExport"
+                                                        update="@this"
+                                                        require="false"
+                                                        label="#{lang['lookup.limit.stock.label.staff']}"
+                                                        placeholder="#{lang['mn.stock.limit.staff.code.placeholder']}"
+                                                        classDivLabel="Container40 pd-top-4 Responsive50 mg-left-15 AlignLb sProduct_col"
+                                                        classDivInput="Container60 Responsive50 sProduct ui-fluid"
+                                                        requiredMessage="#{lang['mn.stock.limit.staff.code.require.msg']}"
+                                                        oncomplete=""
+                                                        forceSelection="false"
+                                                        clearMethodName="clearExport">
+                                        </cbs:inputStaff>
+                                        <p:message for="auCplStaff"/>
+                                    </p:outputPanel>
+                                </p:outputPanel>
+                            </div>
+                            <div class="Container33 Responsive">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ContainerIndent TexAlCenter">
+                        <p:commandButton value="#{lang['create.note.search']}"
+                                         process="@([id$=pnInputSearch])"
+                                         action="#{gatherTransferOrderController.doSearchOrderTransfer}" update="@form"
+                                         resetValues="false"/>
+                        <p:commandButton value="#{lang['mn.stock.export.excel']}"
+                                         process="@this"
+                                         styleClass="exportExcel mg-left-5"
+                                         disabled="#{empty gatherTransferOrderController.lsGoodsStatisticDTOs}"
+                                         update="@this"
+                                         ajax="false"
+                                         immediate="true"
+                                         >
+                            <p:fileDownload value="#{gatherTransferOrderController.doExportAction()}"/>
+                        </p:commandButton>
+                        <p:commandButton value="#{lang['common.reset']}" process="@this" styleClass="mg-left-5"
+                                         action="#{gatherTransferOrderController.doResetOrderTransfer}"
+                                         update="@form"
+                                         resetValues="true"/>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+            <!--end vung thong tin tim kiem-->
+            <!--start vung thong tin bieu do-->
+            <p:outputPanel styleClass="Container" id="pnCycle">
+                <cbs:panel classForToggle="pnViewCycle" titleHeader="#{lang['view.action.transfer.type.title.header']}"/>
+                <div class="Container pnViewCycle">
+                    <p:dataTable
+                            id="tblFinance"
+                            paginator="#{lang['common.paging.paginator']}"
+                            rows="#{lang['common.paging.rows.default']}"
+                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                            emptyMessage="#{lang['common.empty.records']}"
+                            value="#{gatherTransferOrderController.lsGoodsStatisticDTOs}"
+                            rowIndexVar="index"
+                            var="goodStatistic">
+                        <p:column styleClass="col-left" style="width: 5%;">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.stt']}" title="#{lang['common.stt']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{index+1}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" style="width: 18%;">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['view.action.transfer.order.note']}" title="#{lang['view.action.transfer.order.note']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{goodStatistic.actionCode}" title="#{goodStatistic.actionCode}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" style="width: 18%;">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['export.order.name']}" title="#{lang['export.order.name']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{goodStatistic.fullProdOffer}" title="#{goodStatistic.fullProdOffer}"/>
+                        </p:column>
+                        <p:column styleClass="col-left col-right" style="width: 19%;">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['view.action.transfer.shop.receive.code']}" title="#{lang['view.action.transfer.shop.receive.code']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{goodStatistic.fullToOwner}" title="#{goodStatistic.fullToOwner}"/>
+                        </p:column>
+                        <p:column styleClass="col-left col-right" style="width: 10%;">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['stock.rescue.warranty.create.status']}" title="#{lang['stock.rescue.warranty.create.status']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{goodStatistic.statusName}" title="#{goodStatistic.statusName}"/>
+                        </p:column>
+                        <p:column styleClass="col-left col-right" style="width: 10%;">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['MSG.exp.cmd.underlying.from.file.07']}" title="#{lang['MSG.exp.cmd.underlying.from.file.07']}"/>
+                            </f:facet>
+                            <p:outputLabel converter="currencyFormat" styleClass="lb-sentinel TexAlRight" value="#{goodStatistic.quantity}" title="#{goodStatistic.quantity}" />
+                        </p:column>
+                        <p:column styleClass="col-left col-right" style="width: 10%;">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['view.action.transfer.weight']}" title="#{lang['view.action.transfer.weight']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{goodStatistic.weigth}" title="#{goodStatistic.weigth}"/>
+                        </p:column>
+                        <p:column styleClass="col-left col-right" style="width: 10%;">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['view.action.transfer.volume']}" title="#{lang['view.action.transfer.volume']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{goodStatistic.volume}" title="#{goodStatistic.volume}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </p:outputPanel>
+            <!--end vung thong tin bieu do-->
+        </h:form>
+    </ui:define>
+</ui:composition>

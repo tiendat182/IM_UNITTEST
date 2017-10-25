@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition>
+        <h:form id="subsystemForm" styleClass="h100">
+            <div id="sub-system-container" class="h100">
+                <c:forEach var="item" items="#{loginBean.authoLstCache}" varStatus="stt">
+                    <div class="sub-system" id="sub-#{stt.count}">  
+                        <div>
+                            <p:commandLink id="ss-#{stt.count}" ajax="true" process="@this"
+                                           action="#{loginBean.reloadChildObjectsList()}" update=":mainMenuForm"
+                                           oncomplete="reloadForm();">
+                                <h:outputText value="#{item.objectName}"/>
+                                <f:setPropertyActionListener target="#{loginBean.lstChildObjects}" value="#{item.childObjects}"/>
+                                <f:setPropertyActionListener target="#{loginBean.curSubSystem}" value="#{stt.count}"/>
+                            </p:commandLink>
+                        </div>
+                    </div>
+                    <div class="splitter-horizontal"></div>
+                </c:forEach>
+            </div>
+        </h:form>
+        <script type="text/javascript">
+            jQuery(document).ready(function(){
+                jQuery(".sub-system").mouseup(function(){
+                    jQuery(this).find("a").click();
+                });
+            });
+        </script>
+    </ui:composition>
+</html>
+

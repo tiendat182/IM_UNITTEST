@@ -1,0 +1,13 @@
+<ui:composition
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core">
+        <p:outputPanel>
+            <c:if test="#{!changeDamagedProductController.directLink}">
+                <ui:include src="changeDamagedProductWithMenu.xhtml"></ui:include>
+            </c:if>
+            <c:if test="#{changeDamagedProductController.directLink}">
+                <ui:include src="changeDamagedProductWithoutMenu.xhtml"></ui:include>
+            </c:if>
+        </p:outputPanel>
+</ui:composition>

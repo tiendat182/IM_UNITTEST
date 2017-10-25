@@ -1,0 +1,308 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+<ui:composition template="../../sentinel/template.xhtml">
+    <!--<ui:composition-->
+    <!--xmlns="http://www.w3.org/1999/xhtml"-->
+    <!--xmlns:h="http://java.sun.com/jsf/html"-->
+    <!--xmlns:f="http://java.sun.com/jsf/core"-->
+    <!--xmlns:p="http://primefaces.org/ui"-->
+    <!--xmlns:pe="http://primefaces.org/ui/extensions"-->
+    <!--xmlns:cbs="http://java.sun.com/jsf/composite/tags"-->
+    <!--xmlns:ui="http://java.sun.com/jsf/facelets"-->
+    <!--template="../../sentinel/template.xhtml">-->
+    <ui:define name="title">#{lang['mn.isdn.create']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmExportNote">
+            <p:outputPanel styleClass="container100">
+                <p:outputPanel id="pnUnderExportNote">
+                    <div class="ContainerIndent">
+                        <p:messages id="messages" showSummary="false" showDetail="true" closable="true"/>
+                    </div>
+                    <!--Start vung nhap thong tin chi tiet-->
+                    <p:focus for="typeServiceTxt"/>
+                    <p:outputPanel id="pnInfoExportOrder" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInforExport"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.stock.limit.inputDetail']}"/>
+
+                        <div class="Container100 panelInforExport" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.type.service']}"
+                                                       for="typeServiceTxt"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="typeServiceTxt"
+                                                         placeholder="#{lang['export.order.code.placehoder']}"
+                                                         requiredMessage="Loại dịch vụ phải được chọn"
+                                                         value="#{createNewNumberRangesController.searchDTO.serviceType}">
+                                            <p:ajax event="change"
+                                                    update="pnInfoExportOrder"
+                                                    process="@this"
+                                                    listener="#{createNewNumberRangesController.initObjectSearch(false)}"/>
+                                            <f:selectItem itemLabel="#{lang['select.type.service']}"
+                                                          noSelectionOption="true"/>
+                                            <f:selectItems value="#{createNewNumberRangesController.listService}"
+                                                           var="service" itemLabel="#{service.name}"
+                                                           itemValue="#{service.value}"/>
+                                            <!--<f:selectItem itemLabel="#{lang['select.type.service.homePhone']}"-->
+                                            <!--itemValue="2"/>-->
+                                            <!--<f:selectItem itemLabel="#{lang['select.type.service.mobile']}"-->
+                                            <!--itemValue="1"/>-->
+                                            <!--<f:selectItem itemLabel="#{lang['select.type.service.pstn']}"-->
+                                            <!--itemValue="3"/>-->
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['common.locality']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu
+                                                itemLabelEscaped="true"
+                                                id="cbxLocality" filter="true" filterMatchMode="contains"
+                                                value="#{createNewNumberRangesController.searchDTO.areaCode}"
+                                                disabled="#{ (empty createNewNumberRangesController.searchDTO.serviceType) or
+                                                              (createNewNumberRangesController.searchDTO.serviceType eq 1) }">
+                                            <p:ajax event="change"
+                                                    listener="#{createNewNumberRangesController.onChangeArea}"
+                                                    process="@this" update="cbxDigitalHpPstn"/>
+                                            <f:selectItem itemLabel="#{lang['select.locality']}"/>
+                                            <f:selectItems value="#{createNewNumberRangesController.listLocate}"
+                                                           var="locate" itemLabel="#{locate.name}"
+                                                           itemValue="#{locate.areaCode}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['start.digital.hp.pstn']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                                        <p:inputText
+                                                id="cbxDigitalHpPstn"
+                                                maxlength="11"
+                                                requiredMessage=""
+                                                disabled="true"
+                                                value="#{createNewNumberRangesController.searchDTO.pstnCode}">
+                                        </p:inputText>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['digital.start.ranges']}"
+                                                       for="digitalStartRanges"/>
+                                    </div>
+                                    <pe:keyFilter mask="num" preventPaste="false"
+                                                  for="digitalStartRanges,digitalEndRanges"/>
+
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText
+                                                id="digitalStartRanges"
+                                                maxlength="11"
+                                                value="#{createNewNumberRangesController.searchDTO.startRange}"
+                                                placeholder="#{lang['digital.start.ranges.placeholder']}">
+                                            <p:ajax event="change" process="@this"
+                                                    listener="#{createNewNumberRangesController.onChangeStartRange('frmExportNote:digitalStartRanges')}"/>
+                                        </p:inputText>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['digital.end.ranges']}"
+                                                       for="digitalEndRanges"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="digitalEndRanges"
+                                                     placeholder="#{lang['digital.end.ranges.placeholder']}"
+                                                     maxlength="11"
+                                                     value="#{createNewNumberRangesController.searchDTO.endRange}">
+                                            <p:ajax event="change" process="@this"
+                                                    listener="#{createNewNumberRangesController.onChangeEndRange('frmExportNote:digitalEndRanges')}"/>
+                                        </p:inputText>
+                                    </div>
+                                </div>
+
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['common.status']}"
+                                                       for="typeDigitalNeedQH"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="typeDigitalNeedQH"
+                                                         value="#{createNewNumberRangesController.searchDTO.status}">
+                                            <f:selectItem itemLabel="#{lang['mn.stock.status.select']}"/>
+                                            <f:selectItem itemLabel="#{lang['range.create.inprocess']}"
+                                                          itemValue="0"/>
+                                            <f:selectItem itemLabel="#{lang['range.create.finished']}"
+                                                          itemValue="1"/>
+                                            <f:selectItem itemLabel="#{lang['range.create.error']}"
+                                                          itemValue="2"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="Container100 TexAlCenter">
+                                <p:commandButton styleClass="mg-left-5"
+                                                 value="#{lang['create.note.search']}" process="@form"
+                                                 update="lstOrderExport"
+                                                 actionListener="#{createNewNumberRangesController.searchRanges}"/>
+
+                                <p:commandButton value="#{lang['common.reset']}"
+                                                 actionListener="#{createNewNumberRangesController.initObjectSearch(true)}"
+                                                 process="@this"
+                                                 update="@form"
+                                                 validateClient="true"
+                                                 styleClass="mg-left-5"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung nhap thong tin chi tiet-->
+
+                    <!--Start vung lịch sử tạo dải số-->
+                    <p:outputPanel id="pnLstExportOrder" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelListOrderExport"
+                                   toggle="true"
+                                   titleHeader="#{lang['history.create.new.number.ranges']}"/>
+                        <p:commandLink
+                                value="#{lang['create.number.ranges']}" process="@form"
+                                update="pnLstExportOrder,dlgCreateNumberRangeDlg"
+                                resetValues="true"
+                                actionListener="#{createNewNumberRangesController.initObjectSearch(true)}"
+                                oncomplete="PF('dlgCreateNumberRangeDlg').show(); setTimeout(function () {$('.typeServiceTxt').focus();}, 350);"
+                                style="" styleClass="fa icon-plus Fs14 blue md-link"
+                                />
+                        <p:commandLink
+                                value="#{lang['search.isdn.export.excel']}"
+                                disabled="#{empty createNewNumberRangesController.listRanges}"
+                                ajax="false"
+                                immediate="true"
+                                style="" styleClass="fa icon-plus Fs14 blue md-link"
+                                >
+                            <p:fileDownload
+                                    value="#{createNewNumberRangesController.exportIsdn()}"/>
+                        </p:commandLink>
+
+                        <div class="Container100 panelListOrderExport">
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        id="lstOrderExport"
+                                        var="range"
+                                        rowKey=""
+                                        rowIndexVar="index"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}"
+                                        value="#{createNewNumberRangesController.listRanges}">
+                                    <p:column headerText="#{lang['mn.stock.type.service']}"
+                                              sortBy="#{range.telecomServiceId}"
+                                              style="width: 22%">
+                                        <p:outputLabel
+                                                value="#{createNewNumberRangesController.getServiceName(range.telecomServiceId)}"
+                                                style="text-align: left"
+                                                title="#{createNewNumberRangesController.getServiceName(range.telecomServiceId)}"
+                                                >
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['digital.start.ranges']}"
+                                              sortBy="#{range.fromIsdn}"
+                                              style="width: 25%">
+                                        <p:outputLabel value="#{range.fromIsdn}"
+                                                       style="text-align: left"
+                                                       title="#{range.fromIsdn}"
+                                                >
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['digital.end.ranges']}"
+                                              sortBy="#{range.toIsdn}"
+                                              style="width: 25%">
+                                        <p:outputLabel value="#{range.toIsdn}"
+                                                       style="text-align: left"
+                                                       title="#{range.toIsdn}"
+                                                />
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.number']}"
+                                              sortBy="#{createNewNumberRangesController.quantity(range.fromIsdn,range.toIsdn)}"
+                                              style="width: 15%">
+                                        <div style="text-align: right">
+                                            <p:outputLabel
+                                                    value="#{createNewNumberRangesController.quantity(range.fromIsdn,range.toIsdn)}"
+                                                    title="#{createNewNumberRangesController.quantity(range.fromIsdn,range.toIsdn)}"
+                                                    >
+                                                <f:convertNumber pattern="#,###"/>
+                                            </p:outputLabel>
+                                        </div>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.status']}"
+                                              sortBy="#{range.status}"
+                                              style="width: 17%">
+                                        <p:outputLabel
+                                                value="#{createNewNumberRangesController.getStatusName(range.status)}"
+                                                style="text-align: left"
+                                                title="#{createNewNumberRangesController.getStatusName(range.status)}"
+                                                >
+                                            <f:convertNumber pattern="#,###"/>
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.invoice.invoiceType.userCreate']}"
+                                              sortBy="#{range.userCreate}"
+                                              style="width: 20%">
+                                        <p:outputLabel value="#{range.userCreate}"
+                                                       style="text-align: left"
+                                                       title="#{range.userCreate}"
+                                                />
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.invoice.invoiceType.dateCreate']}"
+                                              sortBy="#{range.createDate}"
+                                              style="width: 25%;">
+                                        <p:outputLabel value="#{range.createDate}" style="text-align: left"
+                                                       title="#{range.createDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </p:outputLabel>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung lịch sử tạo dải số-->
+                </p:outputPanel>
+            </p:outputPanel>
+            <p:dialog appendTo="@(body)"
+                      closable="true"
+                      closeOnEscape="true"
+                      maximizable="true"
+                      position="center"
+                      id="dlgCreateNumberRangeDlg"
+                      widgetVar="dlgCreateNumberRangeDlg"
+                      header="#{lang['create.number.ranges']}"
+                      modal="true" resizable="false"
+                      dynamic="true"
+                      styleClass="sale"
+                      width="70%">
+                <ui:include src="createNumberRangeDlg.xhtml"/>
+                <f:param name="dlg" value="#{lang['rule.group.edit']}"/>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>

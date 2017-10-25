@@ -1,0 +1,117 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.underlying.export.createOrder.file']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.underlying.export.createOrder.file']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmExportOrderWithFile">
+            <p:outputPanel styleClass="Container100" rendered="#{!aboveExportOrderWithFileController.infoOrderDetail}">
+                <!--Start vung thong tin phieu xuat-->
+                <p:outputPanel styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="panelInfoExportNote"
+                               toggle="true"
+                               titleHeader="#{lang['export.stock.info.export.note']}"/>
+                    <p:outputPanel id="panelInfoExportNote" styleClass="panelInfoExportNote Container100">
+                        <div class="Container100">
+                            <div class="ContainerIndent TexAlCenter">
+                                <div class="Container10 Responsive mg-left-15 pd-top-10">
+                                    <p:outputLabel value="#{lang['create.order.file.data']}"
+                                                   for="uploadedFile"/>
+                                </div>
+                                <div class="Container20 Responsive pd-top-7">
+                                    <p:fileUpload value="#{aboveExportOrderWithFileController.uploadedFile}"
+                                                  dragDropSupport="true"
+                                                  mode="simple"
+                                                  id="uploadedFile"/>
+                                </div>
+                                <div class="Container15 Responsive pd-top-10">
+                                    <p:commandLink value="#{lang['create.order.file.download.file.template']}"/>
+                                </div>
+                                <div class="Container20 Responsive">
+                                    <p:commandButton value="Preview"/>
+                                    <p:commandButton value="#{lang['create.order.file.create.order']}"
+                                                     styleClass="mg-left-5"/>
+                                </div>
+                                <div class="Container35 Responsive">
+
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+                <!--Start vung thong tin phieu xuat-->
+
+                <!--Start vung thong tin lenh xuat-->
+                <p:outputPanel styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="panelInfoExportOrder"
+                               toggle="true"
+                               titleHeader="#{lang['create.order.file.info.export.order']}"/>
+                    <p:outputPanel id="panelInfoExportOrder" styleClass="panelInfoExportOrder Container100">
+                        <p:dataTable
+                                id="lstDataExportOrder"
+                                var=""
+                                rowKey=""
+                                resizableColumns="true"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage=""
+                                value="">
+                            <p:column headerText="#{lang['create.order.file.code.export.warehouse']}"
+                                      styleClass="TexAlCenter">
+                                <p:outputLabel value="MK_0001"
+                                        />
+                            </p:column>
+                            <p:column headerText="#{lang['create.order.file.code.import.warehouse']}"
+                                      styleClass="TexAlCenter">
+                                <p:outputLabel value="MK_1999"
+                                        />
+                            </p:column>
+                            <p:column headerText="#{lang['create.order.file.stock.model']}" styleClass="TexAlCenter">
+                                <p:outputLabel value="Smartphone"
+                                        />
+                            </p:column>
+                            <p:column headerText="#{lang['create.order.file.origin.price']}" styleClass="TexAlCenter">
+                                <p:outputLabel value="8.900.000 vnd"
+                                        />
+                            </p:column>
+                            <p:column headerText="#{lang['create.order.file.code.TC']}" styleClass="TexAlCenter">
+                                <p:outputLabel value="TC_ABC"
+                                        />
+                            </p:column>
+                            <p:column headerText="#{lang['common.status']}" styleClass="TexAlCenter">
+                                <p:outputLabel value="normal"
+                                        />
+                            </p:column>
+                            <p:column headerText="#{lang['create.order.file.count.sum']}"
+                                      styleClass="TexAlRight ui-fluid">
+                                <p:outputLabel value="100c" style="text-align: right"
+                                        />
+                            </p:column>
+                            <p:column headerText="#{lang['create.note.note']}" styleClass="TexAlCenter">
+                                <p:outputLabel value="note"
+                                        />
+                            </p:column>
+                            <p:column headerText="#{lang['create.note.origin.export']}" styleClass="TexAlCenter">
+                                <p:outputLabel value="export for agent"
+                                        />
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </p:outputPanel>
+                <!--Start vung thong tin lenh xuat-->
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

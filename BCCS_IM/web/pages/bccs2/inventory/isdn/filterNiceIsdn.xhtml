@@ -1,0 +1,334 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+<ui:composition template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.isdn.filter.nice.isdn']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmFilterNiceIsdn">
+            <p:outputPanel styleClass="container100">
+                <p:outputPanel>
+                    <!--Start vung xac nhan-->
+                    <p:outputPanel id="pnLstExportOrder" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelListOrderExport"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.isdn.filter.nice.isdn']}"/>
+
+                        <div class="ContainerIndent">
+                            <p:messages id="messages" showSummary="false" showDetail="true" closable="true"/>
+                        </div>
+
+                        <div class="Container100 panelListOrderExport" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="Container30 Responsive25">
+                                <p:outputPanel id="lstRule" styleClass="ContainerIndent">
+                                    <div class="Container100"
+                                         style="margin-bottom: 10px;margin-top: 10px;">
+                                        <div class="Container100 mg-left-5">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           value="#{lang['mn.isdn.list.rule.filter']}"
+                                                           for="cbxServiceType"/>
+                                        </div>
+                                        <p:focus for="cbxServiceType"/>
+
+                                        <div class="ContainerIndent ui-fluid">
+                                            <p:selectOneMenu id="cbxServiceType"
+                                                             value="#{selectionViewController.typeRule}"
+                                                             required="true"
+                                                             styleClass="cbxServiceType"
+                                                             requiredMessage="#{lang['ws.service.type.not.null']}">
+                                                <f:selectItem itemLabel="#{lang['mn.isdn.select.service']}"
+                                                              noSelectionOption="true"/>
+                                                <f:selectItems value="#{selectionViewController.listService}" var="serv"
+                                                               itemLabel="#{serv.name}" itemValue="#{serv.value}"/>
+                                                <p:ajax event="change" process="@this"
+                                                        listener="#{selectionViewController.renderedListRule()}"
+                                                        update="@([id$=pnlTreeSelectRule])"/>
+                                            </p:selectOneMenu>
+                                            <cbs:message forId="cbxServiceType"/>
+                                        </div>
+                                    </div>
+                                    <cbs:message forId="treeRule"/>
+                                    <p:outputPanel id="pnlTreeSelectRule">
+                                        <p:outputPanel styleClass="Container100" style="padding-left:10px;"
+                                                       rendered="#{selectionViewController.renderedRule}">
+
+                                            <p:tree value="#{selectionViewController.root}"
+                                                    var="rule"
+                                                    id="treeRule"
+                                                    dynamic="true"
+                                                    styleClass="treeRule"
+                                                    widgetVar="treeWidget"
+                                                    selectionMode="checkbox"
+                                                    required="true"
+                                                    requiredMessage="#{lang['rule.isdn.must.select']}"
+                                                    selection="#{selectionViewController.selectedNodes}">
+                                                <!--<p:ajax event="expand" update="@this,@([id$=treeRule])" process="@this"-->
+                                                <!--listener="#{selectionViewController.onNodeExpand}"/>-->
+                                                <p:treeNode>
+                                                    <h:outputText value="#{rule.name}"/>
+                                                </p:treeNode>
+                                                <p:treeNode type="document" icon="fa  icon-thumbs-up-1 blue">
+                                                    <h:outputText value="#{rule.name}"/>
+                                                </p:treeNode>
+                                            </p:tree>
+                                        </p:outputPanel>
+                                    </p:outputPanel>
+                                </p:outputPanel>
+                            </div>
+                            <div class="Container70 Responsive75">
+                                <p:outputPanel id="inforIsdnRanges" styleClass="ContainerIndent">
+                                    <cbs:panel classForToggle="InforIsdnRanges"
+                                               toggle="true"
+                                               titleHeader="#{lang['mn.isdn.infor.filter.niceisdn.ranges']}"/>
+                                    <pe:keyFilter mask="num" for="digitalStartRanges,digitalEndRanges"
+                                                  preventPaste="false"/>
+
+                                    <div class="Container100 InforIsdnRanges"
+                                         style="margin-bottom: 10px;margin-top: 10px;">
+                                        <div class="ContainerIndent">
+                                            <div class="Container50 Responsive50">
+                                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                    <p:outputLabel styleClass="lb-sentinel"
+                                                                   value="#{lang['digital.start.ranges']}"
+                                                                   for="digitalStartRanges"/>
+                                                </div>
+                                                <div class="Container60 Responsive50 ui-fluid">
+                                                    <p:inputText
+                                                            id="digitalStartRanges"
+                                                            styleClass="digitalStartRanges"
+                                                            required="true"
+                                                            value="#{selectionViewController.startRange}"
+                                                            maxlength="11"
+                                                            onchange="this.value=this.value.replace(new RegExp('[^0-9]|^0+','gm'),'')"
+                                                            requiredMessage="#{lang['digital.start.ranges']} #{lang['is.not.null']}"
+                                                            placeholder="#{lang['digital.start.ranges.placeholder']}"/>
+                                                    <p:message for="digitalStartRanges"/>
+                                                </div>
+                                            </div>
+                                            <div class="Container50 Responsive50">
+                                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                    <p:outputLabel styleClass="lb-sentinel"
+                                                                   value="#{lang['digital.end.ranges']}"
+                                                                   for="digitalEndRanges"/>
+                                                </div>
+                                                <div class="Container60 Responsive50 ui-fluid">
+                                                    <p:inputText id="digitalEndRanges"
+                                                                 styleClass="digitalEndRanges"
+                                                                 placeholder="#{lang['digital.end.ranges.placeholder']}"
+                                                                 required="true"
+                                                                 value="#{selectionViewController.endRange}"
+                                                                 onchange="this.value=this.value.replace(new RegExp('[^0-9]|^0+','gm'),'')"
+                                                                 maxlength="11"
+                                                                 requiredMessage="#{lang['digital.end.ranges']} #{lang['is.not.null']}"/>
+                                                    <cbs:message forId="digitalEndRanges"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="ContainerIndent">
+                                            <div class="Container50 Responsive50">
+                                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                    <p:outputLabel styleClass="lb-sentinel"
+                                                                   value="#{lang['stock.get.digital']}"
+                                                                   for="cbxStock"/>
+                                                </div>
+                                                <div class="Container60 Responsive50 ui-fluid">
+                                                    <p:selectOneMenu id="cbxStock"
+                                                                     styleClass="cbxStock"
+                                                                     value="#{selectionViewController.shopId}"
+                                                                     filter="true"
+                                                                     requiredMessage="#{lang['stock.get.isdn.must.select']}">
+                                                        <f:selectItem itemLabel="#{lang['stock.get.digital.select']}"
+                                                                      noSelectionOption="true"/>
+                                                        <f:selectItems value="#{selectionViewController.lstShop}"
+                                                                       var="shop" itemLabel="#{shop.name}"
+                                                                       itemValue="#{shop.shopId}"/>
+                                                    </p:selectOneMenu>
+                                                    <cbs:message forId="cbxStock"/>
+                                                </div>
+                                            </div>
+                                            <div class="Container50 Responsive50 mg-left-15">
+                                                <p:outputLabel styleClass="lb-sentinel" value="."
+                                                               style="color: #FFFFFF"/>
+                                            </div>
+                                        </div>
+                                        <div class="ContainerIndent">
+                                            <div class="Container20 Responsive25 mg-left-15 pd-top-10">
+                                                <p:outputLabel value="#{lang['mn.isdn.condition.filter']}"
+                                                               for="checkBoxFilter"
+                                                               styleClass="checkBoxFilter, lb-sentinel"/>
+                                            </div>
+                                            <div class="Container80 Responsive75">
+                                                <p:selectManyCheckbox id="checkBoxFilter"
+                                                                      value="#{selectionViewController.conditionFilter}"
+                                                                      required="true"
+                                                                      requiredMessage="#{lang['mn.isdn.number.nice.required.type']}"
+                                                                      styleClass="checkBoxFilter">
+                                                    <f:selectItem itemLabel="#{lang['mn.isdn.new.isdn']}"
+                                                                  itemValue="1"/>
+                                                    <f:selectItem itemLabel="#{lang['mn.isdn.pause.use']}"
+                                                                  itemValue="2"/>
+                                                    <f:selectItem itemLabel="#{lang['mn.isdn.use']}"
+                                                                  itemValue="3"/>
+                                                    <f:selectItem itemLabel="#{lang['mn.isdn.filter.again']}"
+                                                                  itemValue="4"/>
+                                                </p:selectManyCheckbox>
+                                                <p:message for="checkBoxFilter"/>
+                                            </div>
+                                        </div>
+                                        <div class="ContainerIndent TexAlCenter">
+                                            <p:commandButton value="#{lang['mn.isdn.filter.isdn']}"
+                                                             process="@form"
+                                                             update="@form"
+                                                             actionListener="#{selectionViewController.actionFilterNumber}"
+                                                    />
+                                            <p:commandButton value="#{lang['view.result.filter.rule']}"
+                                                             actionListener="#{selectionViewController.actionGetResultFilter}"
+                                                             process="@this"
+                                                             resetValues="true"
+                                                             update="@form" styleClass="mg-left-5"/>
+                                            <p:commandButton value="#{lang['common.reset']}"
+                                                             actionListener="#{selectionViewController.resetForm}"
+                                                             process="@this"
+                                                             resetValues="true"
+                                                             update="@form" validateClient="false"
+                                                             styleClass="mg-left-5"/>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+
+                                <!--Start danh sach cac luat thoa man dk loc-->
+                                <p:outputPanel id="pnLstRuleSuitable" styleClass="ContainerIndent">
+                                    <cbs:panel classForToggle="pnLstRuleSuitable"
+                                               toggle="true"
+                                               titleHeader="#{lang['mn.isdn.list.rule.suitable']}"/>
+
+                                    <div class="Container100 pnLstRuleSuitable"
+                                         style="margin-bottom: 10px;margin-top: 10px;">
+                                        <div class="ContainerIndent">
+                                            <p:dataTable
+                                                    id="lstRuleSuitable"
+                                                    var="item"
+                                                    rowIndexVar="index"
+                                                    rowKey="#{item[0]}"
+                                                    resizableColumns="true"
+                                                    paginator="#{lang['common.paging.paginator']}"
+                                                    rows="#{lang['common.paging.rows.default']}"
+                                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                                    emptyMessage="#{lang['common.emty.records']}"
+                                                    selection="#{selectionViewController.listSelectedResult}"
+                                                    value="#{selectionViewController.listResult}">
+                                                <p:ajax event="rowSelectCheckbox" process="@this"/>
+                                                <p:ajax event="rowUnselectCheckbox" process="@this"/>
+                                                <p:ajax event="toggleSelect" process="@this"/>
+s
+                                                <p:column selectionMode="multiple" style="width: 10%"
+                                                          styleClass="TexAlCenter"/>
+                                                <p:column headerText="#{lang['rule.nice.digit']}"
+                                                          sortBy="#{item[1]}"
+                                                          style="width: 15%">
+                                                    <p:outputLabel value="#{item[1]}" style="text-align: left"
+                                                                   title="#{item[1]}"/>
+                                                </p:column>
+                                                <p:column headerText="#{lang['mn.isdn.group.rule.nice.isdn']}"
+                                                          sortBy="#{item[3]}"
+                                                          style="width: 15%">
+                                                    <p:outputLabel value="#{item[3]}" title="#{item[3]}"/>
+                                                </p:column>
+                                                <p:column headerText="#{lang['mn.isdn.unit.rule']}"
+                                                          sortBy="#{item[5]}"
+                                                          style="width: 15%">
+                                                    <p:outputLabel value="#{item[5]}" style="text-align: left"
+                                                                   title="#{item[5]}"/>
+                                                </p:column>
+                                                <p:column headerText="#{lang['mn.isdn.number.nice.isdn']}"
+                                                          sortBy="#{item[6]}"
+                                                          style="width: 15%;text-align: right;">
+                                                    <p:outputLabel value="#{item[6]}" style="text-align: right"
+                                                                   title="#{item[6]}"/>
+                                                </p:column>
+                                                <!--<p:column headerText="#{lang['common.status']}"-->
+                                                <!--sortBy="#{selectionViewController.getStatusName(item[7])}"-->
+                                                <!--style="width: 15%;text-align: right;">-->
+                                                <!--<p:outputLabel value="#{selectionViewController.getStatusName(item[7])}" style="text-align: right"-->
+                                                <!--title="#{selectionViewController.getStatusName(item[7])}"/>-->
+                                                <!--</p:column>-->
+                                                <p:column headerText="#{lang['common.view.detail']}"
+                                                          style="width: 15%;text-align: center;">
+                                                    <p:commandLink styleClass="fa icon-edit"
+                                                                   actionListener="#{selectionViewController.actionViewDetail(item[0])}"
+                                                                   resetValues="true"
+                                                                   oncomplete="PF('dlgFilterNiceIsdn').show();"
+                                                                   update="@([id$=dlgFilterNiceIsdn])"
+                                                                   title="#{lang['common.view.detail']}"
+                                                                   process="@this">
+                                                        <f:param name="ruleSelected" value="#{item[1]}"/>
+                                                        <f:setPropertyActionListener
+                                                                target="#{selectionViewController.ruleNameSelected}"
+                                                                value="#{item[1]}"/>
+                                                        <f:setPropertyActionListener
+                                                                target="#{selectionViewController.currentRuleView}"
+                                                                value="#{item[0]}"/>
+                                                    </p:commandLink>
+                                                </p:column>
+                                            </p:dataTable>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+
+                                <div class="ContainerIndent TexAlCenter">
+                                    <p:commandButton value="#{lang['common.update']}"
+                                                     actionListener="#{selectionViewController.submitAllFiltered}"
+                                                     process="@([id$=lstRuleSuitable]), @this"
+                                                     resetValues="true"
+                                                     update="@form" validateClient="false"
+                                                     styleClass="mg-left-5"/>
+                                    <p:commandButton
+                                            value="#{lang['brasIpPool.button.export']}"
+                                            styleClass="mg-left-5"
+                                            disabled="#{empty selectionViewController.listResult}"
+                                            title="#{lang['brasIpPool.button.export']}"
+                                            process="@this"
+                                            immediate="true"
+                                            update="@form"
+                                            ajax="false"
+                                            style="text-decoration: none!important;">
+                                        <p:fileDownload
+                                                value="#{selectionViewController.exportExcel()}"/>
+                                    </p:commandButton>
+                                </div>
+                                <!--End danh sach cac luat thoa man dk loc-->
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung xac nhan-->
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgFilterNiceIsdn"
+                  widgetVar="dlgFilterNiceIsdn"
+                  header="#{lang['list.nicde.isdn']} #{param.ruleSelected}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="60%">
+            <ui:include src="dlgFilterNiceIsdn.xhtml"/>
+            <f:attribute name="ruleName" value="aaa"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
+</html>

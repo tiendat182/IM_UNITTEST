@@ -1,0 +1,187 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.utilities.pay.inventory.records.last.month']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.utilities.pay.inventory.records.last.month']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmPayInventory" styleClass="Container100">
+            <p:outputPanel id="pnlPayInventory" styleClass="Container100">
+
+                <div class="ContainerIndent mg-top-0">
+                    <p:messages id="msgPayInventoryLst" showDetail="true" showSummary="false" closable="true"/>
+                </div>
+                <p:outputPanel id="pnlInfoPayInventory">
+                    <!--<p:focus for="pnlInfoPayInventory"/>-->
+                    <p:outputPanel styleClass="ContainerIndent" id="pnlReadNode">
+                        <cbs:panel classForToggle="pnlReadNode" toggle="true"
+                                   titleHeader="#{lang['mn.stock.utilities.monthyear.form']}"/>
+
+                        <div class="Container100 pnlReadNote paddingTopBottom10">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container50 Responsive50">
+                                    <div class="Container100 ui-fluid">
+                                        <cbs:inputShop
+                                                styleClass="shopChecked"
+                                                idComponent="shop"
+                                                value="#{payInventoryLastMonthController.shopInfoTag}"
+                                                id="inputStore"
+                                                methodName="receiveShop"
+                                                update="@this"
+                                                label="#{lang['mn.stock.limit.store']}"
+                                                placeholder="#{lang['common.search.shop.placehoder']}"
+                                                classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                classDivInput="Container60 Responsive50 ui-fluid"
+                                                forceSelection="true"
+                                                clearMethodName="clearCurrentShop"
+                                                require="true"
+                                                requiredMessage="#{lang['stock.check.report.require.shop']}">
+
+                                        </cbs:inputShop>
+                                    </div>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['mn.stock.utilities.month.year']}"
+                                                       for="txtMonthYear"
+                                                       styleClass="lb-sentinel"/>
+                                        <label style="color: red"> *</label>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+
+                                        <script type="text/javascript ">
+                                            $(document).ready(function () {
+                                                $('.dateChecked').monthpicker({
+                                                    selectedYear: new Date().getFullYear(),
+                                                    startYear: 1900,
+                                                    finalYear: 2212
+                                                });
+                                            });
+                                        </script>
+                                        <p:inputText id="txtMonthYear"
+                                                     styleClass="dateChecked"
+                                                     maxlength="7"
+                                                     placeholder="#{lang['stock.report.date.placeholder']}"
+                                                     value="#{payInventoryLastMonthController.strDate}">
+
+                                        </p:inputText>
+                                        <p:message id="mgsMonth" for="txtMonthYear"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <p:outputPanel id="pnlUpload">
+                                    <div class="Container100 Responsive100">
+                                        <div class="Container20 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel" for="fileImport"
+                                                           value="#{lang['mn.stock.utilities.file']}"/>
+                                        </div>
+
+                                        <div class="Container30 Responsive33 ui-fluid pd-top-7">
+                                            <p:inputText id="fileName"
+                                                         styleClass="outputAttachFile"
+                                                         maxlength="100"
+                                                         placeholder="#{lang['search.number.range.input.fileName']}"
+                                                         value="#{payInventoryLastMonthController.fileName}"
+                                                         title="#{payInventoryLastMonthController.fileName}"
+                                                         readonly="true"/>
+                                        </div>
+
+                                        <div class="Container15 Responsive33 ui-fluid pd-top-7">
+                                            <p:fileUpload id="fileImport"
+                                                          styleClass="fileUpload"
+                                                          update="@([id$=pnlUpload]),@([id$=msgPayInventoryLst])"
+                                                          dragDropSupport="true" mode="advanced"
+                                                          auto="true"
+                                                          value="#{payInventoryLastMonthController.fileImport}"
+                                                          fileUploadListener="#{payInventoryLastMonthController.handleFileUpload}">
+                                            </p:fileUpload>
+                                        </div>
+                                        <!--<div class="Container40 Responsive33 ui-fluid">-->
+                                        <!--<p:outputLabel styleClass="lb-sentinel"-->
+                                        <!--value="#{payInventoryLastMonthController.fileName}"/>-->
+                                        <!--</div>-->
+                                    </div>
+                                </p:outputPanel>
+                            </div>
+                            <div class="Container100 TexAlCenter pd-top-10">
+                                <cbs:confirmDialog
+                                        idComponent="btnUpload"
+                                        valueButton="#{lang['mn.stock.utilities.upload.note']}"
+                                        headerConfirm="#{lang['mn.stock.check.report.upload.header']}"
+                                        messageConfirm="#{lang['mn.stock.check.report.upload.confirm']}"
+                                        actionOK="#{payInventoryLastMonthController.uploadFileStockCheckReport}"
+                                        resetValueButton="false"
+                                        process="@this, @([id$=shop]), @([id$=txtMonthYear])"
+                                        updateArea="@([id$=tblListNote]), @([id$=msgPayInventoryLst])"
+                                        focusCancel="false"
+                                        isButton="true"
+                                        actionValidate="#{payInventoryLastMonthController.validatePreUpload}"
+                                        />
+                                <p:commandButton value="#{lang['create.note.search']}"
+                                                 process="@this, @([id$=shop]), @([id$=txtMonthYear])"
+                                                 resetValues="true"
+                                                 actionListener="#{payInventoryLastMonthController.searchStockCheckReportList}"
+                                                 update="@([id$=tblListNote]), @([id$=msgPayInventoryLst])"
+                                                 styleClass="mg-left-5"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <p:outputPanel styleClass="ContainerIndent" id="pnlListInventory">
+                        <cbs:panel classForToggle="pnlListInventory"
+                                   titleHeader="#{lang['mn.stock.utilities.monthyear.grid']}"/>
+
+                        <div class="Container100 pnlListInventory TexAlCenter">
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        id="tblListNote"
+                                        var="stockCheckReport"
+                                        rowKey="#{stockCheckReport.stockCheckReportId}"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}"
+                                        value="#{payInventoryLastMonthController.curStockList}">
+                                    <p:column headerText="#{lang['mn.invoice.unit']}" styleClass="col-left"
+                                              sortBy="#{stockCheckReport.ownerName}">
+                                        <p:outputLabel value="#{stockCheckReport.ownerName}"
+                                                       style="text-align: left"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.utilities.monthyear.grid.file']}"
+                                              styleClass="col-left" sortBy="#{stockCheckReport.fileName}">
+                                        <p:outputLabel value="#{stockCheckReport.fileName}"
+                                                       style="text-align: left"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.utilities.month.report']}"
+                                              styleClass="col-left" sortBy="#{stockCheckReport.checkDateStr}">
+                                        <p:outputLabel value="#{stockCheckReport.checkDateStr}"
+                                                       style="text-align: left"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.check.report.action']}" style="width: 10%;"
+                                              styleClass="center">
+                                        <p:commandLink styleClass="fa icon-download Fs14 black"
+                                                       title="#{lang['create.note.download.file.title']}"
+                                                       ajax="false"
+                                                       style="text-decoration: none!important;">
+                                            <p:fileDownload
+                                                    value="#{payInventoryLastMonthController.downloadFileAttach(stockCheckReport)}"/>
+                                        </p:commandLink>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

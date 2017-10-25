@@ -1,0 +1,181 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:o="http://omnifaces.org/ui"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['list.update.serial.gpon']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmUpdateSerial">
+            <p:outputPanel styleClass="container100">
+                <div class="ContainerIndent">
+                    <p:messages id="messages" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel id="panelImport" styleClass="ContainerIndent">
+                    <p:focus for="panelImport"/>
+                    <cbs:panel classForToggle="panelImport"
+                               toggle="true"
+                               titleHeader="#{lang['list.update.serial.gpon']}"/>
+
+                    <div class="Container100 panelImport" style="margin-bottom: 10px;margin-top: 10px;">
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container66 Responsive66">
+                                <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['list.update.serial.gpon.type']}"/>
+                                </div>
+                                <div class="Container80 Responsive75 ui-fluid">
+                                    <p:selectOneRadio id="typeImport" value="#{updateSerialGponController.updateType}"
+                                                      required="true">
+                                        <f:selectItem itemLabel="#{lang['list.update.serial.gpon.type.mutil']}"
+                                                      itemValue="2"/>
+                                        <f:selectItem itemLabel="#{lang['list.update.serial.gpon.type.gpon']}"
+                                                      itemValue="1"/>
+                                        <p:ajax event="change" process="@this"
+                                                listener="#{updateSerialGponController.changeUpdateType}"
+                                                update="@([id$=cplProductOffer]),@([id$=outputAttachFile])"/>
+                                    </p:selectOneRadio>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container66 Responsive66" style="margin-top: 10px!important;">
+                                <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['mn.stock.liquidate.model']}"
+                                                   for="cplProductOffer" styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container80 Responsive75 ui-fluid ui-relative">
+                                    <p:autoComplete id="cplProductOffer"
+                                                    required="true"
+                                                    requiredMessage="#{lang['mn.stock.liquidate.model.required']}"
+                                                    value="#{updateSerialGponController.productOfferingTotalDTO}"
+                                                    disabled="#{!(updateSerialGponController.productOfferingTotalDTO == null || updateSerialGponController.productOfferingTotalDTO == '')}"
+                                                    completeMethod="#{updateSerialGponController.searchListProductOffering}"
+                                                    placeholder="#{lang['mn.stock.liquidate.model.placeholder']}"
+                                                    var="productOfferingTotalDTO"
+                                                    itemValue="#{productOfferingTotalDTO}"
+                                                    itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                    autoHighlight="true"
+                                                    maxResults="10"
+                                                    forceSelection="true">
+                                        <o:converter converterId="productOfferingConverter"
+                                                     list="#{updateSerialGponController.lstProductOfferingTotalDTO}"/>
+                                        <p:ajax event="itemSelect"
+                                                listener="#{updateSerialGponController.doSelectProductOffering}"
+                                                process="@([id$=cplProductOffer])"
+                                                update="@([id$=cplProductOffer]),@([id$=messages])"/>
+                                        <p:column style="width: 40%"
+                                                  headerText="#{lang['common.lb.code']}"
+                                                  filterable="true">
+                                            <p:outputLabel value="#{productOfferingTotalDTO.code}"/>
+                                        </p:column>
+                                        <p:column style="width: 60%"
+                                                  headerText="#{lang['common.lb.name']}"
+                                                  filterable="true">
+                                            <p:outputLabel value="#{productOfferingTotalDTO.name}"/>
+                                        </p:column>
+                                        <p:ajax event="query" global="false"/>
+                                    </p:autoComplete>
+                                    <p:commandLink id="btnResetLstProduct"
+                                                   styleClass="ui-link-right"
+                                                   update="@this, @([id$=cplProductOffer]),@([id$=outputAttachFile])"
+                                                   actionListener="#{updateSerialGponController.resetLstProductOfferingTotal}"
+                                                   process="@this">
+                                        <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                    </p:commandLink>
+                                    <p:message for="cplProductOffer"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container66 Responsive66" style="margin-top: 10px!important;">
+                                <div class="Container20 Responsive25 mg-left-15 pd-top-7 outputAttachFile_col">
+                                    <p:outputLabel styleClass="lb-sentinel" for="outputAttachFile"
+                                                   value="#{lang['create.order.file.data']}"/>
+                                </div>
+                                <div class="Container80 Responsive75 ui-fluid outputAttachFile">
+                                    <p:inputText id="outputAttachFile"
+                                                 styleClass="outputAttachFile"
+                                                 maxlength="100"
+                                                 required="true"
+                                                 placeholder="#{lang['search.number.range.input.fileName']}"
+                                                 value="#{updateSerialGponController.fileName}"
+                                                 readonly="true"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container100">
+                                    <p:fileUpload id="fileAttach"
+                                                  process="@this"
+                                                  label="#{lang['mn.stock.limit.createFile']}"
+                                                  update="@this, @([id$=outputAttachFile]),@([id$=messages]),@([id$=pnDown])"
+                                                  dragDropSupport="true" required="true" mode="advanced"
+                                                  auto="true"
+                                                  allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                                  invalidFileMessage="#{lang['mn.isdn.rule.invalid.file.type']}"
+                                                  value="#{updateSerialGponController.uploadedFile}"
+                                                  fileUploadListener="#{updateSerialGponController.fileUploadAction}">
+                                    </p:fileUpload>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container100">
+                                <p:outputPanel id="pnDown" style="margin-left: 20px">
+                                    <p:commandLink
+                                            id="btnDownloadTemplate"
+                                            value="#{lang['mn.stock.status.isdn.update.status.file_template']}"
+                                            rendered="#{empty updateSerialGponController.lstError}"
+                                            title="#{lang['create.note.download.file.title']}"
+                                            ajax="false"
+                                            immediate="true"
+                                            style="text-decoration: none!important;">
+                                        <p:fileDownload
+                                                value="#{updateSerialGponController.downloadFileTemplate()}"/>
+                                    </p:commandLink>
+                                    <p:commandLink
+                                            id="bthDownloadError"
+                                            value="#{lang['button.export.excel.error']}"
+                                            rendered="#{not empty updateSerialGponController.lstError}"
+                                            title="#{lang['create.note.download.file.title']}"
+                                            ajax="false"
+                                            immediate="true"
+                                            style="text-decoration: none!important;color: red !important;">
+                                        <p:fileDownload
+                                                value="#{updateSerialGponController.downloadFileError()}"/>
+                                    </p:commandLink>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Container100 TexAlCenter" style="margin-bottom: 10px !important;">
+                        <cbs:confirmDialog
+                                idComponent="update"
+                                id="update"
+                                valueButton="#{lang['list.update.serial.gpon.btn.update']}"
+                                headerConfirm="#{lang['list.update.serial.gpon.btn.update.header']}"
+                                messageConfirm="#{lang['list.update.serial.gpon.btn.update.mgs']}"
+                                actionOK="#{updateSerialGponController.importData()}"
+                                resetValueButton="true"
+                                process="@this,@([id$=frmUpdateSerial])"
+                                updateArea="@this,@([id$=frmUpdateSerial])"
+                                processOK="@this,@([id$=frmUpdateSerial])"
+                                updateOK="@([id$=frmUpdateSerial])"
+                                actionValidate="#{updateSerialGponController.validateImport()}"
+                                focusCancel="false"
+                                isButton="true"/>
+                        <p:commandButton styleClass="mg-left-5" value="#{lang['common.reset']}"
+                                         immediate="true"
+                                         resetValues="true"
+                                         process="@form"
+                                         update="@form"
+                                         action="#{updateSerialGponController.doReset}"/>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,336 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn/stock.utilities.share.serial.export']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.utilities.view.infor.ware.house']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmShareSerialExportFile" styleClass="Container100">
+            <p:outputPanel id="pnlInforSearch" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="pnlInforSearch" titleHeader="#{lang['create.note.export.info.search']}"/>
+                <p:focus for="txtNoteCode"/>
+
+                <div class="ContainerIndent">
+                    <p:messages id="msgContainer" showSummary="false" showDetail="true"
+                                closable="true"/>
+                </div>
+                <div class="pnlInforSearch Container100 pd-top-7">
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['export.order.code']}"
+                                               styleClass="lb-sentinel break-word"
+                                               for="txtNoteCode"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="txtNoteCode"
+                                             value="#{shareSerialExportFileController.divideSerialActionDTO.actionCode}"
+                                             required="true"
+                                             maxlength="60"
+                                             placeholder="#{lang['export.order.code.placehoder']}"
+                                             requiredMessage="#{lang['mn.stock.utilities.order.note.export.note.blank']}"/>
+                                <p:message for="txtNoteCode"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel break-word"
+                                               value="#{lang['mn.stock.utilities.status.trans']}"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu
+                                        value="#{shareSerialExportFileController.divideSerialActionDTO.stockTransStatus}">
+                                    <f:selectItem itemLabel="#{lang['mn.stock.status.select']}" noSelectionOption="true"
+                                                  escape="true"/>
+                                    <f:selectItem itemLabel="#{lang['mn.divide.trans.status1']}" itemValue="1"
+                                                  escape="true"/>
+                                    <f:selectItem itemLabel="#{lang['mn.divide.trans.status2']}" itemValue="2"
+                                                  escape="true"/>
+                                </p:selectOneMenu>
+                                <p:remoteCommand name="updateControls" process="@this" resetValues="true"
+                                                 update="@form"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel break-word"
+                                               value="#{lang['mn.stock.utilities.status.serial']}"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu
+                                        value="#{shareSerialExportFileController.divideSerialActionDTO.serialStatus}">
+                                    <f:selectItem itemLabel="#{lang['mn.stock.status.select']}" noSelectionOption="true"
+                                                  escape="true"/>
+                                    <f:selectItem itemLabel="#{lang['mn.divide.status0']}" itemValue="0"
+                                                  escape="true"/>
+                                    <f:selectItem itemLabel="#{lang['mn.divide.status1']}" itemValue="1"
+                                                  escape="true"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel break-word"
+                                               value="#{lang['create.note.from.date']}" for="fromDate"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar
+                                        mask="true"
+                                        pattern="#{lang['common.datetime.format']}"
+                                        converterMessage="#{lang['invalid.date.message']}"
+                                        validatorMessage="#{lang['start.date.validate.message']}"
+                                        value="#{shareSerialExportFileController.divideSerialActionDTO.fromDate}"
+                                        placeholder="#{lang['common.datetime.format']}"
+                                        required="true"
+                                        requiredMessage="#{lang['mn.stock.from.date.not.blank']}"
+                                        id="fromDate">
+                                    <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                </p:calendar>
+                                <p:message for="fromDate"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel break-word"
+                                               value="#{lang['create.note.to.date']}" for="toDate"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar
+                                        mask="true"
+                                        pattern="#{lang['common.datetime.format']}"
+                                        converterMessage="#{lang['invalid.date.message']}"
+                                        validatorMessage="#{lang['end.date.validate.message']}"
+                                        value="#{shareSerialExportFileController.divideSerialActionDTO.toDate}"
+                                        placeholder="#{lang['common.datetime.format']}"
+                                        required="true"
+                                        requiredMessage="#{lang['mn.stock.to.date.not.blank']}"
+                                        id="toDate">
+                                    <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                </p:calendar>
+                                <p:message for="toDate"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive"></div>
+                    </div>
+                    <div class="Container100 TexAlCenter">
+                        <p:commandButton value="#{lang['create.note.search']}"
+                                         process="@this, @([id$=pnlInforSearch])"
+                                         update="@form"
+                                         actionListener="#{shareSerialExportFileController.doSearchDivideSerialAction()}"/>
+                        <p:commandButton value="#{lang['common.reset']}" styleClass="mg-left-5"
+                                         update="@form" resetValues="true" process="@this"
+                                         actionListener="#{shareSerialExportFileController.prepare()}"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+
+            <p:outputPanel id="pnlListExportNote" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="pnlListExportNote" titleHeader="#{lang['create.note.list.order.export']}"/>
+
+                <div class="pnlListExportNote Container100 paddingTopBottom10">
+                    <div class="ContainerIndent mg-top-0">
+                        <p:dataTable
+                                id="tblListExportNote"
+                                var="stockTransDTO"
+                                rowKey=""
+                                resizableColumns="true"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.emty.records']}"
+                                value="#{shareSerialExportFileController.listStockTransFullDTO}">
+                            <p:column styleClass="TexAlLeft">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['create.note.code']}"
+                                            title="#{lang['create.note.code']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTransDTO.actionCode}"
+                                               title="#{stockTransDTO.actionCode}"/>
+                            </p:column>
+                            <p:column styleClass="TexAlLeft">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['store.import.stock']}"
+                                            title="#{lang['store.import.stock']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTransDTO.toOwnerName}"
+                                               title="#{stockTransDTO.toOwnerName}"/>
+                            </p:column>
+                            <p:column styleClass="TexAlLeft">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.liquidate.model']}"
+                                            title="#{lang['mn.stock.liquidate.model']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTransDTO.prodOfferName}"
+                                               title="#{stockTransDTO.prodOfferName}"/>
+                            </p:column>
+                            <p:column styleClass="TexAlRight">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['common.number']}"
+                                            title="#{lang['common.number']}"/>
+                                </f:facet>
+                                <h:outputLabel converter="currencyFormat"
+                                               styleClass="lb-sentinel-bold"
+                                               value="#{stockTransDTO.quantity}"
+                                               title="#{stockTransDTO.quantity}"/>
+                            </p:column>
+                            <p:column styleClass="TexAlLeft">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['create.note.create.date']}"
+                                            title="#{lang['create.note.create.date']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTransDTO.createDatetime}"
+                                               title="#{shareSerialExportFileController.formatDateTime(stockTransDTO.createDatetime)}">
+                                    <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column styleClass="TexAlLeft">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.utilities.status.trans']}"
+                                            title="#{lang['mn.stock.utilities.status.trans']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{shareSerialExportFileController.getDisplayName('mn.divide.trans.status', stockTransDTO.stockTransStatus)}"
+                                        title="#{shareSerialExportFileController.getDisplayName('mn.divide.trans.status', stockTransDTO.stockTransStatus)}"/>
+                            </p:column>
+                            <p:column styleClass="TexAlLeft">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.utilities.status.serial']}"
+                                            title="#{lang['mn.stock.utilities.status.serial']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{shareSerialExportFileController.getDisplayName('mn.divide.status', stockTransDTO.serialStatus)}"
+                                        title="#{shareSerialExportFileController.getDisplayName('mn.divide.status', stockTransDTO.serialStatus)}"/>
+                            </p:column>
+                            <p:column styleClass="TexAlLeft" style="width: 8%">
+                                <f:facet name="header">
+                                    <p:selectBooleanCheckbox value="#{shareSerialExportFileController.all4Divide}">
+                                        <p:ajax event="change" process="@this, @([id$=tblListExportNote])"
+                                                update="@([id$=tblListExportNote])"
+                                                listener="#{shareSerialExportFileController.doChooseStockTrans(null,3)}">
+                                        </p:ajax> </p:selectBooleanCheckbox>
+                                    <h:outputText value="#{lang['mn.stock.utilities.select.share.serial']}"
+                                                  title="#{lang['mn.stock.utilities.select.share.serial']}"/>
+                                </f:facet>
+                                <p:selectBooleanCheckbox
+                                        value="#{stockTransDTO.choose4Divide}">
+                                    <p:ajax event="change" process="@this, @([id$=tblListExportNote])"
+                                            listener="#{shareSerialExportFileController.doChooseStockTrans(stockTransDTO,1)}"></p:ajax>
+                                </p:selectBooleanCheckbox>
+                            </p:column>
+                            <p:column styleClass="TexAlLeft" style="width: 8%">
+                                <f:facet name="header">
+                                    <p:selectBooleanCheckbox value="#{shareSerialExportFileController.all4Export}">
+                                        <p:ajax event="change" process="@this, @([id$=tblListExportNote])"
+                                                update="@([id$=tblListExportNote])"
+                                                listener="#{shareSerialExportFileController.doChooseStockTrans(null,4)}">
+                                        </p:ajax> </p:selectBooleanCheckbox>
+                                    <h:outputText value="#{lang['mn.stock.utilities.select.export.serial']}"
+                                                  title="#{lang['mn.stock.utilities.select.export.serial']}"/>
+                                </f:facet>
+                                <p:selectBooleanCheckbox
+                                        value="#{stockTransDTO.choose4Export}"
+                                        rendered="#{stockTransDTO.serialStatus eq '1'}">
+                                    <p:ajax event="change" process="@this, @([id$=tblListExportNote])"
+                                            listener="#{shareSerialExportFileController.doChooseStockTrans(stockTransDTO,2)}"></p:ajax>
+                                </p:selectBooleanCheckbox>
+                            </p:column>
+                        </p:dataTable>
+                        <p:remoteCommand name="updateTable" process="@this"
+                                         update="@([id$=tblListExportNote]), @([id$=pnlButton]), @([id$=pnlUploadFile])"/>
+                    </div>
+                    <p:outputPanel styleClass="ContainerIndent" id="pnlUploadFile">
+                        <div class="Container66 Responsive66">
+                            <div class="Container20 Responsive25 ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['search.isdn.select.file']}" for="uploadedFile"/>
+                            </div>
+                            <div class="Container80 Responsive75">
+                                <p:fileUpload label="#{lang['mn.stock.limit.createFile']}"
+                                              cancelLabel="#{lang['common.reset']}"
+                                              id="uploadedFile"
+                                              disabled="#{!shareSerialExportFileController.hasDivide}"
+                                              validatorMessage="#{lang['mm.divide.file.allow']}"
+                                              invalidFileMessage="#{lang['mm.divide.file.allow']}"
+                                              invalidSizeMessage="#{lang['mm.divide.file.allow']}"
+                                              uploadLabel="#{lang['mm.divide.fileUpload.upload']}"
+                                              allowTypes="/(\.|\/)(xls)$/"
+                                              sizeLimit="2048000"
+                                              auto="true"
+                                              fileLimitMessage="#{lang['import.partner.valid.fileNum']}"
+                                              fileUploadListener="#{shareSerialExportFileController.handleFileUpload}"
+                                              skinSimple="true"
+                                              update="@([id$=pnlButton]), @([id$=msgContainer]), @([id$=pnlUploadFile])"
+                                              mode="advanced"/>
+                                <p:message for="uploadedFile"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive pd-top-7">
+                            <p:commandLink value="#{lang['mn.stock.limit.template.download']}"
+                                           ajax="false"
+                                           immediate="true">
+                                <p:fileDownload value="#{shareSerialExportFileController.doExportTemplate()}"/>
+                            </p:commandLink>
+                            <p:commandLink style="color:red!important;"
+                                           rendered="#{shareSerialExportFileController.hasError}"
+                                           value="#{lang['button.export.excel.error']}"
+                                           ajax="false"
+                                           immediate="true">
+                                <p:fileDownload value="#{shareSerialExportFileController.doExportError()}"/>
+                            </p:commandLink>
+                            <p:commandLink style="color:red!important;"
+                                           rendered="#{shareSerialExportFileController.hasSuccess}"
+                                           value="#{lang['mn.stock.status.isdn.downfile_result']}"
+                                           ajax="false"
+                                           immediate="true">
+                                <p:fileDownload value="#{shareSerialExportFileController.doExportSerial(5)}"/>
+                            </p:commandLink>
+                        </div>
+                    </p:outputPanel>
+
+                    <div class="Container100 TexAlCenter">
+                        <p:outputPanel styleClass="ContainerIndent" id="pnlButton">
+                            <cbs:confirmDialog
+                                    idComponent="cmdDivide"
+                                    titleButton="#{lang['mn.stock.utilities.share.serial']}"
+                                    valueButton="#{lang['mn.stock.utilities.share.serial']}"
+                                    headerConfirm="#{lang['mm.divide.confim']}"
+                                    messageConfirm="#{lang['mm.divide.confirm.msg']}"
+                                    disableButton="#{!shareSerialExportFileController.hasSerial}"
+                                    actionOK="#{shareSerialExportFileController.doDivideSerial()}"
+                                    actionValidate="#{shareSerialExportFileController.doValidate()}"
+                                    resetValueButton="true"
+                                    process="@this"
+                                    updateArea="@([id$=msgContainer])"
+                                    updateOK="@form"
+                                    isButton="true"
+                                    focusCancel="false"/>
+                            <p:commandButton id="cmdExport" styleClass="mg-left-5"
+                                             disabled="#{!shareSerialExportFileController.hasExport}"
+                                             ajax="false"
+                                             immediate="true"
+                                             value="#{lang['mn.stock.utilities.export.serial']}">
+                                <p:fileDownload value="#{shareSerialExportFileController.doExportSerial(6)}"/>
+                            </p:commandButton>
+                        </p:outputPanel>
+                    </div>
+                </div>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

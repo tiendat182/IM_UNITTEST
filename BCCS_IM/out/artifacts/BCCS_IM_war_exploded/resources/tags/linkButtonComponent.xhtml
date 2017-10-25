@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <composite:interface>
+        <composite:attribute name="idButton" required="true" />
+        <composite:attribute name="ajax" />
+        <composite:attribute name="disabled" />
+        <composite:attribute name="global" />
+        <composite:attribute name="validateClient" />
+        <composite:attribute name="process" />
+        <composite:attribute name="resetValues"/>
+        <composite:attribute name="action" default="''" method-signature="java.lang.String action()" />
+        <composite:attribute name="actionListener" default="''" method-signature="java.lang.String action()" />
+        <composite:attribute name="update" />
+        <composite:attribute name="oncomplete" />
+        <composite:attribute name="style" />
+        <composite:attribute name="styleClass" />
+        <composite:attribute name="icon" />
+        <composite:attribute name="key" required="true"/>
+        <composite:attribute name="confirm" />
+        <composite:attribute name="title" />
+        <composite:attribute name="tabindex" />
+        <composite:attribute name="onclick" />
+        <composite:attribute name="jQIcon" default="false"/>
+    </composite:interface>
+    <!--
+    Sua ngay: 19/03/015
+    Nguoi sua: KhuongDV
+    Thuoc tinh sua:
+        - jQIcon: (them moi) danh dau xem icon truyen vao la icon cua jQuery hay icon co trong resource; mac dinh la false
+          Ly do sua: Neu trong resource khong co icon tuong ung, nhung trong jQueryUI Icons co, luc nay enable kha nang
+                    lay icon cua jQueryUI
+    
+    -->
+    <composite:implementation>
+        <span class="vt-button">
+            <!--<h:form>-->
+               
+                <p:commandLink id="#{cc.attrs.idButton}-1" ajax="#{cc.attrs.ajax}" disabled="#{cc.attrs.disabled}" 
+                               global="#{cc.attrs.global}"  validateClient="#{cc.attrs.validateClient}" 
+                               process="#{cc.attrs.process}" resetValues="#{cc.attrs.resetValues}"
+                               action="#{cc.attrs.action}" title="#{cc.attrs.title}"
+                               actionListener="#{cc.attrs.actionListener}"
+                               update="#{cc.attrs.update}" oncomplete="#{cc.attrs.oncomplete}"
+                               style="#{cc.attrs.style}" styleClass="#{cc.attrs.styleClass}"
+                               onclick="#{cc.attrs.onclick}"
+                               tabindex="#{cc.attrs.tabindex}"
+                               rendered="#{empty cc.attrs.confirm and !cc.attrs.jQIcon}"
+                               >
+                    <p:graphicImage rendered="#{not empty cc.attrs.icon}" style="width:10px;height:10px;" 
+                                    value="/resources/themes/images/#{cc.attrs.icon}.png"/>
+                    <span class="vt-button-text"><h:outputText value="#{cc.attrs.key}"/></span>
+                </p:commandLink>
+                <p:commandLink id="#{cc.attrs.idButton}-2" ajax="#{cc.attrs.ajax}" disabled="#{cc.attrs.disabled}" 
+                               global="#{cc.attrs.global}"  validateClient="#{cc.attrs.validateClient}" 
+                               process="#{cc.attrs.process}" resetValues="#{cc.attrs.resetValues}"
+                               action="#{cc.attrs.action}" title="#{cc.attrs.title}"
+                               actionListener="#{cc.attrs.actionListener}"
+                               update="#{cc.attrs.update}" oncomplete="#{cc.attrs.oncomplete}"
+                               style="#{cc.attrs.style}" styleClass="#{cc.attrs.styleClass}"
+                               onclick="#{cc.attrs.onclick}"
+                               tabindex="#{cc.attrs.tabindex}"
+                               rendered="#{not empty cc.attrs.confirm  and !cc.attrs.jQIcon}">
+                    <p:graphicImage rendered="#{not empty cc.attrs.icon}" style="width:10px;height:10px;"
+                                    value="/resources/themes/images/#{cc.attrs.icon}.png"/>
+                    <span class="vt-button-text"><h:outputText value="#{cc.attrs.key}"/></span>
+                    <p:confirm header="Confirmation" message="#{cc.attrs.confirm}" icon="ui-icon-alert"/> 
+                </p:commandLink>
+                <p:commandLink id="#{cc.attrs.idButton}-3" ajax="#{cc.attrs.ajax}" disabled="#{cc.attrs.disabled}" 
+                               global="#{cc.attrs.global}"  validateClient="#{cc.attrs.validateClient}" 
+                               process="#{cc.attrs.process}" resetValues="#{cc.attrs.resetValues}"
+                               action="#{cc.attrs.action}" title="#{cc.attrs.title}"
+                               actionListener="#{cc.attrs.actionListener}"
+                               update="#{cc.attrs.update}" oncomplete="#{cc.attrs.oncomplete}"
+                               style="#{cc.attrs.style}" styleClass="#{cc.attrs.styleClass} ui-icon #{cc.attrs.icon}"
+                               onclick="#{cc.attrs.onclick}"
+                               tabindex="#{cc.attrs.tabindex}"
+                               rendered="#{cc.attrs.jQIcon}"
+                               value="#{cc.attrs.key}"
+                               >
+                </p:commandLink>
+                
+            <!--</h:form>-->
+        </span>
+    </composite:implementation>
+</html>
+

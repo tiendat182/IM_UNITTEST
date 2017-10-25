@@ -1,0 +1,1000 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:composite="http://java.sun.com/jsf/composite"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.track.actual.warehouse']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.track.actual.warehouse']}</ui:define>
+    <ui:define name="content">
+        <style type="text/css">
+            .ui-datatable-scrollable-theadclone {
+                display: none;
+            }
+        </style>
+        <script type="text/javascript">
+            function onChangeNumber(value, classTarget) {
+                $("." + classTarget).text(value)
+            }
+        </script>
+        <h:form id="frmStockInspect">
+            <p:remoteCommand update="@form" process="@this" immediate="true" name="renderAll"/>
+            <p:outputPanel styleClass="Container" id="pnlStockInspectInfo">
+
+                <p:outputPanel styleClass="ContainerIndent mg-top-0 mg-bottom-0" id="pnMsgSearch">
+                    <p:messages id="msgSearchInit" showSummary="false" showDetail="true" closable="true"
+                                rendered="#{!stockInspectController.timeCheckStock}"/>
+                    <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"
+                                rendered="#{stockInspectController.timeCheckStock}"/>
+                </p:outputPanel>
+                <p:outputPanel styleClass="Container" rendered="#{stockInspectController.timeCheckStock}">
+                    <p:focus for="frmStockInspect"/>
+                    <!--Start vung kiem kho hang thuc te-->
+                    <p:outputPanel id="pnInfoCheckStockInspect" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInforStockInspect" toggle="true"
+                                   titleHeader="#{lang['mn.stock.track.actual.warehouse']}"/>
+
+                        <div class="Container panelInforStockInspect" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent">
+                                <p:outputPanel styleClass="Container">
+                                    <div class="Container66 Responsive66">
+                                        <div class="Container20 Responsive25 ui-fluid mg-left-15 pd-top-4">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           value="#{lang['stock.inpsect.typeInspec.type']}"
+                                                           for="pnTypeCheck"></p:outputLabel>
+                                            <!--<p:selectBooleanCheckbox id="confirmInspectQuantityID"
+                                                                     styleClass="mg-left-5"
+                                                                     disabled="#{stockInspectController.showCheckStock}"
+                                                                     value="#{stockInspectController.confirmInspectQuantity}">
+                                                <p:ajax event="change" process="@this"
+                                                        update="@([id$=StaffId]), @([id$=msgSearch])"
+                                                        resetValues="true"
+                                                        listener="#{stockInspectController.onChooseInspectQuantity}"/>
+                                            </p:selectBooleanCheckbox>-->
+                                        </div>
+                                        <div class="Container80 Responsive75 ui-fluid">
+                                            <!--<p:outputLabel styleClass="lb-sentinel-bold"
+                                                           value="#{lang['stock.inpsect.vtt.check.inspect.quantity']}"/>-->
+                                            <p:selectOneRadio disabled="#{stockInspectController.showCheckStock}"
+                                                              styleClass="mg-left-5"
+                                                              value="#{stockInspectController.typeInspec}"
+                                                              id="pnTypeCheck">
+                                                <f:selectItem itemLabel="#{lang['stock.inpsect.typeInspec.number']}"
+                                                              itemValue="2"/>
+                                                <f:selectItem itemLabel="#{lang['stock.inpsect.typeInspec.serial']}"
+                                                              itemValue="1"/>
+                                                <p:ajax event="change" process="@this"
+                                                        update="@([id$=StaffId]), @([id$=msgSearch]),@([id$=cobState]), @form"
+                                                        resetValues="true"
+                                                        listener="#{stockInspectController.onChooseInspectQuantity}"/>
+                                            </p:selectOneRadio>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive33"></div>
+                                </p:outputPanel>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <cbs:inputShop value="#{stockInspectController.shopInfoTag}"
+                                                   idComponent="inputStore"
+                                                   methodName="receiveShop"
+                                                   clearMethodName="clearShop"
+                                                   update="@this,@form"
+                                                   label="#{lang['mn.stock.utilities.unit.code']}"
+                                                   placeholder="#{lang['mn.stock.utilities.unit.code.placehoder']}"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                   classDivInput="Container60 Responsive50 ui-fluid"
+                                                   require="true"
+                                                   requiredMessage="#{lang['stock.check.report.require.shop']}"
+                                                   forceSelection="false"
+                                                   limit="#{stockInspectController.limitAutoComplete}">
+
+                                    </cbs:inputShop>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <cbs:inputStaff value="#{stockInspectController.staffInfoTag}"
+                                                    id="StaffId"
+                                                    methodName="receiveStaff"
+                                                    clearMethodName="clearStaff"
+                                                    update="@this,@form"
+                                                    limit="#{stockInspectController.limitAutoComplete}"
+                                                    label="#{lang['mn.stock.limit.staff.code']}"
+                                                    require="false"
+                                                    forceSelection="false"
+                                                    classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                    classDivInput="Container60 Responsive50 ui-fluid"
+                                                    requiredMessage="#{lang['mn.stock.track.staff.code.not.blank']}"
+                                                    placeholder="#{lang['mn.stock.limit.staff.code.placeholder']}">
+                                    </cbs:inputStaff>
+                                </div>
+
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7 cobState_col">
+                                        <p:outputLabel value="#{lang['mn.stock.track.state.stock']}" for="cobState"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+
+                                    <!--<p:commandButton id="cmdState" styleClass="cmdState"-->
+                                                     <!--style="display: none;"-->
+                                                     <!--action="#{stockInspectController.onChangeState}"-->
+                                                     <!--process="@this,@([id$=inputState])"-->
+                                                     <!--update="@this,@([id$=productOffer])">-->
+                                    <!--</p:commandButton>-->
+                                    <!--<p:inputText-->
+                                            <!--value="#{stockInspectController.stateId}"-->
+                                            <!--styleClass="txtState" style="display: none;"-->
+                                            <!--id="inputState"/>-->
+
+                                    <div class="Container60 Responsive50 ui-fluid cobState">
+                                        <p:selectOneMenu filter="true" filterMatchMode="contains"
+                                                         id="cobState"
+                                                         required="#{stockInspectController.confirmInspectQuantity}"
+                                                         requiredMessage="#{lang['mn.stock.track.state.stock.require.msg']}"
+                                                         value="#{stockInspectController.checkStockInspectDTO.stateId}">
+                                            <f:selectItem itemEscaped="true"
+                                                          itemValue=""
+                                                          itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                            <f:selectItems
+                                                    value="#{stockInspectController.listState}"
+                                                    itemLabelEscaped="true"
+                                                    var="state" itemValue="#{state.value}"
+                                                    itemLabel="#{state.name}"/>
+                                            <p:ajax event="change" process="@this"></p:ajax>
+                                        </p:selectOneMenu>
+                                        <p:message for="cobState"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7 cobProductOfferType_col">
+                                        <p:outputLabel value="#{lang['type.product']}" for="cobProductOfferType"
+                                                       styleClass="lb-sentinel"/>
+                                        <label style="color: red"> *</label>
+                                    </div>
+                                    <p:commandButton id="cmdProductOfferType" styleClass="cmdProductOfferType"
+                                                     style="display: none;"
+                                                     action="#{stockInspectController.onChangeProductOfferType}"
+                                                     process="@this,@([id$=inputProductOfferType])"
+                                                     update="@this,@([id$=productOffer])">
+                                    </p:commandButton>
+                                    <p:inputText
+                                            value="#{stockInspectController.productOfferTypeId}"
+                                            styleClass="txtProductOfferType" style="display: none;"
+                                            id="inputProductOfferType"/>
+
+                                    <div class="Container60 Responsive50 ui-fluid cobProductOfferType">
+                                        <p:selectOneMenu filter="true" filterMatchMode="contains"
+                                                         id="cobProductOfferType"
+                                                         required="false"
+                                                         onchange="$('.txtProductOfferType').val(this.value);clickLinkByClass('cmdProductOfferType');"
+                                                         requiredMessage="#{lang['export.order.type.product.not.blank']}"
+                                                         value="#{stockInspectController.checkStockInspectDTO.prodOfferTypeId}">
+                                            <f:selectItem itemEscaped="true"
+                                                          itemValue=""
+                                                          itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                            <f:selectItems
+                                                    value="#{stockInspectController.listProductOfferType}"
+                                                    itemLabelEscaped="true"
+                                                    var="productOfferType"
+                                                    itemValue="#{productOfferType.productOfferTypeId}"
+                                                    itemLabel="#{productOfferType.name}"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="cobProductOfferType"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <p:outputPanel styleClass="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel value="#{lang['export.order.name']}" for="productOffer"
+                                                       styleClass="lb-sentinel"/>
+                                    </p:outputPanel>
+
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:outputPanel styleClass="ui-fluid ui-relative" id="pnlProductOffer">
+                                            <p:outputLabel id="productOffer_hidden" style="display:none;"
+                                                           value="#{stockInspectController.productOfferingTotalDTO.itemLabel}"/>
+                                            <pe:keyFilter for="productOffer" preventPaste="false"
+                                                          regEx="/[a-z0-9A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\._\-+]/i"/>
+                                            <p:autoComplete id="productOffer"
+                                                            value="#{stockInspectController.productOfferingTotalDTO}"
+                                                            forceSelection="true"
+                                                            completeMethod="#{stockInspectController.doChangeOffering}"
+                                                            placeholder="#{lang['export.stock.product.inputText.search']}"
+                                                            onfocus="this.setSelectionRange(0, this.value.length)"
+                                                            var="productOfferingTotalDTO"
+                                                            maxResults="#{stockInspectController.limitAutoComplete}"
+                                                            itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                            itemValue="#{productOfferingTotalDTO}"
+                                                            inputStyleClass="txtProductName#{index}"
+                                                            required="false"
+                                                            requiredMessage="#{lang['export.order.stock.inputText.require.msg']}"
+                                                            maxlength="100" scrollHeight="300"
+                                                            disabled="#{stockInspectController.disabledState}">
+                                                <f:attribute name="index" value="#{index}"/>
+                                                <o:converter converterId="productOfferingConverter"
+                                                             list="#{stockInspectController.lsProductOfferingTotalDTO}"/>
+                                                <p:ajax event="itemSelect"
+                                                        listener="#{stockInspectController.doSelectProductOffering}"
+                                                        process="@([id$=pnlProductOffer])"
+                                                        update="@([id$=pnlProductOffer])"/>
+                                                <p:column headerText="#{lang['common.lb.code']}"><h:outputText
+                                                        escape="true"
+                                                        value="#{productOfferingTotalDTO.code}"/></p:column>
+                                                <p:column headerText="#{lang['common.lb.name']}"><h:outputText
+                                                        escape="true"
+                                                        value="#{productOfferingTotalDTO.name}"/></p:column>
+                                                <p:ajax event="query" global="false"/>
+                                            </p:autoComplete>
+                                            <p:commandLink id="btnProductOfferClear"
+                                                           styleClass="ui-link-right"
+                                                           update="productOffer_hidden, pnlProductOffer"
+                                                           actionListener="#{stockInspectController.clearProduct}"
+                                                           process="@this">
+                                                <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                            </p:commandLink>
+                                        </p:outputPanel>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['mn.invoice.invoiceType.dateCreate']}"
+                                                       for="fromDate"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <h:outputText value="#{stockInspectController.checkStockInspectDTO.createDate}"
+                                                      escape="true"
+                                                      id="fromDate"
+                                                      styleClass="lb-sentinel-bold break-all">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="Container TexAlCenter mg-top-0">
+                                <cbs:confirmDialog
+                                    idComponent="btnCheckStock"
+                                    id="btnCheckStock"
+                                    disableButton="#{!stockInspectController.timeCheckStock}"
+                                    valueButton="#{lang['mn.stock.track.pass']}"
+                                    headerConfirm="#{lang['stock.inspect.button.check.stock.confirm.header']}"
+                                    messageConfirm="#{stockInspectController.messageConfirmStockInspect}"
+                                    actionOK="#{stockInspectController.doCheckStock}"
+                                    resetValueButton="true"
+                                    process="@([id$=pnInfoCheckStockInspect])"
+                                    updateArea="@([id$=pnlStockInspectInfo])"
+                                    updateOK="@form"
+                                    actionValidate="#{stockInspectController.doValidateCheckStock}"
+                                    focusCancel="false"
+                                    oncompleteOK=""
+                                    isButton="true"
+                                    />
+                                <p:commandButton styleClass="mg-left-5"
+                                                 value="#{lang['mn.stock.inspect.export.excel']}"
+                                                 process="@this,@([id$=pnInfoCheckStockInspect])"
+                                                 actionListener="#{stockInspectController.getDataForExport}"
+                                                 update="@([id$=msgSearch]),@([id$=pnInfoCheckStockInspect])"
+                                                 oncomplete="if(!args.validationFailed){clickLinkByClass('download');}"
+                                        >
+                                </p:commandButton>
+                                <p:commandButton value="#{lang['mn.stock.inspect.export.excel']}"
+                                                 style="display: none;"
+                                                 styleClass="mg-left-5 download"
+                                                 immediate="true"
+                                                 ajax="false">
+                                    <p:fileDownload
+                                            value="#{stockInspectController.doExportStockInspect()}"/>
+                                </p:commandButton>
+
+
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung kiem kho hang thuc te-->
+                    <!--Start chon lai nguoi phe duyet-->
+                    <!--<p:outputPanel id="pnLApproverNew" styleClass="ContainerIndent"-->
+                    <!--rendered="#{stockInspectController.showIsFinished}">-->
+                    <!--<cbs:panel classForToggle="panelApproverNew" toggle="true"-->
+                    <!--titleHeader="#{lang['choose.approve.new']}"/>-->
+                    <!--&lt;!&ndash;Start vung nhap serial&ndash;&gt;-->
+                    <!--<div class="ContainerIndent panelApproverNew" style="margin-bottom: 10px;margin-top: 10px;">-->
+                    <!--<p:outputPanel styleClass="Container50" id="pnlStaffApproverNew">-->
+                    <!--<cbs:inputStaff value="#{stockInspectController.staffInfoApproverTagNew}"-->
+                    <!--id="StaffApproverNewId"-->
+                    <!--methodName="receiveStaffApproverNew"-->
+                    <!--clearMethodName="clearStaffApproverNew"-->
+                    <!--update="@this, @([id$=pnLApproverNew]), @([id$=msgSearch])"-->
+                    <!--limit="#{stockInspectController.limitAutoComplete}"-->
+                    <!--label="#{lang['choose.approve.new']}"-->
+                    <!--require="true"-->
+                    <!--forceSelection="false"-->
+                    <!--classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"-->
+                    <!--classDivInput="Container60 Responsive50 ui-fluid"-->
+                    <!--requiredMessage="#{lang['stock.inspect.staff.approver.new.require']}"-->
+                    <!--placeholder="#{lang['stock.inspect.staff.approver.new.placeholder']}"-->
+                    <!--rendered="#{stockInspectController.showIsFinished}">-->
+                    <!--</cbs:inputStaff>-->
+                    <!--<p:message for="StaffApproverNewId"/>-->
+                    <!--</p:outputPanel>-->
+
+                    <!--<div class="Container50 Responsive50">-->
+                    <!--<p:commandButton value="#{lang['stock.inspect.btn.choose.approve.new']}"-->
+                    <!--process="@([id$=pnLApproverNew]), @([id$=pnInfoCheckStockInspect])"-->
+                    <!--styleClass="mg-left-5"-->
+                    <!--action="#{stockInspectController.doApproveNew}"-->
+                    <!--resetValues="false"-->
+                    <!--update="@([id$=pnLApproverNew]), @([id$=msgSearch])"/>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</p:outputPanel>-->
+                    <!--End chon lai nguoi phe duyet-->
+                    <!--Start vung kiem ke-->
+                    <!--Start mat hang quan ly theo so luong-->
+                    <p:outputPanel id="pnLsProductNoSerial" styleClass="ContainerIndent"
+                                   rendered="#{stockInspectController.showStockNoSerial and  stockInspectController.showCheckStock and !stockInspectController.showIsFinished and stockInspectController.existDataSpecQuantity}">
+                        <cbs:panel classForToggle="panelLisProductNoSerial" toggle="true"
+                                   titleHeader="#{lang['mn.stock.track.stock.no.serial']}"/>
+
+                        <div class="Container panelLisProductNoSerial" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="Container">
+                                <p:commandLink value="#{lang['mn.stock.limit.createNew']}"
+                                               styleClass="fa icon-plus Fs14 blue md-link" id="AddNew"
+                                               update="@([id$=dlgInputProductCheck])"
+
+                                               resetValues="true"
+                                               rendered="#{stockInspectController.confirmInspectQuantity}"
+                                               actionListener="#{stockInspectController.doValidateCheckStock}"
+                                               oncomplete="PF('dlgInputProductCheck').show();"
+                                               process="@([id$=tblProductQuantity])">
+                                </p:commandLink>
+                            </div>
+                            <p:outputPanel styleClass="Container" id="tblLsProduct">
+                                <p:dataTable
+                                        id="tblProductNoSerial"
+                                        rendered="#{!stockInspectController.confirmInspectQuantity}"
+                                        var="productOffer"
+                                        rowKey="#{productOffer.stockInspectRealId}"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="100"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}"
+                                        value="#{stockInspectController.listProductCheck}">
+                                    <p:column styleClass="col-left"
+                                              sortBy="#{productOffer.productCode}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.utilities.code.stock']}"
+                                                          title="#{lang['mn.stock.utilities.code.stock']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{productOffer.productCode}"
+                                                       title="#{productOffer.productCode}"/>
+                                    </p:column>
+                                    <p:column styleClass="col-left"
+                                              sortBy="#{productOffer.productName}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['export.order.name.product']}"
+                                                          title="#{lang['export.order.name.product']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{productOffer.productName}"
+                                                       title="#{productOffer.productName}"/>
+                                    </p:column>
+                                    <p:column styleClass="col-left"
+                                              sortBy="#{productOffer.stateName}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.track.state.stock']}"
+                                                          title="#{lang['mn.stock.track.state.stock']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{productOffer.stateName}"
+                                                       title="#{productOffer.stateName}"/>
+                                    </p:column>
+                                    <p:column styleClass="col-right pd-top-10"
+                                              sortBy="#{productOffer.currentQuantity}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.track.stock.number.real']}"
+                                                          title="#{lang['mn.stock.track.stock.number.real']}"/>
+                                        </f:facet>
+                                        <h:outputLabel converter="currencyFormat" styleClass="lb-sentinel-bold"
+                                                       value="#{productOffer.currentQuantity}"
+                                                       title="#{productOffer.currentQuantity}"/>
+                                    </p:column>
+                                    <p:column styleClass="col-right pd-top-10"
+                                              sortBy="#{productOffer.availableQuantity}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.track.stock.number']}"
+                                                          title="#{lang['mn.stock.track.stock.number']}"/>
+                                        </f:facet>
+                                        <h:outputLabel converter="currencyFormat" styleClass="lb-sentinel-bold"
+                                                       value="#{productOffer.availableQuantity}"
+                                                       title="#{productOffer.availableQuantity}"/>
+                                    </p:column>
+                                    <p:column style="width: 10%;" styleClass="col-right ">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['common.number']}"
+                                                          title="#{lang['common.number']}"/>
+                                        </f:facet>
+                                        <pe:inputNumber value="#{productOffer.quantity}" id="productOfferNumber"
+                                                        decimalPlaces="0" maxValue="99999999999999999999"
+                                                        maxlength="20"
+                                                        styleClass="txtNumber#{index} TexAlRight">
+                                        </pe:inputNumber>
+                                        <pe:keyFilter for="productOfferNumber" regEx="/[0-9]+/i"
+                                                      preventPaste="true"/>
+                                    </p:column>
+                                </p:dataTable>
+                                <p:dataTable
+                                        id="tblProductQuantity"
+                                        var="productOffer"
+                                        rowKey="#{productOffer.stockInspectRealId}"
+                                        resizableColumns="true"
+                                        rendered="#{stockInspectController.confirmInspectQuantity}"
+                                        paginator="false"
+                                        rowIndexVar="index"
+                                        scrollable="true"
+                                        scrollHeight="560"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}"
+                                        value="#{stockInspectController.listProductCheck}">
+                                    <p:column headerText="#{lang['common.stt']}" style="width: 6%;"
+                                              styleClass="col-left">
+                                        <h:outputLabel value="#{index + 1}" styleClass="lb-sentinel-bold"
+                                                       title="#{index + 1}"/>
+                                    </p:column>
+                                    <p:column styleClass="col-left" style="width: 18%;"
+                                              sortBy="#{productOffer.productCode}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.utilities.code.stock']}"
+                                                          title="#{lang['mn.stock.utilities.code.stock']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{productOffer.productCode}"
+                                                       title="#{productOffer.productCode}"/>
+                                    </p:column>
+                                    <p:column styleClass="col-left" style="width: 18%;"
+                                              sortBy="#{productOffer.productName}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['export.order.name.product']}"
+                                                          title="#{lang['export.order.name.product']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{productOffer.productName}"
+                                                       title="#{productOffer.productName}"/>
+                                    </p:column>
+                                    <p:column styleClass="col-left" style="width: 16%;"
+                                            >
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.track.state.stock']}"
+                                                          title="#{lang['mn.stock.track.state.stock']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{productOffer.stateName}"
+                                                       title="#{productOffer.stateName}"/>
+                                    </p:column>
+                                    <p:column styleClass="col-right pd-top-10" style="width: 12%;"
+                                              sortBy="#{productOffer.currentQuantity}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.track.stock.number.real.ht']}"
+                                                          title="#{lang['mn.stock.track.stock.number.real.ht.title']}"/>
+                                        </f:facet>
+                                        <h:outputLabel converter="currencyFormat" styleClass="lb-sentinel-bold"
+                                                       value="#{productOffer.currentQuantity}"
+                                                       title="#{productOffer.currentQuantity}"/>
+                                    </p:column>
+                                    <p:column style="width: 10%;" styleClass="col-right ">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['stock.inspec.quantity.check']}"
+                                                          title="#{lang['stock.inspec.quantity.check']}"/>
+                                        </f:facet>
+                                        <pe:inputNumber value="#{productOffer.quanittyReal}" id="quantityRealChangePoor"
+                                                        decimalPlaces="0" maxValue="99999999999999999999"
+                                                        onblur="onChangeNumber(this.value, 'quantityPoor#{index}')"
+                                                        maxlength="20" rendered="#{productOffer.disableQuantityPoor}"
+                                                        styleClass="TexAlRight">
+                                        </pe:inputNumber>
+                                        <pe:keyFilter for="quantityRealChangePoor" regEx="/[0-9]+/i"
+                                                      preventPaste="true"/>
+
+                                        <pe:inputNumber value="#{productOffer.quanittyReal}" id="quantityReal"
+                                                        decimalPlaces="0" maxValue="99999999999999999999"
+                                                        maxlength="20" rendered="#{!productOffer.disableQuantityPoor}"
+                                                        styleClass="TexAlRight">
+                                        </pe:inputNumber>
+                                        <pe:keyFilter for="quantityReal" regEx="/[0-9]+/i"
+                                                      preventPaste="true"/>
+                                    </p:column>
+                                    <p:column style="width: 10%;" styleClass="col-right ">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['stock.inspec.quantity.poor']}"
+                                                          title="#{lang['stock.inspec.quantity.poor']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{productOffer.quantityPoor}"
+                                                      rendered="#{productOffer.disableQuantityPoor}"
+                                                      converter="currencyFormat"
+                                                      styleClass="lb-sentinel-bold quantityPoor#{index} pd-top-4 "/>
+                                        <pe:inputNumber value="#{productOffer.quantityPoor}" id="quantityPoor"
+                                                        decimalPlaces="0" maxValue="99999999999999999999"
+                                                        maxlength="20" rendered="#{!productOffer.disableQuantityPoor}"
+                                                        styleClass="TexAlRight">
+                                        </pe:inputNumber>
+                                        <pe:keyFilter for="quantityPoor" regEx="/[0-9]+/i"
+                                                      rendered="#{!productOffer.disableQuantityPoor}"
+                                                      preventPaste="true"/>
+                                    </p:column>
+                                    <p:column styleClass="col-right ">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.limit.template.note']}"
+                                                          title="#{lang['mn.stock.limit.template.note']}"/>
+                                        </f:facet>
+                                        <p:inputText value="#{productOffer.note}" id="aproveNote" style="width: 99%"/>
+
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+                            <!--Start button kiem ke-->
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container50 Responsive50">
+                                    <div class="Container5 Responsive50 ui-fluid">
+                                        <p:selectBooleanCheckbox id="confirmStockInspectApproverNoSerial"
+                                                                 disabled="#{!stockInspectController.existDataSpecQuantity}"
+                                                                 styleClass="mg-left-5"
+                                                                 value="#{stockInspectController.confirmStockInspectApprover}">
+                                            <p:ajax event="change" process="@this"
+                                                    update="@([id$=pnlStaffApproverNoSerialId])"
+                                                    resetValues="true"
+                                                    listener="#{stockInspectController.onShowStaffApprover}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </div>
+                                    <div class="Container95 mg-left-15 Responsive50">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['mn.stock.track.confirm.stock']}"/>
+                                    </div>
+                                </div>
+                                <!--<p:outputPanel styleClass="Container50 Responsive50" id="pnlStaffApproverNoSerialId">-->
+                                <!--<cbs:inputStaff value="#{stockInspectController.staffInfoApproverTag}"-->
+                                <!--id="StaffApproverNoSerialId"-->
+                                <!--methodName="receiveStaffApprover"-->
+                                <!--clearMethodName="clearStaffApprover"-->
+                                <!--update="@this, @([id$=pnlStaffApproverNoSerialId])"-->
+                                <!--limit="#{stockInspectController.limitAutoComplete}"-->
+                                <!--label="#{lang['stock.inspect.staff.approver']}"-->
+                                <!--require="true"-->
+                                <!--forceSelection="false"-->
+                                <!--classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"-->
+                                <!--classDivInput="Container60 Responsive50 ui-fluid"-->
+                                <!--requiredMessage="#{lang['stock.inspect.staff.approver.require']}"-->
+                                <!--placeholder="#{lang['stock.inspect.staff.approver.placeholder']}"-->
+                                <!--rendered="#{stockInspectController.confirmStockInspectApprover}">-->
+                                <!--</cbs:inputStaff>-->
+                                <!--<p:message for="StaffApproverNoSerialId"/>-->
+                                <!--</p:outputPanel>-->
+                            </div>
+                            <div class="Container TexAlCenter mg-top-0">
+                                <cbs:confirmDialog
+                                        idComponent="btnStockInpsectNoSerial"
+                                        id="btnStockInpsectNoSerial"
+                                        disableButton="#{!stockInspectController.timeCheckStock or stockInspectController.inspectFinish or !stockInspectController.existDataSpecQuantity}"
+                                        valueButton="#{lang['mn.stock.track.check']}"
+                                        headerConfirm="#{lang['stock.inspect.button.inspect.confirm.header']}"
+                                        messageConfirm="#{stockInspectController.messageConfirmStockInspect}"
+                                        actionOK="#{stockInspectController.doStockInspectNoSerial}"
+                                        resetValueButton="false"
+                                        process="@([id$=pnLsProductNoSerial]), @([id$=pnInfoCheckStockInspect])"
+                                        updateArea="@([id$=pnLsProductNoSerial]), @([id$=msgSearch])"
+                                        updateOK="@([id$=pnLsProductNoSerial]), @([id$=msgSearch])"
+                                        actionValidate="#{stockInspectController.doValidateStockInspect}"
+                                        focusCancel="false"
+                                        oncompleteOK=""
+                                        isButton="true"
+                                        />
+                            </div>
+                            <!--End button kiem ke-->
+                        </div>
+                    </p:outputPanel>
+                    <!--End mat hang quan ly theo so luong-->
+                    <!--Start mat hang quan ly theo serial-->
+                    <p:outputPanel id="pnLsProductSerial" styleClass="ContainerIndent"
+                                   rendered="#{!stockInspectController.showStockNoSerial and stockInspectController.showCheckStock and !stockInspectController.showIsFinished}">
+                        <cbs:panel classForToggle="panelInputSerial" toggle="true"
+                                   titleHeader="#{lang['mn.stock.track.serial']}"/>
+                        <!--Start vung nhap serial-->
+                        <div class="Container panelInputSerial" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0" style="text-align: center">
+                                <p:outputLabel value="#{lang['lb.stock.inspect.input.method.manual.warning']}"
+                                               styleClass="lb-sentinel-red"
+                                               rendered="#{stockInspectController.showInputMethodManual}"/>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['mn.stock.track.input']}"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:commandButton id="cmdInputMethod" styleClass="cmdInputMethod"
+                                                         style="display: none;"
+                                                         action="#{stockInspectController.onChangeInputMethod}"
+                                                         process="@this,@([id$=pnLsProductSerial])"
+                                                         update="@this,@([id$=pnLsProductSerial])">
+                                        </p:commandButton>
+
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:selectOneMenu filter="true" filterMatchMode="contains"
+                                                             id="cobInputMethod"
+                                                             required="false"
+                                                             onchange="clickLinkByClass('cmdInputMethod');"
+                                                             value="#{stockInspectController.inputMethodId}">
+                                                <f:selectItems
+                                                        value="#{stockInspectController.listInputMethod}"
+                                                        itemLabelEscaped="true"
+                                                        var="inputMethod"
+                                                        itemValue="#{inputMethod.value}"
+                                                        itemLabel="#{inputMethod.name}"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--Start nhap bang tay-->
+                                <p:outputPanel rendered="#{stockInspectController.showInputMethodManual}"
+                                               styleClass="Container50 Responsive50">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-7 singleSerialManual_col">
+                                        <p:outputLabel value="#{lang['mn.stock.track.serial.number']}"
+                                                       for="singleSerialManual"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-4 singleSerial">
+                                        <p:inputText id="singleSerialManual"
+                                                     value="#{stockInspectController.stockInspectRealDTO.singleSerial}"
+                                                     styleClass="singleSerialManual mavachSingleSerial"
+                                                     maxlength="30"
+                                                     required="false"
+                                                     onblur="this.value=this.value.trim()"/>
+                                        <pe:keyFilter for="singleSerialManual" preventPaste="false"
+                                                      regEx="/[a-z0-9A-Z\s\._\-+]/i"/>
+                                    </div>
+                                </p:outputPanel>
+                                <!--End nhap bang tay-->
+                                <!--Start nhap bang may-->
+                                <p:outputPanel rendered="#{!stockInspectController.showInputMethodManual}"
+                                               styleClass="Container50 Responsive50">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-7 singleSerial_col">
+                                        <p:outputLabel value="#{lang['mn.stock.track.serial.number']}"
+                                                       for="singleSerial"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-4 singleSerial">
+                                        <p:remoteCommand name="rmcSingleSerial"
+                                                         update="@([id$=msgSearch]), @([id$=pnLsProductSerial])"
+                                                         actionListener="#{stockInspectController.addSingleSerialAuto}"/>
+                                        <p:inputText id="singleSerial"
+                                                     value="#{stockInspectController.stockInspectRealDTO.singleSerial}"
+                                                     onkeypress="if (event.keyCode == 13) { rmcSingleSerial(); return false;};clearSingleSerial();"/>
+                                        <pe:keyFilter for="singleSerial"/>
+                                    </div>
+                                </p:outputPanel>
+                                <!--End nhap bang may-->
+                            </div>
+                            <!--Start nhap bang tay-->
+                            <p:outputPanel rendered="#{stockInspectController.showInputMethodManual}">
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container50 Responsive50">
+                                        <div class="Container40 mg-left-15 Responsive50 pd-top-7 fromSerialManual_col">
+                                            <p:outputLabel value="#{lang['mn.stock.fromSerial']}"
+                                                           for="fromSerialManual"
+                                                           styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid pd-top-4 fromSerialManual">
+                                            <p:inputText id="fromSerialManual"
+                                                         value="#{stockInspectController.stockInspectRealDTO.fromSerial}"
+                                                         styleClass="fromSerialManual mavachFromSerial"
+                                                         maxlength="30"
+                                                         required="false"
+                                                         onblur="this.value=this.value.trim()"/>
+                                            <pe:keyFilter for="fromSerialManual" preventPaste="false"
+                                                          regEx="/[a-z0-9A-Z\s\._\-+]/i"/>
+
+                                        </div>
+                                    </div>
+                                    <div class="Container50 Responsive50">
+                                        <div class="Container40 mg-left-15 Responsive50 pd-top-7 toSerialManual_col">
+                                            <p:outputLabel value="#{lang['mn.stock.ToSerial']}"
+                                                           for="toSerialManual"
+                                                           styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid pd-top-4 toSerialManual">
+                                            <p:inputText id="toSerialManual"
+                                                         value="#{stockInspectController.stockInspectRealDTO.toSerial}"
+                                                         styleClass="toSerialManual mavachToSerial"
+                                                         maxlength="30"
+                                                         required="false"
+                                                         onblur="this.value=this.value.trim()"/>
+                                            <pe:keyFilter for="toSerialManual" preventPaste="false"
+                                                          regEx="/[a-z0-9A-Z\s\._\-+]/i"/>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="Container TexAlCenter mg-top-0">
+                                    <p:commandButton value="#{lang['stock.inspect.button.add.serial']}"
+                                                     process="@([id$=pnLsProductSerial]), @([id$=pnInfoCheckStockInspect])"
+                                                     styleClass="mg-left-5"
+                                                     action="#{stockInspectController.doAddSerial}"
+                                                     resetValues="false"
+                                                     update="@([id$=tblProductSerial]), @([id$=msgSearch])"/>
+                                </div>
+                            </p:outputPanel>
+                            <!--End nhap bang tay-->
+                            <!-- Start nhap bang may-->
+                            <p:outputPanel rendered="#{!stockInspectController.showInputMethodManual}">
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container50 Responsive50">
+                                        <div class="Container40 mg-left-15 Responsive50 pd-top-7 fromSerial_col">
+                                            <p:outputLabel value="#{lang['mn.stock.fromSerial']}" for="fromSerial"
+                                                           styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid pd-top-4 fromSerial">
+                                            <p:inputText id="fromSerial"
+                                                         value="#{stockInspectController.stockInspectRealDTO.fromSerial}"
+                                                         styleClass="fromSerial mavachFromSerial"
+                                                         required="false"
+                                                         onkeypress="if (event.keyCode == 13) {document.getElementById('frmStockInspect:toSerial').focus();return false;}"/>
+                                            <pe:keyFilter for="fromSerial"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container50 Responsive50">
+                                        <div class="Container40 mg-left-15 Responsive50 pd-top-7 toSerial_col">
+                                            <p:outputLabel value="#{lang['mn.stock.ToSerial']}"
+                                                           for="toSerial"
+                                                           styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid pd-top-4 toSerial">
+                                            <p:remoteCommand name="rmcToSerial"
+                                                             update="@([id$=msgSearch]), @([id$=pnLsProductSerial])"
+                                                             actionListener="#{stockInspectController.addListSerialAuto}"/>
+                                            <p:inputText id="toSerial"
+                                                         value="#{stockInspectController.stockInspectRealDTO.toSerial}"
+                                                         styleClass="toSerial mavachToSerial"
+                                                         required="false"
+                                                         onkeypress="if (event.keyCode == 13) { rmcToSerial(); return false;};clearToSerial();"/>
+                                            <pe:keyFilter for="toSerial"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container20 mg-left-15 Responsive25 pd-top-7 serial2d_col">
+                                        <p:outputLabel value="#{lang['mn.stock.serial.2d']}"
+                                                       for="serial2d"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container80 Responsive75 ui-fluid pd-top-4 serial2d">
+                                        <!--<p:remoteCommand name="rmcSerial2D"-->
+                                        <!--update="@([id$=msgSearch]), @([id$=pnLsProductSerial])"-->
+                                        <!--actionListener="#{stockInspectController.addListSerial2D}"/>-->
+                                        <!--<p:inputText id="serial2d"-->
+                                        <!--value="#{stockInspectController.stockInspectRealDTO.serial2D}"-->
+                                        <!--styleClass="serial2d mavachSerial2d"-->
+                                        <!--required="false"-->
+                                        <!--maxlength="1500"-->
+                                        <!--onkeypress="if (event.keyCode == 13) { rmcSerial2D();return false;}"/>-->
+                                        <!--<pe:keyFilter for="serial2d"/>-->
+                                        <p:remoteCommand name="rmcSerial2D"
+                                                         update="@([id$=msgSearch]), @([id$=pnLsProductSerial])"
+                                                         actionListener="#{stockInspectController.addListSerial2D}"/>
+                                        <p:inputTextarea id="serial2d"
+                                                         value="#{stockInspectController.stockInspectRealDTO.serial2D}"
+                                                         styleClass="serial2d mavachSerial2d"
+                                                         required="false"
+                                                         scrollHeight="100"
+                                                         style="width: 90%"
+                                                         maxlength="1500"
+                                                         onkeypress="if (event.keyCode == 13) { input2D();return false;}"
+                                                />
+                                        <pe:keyFilter for="serial2d"/>
+                                        <p:inputText style="width: 2%" value="2" id="serial2DTmp"
+                                                     ></p:inputText>
+
+                                    </div>
+                                </div>
+                            </p:outputPanel>
+                            <!--end nhap bang may-->
+                        </div>
+                        <!--End vung nhap serial-->
+
+                        <div class="Container panelLisProductSerial"
+                             style="margin-bottom: 10px;margin-top: 10px;">
+                            <p:dataTable
+                                    id="tblProductSerial"
+                                    var="productOffer"
+                                    rowKey="#{productOffer.stockInspectRealId}"
+                                    resizableColumns="true"
+                                    rowIndexVar="index"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.empty.records']}"
+                                    value="#{stockInspectController.listProductCheck}">
+                                <p:column styleClass="col-left"
+                                          sortBy="#{productOffer.productName}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['export.order.name.product']}"
+                                                      title="#{lang['export.order.name.product']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{productOffer.productName}"
+                                                   title="#{productOffer.productName}"/>
+                                </p:column>
+                                <p:column styleClass="col-left"
+                                          sortBy="#{productOffer.stateName}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['mn.stock.track.state.stock']}"
+                                                      title="#{lang['mn.stock.track.state.stock']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{productOffer.stateName}"
+                                                   title="#{productOffer.stateName}"/>
+                                </p:column>
+                                <p:column styleClass="col-left"
+                                          sortBy="#{productOffer.fromSerial}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['mn.stock.fromSerial']}"
+                                                      title="#{lang['mn.stock.fromSerial']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{productOffer.fromSerial}"
+                                                   title="#{productOffer.fromSerial}"/>
+                                </p:column>
+                                <p:column styleClass="col-left"
+                                          sortBy="#{productOffer.toSerial}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['mn.stock.ToSerial']}"
+                                                      title="#{lang['mn.stock.ToSerial']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{productOffer.toSerial}"
+                                                   title="#{productOffer.toSerial}"/>
+                                </p:column>
+                                <p:column styleClass="col-right pd-top-10"
+                                          sortBy="#{productOffer.quantity}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['common.number']}"
+                                                      title="#{lang['common.number']}"/>
+                                    </f:facet>
+                                    <h:outputLabel converter="currencyFormat" styleClass="lb-sentinel-bold"
+                                                   value="#{productOffer.quantity}"
+                                                   title="#{productOffer.quantity}"/>
+                                </p:column>
+                                <p:column style="width: 5%; "
+                                          styleClass="col-left  pd-top-10 ">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['common.delete']}"
+                                                      title="#{lang['common.delete']}"/>
+                                    </f:facet>
+                                    <p:commandLink styleClass="fa icon-trash Fs14 blue link-icon"
+                                                   style="font-size: 16px!important;" immediate="true"
+                                                   update="@([id$=tblProductSerial])"
+                                                   actionListener="#{stockInspectController.doRemoveItemProductOffer(index)}"
+                                                   title="#{lang['range.time.promotion.day.header.confirm']}"
+                                                   process="@this"/>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                        <!--Start button kiem ke-->
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container50 Responsive50">
+                                <div class="Container5 Responsive ui-fluid">
+                                    <p:selectBooleanCheckbox id="confirmStockInspectApproverSerial"
+                                                             styleClass="mg-left-5"
+                                                             value="#{stockInspectController.confirmStockInspectApprover}">
+                                        <p:ajax event="change" process="@this"
+                                                update="@([id$=pnlStaffApproverSerialId])"
+                                                resetValues="true"
+                                                listener="#{stockInspectController.onShowStaffApprover}"/>
+                                    </p:selectBooleanCheckbox>
+                                </div>
+                                <div class="Container95 mg-left-15 Responsive">
+                                    <p:outputLabel styleClass="lb-sentinel-bold"
+                                                   value="#{lang['mn.stock.track.confirm.stock']}"/>
+                                </div>
+                            </div>
+                            <!--<p:outputPanel styleClass="Container50" id="pnlStaffApproverSerialId">-->
+                            <!--<cbs:inputStaff value="#{stockInspectController.staffInfoApproverTag}"-->
+                            <!--id="StaffApproverSerialId"-->
+                            <!--methodName="receiveStaffApprover"-->
+                            <!--clearMethodName="clearStaffApprover"-->
+                            <!--update="@this, @([id$=pnlStaffApproverSerialId])"-->
+                            <!--limit="#{stockInspectController.limitAutoComplete}"-->
+                            <!--label="#{lang['stock.inspect.staff.approver']}"-->
+                            <!--require="true"-->
+                            <!--forceSelection="false"-->
+                            <!--classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"-->
+                            <!--classDivInput="Container60 Responsive50 ui-fluid"-->
+                            <!--requiredMessage="#{lang['stock.inspect.staff.approver.require']}"-->
+                            <!--placeholder="#{lang['stock.inspect.staff.approver.placeholder']}"-->
+                            <!--rendered="#{stockInspectController.confirmStockInspectApprover}">-->
+                            <!--</cbs:inputStaff>-->
+                            <!--<p:message for="StaffApproverSerialId"/>-->
+                            <!--</p:outputPanel>-->
+                        </div>
+                        <div class="Container TexAlCenter mg-top-0">
+                            <cbs:confirmDialog
+                                    idComponent="btnStockInpsectSerial"
+                                    id="btnStockInpsectSerial"
+                                    disableButton="#{!stockInspectController.timeCheckStock or stockInspectController.inspectFinish}"
+                                    valueButton="#{lang['mn.stock.track.check']}"
+                                    headerConfirm="#{lang['stock.inspect.button.inspect.confirm.header']}"
+                                    messageConfirm="#{stockInspectController.messageConfirmStockInspect}"
+                                    actionOK="#{stockInspectController.doStockInspectSerial}"
+                                    resetValueButton="false"
+                                    process="@([id$=pnLsProductSerial]), @([id$=pnInfoCheckStockInspect])"
+                                    updateArea="@([id$=pnLsProductSerial]), @([id$=msgSearch])"
+                                    updateOK="@([id$=pnLsProductSerial]), @([id$=msgSearch])"
+                                    actionValidate="#{stockInspectController.doValidateStockInspect}"
+                                    focusCancel="false"
+                                    oncompleteOK=""
+                                    isButton="true"
+                                    />
+                        </div>
+                        <!--End button kiem ke-->
+                    </p:outputPanel>
+                    <!--End mat hang quan ly theo serial-->
+                    <!--End vung kiem ke-->
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgInputProductCheck"
+                  widgetVar="dlgInputProductCheck"
+                  header="#{lang['process.stock.product.name']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="1000">
+            <ui:include src="dialog/dlgInputProductCheck.xhtml">
+            </ui:include>
+        </p:dialog>
+        <script type="text/javascript">
+            clearSingleSerial = function () {
+                setTimeout(function () {
+                    document.getElementById("frmStockInspect:singleSerial").value = "";
+                }, 2000);
+            }
+            clearToSerial = function () {
+                setTimeout(function () {
+                    document.getElementById("frmStockInspect:toSerial").value = "";
+                }, 2000);
+            }
+            clearSerial2D = function () {
+                setTimeout(function () {
+                    document.getElementById("frmStockInspect:serial2d").value = "";
+                }, 3000);
+            }
+            var timer;
+            function input2D() {
+                if (document.getElementById("frmStockInspect:serial2d").value != '') {
+                    document.getElementById("frmStockInspect:serial2d").value += '\n';
+                    clearTimeout(timer);
+                    timer = setTimeout(function () {
+                        document.getElementById("frmStockInspect:serial2d").value = document.getElementById("frmStockInspect:serial2d").value.trim();
+                        rmcSerial2D();
+                    }, 3000);
+                }
+            }
+
+        </script>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,311 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.invoice.invoiceTemplate']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.invoice.invoiceTemplate']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmInvoiceTemplate">
+            <p:outputPanel styleClass="container100">
+                <p:outputPanel id="pnInvoiceTemplate">
+                    <div class="ContainerIndent mg-top-0">
+                        <p:messages id="msgInforTemplate" showSummary="false" showDetail="true" closable="true"/>
+                    </div>
+                    <!--Start vung thong tin phoi hoa don-->
+                    <p:outputPanel id="pnInfoInvoiceTemplate" styleClass="ContainerIndent">
+                        <p:focus for="pnInfoInvoiceTemplate"/>
+                        <cbs:panel classForToggle="panelInfoInvoiceTemplate"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.invoice.template.inforAddInvoice']}"/>
+
+                        <div class="Container100 panelInfoInvoiceTemplate" style="margin-bottom: 10px;margin-top: 0px;">
+                            <div class="ContainerIndent">
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" for="selOnRaTemplateInvoice"
+                                                       value="#{lang['mn.invoice.type.form.invoice']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="selOnRaTemplateInvoice"
+                                                         value="#{invoiceTemplateController.addInvoiceTemplate.invoiceTemplateTypeId}">
+                                            <!--<f:selectItem itemLabel="#{lang['common.selectOneMenu.select']}"/>-->
+                                            <f:selectItems value="#{invoiceTemplateController.invoiceTemplateTypeList}"
+                                                           itemLabel="#{item.name}" var="item"
+                                                           itemValue="#{item.invoiceTemplateTypeId}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" for="textOwnerType"
+                                                       value="#{lang['mn.invoice.unit']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="textOwnerType"
+                                                     maxlength="10"
+                                                     disabled="true"
+                                                     value="#{invoiceTemplateController.shopName}"
+                                                     title=""/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['common.number']}"
+                                                       for="textAmount"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="textAmount"
+                                                     required="true"
+                                                     maxlength="10"
+                                                     placeholder="#{lang['mn.invoice.invoiceTemplate.input.amount']}"
+                                                     requiredMessage="#{lang['mn.invoice.invoiceTemplate.amount.require.msg']}"
+                                                     value="#{invoiceTemplateController.addInvoiceTemplate.amount}">
+                                            <f:convertNumber type="number"/>
+                                        </p:inputText>
+                                        <pe:keyFilter for="textAmount" regEx="/[0-9]/i"/>
+                                        <cbs:message forId="textAmount"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="Container100 TexAlCenter">
+                                <p:commandButton process="pnInfoInvoiceTemplate" update="frmInvoiceTemplate"
+                                                 value="#{lang['mn.invoice.invoiceTemplate.input.input']}"
+                                                 resetValues="true"
+                                                 oncomplete="if(!args.validationFailed) {PF('dlgConfirmAdd').show()} setTimeout(function () {$('.btnbtnAddOK').focus();}, 350); "
+                                                 actionListener="#{invoiceTemplateController.doConfirmAdd}"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin phoi hoa don-->
+
+                    <!--Start vung ds phoi hoa don-->
+                    <p:outputPanel id="pnLstInvoiceTemplate" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelListInvoiceTemplate"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.invoice.list.form.invoice']}"/>
+
+                        <div class="Container100 panelListInvoiceTemplate"
+                             style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        id="lstInvoiceTemplate"
+                                        var="invoiceTemplate" style="width: 99%;"
+                                        rowKey="#{invoiceTemplate.invoiceTemplateId}"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}"
+                                        value="#{invoiceTemplateController.invoiceTemplateList}"
+                                        selection="#{invoiceTemplateController.forSearchInvoiceTemplate}">
+
+                                    <p:ajax event="rowSelectRadio" process="@this,@([id$=lstInvoiceTemplate])"
+                                            listener="#{invoiceTemplateController.prepareEdit}" resetValues="true"
+                                            update="@form,@([id$=msgInforTemplate]),@([id$=pnInfoInvoiceTemplate])"/>
+                                    <!--<p:ajax event="rowUnselect" process="@this" listener="#{invoiceTemplateController.prepareEdit(invoiceTemplate)}" update="@([id$=pnlEditInvoiceTemplate]),@([id$=msgInforTemplate])" />-->
+                                    <p:column headerText="#{lang['mn.invoice.type.form.invoice']}" styleClass="width25">
+                                        <p:outputLabel
+                                                       value="#{invoiceTemplateController.getInvoiceTemplateType(invoiceTemplate.invoiceTemplateTypeId)}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.invoice.unit']}" styleClass=" width32">
+                                        <p:outputLabel
+                                                       value="#{invoiceTemplateController.shopName}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.invoice.invoiceTemplate.amount']}"
+                                               styleClass="col-right width15">
+                                            <p:outputLabel value="#{invoiceTemplate.amount}">
+                                                <f:convertNumber type="number"/>
+                                            </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.invoice.invoiceTemplate.useAmount']}"
+                                              styleClass="col-right width15">
+                                        <p:outputLabel value="#{invoiceTemplate.usedAmount}">
+                                            <f:convertNumber type="number"/>
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.select']}"
+                                              styleClass="col-center width6"
+                                              selectionMode="single">
+                                    </p:column>
+
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung ds phoi hoa don-->
+
+                    <!--&lt;!&ndash;Start vung thong tin phoi hoa don can xoa&ndash;&gt;-->
+                    <p:outputPanel id="pnlEditInvoiceTemplateOut">
+                        <p:outputPanel id="pnlEditInvoiceTemplate" styleClass="ContainerIndent"
+                                       rendered="#{invoiceTemplateController.render}">
+                            <cbs:panel classForToggle="panelInfoInvoiceTemplateNeedDel"
+                                       toggle="true"
+                                       titleHeader="#{lang['mn.invoice.info.form.invoice.need.edit']}"/>
+
+                            <div class="Container100 panelInfoInvoiceTemplateNeedDel"
+                                 style="margin-bottom: 10px;margin-top: 10px;">
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container50 Responsive50">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel" for="selOnRaTemplateType"
+                                                           value="#{lang['mn.invoice.type.form.invoice']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:selectOneMenu id="selOnRaTemplateType"
+                                                             disabled="true"
+                                                             value="#{invoiceTemplateController.editInvoiceTemplate.invoiceTemplateTypeId}">
+                                                <f:selectItems
+                                                        value="#{invoiceTemplateController.invoiceTemplateTypeList}"
+                                                        itemLabel="#{item.name}" var="item"
+                                                        itemValue="#{item.invoiceTemplateTypeId}"/>
+                                            </p:selectOneMenu>
+                                            <cbs:message forId="selOnRaTemplateType"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container50 Responsive50">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel" for="textShopName"
+                                                           value="#{lang['mn.invoice.unit']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:inputText id="textShopName"
+                                                         maxlength="10"
+                                                         disabled="true"
+                                                         value="#{invoiceTemplateController.shopName}"
+                                                         title=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container50 Responsive50">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.invoice.invoiceTemplate.amount']}"
+                                                           for="textAmountEdit"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:inputText id="textAmountEdit"
+                                                         disabled="true"
+                                                         value="#{invoiceTemplateController.editInvoiceTemplate.amount}">
+                                                <f:convertNumber type="number"/>
+                                            </p:inputText>
+                                            <pe:keyFilter for="textAmount" regEx="/[0-9]/i"/>
+                                            <cbs:message forId="textAmountEdit"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container50 Responsive50">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           value="#{lang['mn.invoice.invoiceTemplate.useAmount']}"
+                                                           for="textUsedAmount"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:inputText id="textUsedAmount"
+                                                         disabled="true"
+                                                         value="#{invoiceTemplateController.editInvoiceTemplate.usedAmount}">
+                                                <f:convertNumber type="number"/>
+                                            </p:inputText>
+                                            <pe:keyFilter for="textUsedAmount" regEx="/[0-9]/i"/>
+                                            <cbs:message forId="textUsedAmount"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container50 Responsive50">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           value="#{lang['mn.invoice.invoiceTemplate.updateAmount']}"
+                                                           for="textUpdateAmount"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:inputText id="textUpdateAmount"
+                                                         required="true"
+                                                         maxlength="10"
+                                                         placeholder="#{lang['mn.invoice.invoiceTemplate.input.updateAmount']}"
+                                                         requiredMessage="#{lang['mn.invoice.invoiceTemplate.updateAmount.require.msg']}"
+                                                         value="#{invoiceTemplateController.editInvoiceTemplate.updateAmount}">
+                                                <f:convertNumber type="number"/>
+                                            </p:inputText>
+                                            <pe:keyFilter for="textUpdateAmount" regEx="/[0-9]/i"/>
+                                            <p:message for="textUpdateAmount"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="Container100 TexAlCenter marT10">
+                                    <cbs:confirmDialog
+                                            idComponent="btnDeleteOnePackageGoods"
+                                            valueButton="#{lang['common.edit']}"
+                                            headerConfirm="#{lang['mn.invoice.invoiceType.header.edit']}"
+                                            messageConfirm="#{lang['mn.invoice.invoiceType.msg.edit.confirm']}"
+                                            actionOK="#{invoiceTemplateController.editInvoiceTemplateProcess}"
+                                            resetValueButton="true"
+                                            process="@([id$=pnlEditInvoiceTemplateOut])"
+                                            actionValidate="#{invoiceTemplateController.doConfirmEdit}"
+                                            updateArea="@([id$=pnlEditInvoiceTemplateOut]),@([id$=msgInforTemplate]),@([id$=pnLstInvoiceTemplate])"
+                                            updateOK="frmInvoiceTemplate"
+                                            styleButton="true"
+                                            focusCancel="false"
+                                            oncompleteOK=""
+                                                isButton="true"
+                                            />
+                                    <!--<p:commandButton process="pnlEditInvoiceTemplate" update="msgInforTemplate,pnInfoInvoiceTemplate"-->
+                                                     <!--value="#{lang['common.edit']}"-->
+                                                     <!--oncomplete="if(!args.validationFailed) {PF('dlgConfirmEdit').show()}  setTimeout(function () {$('.btnbtnEditOnePackageGoods0OK').focus();}, 350); "-->
+                                                     <!--actionListener="#{invoiceTemplateController.doConfirmEdit}"/>-->
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <!--End vung thong tin phoi hoa don can thay đổi-->
+                </p:outputPanel>
+            </p:outputPanel>
+
+            <p:confirmDialog closeOnEscape="true" closable="true"
+                             appendTo="@(body)"
+                             widgetVar="dlgConfirmAdd"
+                             header="#{lang['mn.invoice.invoiceTemplate.input']}"
+                             id="cfmBtn"
+                             width="550"
+                             message="#{lang['mn.invoice.invoiceTemplate.inputConfirm']}">
+                <p:commandLink value="#{lang['common.button.NO']}" styleClass="md-button" process="@none"
+                               onstart="PF('dlgConfirmAdd').hide();"
+                        />
+                <p:commandLink process="@this,@([id$=pnInfoInvoiceTemplate]}"
+                               update="@this,@([id$=msgInforTemplate]),@([id$=pnInfoInvoiceTemplate]),@([id$=pnLstInvoiceTemplate])"
+                               value="#{lang['common.button.YES']}" styleClass="md-button btnbtnAddOK"
+                               oncomplete="PF('dlgConfirmAdd').hide();"
+                               actionListener="#{invoiceTemplateController.addInvoiceTemplateProcess}"/>
+
+            </p:confirmDialog>
+
+            <p:confirmDialog closeOnEscape="true" closable="true"
+                             appendTo="@(body)"
+                             widgetVar="dlgConfirmEdit"
+                             header="#{lang['mn.invoice.invoiceType.header.edit']}"
+                             id="cfmBtnEdit"
+                             width="550"
+                             message="#{lang['mn.invoice.invoiceType.msg.edit.confirm']}">
+                <p:commandLink value="#{lang['common.button.NO']}" styleClass="md-button " process="@none"
+                               onstart="PF('dlgConfirmEdit').hide();"
+                        />
+                <p:commandLink process="@this,pnlEditInvoiceTemplate"
+                               update="@([id$=frmInvoiceTemplate])"
+                               value="#{lang['common.button.YES']}" styleClass="md-button btnbtnEditOnePackageGoods0OK"
+                               oncomplete=" PF('dlgConfirmEdit').hide();"
+                               actionListener="#{invoiceTemplateController.editInvoiceTemplateProcess}"/>
+
+            </p:confirmDialog>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

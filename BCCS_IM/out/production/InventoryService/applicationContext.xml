@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+             http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+             http://www.springframework.org/schema/context
+             http://www.springframework.org/schema/context/spring-context-4.1.xsd
+             http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring
+             http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.2.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!-- Activates various annotations to be detected in bean classes -->
+    <context:annotation-config/>
+
+    <!-- Scans the classpath for annotated components that will be auto-registered
+    as Spring beans. For example @Controller and @Service. Make sure to set the
+    correct base-package -->
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <context:component-scan base-package="com.viettel.bccs">
+        <context:exclude-filter type="regex" expression="com.viettel.bccs.inventory.wsesb.service.*"/>
+        <context:exclude-filter type="regex" expression="com.viettel.bccs.product.wsesb.service.*"/>
+        <context:exclude-filter type="regex" expression="com.viettel.bccs.sale.wsesb.service.*"/>
+        <context:exclude-filter type="annotation" expression="javax.jws.WebMethod"/>
+        <context:exclude-filter type="annotation" expression="javax.jws.WebService"/>
+    </context:component-scan>
+
+
+    <!--start thong tin cau hinh ftp cac kieu, tam thoi ko dung comment lai-->
+    <!--<import resource="business-bean.xml"/>-->
+    <!--end thong tin cau hinh ftp cac kieu, tam thoi ko dung comment lai-->
+
+
+    <bean id="configurationEncryptor" class="org.jasypt.encryption.pbe.StandardPBEStringEncryptorExtension">
+    </bean>
+    <bean class="org.jasypt.spring31.properties.EncryptablePropertyPlaceholderConfigurer">
+        <constructor-arg ref="configurationEncryptor"/>
+        <property name="locations">
+            <list>
+                <value>classpath:spring.properties</value>
+                <value>classpath:systemConfig.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="com.viettel.fw.CoreConfiguration"/>
+    <bean class="com.viettel.fw.CacheConfiguration"/>
+    <bean class="com.viettel.akka.AkkaConfiguration"/>
+    <bean class="com.viettel.web.WebConfiguration"/>
+
+    <import resource="fw-beans.xml"/>
+    <bean class="com.viettel.web.config.LanguageConfiguration"/>
+
+    <import resource="common-beans.xml"/>
+    <!--Defines service client-->
+    <import resource="ws-endpoint.xml"/>
+
+    <!-- Imports logging configuration -->
+
+    <import resource="spring-data-non-xa.xml"/>
+    <!--<context:load-time-weaver aspectj-weaving="on"/>-->
+    <ehcache:annotation-driven/>
+
+    <import resource="trace-context.xml"/>
+
+</beans>

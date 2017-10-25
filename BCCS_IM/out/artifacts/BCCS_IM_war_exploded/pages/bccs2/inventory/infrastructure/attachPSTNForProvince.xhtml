@@ -1,0 +1,111 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.infrastructure.attach.pstn.for.provin']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.infrastructure.attach.pstn.for.provin']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmAttachPstnForProvin" styleClass="Container100">
+            <p:outputPanel id="pnlInfoAttachPstnForProvin" styleClass="ContainerIndent">
+               <cbs:panel classForToggle="pnlInfoAttachPstnForProvin"
+                          titleHeader="#{lang['mn.infrastructure.inforPSTNProvin']}"/>
+                <div class="pnlInfoAttachPstnForProvin Container100 paddingTopBottom10">
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container50 Responsive">
+                            <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['mn.infrastructure.number']}"/>
+                                <p:outputLabel value="*" style="color:red;"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:inputText value=""/>
+                            </div>
+                        </div>
+                        <div class="Container50 Responsive">
+                            <div class="Container40 Responsive ui-fluid  mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['mn.infrastructure.type.provin']}"/>
+                                <p:outputLabel value="*" style="color: red"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:selectOneMenu value="">
+                                    <f:selectItem itemLabel="#{lang['mn.infrastructure.type.provin.select']}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container50 Responsive">
+                            <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['mn.infrastructure.type.provin.exchange']}"/>
+                                <p:outputLabel value="*" style="color: red"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:selectOneMenu value="">
+                                    <f:selectItem itemLabel="#{lang['mn.infrastructure.type.select.provin']}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="Container50 Responsive">
+                            <div class="Container40 Responsive ui-fluid  mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['mn.infrastructure.type.code.district']}"/>
+                                <p:outputLabel value="*" style="color: red"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:autoComplete value="" styleClass="autoCpl"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Container100 TexAlCenter">
+                        <p:commandButton value="#{lang['mn.infrastructure.agree']}"/>
+                        <p:commandButton styleClass="mg-left-5" value="#{lang['common.next']}"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel id="pnlListInfrastructurePstn" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="pnlListInfrastructurePstn"
+                           titleHeader="#{lang['mn.infrastructure.list.PSTN']}"/>
+                <div class="pnlListInfrastructurePstn Container100 paddingTopBottom10">
+                    <div class="ContainerIndent">
+                        <p:dataTable
+                                id="tblListInfrastructurePstn"
+                                var="" value=""
+                                rowIndexVar=""
+                                resizableColumns="true"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.empty.records']}">
+                            <p:column headerText="#{lang['mn.infrastructure.type.code.district']}" sortBy="">
+                                <p:outputLabel value="H001" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.infrastructure.PSTN']}" sortBy="">
+                                <p:outputLabel value="Pstn_1" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.infrastructure.provin']}" sortBy="">
+                                <p:outputLabel value="" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.infrastructure.date.buy']}" sortBy="">
+                                <p:outputLabel value="20/11/2015" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['common.edit']}" styleClass="TexAlCenter">
+                                <p:commandLink styleClass="fa icon-edit"
+                                               style="text-decoration: none;"/>
+                            </p:column>
+                            <p:column headerText="#{lang['common.delete']}" styleClass="TexAlCenter">
+                                <p:commandLink styleClass="fa icon-trash Fs14 blue"
+                                               style="text-decoration: none;"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

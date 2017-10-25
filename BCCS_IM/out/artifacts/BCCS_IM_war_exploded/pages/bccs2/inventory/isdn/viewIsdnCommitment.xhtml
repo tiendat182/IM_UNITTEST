@@ -1,0 +1,80 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:form id="frmIsdnCommitment">
+        <div class="Container100 panelListCommitment" style="margin-bottom: 10px;margin-top: 10px;">
+            <p:dataTable
+                    id="lstCommitment"
+                    rowKey="#{item.productOfferPriceId}"
+                    resizableColumns="true"
+                    paginator="#{lang['common.paging.paginator']}"
+                    rows="#{lang['common.paging.rows.default']}"
+                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                    emptyMessage="#{lang['common.empty.records']}"
+                    value="#{searchIsdnController.listIsdnCommitment}"
+                    var="item"
+                    rowIndexVar="rowIndex"
+                    >
+                <p:column headerText="#{lang['mn.stock.limit.template.stt']}"
+                          style="width: 10%;text-align: right">
+                    <f:facet name="header">
+                        <h:outputText value="#{lang['mn.stock.limit.template.stt']}"
+                                      title="#{lang['mn.stock.limit.template.stt']}"/>
+                    </f:facet>
+                    <p:outputLabel value="#{rowIndex+1}" style="text-align: center"/>
+                </p:column>
+                <p:column headerText="#{lang['price.money']}"
+                          style="width: 25%;text-align: right" sortBy="#{item.price}">
+                    <f:facet name="header">
+                        <h:outputText value="#{lang['price.money']}"
+                                      title="#{lang['price.money']}">
+                        </h:outputText>
+                    </f:facet>
+                    <p:outputLabel value="#{item.price}" title="#{item.price}" style="text-align: right">
+                        <f:convertNumber pattern="#,###¤" type="currency" currencySymbol="đ" locale="vn_VN"/>
+                    </p:outputLabel>
+                </p:column>
+                <p:column headerText="#{lang['search.isdn.amount.commitment']}"
+                          style="width: 25%;text-align: right" sortBy="#{item.pledgeAmount}">
+                    <f:facet name="header">
+                        <h:outputText value="#{lang['search.isdn.amount.commitment']}"
+                                      title="#{lang['search.isdn.amount.commitment']}"/>
+                    </f:facet>
+                    <p:outputLabel value="#{item.pledgeAmount}" title="#{item.pledgeAmount}"
+                                   style="text-align: right">
+                        <f:convertNumber pattern="#,###¤" type="currency" currencySymbol="đ" locale="vn_VN"/>
+                    </p:outputLabel>
+                </p:column>
+                <p:column headerText="#{lang['search.isdn.time.commitment']}"
+                          style="width: 25%;text-align: right" sortBy="#{item.pledgeTime}">
+                    <f:facet name="header">
+                        <h:outputText value="#{lang['search.isdn.time.commitment']}"
+                                      title="#{lang['search.isdn.time.commitment']}"/>
+                    </f:facet>
+                    <p:outputLabel value="#{item.pledgeTime}" title="#{item.pledgeTime}"
+                                   style="text-align: left">
+                        <f:convertNumber pattern="#,###" type="number" locale="vn_VN"/>
+                    </p:outputLabel>
+                </p:column>
+                <p:column headerText="#{lang['search.isdn.advance.month']}"
+                          style="width: 25%;text-align: right" sortBy="#{item.priorPay}">
+                    <f:facet name="header">
+                        <h:outputText value="#{lang['search.isdn.advance.month']}"
+                                      title="#{lang['search.isdn.advance.month']}"/>
+                    </f:facet>
+                    <p:outputLabel value="#{item.priorPay}" title="#{item.priorPay}" style="text-align: left"/>
+                </p:column>
+            </p:dataTable>
+        </div>
+    </h:form>
+</ui:composition>

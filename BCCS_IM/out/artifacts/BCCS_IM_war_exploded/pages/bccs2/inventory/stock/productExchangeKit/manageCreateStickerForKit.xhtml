@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:of="http://omnifaces.org/functions"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.create.sticker.kit']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.create.sticker.kit']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmChangeProduct">
+            <p:outputPanel id="pnlTabChange" styleClass="Container100">
+                <div class="Container">
+                    <p:messages id="msg" showDetail="true" showSummary="false" closable="true"/>
+                </div>
+
+            </p:outputPanel>
+            <p:outputPanel id="tab2" styleClass="Container100">
+
+                <p:outputPanel id="pnUnderExportOrderFile" styleClass="Container100">
+                    <p:outputPanel id="pnCreateField" styleClass="ContainerIndent mg-top-0">
+                        <p:focus for="upLoadFile"/>
+                        <cbs:panel classForToggle="panelCreateField" toggle="true"
+                                   titleHeader="#{lang['mn.create.sticker.for.kit.file']}"/>
+
+                        <div class="Container panelCreateField">
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50">
+                                        <p:outputLabel styleClass="lb-sentinel" for="logicstic"
+                                                       value="#{lang['export.order.logicstics']}"
+                                                       rendered="#{manageCreateStickerForKitController.showLogistic}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectBooleanCheckbox styleClass="mg-left-5" id="logicstic"
+                                                                 value="#{manageCreateStickerForKitController.tranLogistics}"
+                                                                 disabled="#{manageCreateStickerForKitController.autoCreateNoteFile}"
+                                                                 rendered="#{manageCreateStickerForKitController.showLogistic}"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+
+                                </div>
+                                <div class="Container33 Responsive">
+
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <p:outputPanel styleClass="Container33 Responsive" id="divFileName">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7"
+                                         style="margin-top: 20px">
+                                        <p:outputLabel styleClass="lb-sentinel" for="outputAttachFile"
+                                                       value="#{lang['attach.file']}"/>
+                                        <p:outputLabel value="*" style="color: red"></p:outputLabel>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid" style="margin-top: 20px">
+                                        <p:inputText id="outputAttachFile" styleClass="outputAttachFile"
+                                                     maxlength="100"
+                                                     placeholder="#{lang['search.number.range.input.fileName']}"
+                                                     value="#{manageCreateStickerForKitController.attachFileName}"
+                                                     readonly="true"/>
+                                    </div>
+                                </p:outputPanel>
+
+                                <div class="Container33 Responsive">
+                                    <p:fileUpload id="upLoadFile"
+                                                  styleClass="Fleft"
+                                                  label="#{lang['select.file']}"
+                                                  invalidFileMessage="#{lang['mn.stock.limit.importFile.msg.format']}"
+                                                  requiredMessage="#{lang['mn.stock.limit.attachFile.msg.require']}"
+                                                  invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                  fileLimitMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                  update="@([id$=divFileName]),@([id$=pnViewFile]), @([id$=divDownloadFile]),@([id$=msg])"
+                                                  dragDropSupport="true" required="true" mode="advanced"
+                                                  auto="true"
+                                                  process="@this"
+                                                  allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                                  sizeLimit="5242880"
+                                                  value="#{manageCreateStickerForKitController.uploadedFile}"
+                                                  fileUploadListener="#{manageCreateStickerForKitController.doFileUploadAction}">
+                                    </p:fileUpload>
+                                </div>
+                                <p:outputPanel id="divDownloadFile" class="Container33">
+                                    <p:commandLink
+                                            id="downloadTemplateBtn"
+                                            value="#{lang['mn.stock.status.isdn.update.status.file_template']}"
+                                            title="#{lang['create.note.download.file.title']}"
+                                            ajax="false"
+                                            immediate="true">
+                                        <p:fileDownload
+                                                value="#{manageCreateStickerForKitController.downloadFileTemplate()}"/>
+                                    </p:commandLink>
+                                    <p:commandLink
+                                            id="downloadErrBtn" styleClass="mg-left-5" process="@this"
+                                            value="#{lang['mn.stock.status.isdn.update.status.file_error']}"
+                                            rendered="#{manageCreateStickerForKitController.hasFileError}"
+                                            title="#{lang['create.note.download.file.title']}"
+                                            ajax="false"
+                                            immediate="true" style="color: #e90c45!important;">
+                                        <p:fileDownload
+                                                value="#{manageCreateStickerForKitController.downloadFileError()}"/>
+                                    </p:commandLink>
+                                    <p:commandLink
+                                            styleClass="mg-left-5" style="color: #e90c45!important;"
+                                            value="#{lang['mn.stock.status.isdn.downfile_result']}"
+                                            rendered="#{manageCreateStickerForKitController.showDownResult}"
+                                            title="#{lang['create.note.download.file.title']}"
+                                            ajax="false"
+                                            immediate="true">
+                                        <p:fileDownload
+                                                value="#{manageCreateStickerForKitController.downloadFileCreateOrder()}"/>
+                                    </p:commandLink>
+                                </p:outputPanel>
+                            </div>
+                            <p:outputPanel styleClass="ContainerIndent TexAlCenter" id="pnViewFile">
+
+                                <div class="ContainerIndent">
+                                    <div class="ContainerIndent TexAlCenter mg-top-0">
+                                        <p:commandButton value="#{lang['see.previous']}"
+                                                         process="@this, @([id$=logicstic]),@([id$=tranfer])"
+                                                         update="@this, @([id$=pnLstField]),@([id$=pnUnderExportOrderFile]),@([id$=msg]), @([id$=panelSticker])"
+                                                         disabled="#{!manageCreateStickerForKitController.selectedFile}"
+                                                         actionListener="#{manageCreateStickerForKitController.doPreviewField}"/>
+                                        <!--<p:commandButton-->
+                                        <!--value="#{lang['common.export.PDF']}"-->
+                                        <!--process="@this"-->
+                                        <!--disabled="#{manageCreateStickerForKitController.hasFileError or !manageCreateStickerForKitController.selectedFile}"-->
+                                        <!--update="@form"-->
+                                        <!--ajax="false"-->
+                                        <!--immediate="true"-->
+                                        <!--styleClass="mg-left-5">-->
+                                        <!--<p:fileDownload-->
+                                        <!--value="#{manageCreateStickerForKitController.exportStockTransDetail()}"/>-->
+                                        <!--</p:commandButton>-->
+                                        <p:commandButton id="pdfExport" ajax="false" immediate="true"
+                                                         actionListener="#{manageCreateStickerForKitController.prepareExportPDF}"
+                                                         value="#{lang['common.export.PDF']}"
+                                                         styleClass="mg-left-5"
+                                                         update="@([id$=msg]), @([id$=panelSticker])"
+                                                         disabled="#{manageCreateStickerForKitController.hasFileError or !manageCreateStickerForKitController.selectedFile
+                                                         or !manageCreateStickerForKitController.preview}"
+                                                >
+                                            <!--<p:graphicImage value="resources/themes/logo/pdf.png"-->
+                                            <!--styleClass="fa icon-cancel Fs16"/>-->
+
+                                            <pe:exporter type="pdf" target="exportSticker" fileName="KitExport"
+                                                         ajax="false"
+                                                         encoding="Cp1258" cellFontSize="5"
+                                                         facetFontSize="5"
+                                                         preProcessor="#{manageCreateStickerForKitController.preProcessPDF}"
+                                                    >
+
+                                            </pe:exporter>
+                                            <!--<p:dataExporter type="pdf" target="exportSticker" fileName="KitExport"-->
+                                            <!--encoding="Cp1258"-->
+                                            <!--/>-->
+                                        </p:commandButton>
+                                    </div>
+                                </div>
+                            </p:outputPanel>
+                        </div>
+                    </p:outputPanel>
+
+                    <p:outputPanel id="pnLstField" styleClass="ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="panelListField" toggle="true"
+                                   titleHeader="#{lang['stock.rescue.warranty.view.detail.lst.product']}"/>
+
+                        <div class="Container panelListField" style="margin-bottom: 10px;margin-top: 5px;">
+
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        id="lstListNeedDelete"
+                                        var="item"
+                                        rowKey="#{item.rowKey}"
+                                        rowIndexVar="index"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage=""
+                                        value="#{manageCreateStickerForKitController.fieldExportFileDTOs}">
+                                    <p:column headerText="#{lang['common.stt']}" style="width: 8%">
+                                        <p:outputLabel value="#{index + 1}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['create.order.file.code.export.warehouse']}"
+                                              style="width: 15%" sortBy="#{item.fromOwnerCode}">
+                                        <p:outputLabel value="#{item.fromOwnerCode}"
+                                                       title="#{item.fromOwnerCode}" style="text-align: left"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.utilities.code.stock']}"
+                                              style="width: 15%" sortBy="#{(item.productOfferCode)}">
+                                        <p:outputLabel value="#{(item.productOfferCode)}"
+                                                       title="#{(item.productOfferCode)}"
+                                                       style="text-align: left"/>
+                                    </p:column>
+                                    <p:column styleClass="col-left" style="width: 10%"
+                                              headerText="#{lang['common.status']}">
+                                        <p:outputLabel value="#{item.stateName}" title="#{item.stateName}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.utilities.from.serial.imei']}"
+                                              sortBy="#{(item.fromSerial)}">
+                                        <p:outputLabel value="#{(item.fromSerial)}"
+                                                       title="#{(item.fromSerial)}"
+                                                       style="text-align: left"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.utilities.to.serial.imei']}"
+                                              sortBy="#{(item.toSerial)}">
+                                        <p:outputLabel value="#{(item.toSerial)}"
+                                                       title="#{(item.toSerial)}"
+                                                       style="text-align: left"/>
+                                    </p:column>
+                                    <!--<p:column headerText="#{lang['export.order.note']}" style="width: 15%">-->
+                                    <!--<p:outputLabel value="#{(item.note)}" title="#{(item.note)}"-->
+                                    <!--style="text-align: left">-->
+
+                                    <!--</p:outputLabel>-->
+                                    <!--</p:column>-->
+                                    <p:column headerText="#{lang['common.number']}" style="width: 10%"
+                                              styleClass="TexAlRight" sortBy="#{item.quantity}">
+                                        <p:outputLabel value="#{(item.quantity)}" title="#{(item.quantity)}"
+                                                       style="text-align: right"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+            <p:outputPanel id="panelSticker" rendered="#{false}">
+                <p:commandLink id="pdf" ajax="false" immediate="true">
+                    <p:graphicImage value="resources/themes/logo/pdf.png"
+                                    styleClass="fa icon-cancel Fs16"/>
+
+                    <!--<pe:exporter type="pdf" target="test2" fileName="prodExchange" ajax="false"-->
+                    <!--fontName="DejaVu Sans" encoding="Cp1258"-->
+                    <!--preProcessor="#{manageProductExchangeController.preProcessPDF}"-->
+                    <!-->-->
+                    <!-- -->
+                    <!--</pe:exporter>-->
+                    <pe:exporter type="pdf" target="test2" fileName="prodExchange" encoding="Cp1258"
+                                 facetFontSize="6"
+                                 cellFontSize="6"
+                                 preProcessor="#{manageCreateStickerForKitController.preProcessPDF}"/>
+                </p:commandLink>
+                <p:dataTable
+                        id="exportSticker"
+                        var="export"
+                        rowKey=""
+                        rowIndexVar="index"
+                        resizableColumns="true"
+                        paginator="#{lang['common.paging.paginator']}"
+                        rows="5"
+                        emptyMessage="#{lang['common.emty.records']}"
+                        value="#{manageCreateStickerForKitController.lstExportFile}">
+
+                    <p:column styleClass="TexAlLeft" style="font-size: 8px; font-family: Arial!important; width: 20px">
+                        <h:outputLabel
+                                value="So thue bao: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO1.isdn}"/>
+                        <h:outputLabel
+                                value="
+
+
+                                Seri Sim: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO1.serial}"/>
+                        <h:outputLabel
+                                value="
+
+
+                                PIN: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO1.pin}"/>
+                        <h:outputLabel
+                                value="      PUK: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO1.puk}"/>
+                        <h:outputLabel
+                                value="
+
+
+
+
+                                Bo Kit:"/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO1.prodOfferName}"/>
+                        <h:outputLabel
+                                value="
+
+
+                                Thoi han su dung: "/>
+                        <h:outputLabel
+                                value="#{of:formatDate(export.rowStockKitDTO1.expireDate,'dd/MM/yyyy')}"/>
+                    </p:column>
+                    <p:column styleClass="TexAlLeft" style="width: 20px!important;">
+                        <h:outputLabel
+                                value="So thue bao: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO2.isdn}"/>
+                        <h:outputLabel
+                                value="
+
+
+                                Seri Sim: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO2.serial}"/>
+                        <h:outputLabel
+                                value="
+
+
+                                PIN: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO2.pin}"/>
+                        <h:outputLabel
+                                value="     PUK: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO2.puk}"/>
+                        <h:outputLabel
+                                value="
+
+
+
+                                Bo Kit:"/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO2.prodOfferName}"/>
+                        <h:outputLabel
+                                value="
+
+
+                                Thoi han su dung: "/>
+                        <h:outputLabel
+                                value="#{of:formatDate(export.rowStockKitDTO2.expireDate,'dd/MM/yyyy')}"/>
+                    </p:column>
+                    <p:column styleClass="TexAlLeft" style="width: 20px!important;">
+                        <h:outputLabel
+                                value="So thue bao: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO3.isdn}"/>
+                        <h:outputLabel
+                                value="
+
+
+                                Seri Sim: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO3.serial}"/>
+                        <h:outputLabel
+                                value="
+
+
+                                PIN: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO3.pin}"/>
+                        <h:outputLabel
+                                value="     PUK: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO3.puk}"/>
+                        <h:outputLabel
+                                value="
+
+
+
+                                Bo Kit:"/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO3.prodOfferName}"/>
+                        <h:outputLabel
+                                value="
+
+
+                                Thoi han su dung: "/>
+                        <h:outputLabel
+                                value="#{of:formatDate(export.rowStockKitDTO3.expireDate,'dd/MM/yyyy')}"/>
+                    </p:column>
+                    <p:column styleClass="TexAlLeft" style="width: 20px!important;">
+                        <h:outputLabel
+                                value="So thue bao: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO4.isdn}"/>
+                        <h:outputLabel
+                                value="
+
+
+                                Seri Sim: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO4.serial}"/>
+                        <h:outputLabel
+                                value="
+
+
+                                PIN: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO4.pin}"/>
+                        <h:outputLabel
+                                value="     PUK: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO4.puk}"/>
+                        <h:outputLabel
+                                value="
+
+
+
+                                Bo Kit:"/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO4.prodOfferName}"/>
+                        <h:outputLabel
+                                value="
+
+
+                                Thoi han su dung: "/>
+                        <h:outputLabel
+                                value="#{of:formatDate(export.rowStockKitDTO4.expireDate,'dd/MM/yyyy')}"/>
+                    </p:column>
+                    <p:column styleClass="TexAlLeft" style="width: 20px!important;">
+                        <h:outputLabel
+                                value="So thue bao: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO5.isdn}"/>
+                        <h:outputLabel
+                                value="
+
+
+                                Seri Sim: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO5.serial}"/>
+                        <h:outputLabel
+                                value="
+
+
+                                PIN: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO5.pin}"/>
+                        <h:outputLabel
+                                value="     PUK: "/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO5.puk}"/>
+                        <h:outputLabel
+                                value="
+
+
+
+                                Bo Kit:"/>
+                        <h:outputLabel
+                                value="#{export.rowStockKitDTO5.prodOfferName}"/>
+                        <h:outputLabel
+                                value="
+
+
+                                Thoi han su dung: "/>
+                        <h:outputLabel
+                                value="#{of:formatDate(export.rowStockKitDTO5.expireDate,'dd/MM/yyyy')}"/>
+
+                    </p:column>
+
+                </p:dataTable>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailSerial"
+                  widgetVar="dlgDetailSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <ui:include src="../../../../../resources/tags/dlgDetailSerial.xhtml">
+                <ui:param name="controller" value="#{manageCreateStickerForKitController.listProductTag}"/>
+                <ui:param name="idComponent" value="changelistProduct"/>
+            </ui:include>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

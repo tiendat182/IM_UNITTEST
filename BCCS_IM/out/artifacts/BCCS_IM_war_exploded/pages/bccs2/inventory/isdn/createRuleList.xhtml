@@ -1,0 +1,265 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:pe="http://primefaces.org/ui/extensions"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.isdn.rule.list']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmExportNote">
+            <div class="Container100">
+                <p:outputPanel styleClass="container100">
+                    <p:outputPanel id="pnUnderExportNote">
+                        <p:focus context="pnUnderExportNote"/>
+                        <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                            <p:messages id="msgs" showDetail="true" showSummary="false" closable="true" />
+                        </div>
+                        <!--Start vung thong tin tap lenh-->
+                        <p:outputPanel id="pnInfoExportOrder" styleClass="ContainerIndent">
+                            <cbs:panel classForToggle="panelInforExport"
+                                       toggle="true"
+                                       titleHeader="#{lang['mn.isdn.rule.info']}"/>
+                            <div class="Container100 panelInforExport marginTopBottom10">
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container33 Responsive">
+                                        <div class="Container30 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel"  value="#{lang['mn.isdn.rule.code']}"/>
+                                        </div>
+                                        <div class="Container70 Responsive50 ui-fluid">
+                                            <p:inputText
+                                                    styleClass="ruleCode"
+                                                    id="ruleCode"
+                                                    title="#{lang['mn.isdn.rule.title.code']}"
+                                                    maxlength="20"
+                                                    onblur="this.value = this.value.trim();"
+                                                    placeholder="#{lang['mn.isdn.rule.code.msg']}"
+                                                    value="#{createRuleListController.searchDto.groupFilterRuleCode}">
+                                                <pe:keyFilter regEx="/[a-z0-9_]/i"  preventPaste="false"/>
+                                            </p:inputText>
+                                            <cbs:message forId="ruleCode"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel" 
+                                                    value="#{lang['mn.isdn.rule.name']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                                            <p:inputText
+                                                    id="ruleName"
+                                                    title="#{lang['mn.isdn.rule.title.name']}"
+                                                    maxlength="100"
+                                                    onblur="this.value = this.value.trim();"
+                                                    placeholder="#{lang['mn.isdn.rule.name.msg']}"
+                                                    value="#{createRuleListController.searchDto.name}"/>
+                                            <cbs:message forId="ruleName"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel"  value="#{lang['mn.isdn.rule.resource']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:selectOneMenu
+                                                    id="ruleProd"
+                                                    value="#{createRuleListController.searchDto.telecomServiceId}">
+                                                <f:selectItem itemLabel="#{lang['mn.isdn.rule.resource.msg']}"/>
+                                                <f:selectItems value="#{createRuleListController.optionSetValueDTOs}"
+                                                               var="item" itemValue="#{item.value}"
+                                                               itemLabel="#{item.name}"
+                                                               itemLabelEscaped="true"
+                                                               noSelectionValue="#{lang['mn.isdn.rule.resource.msg']}"/>
+                                            </p:selectOneMenu>
+                                            <cbs:message forId="ruleProd"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container100 Responsivessss">
+                                        <div class="Container10 Responsive17 mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel" 
+                                                    value="#{lang['mn.isdn.rule.desc']}"/>
+                                        </div>
+                                        <div class="Container90 Responsive83 ui-fluid">
+                                            <p:inputText
+                                                    id="ruleNote"
+                                                    title="#{lang['mn.isdn.rule.title.note']}"
+                                                    maxlength="500"
+                                                    onblur="this.value = this.value.trim();"
+                                                    placeholder="#{lang['mn.isdn.rule.desc.msg']}"
+                                                    value="#{createRuleListController.searchDto.notes}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="Container100 TexAlCenter">
+                                    <p:commandButton value="#{lang['create.note.search']}"
+                                                     process="@form" update="pnUnderExportNote, dlgUpdateRule"
+                                                     action="#{createRuleListController.search()}"/>
+                                    <p:commandButton value="#{lang['common.reset']}"
+                                                     actionListener="#{createRuleListController.doResetSearchRuleList}"
+                                                     process="@this"
+                                                     update="@form,dlgAddRule"
+                                                     validateClient="true"
+                                                     styleClass="mg-left-5" />
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                        <!--End vung thong tin tap lenh-->
+
+                        <!--Start vung kết quả tìm kiếm-->
+                        <p:outputPanel id="pnLstExportOrder" styleClass="ContainerIndent">
+                            <cbs:panel classForToggle="panelListOrderExport"
+                                       toggle="true"
+                                       titleHeader="#{lang['mn.isdn.rule.search.result']}"/>
+
+                            <p:commandLink title="#{lang['common.add']}"
+                                           process="@this"
+                                           update="dlgAddRule, frmAddRuleList:pnlAddRuleList"
+                                           resetValues="true"
+                                           actionListener="#{createRuleListController.preAdd()}"
+                                           oncomplete="if(!args.validationFailed){PF('dlgAddRuleList').show();}"
+                                           style="" styleClass="fa icon-plus Fs14 blue md-link">
+                                <h:outputText value="#{lang['common.add']}"/>
+                            </p:commandLink>
+                            <cbs:confirmDialog
+                                    idComponent="btnDeleteRuleList"
+                                    valueButton="#{lang['common.delete']}"
+                                    headerConfirm="#{lang['mn.isdn.rule.header.delete']}"
+                                    messageConfirm="#{lang['mn.isdn.rule.msg.delete.confirm']}"
+                                    actionOK="#{createRuleListController.deleteRuleList}"
+                                    resetValueButton="true"
+                                    process="@([id$=lstOrderExport]), @this"
+                                    actionValidate="#{createRuleListController.validateDeleteRuleList}"
+                                    updateArea="frmExportNote:msgs"
+                                    updateOK="@([id$=lstOrderExport]), frmExportNote:msgs"
+                                    styleClassButton="fa icon-trash Fs14 blue md-link mg-left-5"
+                                    focusCancel="true"
+                                    oncompleteOK=""
+                                    isButton="false"
+                                    />
+                            <div class="Container100 panelListOrderExport">
+                                <div class="ContainerIndent">
+                                    <p:dataTable
+                                            id="lstOrderExport"
+                                            var="itemRule"
+                                            value="#{createRuleListController.listResultSearch}"
+                                            rowIndexVar="index"
+                                            rowKey="#{itemRule.groupFilterRuleId}"
+                                            selection="#{createRuleListController.listRuleListSelection}"
+                                            resizableColumns="true"
+                                            paginator="#{lang['common.paging.paginator']}"
+                                            rows="#{lang['common.paging.rows.default']}"
+                                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                            emptyMessage="#{lang['common.empty.records']}">
+                                        <p:column selectionMode="multiple" styleClass="width5 TexAlCenter"/>
+                                        <p:column headerText="#{lang['mn.isdn.rule.code']}" style="width: 11%"
+                                                  sortBy="#{itemRule.groupFilterRuleCode}">
+                                            <p:outputLabel value="#{itemRule.groupFilterRuleCode}" style="text-align: left"
+                                                           title="#{itemRule.groupFilterRuleCode}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.isdn.rule.name']}" style="width: 12%"
+                                                  sortBy="#{itemRule.name}">
+                                            <p:outputLabel value="#{itemRule.name}" style="text-align: left"
+                                                           title="#{itemRule.name}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.isdn.rule.resource']}" style="width: 12%"
+                                                  sortBy="#{itemRule.telecomServiceName}">
+                                            <p:outputLabel value="#{itemRule.telecomServiceName}" style="text-align: left"
+                                                           title="#{itemRule.telecomServiceName}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.isdn.rule.desc']}" style="width: 15%"
+                                                  sortBy="#{itemRule.notes}">
+                                            <p:outputLabel value="#{itemRule.notes}" style="text-align: left"
+                                                           title="#{itemRule.notes}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.isdn.rule.user.update']}" style="width: 17%"
+                                                  sortBy="#{itemRule.lastUpdateUser}">
+                                            <p:outputLabel value="#{itemRule.lastUpdateUser}" style="text-align: left"
+                                                           title="#{itemRule.lastUpdateUser}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.isdn.rule.time.update']}" style="width: 17%"
+                                                  sortBy="#{itemRule.lastUpdateTime}">
+                                            <h:outputText value="#{itemRule.lastUpdateTime}" style="text-align: left"
+                                                           title="#{itemRule.lastUpdateTime}" escape="true" >
+                                                <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="#{lang['common.edit']}/#{lang['common.delete']}" sortBy="" styleClass="TexAlCenter">
+                                            <p:commandLink styleClass="fa icon-edit"
+                                                           actionListener="#{createRuleListController.preEdit(index)}"
+                                                           resetValues="true"
+                                                           oncomplete="if(!args.validationFailed){PF('dlgUpdateRuleList').show()}"
+                                                           update="dlgUpdateRule, frmUpdateRuleList:pnlUpdateRuleList" title="#{lang['mn.isdn.rule.edit.title']}"
+                                                           process="@this"/>
+                                            <p:commandLink styleClass="fa  icon-trash Fs14 blue "
+                                                           style="text-decoration: none;font-size: 16px!important;padding-top: 4px;" immediate="true"
+                                                           update="frmExportNote"
+                                                           actionListener="#{createRuleListController.validate(itemRule)}" title="#{lang['mn.isdn.rule.delete.title']}"
+                                                           process="@this"
+                                                           oncomplete="if(!args.validationFailed){PF('dlgConfirmDelete').show()}
+                                                                       setTimeout(function () {$('.btnbtnAddOnePackageGoods0CANCEL').focus();}, 350);">
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                        <!--End vung kết quả tìm kiếm-->
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  maximizable="true"
+                  closable="true"
+                  closeOnEscape="true"
+                  position="center"
+                  id="dlgUpdateRule"
+                  widgetVar="dlgUpdateRuleList"
+                  header="#{lang['mn.isdn.rule.edit.header']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  width="500"
+                  minWidth="900">
+            <ui:include src="dlgUpdateRuleList.xhtml"/>
+        </p:dialog>
+        <p:dialog appendTo="@(body)"
+                  maximizable="true"
+                  closable="true"
+                  closeOnEscape="true"
+                  position="center"
+                  id="dlgAddRule"
+                  widgetVar="dlgAddRuleList"
+                  header="#{lang['mn.isdn.rule.add.header']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  width="500"
+                  minWidth="900" >
+            <ui:include src="dlgAddRuleList.xhtml"/>
+        </p:dialog>
+
+        <p:confirmDialog closeOnEscape="true" closable="true"
+                         appendTo="@(body)"
+                         widgetVar="dlgConfirmDelete"
+                         header="#{lang['mn.isdn.rule.header.delete']}"
+                         id="cfmBtn"
+                         width="550"
+                         message="#{lang['mn.isdn.rule.msg.delete.confirm']}">
+            <p:commandLink value="#{lang['common.button.NO']}"
+                           styleClass="md-button btnbtnAddOnePackageGoods0CANCEL"
+                           process="@none"
+                           onstart="PF('dlgConfirmDelete').hide(); " onfocus="true"
+                    />
+            <p:commandLink process="@this,frmExportNote"  update="frmExportNote" value="#{lang['common.button.YES']}" styleClass="md-button"
+                           oncomplete="PF('dlgConfirmDelete').hide();"
+                           actionListener="#{createRuleListController.doRemoveItem()}"/>
+            <p:focus context="cfmBtn"/>
+        </p:confirmDialog>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,145 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+<composite:interface>
+    <composite:attribute name="idComponent" shortDescription="id component cua doi tuong " required="true"/>
+    <composite:attribute name="title" shortDescription="title " required="true"/>
+    <composite:attribute name="showWorkFlowPrint" shortDescription="dieu kien hien thi luong in va luong nguoi dung "
+                         default="false"/>
+    <composite:attribute name="value" type="com.viettel.bccs.inventory.tag.SignOfficeTagNameable" required="true"/>
+</composite:interface>
+<composite:implementation>
+    <p:outputPanel id="#{cc.attrs.idComponent}pnViewOffice" styleClass="ContainerIndent mg-top-0">
+        <cbs:panel classForToggle="pnViewOffice#{cc.attrs.idComponent}"
+                   titleHeader="#{cc.attrs.title}"
+                   toggle="true"></cbs:panel>
+
+        <div class="Container100 pnViewOffice#{cc.attrs.idComponent}" style="margin-bottom: 10px;margin-top: 10px;">
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container33 Responsive">
+                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                        <p:outputLabel for="#{cc.attrs.idComponent}ipUser" styleClass="lb-sentinel"
+                                       value="#{lang['common.user']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:inputText value="#{cc.attrs.value.signOfficeDTO.userName}"
+                                     placeholder="#{lang['common.user.placehoder']}" maxlength="100"
+                                     onchange="this.value=this.value.trim()"
+                                     requiredMessage="#{lang['common.user.require.msg']}"
+                                     validatorMessage="#{lang['common.user.format.msg']}" required="true"
+                                     id="#{cc.attrs.idComponent}ipUser"/>
+                        <p:message for="#{cc.attrs.idComponent}ipUser"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                        <p:outputLabel for="#{cc.attrs.idComponent}ipPassWord" styleClass="lb-sentinel"
+                                       value="#{lang['common.password']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:password value="#{cc.attrs.value.signOfficeDTO.passWord}"
+                                    placeholder="#{lang['common.password.placehoder']}" maxlength="200"
+                                    validatorMessage="#{lang['common.password.lenght.format']}"
+                                    requiredMessage="#{lang['common.password.require.msg']}" required="true"
+                                    id="#{cc.attrs.idComponent}ipPassWord"/>
+                        <p:message for="#{cc.attrs.idComponent}ipPassWord"/>
+                    </div>
+                </div>
+                <p:outputPanel class="Container33 Responsive" id="#{cc.attrs.idComponent}pnSelectFlow">
+                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                        <p:outputLabel styleClass="lb-sentinel" for="#{cc.attrs.idComponent}ipAirflow"
+                                       value="#{lang['export.order.airflow']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <div style="width: 80%; float: left">
+                        <p:selectOneMenu id="#{cc.attrs.idComponent}ipAirflow"
+                                         value="#{cc.attrs.value.signOfficeDTO.signFlowId}"
+                                         required="true"
+                                         requiredMessage="#{lang['export.order.airflow.require.msg']}">
+                            <f:selectItem itemValue="" itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                            <f:selectItems value="#{cc.attrs.value.lsSignFlowDTOs}" var="signFlow"
+                                           itemLabelEscaped="true" itemLabel="#{signFlow.name}"
+                                           itemValue="#{signFlow.signFlowId}"/>
+                        </p:selectOneMenu>
+                        </div>
+                        <div style="width: 20%; float: right">
+                            <p:commandLink styleClass="fa icon-info-circled Fs16 blue"
+                                           style="margin-top: 7px"
+                                           title="#{lang['voffice.button.view.detail.flow']}"
+                                           id="#{cc.attrs.idComponent}btShowDetail"
+                                           rendered="true"
+                                           process="@this,@([id$=dlgDetailOfficeFlow]),@([id$=#{cc.attrs.idComponent}ipAirflow])"
+                                           actionListener="#{cc.attrs.value.showDetailSignOfficeFlow()}"
+                                           oncomplete="if(!args.validationFailed){PF('dlgDetailOfficeFlow').show()}"
+                                           update="@([id$=dlgDetailOfficeFlow])"/>
+                        </div>
+                        <p:message for="#{cc.attrs.idComponent}ipAirflow"/>
+                    </div>
+                </p:outputPanel>
+            </div>
+        </div>
+    </p:outputPanel>
+    <p:dialog appendTo="@(body)"
+              closable="true"
+              closeOnEscape="true"
+              maximizable="true"
+              position="center"
+              id="dlgDetailOfficeFlow"
+              widgetVar="dlgDetailOfficeFlow"
+              header="#{lang['signFlow.listSignFlowDetail']}"
+              modal="true" resizable="false"
+              dynamic="true"
+              styleClass="sale"
+              width="600">
+        <h:form id="formUpload">
+            <p:dataTable
+                    sortMode="single"
+                    paginator="false"
+                    rows="100"
+                    style="overflow: auto; height: 300px;"
+                    reflow="false"
+                    emptyMessage="#{lang['common.empty.records']}"
+                    styleClass="Width100" value="#{cc.attrs.value.lstFlowDetailDTO}"
+                    rowIndexVar="index" var="signflowdetail">
+                <p:column style="width:40%;"
+                          styleClass="col-left pd-top-6">
+                    <f:facet name="header">
+                        <h:outputText id="name"
+                                      value="#{lang['signRoleVoffice.voficeRole.roleName']}"
+                                      title="#{lang['signRoleVoffice.voficeRole.roleName']}"/>
+                    </f:facet>
+
+                    <h:outputText escape="true" value="#{cc.attrs.value.getNameRole(signflowdetail.vofficeRoleId)}"
+                                  styleClass="lb-sentinel-bold"
+                                  title="#{signflowdetail.vofficeRoleId}">
+                    </h:outputText>
+                </p:column>
+                <p:column style="width: 40%;" styleClass="col-left">
+                    <f:facet name="header">
+                        <h:outputText value="#{lang['signFlow.input.email']}"
+                                      title="#{lang['signFlow.input.email']}"/>
+                    </f:facet>
+                    <h:outputText escape="true" value="#{signflowdetail.email}"
+                                  styleClass="lb-sentinel-bold"
+                                  title="#{signflowdetail.email}">
+                    </h:outputText>
+                </p:column>
+                <p:column style="width: 20%;" styleClass="col-right ">
+                    <f:facet name="header">
+                        <h:outputText value="#{lang['signFlow.detail.signOrder']}"
+                                      title="#{lang['signFlow.detail.signOrder']}"/>
+                    </f:facet>
+                    <h:outputText escape="true" value="#{signflowdetail.signOrder}"
+                                  styleClass="lb-sentinel-bold"
+                                  title="#{signflowdetail.signOrder}">
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </p:dialog>
+</composite:implementation>
+</html>
+

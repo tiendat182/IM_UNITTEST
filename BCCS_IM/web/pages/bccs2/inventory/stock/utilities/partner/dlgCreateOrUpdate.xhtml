@@ -1,0 +1,230 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://java.sun.com/jsf/core">
+
+    <style>
+        .pe-inputNumber{
+            width: 90% !important;
+        }
+    </style>
+
+    <h:form id="frmCreate">
+        <p:outputPanel id="pnCreate" styleClass="Containe100">
+            <div class="ContainerIndent mg-top-0">
+                <p:messages id="mesageCreate" for="frmCreate" showSummary="false" globalOnly="true" showDetail="true" closable="true"/>
+            </div>
+            <div class="ContainerIndent">
+                <div class="Container33 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['partner.mng.code']}"/>
+                        <p:outputLabel value="*" style="color: red"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                        <p:inputText
+                                id="partnerCode"
+                                maxlength="25"
+                                value="#{partnerMngController.partnerNew.partnerCode}">
+                            <pe:keyFilter regEx="/[a-zA-Z0-9_]/i"></pe:keyFilter>
+                        </p:inputText>
+                        <p:message for="partnerCode"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['partner.mng.name']}"/>
+                        <p:outputLabel value="*" style="color: red"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                        <p:inputText
+                                id="partnerName"
+                                maxlength="100"
+                                converter="stringTrimmer"
+                                value="#{partnerMngController.partnerNew.partnerName}">
+                        </p:inputText>
+                        <p:message for="partnerName"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['partner.mng.type']}"/>
+                        <p:outputLabel value="*" style="color: red"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:selectOneMenu id="partnerType"
+                                         value="#{partnerMngController.partnerNew.partnerType}">
+                            <f:selectItem itemLabel="#{lang['mn.stock.status.select']}"/>
+                            <f:selectItem itemLabel="#{lang['partner.mng.type1']}"
+                                          itemValue="1"/>
+                            <f:selectItem itemLabel="#{lang['partner.mng.type2']}"
+                                          itemValue="2"/>
+                            <f:selectItem itemLabel="#{lang['partner.mng.type3']}"
+                                          itemValue="3"/>
+                            <f:selectItem itemLabel="#{lang['partner.mng.type4']}"
+                                          itemValue="4"/>
+                            <p:ajax event="change" process="@this" update="a4keyPannel"/>
+                        </p:selectOneMenu>
+                        <p:message for="partnerType"/>
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent">
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['partner.mng.address']}"/>
+                        <p:outputLabel value="*" style="color: red"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                        <p:inputText
+                                id="address"
+                                maxlength="250"
+                                converter="stringTrimmer"
+                                value="#{partnerMngController.partnerNew.address}">
+                        </p:inputText>
+                        <p:message for="address"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['partner.mng.phone']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                        <p:inputText
+                                id="phone"
+                                maxlength="20"
+                                value="#{partnerMngController.partnerNew.phone}">
+                            <pe:keyFilter regEx="/[0-9]/i"></pe:keyFilter>
+                        </p:inputText>
+                        <p:message for="phone"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['partner.mng.fax']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                        <p:inputText
+                                id="fax"
+                                maxlength="20"
+                                value="#{partnerMngController.partnerNew.fax}">
+                            <pe:keyFilter regEx="/[0-9]/i"></pe:keyFilter>
+                        </p:inputText>
+                        <p:message for="fax"/>
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent">
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['partner.mng.startdate']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                        <p:calendar
+                                mask="true"
+                                pattern="#{lang['common.datetime.format']}"
+                                converterMessage="#{lang['partner.mng.startdate.invalid']}"
+                                validatorMessage="#{lang['partner.mng.startdate.invalid']}"
+                                value="#{partnerMngController.partnerNew.staDate}"
+                                placeholder="#{lang['common.datetime.format']}"
+                                required="false"
+                                id="fromDate">
+                            <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                        </p:calendar>
+                        <p:message for="fromDate"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['partner.mng.enddate']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                        <p:calendar
+                                mask="true"
+                                pattern="#{lang['common.datetime.format']}"
+                                converterMessage="#{lang['partner.mng.enddate.invalid']}"
+                                validatorMessage="#{lang['partner.mng.enddate.invalid']}"
+                                value="#{partnerMngController.partnerNew.endDate}"
+                                placeholder="#{lang['common.datetime.format']}"
+                                required="false"
+                                id="toDate">
+                            <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                        </p:calendar>
+                        <p:message for="toDate"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['partner.mng.status']}"/>
+                        <p:outputLabel value="*" style="color: red"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:selectOneMenu id="status"
+                                         value="#{partnerMngController.partnerNew.status}">
+                            <f:selectItem itemLabel="#{lang['mn.stock.status.select']}"/>
+                            <f:selectItem itemLabel="#{lang['partner.mng.status1']}"
+                                          itemValue="1"/>
+                            <f:selectItem itemLabel="#{lang['partner.mng.status0']}"
+                                          itemValue="0"/>
+                        </p:selectOneMenu>
+                        <p:message for="status"/>
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent">
+                <p:outputPanel id="a4keyPannel">
+                    <p:outputPanel class="Container33 Responsive" rendered="#{partnerMngController.partnerNew.partnerType == 4}">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel"
+                                           value="#{lang['partner.mng.a4key']}"/>
+                            <p:outputLabel value="*" style="color: red"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                            <p:inputText
+                                    id="a4key"
+                                    maxlength="25"
+                                    converter="stringTrimmer"
+                                    value="#{partnerMngController.partnerNew.a4Key}">
+                            </p:inputText>
+                            <p:message for="a4key"/>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+             </div>
+            <div class="Container100 TexAlCenter">
+                <cbs:confirmDialog
+                        idComponent="btnAdd"
+                        valueButton="#{partnerMngController.btnCreateOrUpdate}"
+                        headerConfirm="#{partnerMngController.headerConfirm}"
+                        messageConfirm="#{partnerMngController.messageConfirm}"
+                        actionOK="#{partnerMngController.doCreateOrUpdate}"
+                        resetValueButton="true"
+                        process="@([id$=frmCreate])"
+                        updateArea="@([id$=frmCreate])"
+                        updateOK="@([id$=frmSearch]),@([id$=lstImsiInfo])"
+                        oncompleteOK="if(!args.validationFailed) {PF('dlgCreateOrUpdate').hide();}"
+                        actionValidate="#{partnerMngController.validateBeforeCreateOrUpdate}"
+                        focusCancel="false"
+                        isButton="true"
+                />
+                <p:commandButton value="#{lang['common.reset']}"
+                                 process="@this"
+                                 immediate="true"
+                                 actionListener="#{partnerMngController.resetFormCreateOrUpdate}"
+                                 update="@([id$=frmCreate])"
+                                 styleClass="mg-left-5"/>
+            </div>
+        </p:outputPanel>
+    </h:form>
+
+</ui:composition>

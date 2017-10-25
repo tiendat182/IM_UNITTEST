@@ -1,0 +1,301 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:composite="http://java.sun.com/jsf/composite" xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:pe="http://primefaces.org/ui/extensions" xmlns:of="http://omnifaces.org/functions">
+<composite:interface>
+</composite:interface>
+<composite:implementation>
+    <!--vung nhap thong tin apn-->
+    <p:outputPanel styleClass="Container100">
+        <p:outputPanel id="apnIpInfo" styleClass="ContainerIndent mg-left-5">
+            <div class="Container100">
+                <p:messages id="messagesIP" showSummary="false" showDetail="true" closable="true"/>
+            </div>
+            <p:focus for="pnInfoSearchIp"/>
+            <cbs:panel classForToggle="pnInfoSearchIp"
+                       toggle="true"
+                       titleHeader="#{lang['mn.stock.limit.info.range.time.promotion']}"/>
+            <p:outputPanel id="pnInfoSearchIp" class="Container100 pnInfoSearchIp"
+                           style="margin-bottom: 10px;margin-top: 10px;">
+                <div class="ContainerIndent mg-top-0">
+                    <div class="Container33 Responsive">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel"
+                                           value="APN"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid ui-relative">
+                            <!--<p:selectOneMenu value="#{importApnController.inputApnIp.apnId}" filter="true">-->
+                            <!--<f:selectItem itemLabel="#{lang['im.import.apn.list.select']}" noSelectionOption="true"/>-->
+                            <!--<f:selectItems value="#{importApnController.listApnForIp}" var="apn"-->
+                            <!--itemLabel="#{apn.apnCode}" itemValue="#{apn.apnId}"/>-->
+                            <!--</p:selectOneMenu>-->
+                            <p:autoComplete id="themeCustom"
+                                            value="#{importApnController.apnSelected}"
+                                            completeMethod="#{importApnController.autoCompleteApn}"
+                                            var="item"
+                                            placeholder="#{lang['im.import.apn.holer']}"
+                                            itemLabel="#{(not empty item.apnCode and not empty item.apnName)?item.apnCode.concat(' - ').concat(item.apnName):''}"
+                                            itemValue="#{item}" forceSelection="true">
+                                <o:converter converterId="apnConverter" list="#{importApnController.listApnForIp}"/>
+
+                                <p:column headerText="#{lang['common.lb.code']}" filterable="true">
+                                    <h:outputText
+                                            value="#{item.apnCode}"/>
+                                </p:column>
+
+                                <p:column headerText="#{lang['common.lb.name']}" filterable="true">
+                                    <h:outputText
+                                            value="#{item.apnName}"/>
+                                </p:column>
+                            </p:autoComplete>
+                            <p:commandLink id="btnReset"
+                                           styleClass="ui-link-right"
+                                           update="@this,@([id$=themeCustom])"
+                                           actionListener="#{importApnController.resetAutoComplete}"
+                                           process="@this">
+                                <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                            </p:commandLink>
+
+                        </div>
+                    </div>
+                    <div class="Container33 Responsive">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel"
+                                           value="IP"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:inputText id="iptxt"
+                                         maxlength="100"
+                                         requiredMessage="#{lang['mn.import.apn.name.require']}"
+                                         onchange="this.value=this.value.trim()"
+                                         placeholder="#{lang['mn.import.apnip.ip.holder']}"
+                                         value="#{importApnController.inputApnIp.ip}">
+                                <pe:keyFilter regEx="/[0-9\./]/i"/>
+                            </p:inputText>
+                        </div>
+                    </div>
+
+                    <div class="Container33 Responsive">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel"
+                                           value="#{lang['common.status']}"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:selectOneMenu value="#{importApnController.apnIpStatus}">
+                                <f:selectItem itemLabel="#{lang['common.selectOneMenu.select']}"
+                                              noSelectionOption="true"/>
+                                <f:selectItem itemValue="1" itemLabel="#{lang['list.import.apn.status.renew']}"/>
+                                <f:selectItem itemValue="0" itemLabel="#{lang['list.import.apn.status.used']}"/>
+
+                                <p:ajax event="change" process="@this"
+                                        listener="#{importApnController.onChangeStatusAPNIP()}"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+                </div>
+                <div class="ContainerIndent mg-top-0">
+                    <div class="Container33 Responsive">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel"
+                                           value="#{lang['mn.import.apn.center.code']}"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:inputText id="centerCodeIp"
+                                         styleClass=""
+                                         onchange="this.value=this.value.trim()"
+                                         maxlength="50"
+                                         requiredMessage="#{lang['mn.import.apn.center.code.require']}"
+                                         placeholder="#{lang['mn.import.apn.center.code.holder']}"
+                                         value="#{importApnController.inputApnIp.centerCode}"/>
+                        </div>
+                    </div>
+                    <div class="Container33 Responsive">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel decscription"
+                                           value="#{lang['mn.apnip.text.Subnet']}"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:inputText id="subnet"
+                                         onchange="this.value=this.value.trim()"
+                                         maxlength="500"
+                                         placeholder="#{lang['mn.import.apnip.subnet.holder']}"
+                                         value="#{importApnController.inputApnIp.subNet}">
+                                <pe:keyFilter regEx="/[0-9\./]/i"/>
+                            </p:inputText>
+                        </div>
+                    </div>
+                    <div class="Container33 Responsive"></div>
+                </div>
+                <div class="ContainerIndent TexAlCenter mg-top-0">
+                    <p:commandButton
+                            title="#{lang['range.time.promotion.btn.search']}"
+                            value="#{lang['range.time.promotion.btn.search']}"
+                            process="@this,@([id$=pnInfoSearchIp])"
+                            resetValues="true"
+                            update="@([id$=pnInfoSearchIp]),@([id$=pnLstAPNIp]),@([id$=messagesIP]) "
+                            actionListener="#{importApnController.searchApnIp()}"
+                            />
+                    <p:commandButton
+                            title="#{lang['reset.selected']}"
+                            value="#{lang['reset.selected']}"
+                            process="@this"
+                            resetValues="true"
+                            action="#{importApnController.btnResetAPNIP()}"
+                            update="@([id$=pnInfoSearchIp]),@([id$=pnLstAPNIp]),@([id$=apnIpInfo])"
+                            styleClass="fa Fs14 blue md-link mg-left-5">
+                    </p:commandButton>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+        <!--danh sach apn-->
+        <p:outputPanel id="pnLstAPNIp" styleClass="ContainerIndent mg-left-5">
+            <cbs:panel classForToggle="pnLstAPNIp"
+                       toggle="true"
+                       titleHeader="#{lang['im.import.apn.list.apnIp']}"/>
+
+            <div class="Container100 pnLstAPNIp">
+                <p:commandLink title="#{lang['common.add']}"
+                               process="@this"
+                               resetValues="true"
+                               action="#{importApnController.prepareDataIp(null,false)}"
+                               update="@([id$=pnInfoSearchIp]),@([id$=dlgAddEditApnIp]),@([id$=dataListApnIp])"
+                               oncomplete="PF('dlgAddEditApnIp').show();"
+                               styleClass="fa icon-plus Fs14 blue md-link mg-left-5">
+                    <h:outputText value="#{lang['common.add']}"/>
+                </p:commandLink>
+                <p:dataTable
+                        id="dataListApnIp"
+                        var="item"
+                        resizableColumns="true"
+                        paginator="#{lang['common.paging.paginator']}"
+                        rows="#{lang['common.paging.rows.default']}"
+                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                        emptyMessage="#{lang['common.empty.records']}"
+                        value="#{importApnController.listApnIp}">
+
+                    <p:column headerText="#{lang['mn.apnip.text.APN']}"
+                              sortBy="#{item.apnStr}">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['mn.apnip.text.APN']}"
+                                          title="#{lang['mn.apnip.text.APN']}"/>
+                        </f:facet>
+                        <p:outputLabel
+                                value="#{item.apnStr}"
+                                title="#{item.apnStr}"
+                                />
+                    </p:column>
+                    <p:column headerText="#{lang['mn.apnip.text.IP']}"
+                              sortBy="#{item.ip}">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['mn.apnip.text.IP']}"
+                                          title="#{lang['mn.apnip.text.IP']}"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.ip}" title="#{item.ip}"
+                                />
+                    </p:column>
+                    <p:column headerText="#{lang['common.status']}" sortBy="#{item.status}"
+                              style="text-align: left">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['common.status']}"
+                                          title="#{lang['common.status']}"/>
+                        </f:facet>
+                        <p:outputLabel
+                                value="#{item.status eq 1 ? lang['list.import.apn.status.renew']:(item.status eq 0?lang['list.import.apn.status.used']:'')}"
+                                title="#{item.status eq 1 ? lang['list.import.apn.status.renew']:(item.status eq 0?lang['list.import.apn.status.used']:'')}"
+                                style="text-align: left"/>
+                    </p:column>
+                    <p:column headerText="#{lang['mn.apnip.text.centerCode']}"
+                              sortBy="#{item.centerCode}">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['mn.apnip.text.centerCode']}"
+                                          title="#{lang['mn.apnip.text.centerCode']}"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.centerCode}"
+                                       title="#{item.centerCode}"/>
+                    </p:column>
+                    <p:column headerText="#{lang['mn.apnip.text.Subnet']}"
+                              sortBy="#{item.subNet}">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['mn.apnip.text.Subnet']}"
+                                          title="#{lang['mn.apnip.text.Subnet']}"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.subNet}" title="#{item.subNet}"/>
+
+                    </p:column>
+
+                    <p:column headerText="#{lang['mn.invoice.invoiceType.userCreate']}"
+                              sortBy="#{item.createUser}">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['mn.invoice.invoiceType.userCreate']}"
+                                          title="#{lang['mn.invoice.invoiceType.userCreate']}"/>
+                        </f:facet>
+                        <p:outputLabel
+                                value="#{item.createUser}"
+                                title="#{item.createUser}"/>
+                    </p:column>
+                    <p:column headerText="#{lang['mn.invoice.invoiceType.dateCreate']}"
+                              sortBy="#{item.createTime}">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['mn.invoice.invoiceType.dateCreate']}"
+                                          title="#{lang['mn.invoice.invoiceType.dateCreate']}"/>
+                        </f:facet>
+                        <p:outputLabel value="#{item.createTime}"
+                                       title="#{of:formatDate(item.createTime, 'dd/MM/yyyy')}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+                    <p:column headerText="#{lang['common.edit.delete']}" style="width: 7%;" styleClass="col-left">
+                        <f:facet name="header">
+                            <h:outputText value="#{lang['common.edit.delete']}"
+                                          title="#{lang['common.edit.delete']}"/>
+                        </f:facet>
+                        <p:commandLink title="#{lang['common.edit']}"
+                                       styleClass="fa icon-edit"
+                                       process="@this"
+                                       disabled="#{item.status == 0}"
+                                       actionListener="#{importApnController.prepareDataIp(item,true)}"
+                                       update="@([id$=dlgAddEditApnIp]) ,@([id$=dlgAddEditApn])"
+                                       oncomplete="if(!args.validationFailed){PF('dlgAddEditApnIp').show()}"/>
+                        <cbs:confirmDialog
+                                idComponent="btnConfirmIp"
+                                valueButton=""
+                                disableButton="#{item.status == 0}"
+                                titleButton="#{lang['common.delete']}"
+                                styleClassButton="fa icon-trash Fs14 blue"
+                                headerConfirm="#{lang['mn.import.apnIp.delete']}"
+                                messageConfirm="#{lang['mn.import.apnIp.delete.msg']} #{importApnController.inputApnIpAdd.ip} ?"
+                                actionOK="#{importApnController.doAddApnIp(null)}"
+                                process="@this"
+                                updateArea="@([id$=pnLstAPNIp]),@([id$=messagesIP])"
+                                processOK="@this"
+                                updateOK="@([id$=pnLstAPNIp]),@([id$=messagesIP])"
+                                actionValidate="#{importApnController.prepareDataIp(item,true)}"
+                                focusCancel="false"
+                                isButton="false"
+                                />
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+    <p:dialog widgetVar="dlgAddEditApnIp" id="dlgAddEditApnIp" appendTo="@(body)" closable="true"
+              closeOnEscape="true" dynamic="true" resizable="false" maximizable="true"
+              header="#{importApnController.isEdit ?lang['mn.import.apnIp.code.edit'] :lang['mn.import.apnIp.code.add']}"
+              width="60%"
+              onShow="reloadMessIP()"
+              modal="true" position="center" minWidth="700">
+        <ui:include src="dlgAddEditApnIp.xhtml"/>
+        <p:remoteCommand name="reloadMessIP"
+                         update="@([id$=messagesIP])"/>
+    </p:dialog>
+</composite:implementation>
+
+</html>

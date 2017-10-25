@@ -1,0 +1,511 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.utilities.pay.note.report']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.utilities.pay.note.report']}</ui:define>
+    <ui:define name="content">
+        <style type="text/css">
+            td.selectionDisabled .ui-chkbox {
+                display: none;
+            }
+
+        </style>
+        <h:form id="frmPayNoteAndReport" styleClass="Container100">
+            <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                <p:messages id="msgPayNoteAndReport" showSummary="false" showDetail="true" closable="true"/>
+            </div>
+            <p:focus for="frmPayNoteAndReport"/>
+            <p:outputPanel id="pnlInforSearch" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="pnlInforSearch"
+                           titleHeader="#{lang['create.note.export.info.search']}"/>
+
+                <div class="pnlInforSearch Container100 paddingTopBottom10">
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel"
+                                               value="#{lang['export.order.code.field']}"
+                                               for="codeExportTxt"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="codeExportTxt"
+                                             maxlength="50"
+                                             onblur="this.value = this.value.trim();"
+                                             value="#{payNoteAndReportController.forSearchDTO.actionCode}"
+                                             placeholder="#{lang['export.order.code.field.placehoder']}"/>
+                                <pe:keyFilter for="codeExportTxt" regEx="/^[0-9a-zA-Z_]+$/i" preventPaste="false"/>
+                                <p:message for="codeExportTxt"/>
+                            </div>
+                        </div>
+
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel"
+                                               value="#{lang['common.status']}"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu itemLabelEscaped="true" id="cbxStatus" filter="true"
+                                                 filterMatchMode="contains"
+                                                 value="#{payNoteAndReportController.forSearchDTO.status}">
+                                    <f:selectItem itemLabel="#{lang['mn.stock.status.select']}"
+                                                  itemValue=""/>
+                                    <f:selectItem itemLabel="#{lang['payNoteAndReport.status.notPaid']}"
+                                                  itemValue="0"/>
+                                    <f:selectItem itemLabel="#{lang['payNoteAndReport.status.hasPaid']}"
+                                                  itemValue="1"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <cbs:inputShop value="#{payNoteAndReportController.shopInfoTagExport}"
+                                           idComponent="ipExportShop"
+                                           methodName="exportShop"
+                                           clearMethodName="clearExportShop"
+                                           update="@this"
+                                           require="false"
+                                           forceSelection="false"
+                                           label="#{lang['create.note.warehouse.export']}"
+                                           placeholder="#{lang['export.order.stock.placehoder']}"
+                                           classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                           classDivInput="Container60 Responsive50 ui-fluid">
+                            </cbs:inputShop>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive">
+                            <cbs:inputShop value="#{payNoteAndReportController.shopInfoTag}"
+                                           idComponent="inputStore"
+                                           methodName="importShop"
+                                           clearMethodName="clearImportShop"
+                                           update="@this"
+                                           forceSelection="false"
+                                           require="false"
+                                           label="#{lang['export.order.stock.receive.product']}"
+                                           placeholder="#{lang['export.order.stock.receive.product.placehoder']}"
+                                           classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                           classDivInput="Container60 Responsive50 ui-fluid">
+                            </cbs:inputShop>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50  mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.from.date']}" styleClass="lb-sentinel"
+                                               for="fromDate"/>
+                            </div>
+                            <div class="Container60 Responsive50  ui-fluid">
+                                <p:calendar
+                                        mask="true"
+                                        pattern="#{lang['common.datetime.format']}"
+                                        converterMessage="#{lang['invalid.date.message']}"
+                                        validatorMessage="#{lang['start.date.validate.message']}"
+                                        value="#{payNoteAndReportController.forSearchDTO.fromDate}"
+                                        placeholder="#{lang['common.datetime.format']}"
+                                        required="true"
+                                        requiredMessage="#{lang['mn.stock.from.date.not.blank']}"
+                                        styleClass="fromDate"
+                                        id="fromDate">
+                                    <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                </p:calendar>
+                                <p:message for="fromDate"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.to.date']}" for="toDate"
+                                               styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar id="toDate"
+                                            mask="true"
+                                            pattern="#{lang['common.datetime.format']}"
+                                            converterMessage="#{lang['invalid.date.message']}"
+                                            validatorMessage="#{lang['start.date.validate.message']}"
+                                            value="#{payNoteAndReportController.forSearchDTO.toDate}"
+                                            required="true"
+                                            styleClass="toDate"
+                                            placeholder="#{lang['create.note.to.date.placeholder']}"
+                                            requiredMessage="#{lang['mn.stock.to.date.not.blank']}">
+                                    <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                </p:calendar>
+                                <p:message for="toDate"/>
+                                <p:remoteCommand name="updateControls" update="@form"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Container100 pd-top-10 TexAlCenter ">
+                        <p:commandButton value="#{lang['create.note.search']}"
+                                         process="@([id$=pnlInforSearch])"
+                                         action="#{payNoteAndReportController.doSearch}"
+                                         update=" @form"/>
+                        <p:commandButton styleClass="mg-left-5"
+                                         value="#{lang['mn.stock.utilities.search.note.delete']}"
+                                         process="@([id$=pnlInforSearch])"
+                                         action="#{payNoteAndReportController.doSearchForCancel()}"
+                                         update="@([id$=pnlListNote]), @([id$=updateShowCancel]),@([id$=msgPayNoteAndReport])"/>
+                        <p:commandButton
+                                value="#{lang['search.isdn.export.excel']}"
+                                styleClass="mg-left-5"
+                                ajax="false"
+                                immediate="true"
+                                >
+                            <p:fileDownload
+                                    value="#{payNoteAndReportController.exportExcel()}"/>
+                        </p:commandButton>
+                    </div>
+                </div>
+            </p:outputPanel>
+
+            <!--selection="#{payNoteAndReportController.selectForCancel}"-->
+            <p:outputPanel id="pnlListNote" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="pnlListNote"
+                           titleHeader="#{lang['export.stock.list.export.note']}"/>
+
+                <div class="pnlListNote Container100 paddingTopBottom10">
+                    <div class="ContainerIndent mg-top-0">
+                        <p:dataTable
+                                id="tblListNote"
+                                var="stockTrans"
+                                rowKey="#{stockTrans.stockTransID}"
+                                resizableColumns="true"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.empty.records']}"
+                                value="#{payNoteAndReportController.listVStockTransDTO}">
+
+                            <!--<p:column headerText="#{lang['mn.stock.utilities.manage.trans.warehouse.type.trans']}" styleClass="col-left" style="width: 11%"-->
+                            <!--sortBy="#{stockTrans.actionType}">-->
+                            <!--<p:outputLabel value="#{stockTrans.actionType}" title="#{stockTrans.actionType}"/>-->
+                            <!--</p:column>-->
+                            <p:column  sortBy="#{stockTrans.actionCode}" style="width: 10%">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['export.order.code.field']}"
+                                                  title="#{lang['export.order.code.field']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTrans.actionCode}" title="#{stockTrans.actionCode}"/>
+                            </p:column>
+                            <p:column  sortBy="#{stockTrans.createDateTime}" style="width: 8%">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['create.note.create.date']}"
+                                                  title="#{lang['create.note.create.date']}"/>
+                                </f:facet>
+                                <h:outputText escape="true" value="#{stockTrans.createDateTime}"
+                                              styleClass="lb-sentinel-bold" title="#{stockTrans.createDateTime}">
+                                    <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column  sortBy="#{stockTrans.fromOwnerName}" style="width: 10%">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['create.note.warehouse.export']}"
+                                                  title="#{lang['create.note.warehouse.export']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTrans.fromOwnerName}"
+                                               title="#{stockTrans.fromOwnerName}"/>
+                            </p:column>
+                            <p:column  sortBy="#{stockTrans.toOwnerName}" style="width: 10%">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['export.order.stock.receive.product']}"
+                                                  title="#{lang['export.order.stock.receive.product']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTrans.toOwnerName}" title="#{stockTrans.toOwnerName}"/>
+                            </p:column>
+                            <p:column styleClass="col-left" style="width: 10%">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['list.order.import.reason.import']}"
+                                                  title="#{lang['list.order.import.reason.import']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTrans.reasonName}" title="#{stockTrans.reasonName}"/>
+                            </p:column>
+                            <p:column styleClass="col-left" style="width: 9%">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['common.status']}" title="#{lang['common.status']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTrans.statusName}" title="#{stockTrans.statusName}"/>
+                            </p:column>
+                            <p:column styleClass="col-left" style="width: 10%">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['create.note.note']}"
+                                                  title="#{lang['create.note.note']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTrans.note}" title="#{stockTrans.note}"/>
+                            </p:column>
+                            <p:column styleClass="col-left" style="width: 7%">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.stock.utilities.action']}"
+                                                  title="#{lang['mn.stock.utilities.action']}"/>
+                                </f:facet>
+                                <p:commandLink value="#{payNoteAndReportController.getAction(stockTrans)}"
+                                               title="#{payNoteAndReportController.getAction(stockTrans)}"
+                                               oncomplete="PF('dlgDetailPayNoteAndReport').show()"
+                                               update="@([id$=dlgDetailPayNoteAndReport])"
+                                               rendered="#{!(stockTrans.documentStatus eq 1)
+                                                and stockTrans.fromOwnerID eq payNoteAndReportController.currentStaff.shopId}"
+                                               process="@this"
+                                               actionListener="#{payNoteAndReportController.showPayNote(stockTrans)}"/>
+                                <p:outputLabel value="#{payNoteAndReportController.getAction(stockTrans)}"
+                                               title="#{payNoteAndReportController.getAction(stockTrans)}"
+                                               rendered="#{!(!(stockTrans.documentStatus eq 1) and stockTrans.fromOwnerID eq payNoteAndReportController.currentStaff.shopId)}"/>
+                            </p:column>
+
+                            <p:column style="width: 5%">
+                                <f:facet name="header">
+                                    <p:selectBooleanCheckbox value="#{payNoteAndReportController.allForCancel}">
+                                        <p:ajax event="change" process="@this, @([id$=tblListNote])"
+                                                update="@([id$=tblListNote])"
+                                                listener="#{payNoteAndReportController.doSelect(stockTrans,4)}">
+                                        </p:ajax> </p:selectBooleanCheckbox>
+                                    <h:outputText value="#{lang['payNoteAndReport.cancelPay.document']}"
+                                                  title="#{lang['payNoteAndReport.cancelPay.document']}"/>
+                                </f:facet>
+                                <p:selectBooleanCheckbox
+                                        value="#{stockTrans.cancelable}"
+                                        rendered="#{stockTrans.fromOwnerID eq payNoteAndReportController.currentStaff.shopId
+                                        and stockTrans.documentStatus eq '1' and payNoteAndReportController.enableCheckBoxViewRole}">
+                                    <p:ajax event="change" process="@this, @([id$=tblListNote])"
+                                            listener="#{payNoteAndReportController.doSelect(stockTrans,2)}"></p:ajax>
+                                </p:selectBooleanCheckbox>
+                            </p:column>
+
+                            <p:column style="width: 5%">
+                                <f:facet name="header">
+                                    <p:selectBooleanCheckbox value="#{payNoteAndReportController.allForPrint}"
+                                                             styleClass="mg-top-10">
+                                        <p:ajax event="change" process="@this, @([id$=tblListNote])"
+                                                update="@([id$=tblListNote])"
+                                                listener="#{payNoteAndReportController.doSelect(stockTrans,3)}">
+                                        </p:ajax>
+                                    </p:selectBooleanCheckbox>
+                                    <h:outputText value="#{lang['mn.stock.utilities.print.note']}"
+                                                  title="#{lang['mn.stock.utilities.print.note']}"/>
+                                </f:facet>
+                                <p:selectBooleanCheckbox value="#{stockTrans.printable}"
+                                                         rendered="#{stockTrans.documentStatus eq '1'}">
+                                    <p:ajax event="change" process="@this, @([id$=tblListNote])"
+                                            listener="#{payNoteAndReportController.doSelect(stockTrans,1)}"></p:ajax>
+                                </p:selectBooleanCheckbox>
+                            </p:column>
+
+                        </p:dataTable>
+                        <p:remoteCommand name="updateTable" update="@([id$=tblListNote])"/>
+                    </div>
+                    <p:outputPanel styleClass="Container100" id="updateShowCancel">
+
+                        <div class="Container100 ">
+                            <div class="Container33 Responsive">
+                                <p:outputLabel
+                                        value=""/>
+
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container33 Responsive mg-left-15 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   rendered="#{payNoteAndReportController.showCancel}"
+                                                   value="#{lang['payNoteAndReport.reason.cancelPay']}"
+                                                   for="cancelPayTxt"/>
+                                    <p:outputLabel rendered="#{payNoteAndReportController.showCancel}"
+                                                   value="*" style="color: red"/>
+                                </div>
+                                <div class="Container66 Responsive ui-fluid">
+                                    <p:inputText id="cancelPayTxt" rendered="#{payNoteAndReportController.showCancel}"
+                                                 maxlength="200"
+                                                 styleClass="clCancelPay"
+                                                 onblur="this.value = this.value.trim();"
+                                                 value="#{payNoteAndReportController.strCancelPay}"
+                                                 placeholder="#{lang['payNoteAndReport.reason.cancelPay.input']}"/>
+                                    <p:message for="cancelPayTxt"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive"/>
+                        </div>
+                        <p:outputPanel styleClass="Container100 pd-top-15 TexAlCenter"
+                                       rendered="#{payNoteAndReportController.showCancel}">
+                            <cbs:confirmDialog
+                                    idComponent="submitCancelDocument"
+                                    id="cancelDocument"
+                                    valueButton="#{lang['payNoteAndReport.cancelPay.document']}"
+                                    headerConfirm="#{lang['payNoteAndReport.cancelPay.comfirm']}"
+                                    messageConfirm="#{lang['payNoteAndReport.cancelPay.comfirm.msg']}"
+                                    actionOK="#{payNoteAndReportController.cancelStockDocument}"
+                                    resetValueButton="true"
+                                    process="@this,@([id$=updateShowCancel])"
+                                    updateArea="@this,@([id$=frmPayNoteAndReport])"
+                                    processOK="@this,@([id$=updateShowCancel])"
+                                    updateOK="@([id$=frmPayNoteAndReport])"
+                                    actionValidate="#{payNoteAndReportController.validatedateCancelDocument}"
+                                    focusCancel="true"
+                                    isButton="true"/>
+                            <p:commandButton styleClass="mg-left-5"
+                                             value="#{lang['mn.stock.utilities.print.note']}"
+                                             process="@this"
+                                             actionListener="#{payNoteAndReportController.printStockDocument()}"
+                                             update="@([id$=msgPayNoteAndReport])"
+                                             oncomplete="if(!args.validationFailed){clickLinkByClass('download');}"
+                                    >
+                            </p:commandButton>
+                            <p:commandButton styleClass="mg-left-5 download" style="display: none;"
+                                           value="#{lang['mn.stock.utilities.print.note']}"
+                                           ajax="false"
+                                           update="@this"
+                                           immediate="true">
+                                <p:fileDownload
+                                        value="#{payNoteAndReportController.download()}"/>
+                            </p:commandButton>
+                        </p:outputPanel>
+                        <p:outputPanel styleClass="Container100 pd-top-15 TexAlCenter"
+                                       rendered="#{!payNoteAndReportController.showCancel and payNoteAndReportController.enablePrint }">
+                            <p:commandButton styleClass="mg-left-5"
+                                             value="#{lang['mn.stock.utilities.print.note']} 1"
+                                             process="@this"
+                                             actionListener="#{payNoteAndReportController.printStockDocument()}"
+                                             update="@([id$=msgPayNoteAndReport])"
+                                             oncomplete="if(!args.validationFailed){clickLinkByClass('download');}"
+                                    >
+                            </p:commandButton>
+                            <p:commandButton styleClass="mg-left-5 download" style="display: none;"
+                                             value="#{lang['mn.stock.utilities.print.note']} 2"
+                                             ajax="false"
+                                             update="@this"
+                                             immediate="true">
+                                <p:fileDownload
+                                        value="#{payNoteAndReportController.download()}"/>
+                            </p:commandButton>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                </div>
+            </p:outputPanel>
+        </h:form>
+
+        <!--Vung poupup-->
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailPayNoteAndReport"
+                  widgetVar="dlgDetailPayNoteAndReport"
+                  header="#{lang['payNoteAndReport.export.import.input']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="600">
+            <h:form id="formUpload">
+                <p:outputPanel styleClass="Container100" id="pnPayNoteAndReport">
+
+                    <div class="ContainerIndent">
+                        <p:messages id="msgPayNoteAndReportDetail" showSummary="false" showDetail="true"
+                                    closable="true"/>
+                    </div>
+                    <p:focus for="formUpload"/>
+
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive mg-left-15 pd-top-7">
+                            <p:outputLabel value="#{lang['order.code.field']}" styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container33 Responsive pd-top-7">
+                            <p:outputLabel
+                                    title="#{payNoteAndReportController.stockTransDetail.actionCode}"
+                                    value="#{payNoteAndReportController.stockTransDetail.actionCode}"/>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive mg-left-15 pd-top-7">
+                            <p:outputLabel value="#{lang['agency.deposit.reason']}" styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container33 Responsive pd-top-7">
+                            <p:outputLabel value="#{payNoteAndReportController.stockTransDetail.reasonName}"
+                                           title="#{payNoteAndReportController.stockTransDetail.reasonName}"/>
+                        </div>
+                    </div>
+                    <p:outputPanel id="pnlUpload" styleClass="ContainerIndent">
+                        <div class="Container33 Responsive mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel break-word" for="fileImport"
+                                           value="#{lang['payNoteAndReport.export.bbbg']}"/>
+                            <p:outputLabel value="*" style="color: red"/>
+                        </div>
+
+                        <div class="Container33 Responsive ui-fluid pd-top-7">
+                            <!--<p:outputLabel value="#{payNoteAndReportController.fileName}"-->
+                            <!--title="#{payNoteAndReportController.fileName}"/>-->
+                            <p:inputText id="fileName"
+                                         styleClass="clFileName"
+                                         maxlength="200"
+                                         placeholder="#{lang['search.number.range.input.fileName']}"
+                                         value="#{payNoteAndReportController.fileName}"
+                                         title="#{payNoteAndReportController.fileName}"
+                                         readonly="true"/>
+                        </div>
+
+                        <div class="Container33 Responsive pd-top-7">
+                            <p:fileUpload id="fileImport"
+                                          styleClass="fileUpload"
+                                          update="@([id$=pnlUpload]),@([id$=msgPayNoteAndReport])"
+                                          dragDropSupport="true" mode="advanced"
+                                          auto="true"
+                                          fileLimit="1"
+                                          value="#{payNoteAndReportController.fileUpload}"
+                                          fileUploadListener="#{payNoteAndReportController.handleFileUpload}">
+                            </p:fileUpload>
+                        </div>
+                    </p:outputPanel>
+
+                    <p:outputPanel id="pnlUploadAdd" styleClass="ContainerIndent">
+                        <div class="Container33 Responsive mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel" for="fileImportAdd"
+                                           value="#{lang['payNoteAndReport.file.additional']}"/>
+                        </div>
+
+                        <div class="Container33 Responsive ui-fluid pd-top-7">
+                            <p:inputText id="fileNameAdd"
+                                         styleClass="clFileNameAdd"
+                                         maxlength="200"
+                                         placeholder="#{lang['search.number.range.input.fileName']}"
+                                         value="#{payNoteAndReportController.fileNameAdd}"
+                                         title="#{payNoteAndReportController.fileNameAdd}"
+                                         readonly="true"/>
+                        </div>
+
+                        <div class="Container33 Responsive pd-top-7">
+                            <p:fileUpload id="fileImportAdd"
+                                          styleClass="fileUpload"
+                                          update="@([id$=pnlUploadAdd])"
+                                          dragDropSupport="true" mode="advanced"
+                                          auto="true"
+                                          value="#{payNoteAndReportController.fileUploadAdd}"
+                                          fileUploadListener="#{payNoteAndReportController.handleFileUploadAdd}">
+                            </p:fileUpload>
+                        </div>
+                    </p:outputPanel>
+
+                    <div class="Container100 TexAlCenter">
+                        <cbs:confirmDialog
+                                idComponent="submitOrder"
+                                id="createOrder"
+                                valueButton="#{lang['mn.stock.utilities.send.file']}"
+                                headerConfirm="#{lang['payNoteAndReport.sentFile.comfirm']}"
+                                messageConfirm="#{lang['payNoteAndReport.sentFile.confirm.msg']}"
+                                actionOK="#{payNoteAndReportController.doSendFile}"
+                                resetValueButton="true"
+                                process="@this"
+                                updateArea="@this,@([id$=formUpload])"
+                                processOK="@this,@([id$=formUpload])"
+                                updateOK="@this,@([id$=frmPayNoteAndReport])"
+                                oncompleteOK="if(!args.validationFailed) {PF('dlgDetailPayNoteAndReport').hide();}"
+                                actionValidate="#{payNoteAndReportController.validatedateSentFile}"
+                                focusCancel="false"
+                                isButton="true"
+                                />
+                    </div>
+                </p:outputPanel>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

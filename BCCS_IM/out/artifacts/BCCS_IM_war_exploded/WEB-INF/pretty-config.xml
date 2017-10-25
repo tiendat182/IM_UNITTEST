@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pretty-config xmlns="http://ocpsoft.org/schema/rewrite-config-prettyfaces"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces
+                      http://ocpsoft.org/xml/ns/prettyfaces/rewrite-config-prettyfaces.xsd">
+    <!-- FW -->
+    <url-mapping id="login">
+        <pattern value="/login"/>
+        <view-id value="/login.jsf"/>
+    </url-mapping>
+    <url-mapping id="logout">
+        <pattern value="/logout"/>
+        <view-id value="logout.jsf"/>
+    </url-mapping>
+    <url-mapping id="error">
+        <pattern value="/error.jsf"/>
+        <view-id value="/Error.jsf"/>
+    </url-mapping>
+    <url-mapping id="refresh">
+        <pattern value="/"/>
+        <view-id value="/pages/home.jsf"/>
+    </url-mapping>
+    <url-mapping id="loginSuccess">
+        <pattern value="/home"/>
+        <view-id value="/pages/home.jsf"/>
+    </url-mapping>
+    <url-mapping id="notification">
+        <pattern value="/notification.jsf"/>
+        <view-id value="/notification/notification.jsf"/>
+    </url-mapping>
+
+    <url-mapping id="businessCode">
+        <pattern value="/businessCode"/>
+        <view-id value="/pages/businessCode.jsf"/>
+        <pass-through value="true"/>
+    </url-mapping>
+
+    <!--x_1604_1 START: phan quyen component-->
+    <url-mapping id="securityError">
+        <pattern value="/securityError"/>
+        <view-id value="/securityError.jsf"/>
+    </url-mapping>
+    <!--x_1604_1 END: phan quyen component-->
+
+    <!-- FW -->
+
+    <!--START  Export to Underlying stock-->
+    <url-mapping id="underlyingExportOrder">
+        <pattern value="/underlyingExportOrder.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toUnderlying/underlyingExportOrder.jsf"/>
+    </url-mapping>
+    <url-mapping id="underlyingExportNote">
+        <pattern value="/underlyingExportNote.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toUnderlying/underlyingExportNote.jsf"/>
+    </url-mapping>
+    <url-mapping id="underlyingExportStock">
+        <pattern value="/underlyingExportStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toUnderlying/underlyingExportStock.jsf"/>
+    </url-mapping>
+    <url-mapping id="underlyingExportOrderWithFile">
+        <pattern value="/underlyingExportOrderWithFile.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toUnderlying/underlyingExportOrderWithFile.jsf"/>
+    </url-mapping>
+    <!--END  Export to Underlying stock-->
+
+    <!--START  Import to Underlying stock-->
+    <url-mapping id="underlyingImportOrder">
+        <pattern value="/underlyingImportOrder.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toUnderlying/underlyingImportOrder.jsf"/>
+    </url-mapping>
+    <url-mapping id="underlyingImportNote">
+        <pattern value="/underlyingImportNote.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toUnderlying/underlyingImportNote.jsf"/>
+    </url-mapping>
+    <url-mapping id="underlyingImportStock">
+        <pattern value="/underlyingImportStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toUnderlying/underlyingImportStock.jsf"/>
+    </url-mapping>
+    <url-mapping id="underlyingImportOrderWithFile">
+        <pattern value="/underlyingImportOrderWithFile.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toUnderlying/underlyingImportOrderWithFile.jsf"/>
+    </url-mapping>
+    <!--END  Import to Underlying stock-->
+
+    <!--START  Import to above stock-->
+    <url-mapping id="aboveImportNote">
+        <pattern value="/aboveImportNote.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toAbove/aboveImportNote.jsf"/>
+    </url-mapping>
+    <url-mapping id="aboveImportStock">
+        <pattern value="/aboveImportStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toAbove/aboveImportStock.jsf"/>
+    </url-mapping>
+    <url-mapping id="aboveExportNote">
+        <pattern value="/aboveExportNote.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toAbove/aboveExportNote.jsf"/>
+    </url-mapping>
+    <url-mapping id="aboveExportStock">
+        <pattern value="/aboveExportStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toAbove/aboveExportStock.jsf"/>
+    </url-mapping>
+    <url-mapping id="processStock">
+        <pattern value="/processStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/balanceStock/processStock.jsf"/>
+    </url-mapping>
+    <url-mapping id="requestBalanceStock">
+        <pattern value="/requestBalanceStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/balanceStock/requestBalanceStock.jsf"/>
+    </url-mapping>
+    <!--END  Import to above stock-->
+
+    <!--START  Create request import stock from branch-->
+    <url-mapping id="createRequestImport">
+        <pattern value="/createRequestImport.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/branch/createRequestImport.jsf"/>
+    </url-mapping>
+    <url-mapping id="confirmRequestImport">
+        <pattern value="/confirmRequestImport.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/branch/confirmRequestImport.jsf"/>
+    </url-mapping>
+    <url-mapping id="importStock">
+        <pattern value="/importStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/branch/importStock.jsf"/>
+    </url-mapping>
+    <!--END  Create request import stock from branch-->
+
+    <!--START  Hoa don-->
+    <url-mapping id="assignInvoiceTemplate">
+        <pattern value="/assignInvoiceTemplate.jsf"/>
+        <view-id value="/pages/bccs2/inventory/invoice/assignInvoiceTemplate.jsf"/>
+    </url-mapping>
+    <url-mapping id="confirmInvoiceTemplate">
+        <pattern value="/confirmInvoiceTemplate.jsf"/>
+        <view-id value="/pages/bccs2/inventory/invoice/confirmInvoiceTemplate.jsf"/>
+    </url-mapping>
+    <url-mapping id="invoiceList">
+        <pattern value="/invoiceList.jsf"/>
+        <view-id value="/pages/bccs2/inventory/invoice/invoiceList/invoiceList.jsf"/>
+    </url-mapping>
+    <url-mapping id="invoiceSerial">
+        <pattern value="/invoiceSerial.jsf"/>
+        <view-id value="/pages/bccs2/inventory/invoice/invoiceSerial/invoiceSerial.jsf"/>
+    </url-mapping>
+    <url-mapping id="invoiceTemplate">
+        <pattern value="/invoiceTemplate.jsf"/>
+        <view-id value="/pages/bccs2/inventory/invoice/invoiceTemplate/invoiceTemplate.jsf"/>
+    </url-mapping>
+    <url-mapping id="invoiceType">
+        <pattern value="/invoiceType.jsf"/>
+        <view-id value="/pages/bccs2/inventory/invoice/invoiceType/invoiceType.jsf"/>
+    </url-mapping>
+    <url-mapping id="manageSaleInvoice">
+        <pattern value="/manageSaleInvoice.jsf"/>
+        <view-id value="/pages/bccs2/inventory/invoice/manageSaleInvoice.jsf"/>
+    </url-mapping>
+
+    <!--END Hoa don-->
+
+    <!--start export import to staff stock-->
+    <url-mapping id="staffExportOrder">
+        <pattern value="/staffExportOrder.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toStaff/staffExportOrder.jsf"/>
+    </url-mapping>
+    <url-mapping id="staffExportNote">
+        <pattern value="/staffExportNote.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toStaff/staffExportNote.jsf"/>
+    </url-mapping>
+    <url-mapping id="staffExportStock">
+        <pattern value="/staffExportStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toStaff/staffExportStock.jsf"/>
+    </url-mapping>
+    <url-mapping id="staffConfirmImport">
+        <pattern value="/staffConfirmImport.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toStaff/staffConfirmImport.jsf"/>
+    </url-mapping>
+    <url-mapping id="staffReturnStock">
+        <pattern value="/staffReturnStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toStaff/staffReturnStock.jsf"/>
+    </url-mapping>
+    <url-mapping id="staffImportOrder">
+        <pattern value="/staffImportOrder.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toStaff/staffImportOrder.jsf"/>
+    </url-mapping>
+    <url-mapping id="staffImportNote">
+        <pattern value="/staffImportNote.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toStaff/staffImportNote.jsf"/>
+    </url-mapping>
+    <url-mapping id="staffImportStock">
+        <pattern value="/staffImportStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toStaff/staffImportStock.jsf"/>
+    </url-mapping>
+    <!--end export import to staff stock-->
+
+    <!--start export to agency-->
+    <url-mapping id="agentExportOrder">
+        <pattern value="/agentExportOrder.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toAgency/agentExportOrder.jsf"/>
+    </url-mapping>
+    <url-mapping id="agencyExportNote">
+        <pattern value="/agencyExportNote.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toAgency/agencyExportNote.jsf"/>
+    </url-mapping>
+    <url-mapping id="approveSaleAgent">
+        <pattern value="/approveSaleAgent.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toAgency/approveSaleAgent.jsf"/>
+    </url-mapping>
+    <url-mapping id="agencyExportStock">
+        <pattern value="/agencyExportStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toAgency/agencyExportStock.jsf"/>
+    </url-mapping>
+    <url-mapping id="agentSaleFromExportOrder">
+        <pattern value="/agentSaleFromExportOrder.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toAgency/agentSaleFromExportOrder.jsf"/>
+    </url-mapping>
+    <url-mapping id="agencyDepositMoney">
+        <pattern value="/agencyDepositMoney.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toAgency/agencyDepositMoney.jsf"/>
+    </url-mapping>
+    <url-mapping id="stockOrderAgent">
+        <pattern value="/stockOrderAgent.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toAgency/stockOrderAgent.jsf"/>
+    </url-mapping>
+    <!--end export to agency-->
+
+    <!--start export to special staff-->
+    <url-mapping id="exportStockToCollaborator">
+        <pattern value="/exportStockToCollaborator.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toCollaborator/exportStockToCollaborator.jsf"/>
+    </url-mapping>
+    <url-mapping id="retrieveStockFromCollaborator">
+        <pattern value="/retrieveStockFromCollaborator.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toCollaborator/retrieveStockFromCollaborator.jsf"/>
+    </url-mapping>
+    <!--end export to special staff-->
+
+    <!--start export import rescue info-->
+    <url-mapping id="rescueInformationExportStock">
+        <pattern value="/rescueInformationExportStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/rescueInformation/rescueInformationExportStock.jsf"/>
+    </url-mapping>
+    <url-mapping id="rescueInformationRetrieveStock">
+        <pattern value="/rescueInformationRetrieveStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/rescueInformation/rescueInformationRetrieveStock.jsf"/>
+    </url-mapping>
+    <!--end export import rescue info-->
+
+    <!--start thu hoi hang dai ly-->
+    <url-mapping id="agencyRetrieveStock">
+        <pattern value="/agencyRetrieveStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/retrieve/agencyRetrieveStock.jsf"/>
+    </url-mapping>
+    <url-mapping id="agencyImportStock">
+        <pattern value="/agencyImportStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/retrieve/agencyImportStock.jsf"/>
+    </url-mapping>
+    <!--end thu hoi hang dai ly-->
+    <!--start tien ich kho-->
+    <url-mapping id="revokeStockKit">
+        <pattern value="/revokeStockKit.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/revokeStockKit.jsf"/>
+    </url-mapping>
+    <url-mapping id="manageTransWarehouse">
+        <pattern value="/manageTransWarehouse.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/manageTransWarehouse.jsf"/>
+    </url-mapping>
+    <url-mapping id="viewInforWarehouse">
+        <pattern value="/viewInforWarehouse.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/viewInforWarehouse.jsf"/>
+    </url-mapping>
+    <url-mapping id="lookUpSerialHistory">
+        <pattern value="/lookUpSerialHistory.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/lookUpSerialHistory.jsf"/>
+    </url-mapping>
+    <url-mapping id="updatePincodeCard">
+        <pattern value="/updatePincodeCard.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/updatePincodeCard.jsf"/>
+    </url-mapping>
+    <url-mapping id="exchangeCardBankplus">
+        <pattern value="/exchangeCardBankplus.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/exchangeCardBankplus.jsf"/>
+    </url-mapping>
+    <url-mapping id="exportStockMaterial">
+        <pattern value="/exportStockMaterial.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/exportStockMaterial.jsf"/>
+    </url-mapping>
+    <url-mapping id="updateLicenseKey">
+        <pattern value="/updateLicenseKey.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/updateLicenseKey.jsf"/>
+    </url-mapping>
+    <url-mapping id="payNoteAndReport">
+        <pattern value="/payNoteAndReport.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/payNoteAndReport.jsf"/>
+    </url-mapping>
+    <url-mapping id="utilitiesPayInventoryLastMonth">
+        <pattern value="/payInventoryLastMonth.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/payInventoryLastMonth.jsf"/>
+    </url-mapping>
+    <url-mapping id="utilitiesShareSerialExportFile">
+        <pattern value="/shareSerialExportFile.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/shareSerialExportFile.jsf"/>
+    </url-mapping>
+    <url-mapping id="changeDamagedProduct">
+        <pattern value="/changeDamagedProduct.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/changeDamagedProduct.jsf"/>
+    </url-mapping>
+    <url-mapping id="viewStockOffer">
+        <pattern value="/viewStockOffer.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/viewStockOffer.jsf"/>
+    </url-mapping>
+    <url-mapping id="gatherTransferOrder">
+        <pattern value="/gatherTransferOrder.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/gatherTransferOrder.jsf"/>
+    </url-mapping>
+    <url-mapping id="createOrderChangeDOA">
+        <pattern value="/createOrderChangeDOA.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/createOrderChangeDOA.jsf"/>
+    </url-mapping>
+    <!-- hopnv -->
+    <url-mapping id="createOrderDivideDevice">
+        <pattern value="/createOrderDivideDevice.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/createOrderDivideDevice.jsf"/>
+    </url-mapping>
+    <url-mapping id="approachOrderDivideDevide">
+        <pattern value="/approachOrderDivideDevide.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/approachOrderDivideDevide.jsf"/>
+    </url-mapping>
+
+    <!--<url-mapping id="changeDamagedProductFS">-->
+    <!--<pattern value="/changeDamagedProductForSale.jsf"/>-->
+    <!--<view-id value="/pages/bccs2/inventory/stock/utilities/changeDamagedProductWithoutMenu.jsf"/>-->
+    <!--</url-mapping>-->
+    <!--end tien ich kho-->
+    <!--start kiem kho-->
+    <url-mapping id="approveStockInspect">
+        <pattern value="/approveStockInspect.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/checkStock/approveStockInspect.jsf"/>
+    </url-mapping>
+    <url-mapping id="stockInspect">
+        <pattern value="/stockInspect.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/checkStock/stockInspect.jsf"/>
+    </url-mapping>
+    <url-mapping id="stockHandover">
+        <pattern value="/stockHandover.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/checkStock/stockHandover.jsf"/>
+    </url-mapping>
+    <!--end kiem kho-->
+    <!--Start han muc kho -->
+    <url-mapping id="limitStockView">
+        <pattern value="/limitStockView.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/limitStock/limitStockCreateOrderByFile.jsf"/>
+    </url-mapping>
+    <url-mapping id="limitStockCreateOrder">
+        <pattern value="/limitStockCreateOrder.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/limitStock/limitStockCreateOrder.jsf"/>
+    </url-mapping>
+    <url-mapping id="limitStockSearchListOrder">
+        <pattern value="/limitStockSearchListOrder.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/limitStock/limitStockSearchListOrder.jsf"/>
+    </url-mapping>
+    <url-mapping id="limitStockLookup">
+        <pattern value="/limitStockLookup.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/limitStock/limitStockLookup.jsf"/>
+    </url-mapping>
+    <!--End han muc kho -->
+    <!--start Thu hoi KIT tu dai ly-->
+    <url-mapping id="lookRevokeOutdateKit">
+        <pattern value="/lookRevokeOutdateKit.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/withdrawal/lookRevokeOutdateKit.jsf"/>
+    </url-mapping>
+    <url-mapping id="recoveryOverdueUsedKit">
+        <pattern value="/recoveryOverdueUsedKit.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/withdrawal/recoveryOverdueUsedKit.jsf"/>
+    </url-mapping>
+    <url-mapping id="exportedKitRecoveryAgent">
+        <pattern value="/exportedKitRecoveryAgent.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/withdrawal/exportedKitRecoveryAgent.jsf"/>
+    </url-mapping>
+    <!--end Thu hoi KIT tu dai ly-->
+
+    <!--start quan ly ha tang-->
+    <url-mapping id="attachPSTNForProvince">
+        <pattern value="/attachPSTNForProvince.jsf"/>
+        <view-id value="/pages/bccs2/inventory/infrastructure/attachPSTNForProvince.jsf"/>
+    </url-mapping>
+    <url-mapping id="manageBras">
+        <pattern value="/manageBras.jsf"/>
+        <view-id value="/pages/bccs2/inventory/infrastructure/manageBras/manageBras.jsf"/>
+    </url-mapping>
+    <url-mapping id="manageBrasIpPool">
+        <pattern value="/manageBrasIpPool.jsf"/>
+        <view-id value="/pages/bccs2/inventory/infrastructure/manageBrasIpPool.jsf"/>
+    </url-mapping>
+    <!--end quan ly ha tang-->
+
+    <!--Start quan ly so-->
+    <url-mapping id="createNewNumberRanges">
+        <pattern value="/createNewNumberRanges.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/createNewNumberRanges.jsf"/>
+    </url-mapping>
+    <url-mapping id="manageTransStockIsdn">
+        <pattern value="/manageTransStockIsdn.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/manageTransStockIsdn.jsf"/>
+    </url-mapping>
+    <url-mapping id="assigningTypeAndStatus">
+        <pattern value="/assigningTypeAndStatus.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/assigningTypeAndStatus.jsf"/>
+    </url-mapping>
+    <url-mapping id="deleteIsdn">
+        <pattern value="/deleteIsdn.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/deleteIsdn.jsf"/>
+    </url-mapping>
+    <url-mapping id="assigningModelForIsdn">
+        <pattern value="/assigningModelForIsdn.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/assigningModelForIsdn.jsf"/>
+    </url-mapping>
+    <url-mapping id="distributionIsdn">
+        <pattern value="/distributionIsdn.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/distributionIsdn.jsf"/>
+    </url-mapping>
+    <url-mapping id="filterNiceIsdn">
+        <pattern value="/filterNiceIsdn.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/filterNiceIsdn.jsf"/>
+    </url-mapping>
+    <url-mapping id="establishExportIsdn">
+        <pattern value="/establishExportIsdn.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/establishExportIsdn.jsf"/>
+    </url-mapping>
+    <url-mapping id="createFieldExportIsdn">
+        <pattern value="/createFieldExportIsdn.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/createFieldExportIsdn.jsf"/>
+    </url-mapping>
+    <url-mapping id="tranferIsdnManage">
+        <pattern value="/tranferIsdnManage.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/tranferIsdnManage.jsf"/>
+    </url-mapping>
+    <url-mapping id="establishExportIsdn">
+        <pattern value="/establishExportIsdn.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/establishExportIsdn.jsf"/>
+    </url-mapping>
+    <url-mapping id="tranferNgnBranch">
+        <pattern value="/tranferNgnBranch.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/tranferNgnBranch.jsf"/>
+    </url-mapping>
+
+
+    <url-mapping id="createRuleList">
+        <pattern value="/createRuleList.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/createRuleList.jsf"/>
+    </url-mapping>
+    <url-mapping id="createFieldExportIsdnByFile">
+        <pattern value="/createFieldExportIsdnByFile.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/createFieldExportIsdnByFile.jsf"/>
+    </url-mapping>
+    <!--End quan ly so-->
+    <!--Start nhap hang tu doi tac-->
+    <url-mapping id="partnerImportStock">
+        <pattern value="/partnerImportStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/partner/partnerImportStock.jsf"/>
+    </url-mapping>
+    <url-mapping id="partnerUpdateSim">
+        <pattern value="/partnerUpdateSim.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/partner/partnerUpdateSim.jsf"/>
+    </url-mapping>
+    <url-mapping id="partnerExportStock">
+        <pattern value="/partnerExportStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/partner/partnerExportStock.jsf"/>
+    </url-mapping>
+    <url-mapping id="createPartnerUnderlying">
+        <pattern value="/createPartnerUnderlying.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/partner/createPartnerUnderlying.jsf"/>
+    </url-mapping>
+    <url-mapping id="partnerImportStockByFile">
+        <pattern value="/partnerImportStockByFile.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/partner/partnerImportStockByFile.jsf"/>
+    </url-mapping>
+    <!--En nhap hang tu doi tac-->
+
+    <!--Start quan ly han muc kho hang-->
+    <url-mapping id="rangeTimePromotion">
+        <pattern value="/rangeTimePromotion.jsf"/>
+        <view-id value="/pages/bccs2/inventory/limit/rangeTimePromotion.jsf"/>
+    </url-mapping>
+    <!--En quan ly han muc kho hang-->
+
+    <url-mapping id="limitFinanceType">
+        <pattern value="/limitFinanceType.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/limitStock/limitFinanceType.jsf"/>
+    </url-mapping>
+    <url-mapping id="createRuleNumber">
+        <pattern value="/createRuleNumber.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/createRuleNumber.jsf"/>
+    </url-mapping>
+
+    <url-mapping id="ruleGroupManager">
+        <pattern value="/ruleGroupManager.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/ruleGroupManager.jsf"/>
+    </url-mapping>
+
+    <url-mapping id="ruleNiceDigit">
+        <pattern value="/ruleNiceDigit.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/ruleNiceDigit.jsf"/>
+    </url-mapping>
+
+    <url-mapping id="establishQuota">
+        <pattern value="/establishQuota.jsf"/>
+        <view-id value="/pages/bccs2/inventory/limit/establishQuota.jsf"/>
+    </url-mapping>
+
+    <url-mapping id="agencyRetrieveExpense">
+        <pattern value="/agencyRetrieveExpense.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/retrieve/agencyRetrieveExpense.jsf"/>
+    </url-mapping>
+
+    <url-mapping id="searchIsdn">
+        <pattern value="/searchIsdn.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/searchIsdn.jsf"/>
+    </url-mapping>
+    <url-mapping id="searchNiceIsdn">
+        <pattern value="/searchNiceIsdn.jsf"/>
+        <view-id value="/pages/bccs2/inventory/isdn/searchNiceIsdn.jsf"/>
+    </url-mapping>
+    <url-mapping id="importAPNIP">
+        <pattern value="/importAPNIP.jsf"/>
+        <view-id value="/pages/bccs2/inventory/list/importAPNIP.jsf"/>
+    </url-mapping>
+    <url-mapping id="updateSerialGpon">
+        <pattern value="/updateSerialGpon.jsf"/>
+        <view-id value="/pages/bccs2/inventory/list/updateSerialGpon.jsf"/>
+    </url-mapping>
+    <url-mapping id="signRoleVoffice">
+        <pattern value="/signRoleVoffice.jsf"/>
+        <view-id value="/pages/bccs2/inventory/list/signRoleVoffice/signRoleVoffice.jsf"/>
+    </url-mapping>
+    <url-mapping id="signFlowVoffice">
+        <pattern value="/signFlowVoffice.jsf"/>
+        <view-id value="/pages/bccs2/inventory/list/signFlowVoffice/signFlowVoffice.jsf"/>
+    </url-mapping>
+    <url-mapping id="stockRescueWarranty">
+        <pattern value="/stockRescueWarranty.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/rescueInformation/stockRescueWarranty.jsf"/>
+    </url-mapping>
+
+    <!--start liquitdate-->
+    <url-mapping id="liquidatePropose">
+        <pattern value="/liquidatePropose.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/liquidate/liquidatePropose.jsf"/>
+    </url-mapping>
+    <url-mapping id="liquidateApprove">
+        <pattern value="/liquidateApprove.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/liquidate/liquidateApprove.jsf"/>
+    </url-mapping>
+    <!--end liquitdate-->
+    <url-mapping id="approveStockBalanceRequest">
+        <pattern value="/approveStockBalanceRequest.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/balanceStock/approveStockBalanceRequest.jsf"/>
+    </url-mapping>
+    <!--xuat hang can kho-->
+    <url-mapping id="exportStockPartnerBalance">
+        <pattern value="/exportStockPartnerBalance.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/balanceStock/exportStockPartnerBalance.jsf"/>
+    </url-mapping>
+    <url-mapping id="importStockPartnerBalance">
+        <pattern value="/importStockPartnerBalance.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/balanceStock/importStockPartnerBalance.jsf"/>
+    </url-mapping>
+
+    <url-mapping id="agentExportOrderFromRequest">
+        <pattern value="/agentExportOrderFromRequest.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toAgency/agentExportOrderFromRequest.jsf"/>
+    </url-mapping>
+    <url-mapping id="agentExportOrderFromRequest">
+        <pattern value="/agentExportOrderFromRequest.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/toAgency/agentExportOrderFromRequest.jsf"/>
+    </url-mapping>
+    <url-mapping id="createNoteChangeProduct">
+        <pattern value="/createNoteChangeProduct.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/changeProduct/createNoteChangeProduct.jsf"/>
+    </url-mapping>
+    <url-mapping id="approveChangeProduct">
+        <pattern value="/approveChangeProduct.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/changeProduct/approveChangeProduct.jsf"/>
+    </url-mapping>
+    <url-mapping id="changeTerminalDevide">
+        <pattern value="/changeTerminalDevide.jsf"/>
+        <view-id value="/pages/bccs2/inventory/sale/changeTerminalDevide.jsf"/>
+    </url-mapping>
+    <url-mapping id="recoveryProductCreateRequest">
+        <pattern value="/recoveryProductCreateRequest.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/recoveryProduct/recoveryProductCreateRequest.jsf"/>
+    </url-mapping>
+    <url-mapping id="recoveryProductApproveRequest">
+        <pattern value="/recoveryProductApproveRequest.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/recoveryProduct/recoveryProductApproveRequest.jsf"/>
+    </url-mapping>
+    <url-mapping id="manageProductExchange">
+        <pattern value="/manageProductExchange.jsf"/>
+        <view-id value="/pages/bccs2/inventory/list/productExchange/manageProductExchange.jsf"/>
+    </url-mapping>
+    <url-mapping id="manageProductExchangeTallyOutKit">
+        <pattern value="/manageCreateTallyOutKit.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/productExchangeKit/manageCreateTallyOutKit.jsf"/>
+    </url-mapping>
+    <url-mapping id="manageApproveProductExchangeKit">
+        <pattern value="/manageApproveProductExchangeKit.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/productExchangeKit/manageApproveProductExchangeKit.jsf"/>
+    </url-mapping>
+    <url-mapping id="manageCreateStickerForKit">
+        <pattern value="/manageCreateStickerForKit.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/productExchangeKit/manageCreateStickerForKit.jsf"/>
+    </url-mapping>
+    <!-- OURSOURCE TEAM START-->
+    <url-mapping id="searchUserLockInfo">
+        <pattern value="/searchUserLockInfo.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/searchUserLockInfo.jsf"/>
+    </url-mapping>
+
+    <url-mapping id="importVoucher">
+        <pattern value="/importVoucher.jsf"/>
+        <view-id value="/pages/bccs2/inventory/list/importVoucher.jsf"/>
+    </url-mapping>
+
+    <url-mapping id="lookupInvoiceUsed">
+        <pattern value="/lookupInvoiceUsed.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/lookupInvoiceUsed.jsf"/>
+    </url-mapping>
+    <url-mapping id="manageReturnStocks">
+        <pattern value="/manageReturnStocks.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/guarantee/manageReturnStocks.jsf"/>
+    </url-mapping>
+    <url-mapping id="manageReceiveStocks">
+        <pattern value="/manageReceiveStocks.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/guarantee/manageReceiveStocks.jsf"/>
+    </url-mapping>
+    <url-mapping id="lookupSerialCardAndKitByFile">
+        <pattern value="/lookupSerialCardAndKitByFile.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/lookupSerialCardAndKitByFile.jsf"/>
+    </url-mapping>
+    <url-mapping id="configDivideDevice">
+        <pattern value="/configDivideDevice.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/configDivideDevice.jsf"/>
+    </url-mapping>
+    <url-mapping id="createOrderDivideDevice">
+        <pattern value="/createOrderDivideDevice.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/createOrderDivideDevice.jsf"/>
+    </url-mapping>
+    <url-mapping id="approachOrderDivideDevide">
+        <pattern value="/approachOrderDivideDevide.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/approachOrderDivideDevide.jsf"/>
+    </url-mapping>
+
+    <url-mapping id="demoExportStock">
+        <pattern value="/demoExportStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/rescueInformation/demoExportStock.jsf"/>
+    </url-mapping>
+    <url-mapping id="demoImportStock">
+        <pattern value="/demoImportStock.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/rescueInformation/demoImportStock.jsf"/>
+    </url-mapping>
+    <!-- OURSOURCE TEAM END-->
+    <url-mapping id="imsiInfo">
+        <pattern value="/imsiInfo.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/imsiInfo/imsiInfo.jsf"/>
+    </url-mapping>
+    <url-mapping id="chooseImsiRangeToProceduce">
+        <pattern value="/chooseImsiRangeToProceduce.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/chooseImsiRangeToProceduce.jsf"/>
+    </url-mapping>
+    <url-mapping id="partner">
+        <pattern value="/partnerMng.jsf"/>
+        <view-id value="/pages/bccs2/inventory/stock/utilities/partner/partnerMng.jsf"/>
+    </url-mapping>
+</pretty-config>
+
+

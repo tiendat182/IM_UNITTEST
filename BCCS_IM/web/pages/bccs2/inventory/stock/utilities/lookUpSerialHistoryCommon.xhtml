@@ -1,0 +1,339 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:pe="http://primefaces.org/ui/extensions">
+        <h:form id="frmViewSerial">
+            <style type="text/css">
+                .ui-tabs-top .ui-tabs-panels {
+                    border-bottom: medium none;
+                }
+            </style>
+            <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"/>
+            </div>
+            <p:tabView id="numberTabView" dynamic="true" styleClass="ContainerIndent mg-top-0" tabindex="#{lookUpSerialController.tabIndex}">
+                <p:ajax event="tabChange" listener="#{lookUpSerialController.onTabChange}" resetValues="false" update="@([id$=msgSearch]), @([id$=numberTabView]),@([id$=pnViewSeach])"/>
+                <p:tab id="tabInput" title="#{lang['im.number.assign.status.by.normal']}">
+                    <p:outputPanel styleClass="ContainerIndent" rendered="#{lookUpSerialController.tabIndex eq 0}" >
+                        <div class="ContainerIndent">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 pd-top-7 ">
+                                    <p:outputLabel value="#{lang['mn.stock.utilities.view.prod.offer.type']}" for="prodOfferType" styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid ">
+                                    <p:selectOneMenu value="#{lookUpSerialController.productOfferTypeId}" id="prodOfferType"
+                                                     requiredMessage="#{lang['mn.stock.utilities.view.prod.offer.type.require.msg']}"
+                                                     filter="true" filterMatchMode="contains" required="true">
+                                        <f:selectItems value="#{lookUpSerialController.lsProductOfferTypeDTO}" var="item" itemLabelEscaped="true"
+                                                       itemValue="#{item.productOfferTypeId}" itemLabel="#{item.name}"/>
+                                        <p:ajax event="change" process="@this" update="@([id$=pnSerialGpon]), @([id$=pnSerial])" listener="#{lookUpSerialController.changeOfferType}" />
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                            <p:outputPanel styleClass="Container33 Responsive" id="pnSerial">
+                                <div class="Container40 Responsive50 pd-top-7 txtSerial_col txtSerialReq_col ">
+                                    <p:outputLabel value="#{lang['mn.stock.utilities.look.serial.lb']}" for="txtSerialReq" styleClass="lb-sentinel txtSerial_col" rendered="#{!lookUpSerialController.handset}" />
+                                    <p:outputLabel value="#{lang['mn.stock.utilities.look.serial.lb']}" for="txtSerial" styleClass="lb-sentinel txtSerial_col" rendered="#{lookUpSerialController.handset}" />
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid txtSerial ">
+                                    <p:inputText value="#{lookUpSerialController.serial}" required="true" id="txtSerialReq" onblur="this.value=this.value.trim();"
+                                                 requiredMessage="#{lang['mn.stock.utilities.look.serial.require.msg']}" rendered="#{!lookUpSerialController.handset}" />
+                                    <p:message for="txtSerialReq" />
+                                    <pe:keyFilter for="txtSerialReq" preventPaste="false" regEx="/[a-zA-Z0-9]+/i"/>
+
+
+                                    <p:inputText value="#{lookUpSerialController.serial}" id="txtSerial" onblur="this.value=this.value.trim();"
+                                                 rendered="#{lookUpSerialController.handset}"  />
+                                    <p:message for="txtSerial" />
+                                    <pe:keyFilter for="txtSerial" preventPaste="false" regEx="/[a-zA-Z0-9]+/i"/>
+                                </div>
+                            </p:outputPanel>
+                            <p:outputPanel styleClass="Container33 Responsive" id="pnSerialGpon">
+                                <div class="Container40 Responsive50 pd-top-7 txtSerialGpon_col">
+                                    <p:outputLabel value="#{lang['mn.stock.utilities.lookup.serial.gpon.title']}" for="txtSerialGpon" styleClass="lb-sentinel txtSerial_col"
+                                                   rendered="#{lookUpSerialController.handset}" />
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid txtSerial ">
+                                    <p:inputText value="#{lookUpSerialController.serialGpon}" id="txtSerialGpon" onblur="this.value=this.value.trim();"
+                                                 rendered="#{lookUpSerialController.handset}" />
+                                    <p:message for="txtSerialGpon" />
+                                    <pe:keyFilter for="txtSerial" preventPaste="false" regEx="/[a-zA-Z0-9]+/i"/>
+                                </div>
+                            </p:outputPanel>
+                        </div>
+                        <div class="ContainerIndent">
+                            <div class="Container66 Responsive66">
+                                <div class="Container20 Responsive25 pd-top-7 ">
+                                    <p:outputLabel value="#{lang['mn.stock.utilities.look.serial.type.search.history']}" for="typeSearch" styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container80 Responsive75 ui-fluid">
+                                    <p:selectOneRadio id="typeSearch" value="#{lookUpSerialController.typeSearch}"
+                                                      required="true" requiredMessage="#{lang['mn.stock.utilities.look.serial.type.search.history.require.msg']}">
+                                        <f:selectItem itemLabel="#{lang['mn.stock.utilities.look.serial.history.new.lb']}" itemValue="1"/>
+                                        <f:selectItem itemLabel="#{lang['mn.stock.utilities.look.serial.history.old.lb']}" itemValue="2"/>
+                                        <p:ajax process="@this" event="change" />
+                                    </p:selectOneRadio>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive"> </div>
+                        </div>
+                        <div class="ContainerIndent TexAlCenter">
+                            <p:commandButton value="#{lang['range.time.promotion.btn.search']}" process="@this,@([id$=tabInput])"
+                                             update="@form" actionListener="#{lookUpSerialController.doSearchSerial}"/>
+                            <p:commandButton styleClass="mg-left-5" value="#{lang['reset.selected']}" process="@this"
+                                             update="@form" actionListener="#{lookUpSerialController.doResetSearial}" />
+                            <p:commandButton styleClass="mg-left-5" value="#{lang['mn.stock.export.excel']}" process="@none" immediate="true" ajax="false" disabled="#{!lookUpSerialController.isShowExportListSerial}"
+                                             update="@none" >
+                                <p:fileDownload value="#{lookUpSerialController.doExportSerialSearch()}"></p:fileDownload>
+                            </p:commandButton>
+                        </div>
+                    </p:outputPanel>
+                </p:tab>
+                <p:tab id="tabFile" title="#{lang['im.number.assign.status.by.file']}">
+                    <p:outputPanel styleClass="ContainerIndent" rendered="#{lookUpSerialController.tabIndex eq 1}" id="pnSelectSerialRange">
+                        <div class="ContainerIndent TexAlLeft">
+                            <p:outputLabel value="#{lang['mn.stock.utilities.look.serial.stock.card']}" styleClass="red"/>
+                        </div>
+                        <div class="ContainerIndent">
+                            <p:outputPanel styleClass="Container50 Responsive50 outputAttach_col" id="pnUpload">
+                                <div class="Container40 Responsive50 lb-sentinel pd-top-4">
+                                    <p:outputLabel value="#{lang['stock.change.damaged.file']}" for="outputAttach" styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid outputAttach">
+                                    <p:inputText id="outputAttach" maxlength="100" required="true" value="#{lookUpSerialController.attachFileName}" readonly="true"/>
+                                    <p:message id="messageAttach" for="upLoadFile"/>
+                                    <p:commandLink value="#{lang['create.order.file.download.file.template']}" styleClass="Fleft mg-top-4" ajax="false" process="@this"
+                                                   immediate="true" rendered="#{!lookUpSerialController.hasFileError}">
+                                        <p:fileDownload value="#{lookUpSerialController.downloadFileTemplate()}"/>
+                                    </p:commandLink>
+                                    <p:commandLink value="#{lang['button.export.excel.error']}" ajax="false" style="color: #e90c45!important;"
+                                                   immediate="true" rendered="#{lookUpSerialController.hasFileError}">
+                                        <p:fileDownload value="#{lookUpSerialController.downloadFileError()}"/>
+                                    </p:commandLink>
+                                </div>
+                            </p:outputPanel>
+
+                            <div class="Container50 Responsive50">
+                                <div class="Container mg-left-15">
+                                    <p:fileUpload id="upLoadFile"
+                                                  styleClass="Fleft"
+                                                  label="#{lang['select.file']}"
+                                                  invalidFileMessage="#{lang['mn.stock.limit.importFile.msg.format']}"
+                                                  requiredMessage="#{lang['mn.stock.limit.attachFile.msg.require']}"
+                                                  invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                  fileLimitMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                  update="@this,@([id$=msgSearch]), @([id$=pnSelectSerialRange])"
+                                                  dragDropSupport="true" required="true" mode="advanced"
+                                                  auto="true"
+                                                  process="@this"
+                                                  widgetVar="wgUploadFile"
+                                                  allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                                  sizeLimit="5242880"
+                                                  value="#{lookUpSerialController.fileUpload}"
+                                                  fileUploadListener="#{lookUpSerialController.handleFileUpload}">
+                                    </p:fileUpload>
+                                    <p:message for="upLoadFile" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent">
+                            <div class="Container50 Responsive50">
+                                <div class="Container40 Responsive50 pd-top-4 ">
+                                    <p:outputLabel value="#{lang['mn.stock.utilities.look.serial.type.search.history']}" for="typeSearch2" styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:selectOneRadio id="typeSearch2" value="#{lookUpSerialController.typeSearch}"
+                                                      required="true" requiredMessage="#{lang['mn.stock.utilities.look.serial.type.search.history.require.msg']}">
+                                        <f:selectItem itemLabel="#{lang['mn.stock.utilities.look.serial.history.new.lb']}" itemValue="1"/>
+                                        <f:selectItem itemLabel="#{lang['mn.stock.utilities.look.serial.history.old.lb']}" itemValue="2"/>
+                                        <p:ajax process="@this" event="change" />
+                                    </p:selectOneRadio>
+                                </div>
+                            </div>
+                            <div class="Container50 Responsive50">
+                            </div>
+                        </div>
+                        <div class="ContainerIndent TexAlCenter">
+                            <p:commandButton value="#{lang['range.time.promotion.btn.search']}" process="@this, @([id$=typeSearch2])"
+                                             update="@form" actionListener="#{lookUpSerialController.doPreviewFileUpload}"/>
+                            <p:commandButton styleClass="mg-left-5" value="#{lang['reset.selected']}" resetValues="true" process="@this"
+                                             update="@form" actionListener="#{lookUpSerialController.doClearFileUpload}" />
+                            <p:commandButton styleClass="mg-left-5" value="#{lang['mn.stock.export.excel']}" process="@none" immediate="true" ajax="false" disabled="#{!lookUpSerialController.isShowExportListSerial}"
+                                             update="@none" >
+                                <p:fileDownload value="#{lookUpSerialController.doExportSerialSearch()}"></p:fileDownload>
+                            </p:commandButton>
+                        </div>
+                    </p:outputPanel>
+                </p:tab>
+            </p:tabView>
+            <p:outputPanel styleClass="ContainerIndent" id="pnViewSeach">
+                <cbs:panel classForToggle="pnViewSeach" titleHeader="#{lang['mn.stock.list.result.search']}" toggle="true"/>
+                <div class="ContainerIndent pnViewSeach">
+                    <p:dataTable
+                            id="tblViewSerial"
+                            var="stockTrans"
+                            rowIndexVar="index"
+                            resizableColumns="true"
+                            reflow="false"
+                            paginator="#{lang['common.paging.paginator']}"
+                            rows="#{lang['common.paging.rows.default']}"
+                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                            emptyMessage="#{lang['common.empty.records']}"
+                            value="#{lookUpSerialController.lsLookupSerialByFileDTO}">
+                        <p:column headerText="#{lang['range.time.promotion.stt']}" styleClass="col-right" style="width: 4%;">
+                            <p:outputLabel value="#{index + 1}" title="#{index + 1}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" sortBy="#{stockTrans.serial}" style="width: 13%;">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.utilities.look.serial.lb']}" title="#{lang['mn.stock.utilities.look.serial.lb']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{stockTrans.serial}" title="#{stockTrans.serial}" />
+                        </p:column>
+                        <p:column styleClass="col-left" sortBy="#{stockTrans.serialGpon}" style="width: 13%;">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.utilities.lookup.serial.gpon.title']}" title="#{lang['mn.stock.utilities.lookup.serial.gpon.title']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{stockTrans.serialGpon}" title="#{stockTrans.serialGpon}" />
+                        </p:column>
+                        <p:column styleClass="col-left" sortBy="#{stockTrans.prodOfferCode}" style="width: 18%;">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['export.order.name']}" title="#{lang['export.order.name']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{stockTrans.prodOfferCode}-#{stockTrans.prodOfferName}" title="#{stockTrans.prodOfferCode}-#{stockTrans.prodOfferName}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" sortBy="#{stockTrans.ownerTypeName}" style="width: 12%;">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.utilities.type.ware.house']}" title="#{lang['mn.stock.utilities.type.ware.house']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{stockTrans.ownerTypeName}" title="#{stockTrans.ownerTypeName}" style="width: 20%;"/>
+                        </p:column>
+                        <p:column styleClass="col-left" sortBy="#{stockTrans.ownerCode}" style="width: 18%;">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['process.stock.shop.name']}" title="#{lang['process.stock.shop.name']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{stockTrans.ownerCode}-#{stockTrans.ownerName}" title="#{stockTrans.ownerCode}-#{stockTrans.ownerName}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.track.state.stock']}" title="#{lang['mn.stock.track.state.stock']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{stockTrans.stateName}" title="#{stockTrans.stateName}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.status']}" title="#{lang['common.status']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{stockTrans.strStatus}" title="#{stockTrans.strStatus}"/>
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.view.detail']}" title="#{lang['common.view.detail']}"/>
+                            </f:facet>
+                            <p:commandLink styleClass="fa icon-zoom-in Fs16 blue icon-link" process="@this" id="viewdetail" update="@([id$=history])" oncomplete="PF('history').show('#{component.clientId}')"
+                                           title="#{lang['common.view.detail']}">
+                                <f:setPropertyActionListener value="#{stockTrans}" target="#{lookUpSerialController.selected}" ></f:setPropertyActionListener>
+                            </p:commandLink>
+                        </p:column>
+
+                        <p:column style="text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.utilities.look.serial.view.history']}" title="#{lang['mn.stock.utilities.look.serial.view.history']}"/>
+                            </f:facet>
+                            <p:commandLink styleClass="icon-history Fs16 blue icon-link" resetValues="true"
+                                           update="@([id$=dlgViewHistorySerial])" process="@this" oncomplete="PF('dlgViewHistorySerial').show();"
+                                           title="#{lang['mn.stock.utilities.look.serial.view.history']}"
+                                           actionListener="#{lookUpSerialController.doOpenSearchHistoryDlg(index)}"/>
+                        </p:column>
+                    </p:dataTable>
+                    <p:overlayPanel id="history" widgetVar="history" showEffect="fade" hideEffect="fade"  dismissable="false" showCloseIcon="true"  style="width: 500px;background: #f5f5f5;">
+                        <div class="Container100">
+                            <div class="Container40 Responsive50">
+                                <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.utilities.look.serial.conection.status.name']}" title="#{lang['mn.stock.utilities.look.serial.conection.status.name']}" />
+                            </div>
+                            <div class="Container60 Responsive50">
+                                <p:outputLabel value="#{lookUpSerialController.selected.connectionStatusName}" title="#{lookUpSerialController.selected.connectionStatusName}"/>
+                            </div>
+                        </div>
+                        <div class="Container100">
+                            <div class="Container40 Responsive50">
+                                <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.utilities.look.serial.conection.date']}" title="#{lang['mn.stock.utilities.look.serial.conection.date']}" />
+                            </div>
+                            <div class="Container60 Responsive50">
+                                <p:outputLabel value="#{lookUpSerialController.selected.connectionDateStr}" title="#{lookUpSerialController.selected.connectionDateStr}"/>
+                            </div>
+                        </div>
+                        <div class="Container100">
+                            <div class="Container40 Responsive50">
+                                <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.branch.contract.code']}" title="#{lang['mn.stock.branch.contract.code']}" />
+                            </div>
+                            <div class="Container60 Responsive50">
+                                <p:outputLabel value="#{lookUpSerialController.selected.contractCode}" title="#{lookUpSerialController.selected.contractCode}"/>
+                            </div>
+                        </div>
+                        <div class="Container100">
+                            <div class="Container40 Responsive50">
+                                <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.branch.sign.contract.date']}" title="#{lang['mn.stock.branch.sign.contract.date']}" />
+                            </div>
+                            <div class="Container60 Responsive50">
+                                <h:outputText escape="true" value="#{lookUpSerialController.selected.contractDateStr}" styleClass="lb-sentinel-bold" title="#{lookUpSerialController.selected.contractDate}">
+                                </h:outputText>
+                            </div>
+                        </div>
+                        <div class="Container100">
+                            <div class="Container40 Responsive50">
+                                <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.branch.PO.code']}" title="#{lang['mn.stock.branch.PO.code']}" />
+                            </div>
+                            <div class="Container60 Responsive50">
+                                <p:outputLabel  value="#{lookUpSerialController.selected.poCode}" styleClass="lb-sentinel-bold" title="#{lookUpSerialController.selected.poCode}" />
+                            </div>
+                        </div>
+                        <div class="Container100">
+                            <div class="Container40 Responsive50">
+                                <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.branch.sign.po.date']}" title="#{lang['mn.stock.branch.sign.po.date']}" />
+                            </div>
+                            <div class="Container60 Responsive50">
+                                <h:outputText escape="true" value="#{lookUpSerialController.selected.poDateStr}" styleClass="lb-sentinel-bold" title="#{lookUpSerialController.selected.poDate}">
+                                </h:outputText>
+                            </div>
+                        </div>
+                        <div class="Container100">
+                            <div class="Container40 Responsive50">
+                                <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.partner.date.import']}" title="#{lang['mn.stock.partner.date.import']}" />
+                            </div>
+                            <div class="Container60 Responsive50">
+                                <h:outputText escape="true" value="#{lookUpSerialController.selected.requestImportDateStr}" styleClass="lb-sentinel-bold" title="#{lookUpSerialController.selected.requestImportDate}">
+
+                                </h:outputText>
+                            </div>
+                        </div>
+                        <div class="Container100">
+                            <div class="Container40 Responsive50">
+                                <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.branch.date.stock']}" title="#{lang['mn.stock.branch.date.stock']}" />
+                            </div>
+                            <div class="Container60 Responsive50">
+                                <h:outputText escape="true" value="#{lookUpSerialController.selected.importStockDateStr}" styleClass="lb-sentinel-bold" title="#{lookUpSerialController.selected.importStockDate}">
+                                    <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                </h:outputText>
+                            </div>
+                        </div>
+                    </p:overlayPanel>
+                </div>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog id="dlgViewHistorySerial" widgetVar="dlgViewHistorySerial"
+                  appendTo="@(body)" closable="true" closeOnEscape="true" maximizable="true"
+                  position="center" dynamic="true" modal="true" resizable="false"
+                  minWidth="700"
+                  width="90%"
+                  header="#{lang['mn.stock.utilities.look.serial.history']}">
+            <ui:include src="dlgViewHistorySerial.xhtml"/>
+        </p:dialog>
+</ui:composition>

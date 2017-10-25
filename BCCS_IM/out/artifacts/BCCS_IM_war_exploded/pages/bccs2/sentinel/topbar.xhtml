@@ -1,0 +1,246 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h:form id="topBarForm" prependId="false">
+
+        <style>
+            .iconPadTop10 {
+                padding-top: 10px;
+            }
+
+            .nounderlink {
+                text-decoration: none;
+            }
+
+            #divLogo:hover {
+                cursor: pointer;
+            }
+
+            .link-logo-poiter {
+
+                font-weight: 400 !important;
+                color: white;
+            }
+
+            .link-logo-poiter:hover {
+                cursor: pointer;
+                text-decoration: underline !important;
+            }
+        </style>
+
+        <h:outputScript>
+            function onClickEmail() {
+            window.open("mailto:#{lang['dashboard.support.email']}")
+            }
+
+            function backHome() {
+            window.location.replace("#{request.contextPath}/home")
+            }
+        </h:outputScript>
+
+        <p:remoteCommand name="itemFavorite" update="@([id$=userPanel]),:topBarForm:favoriteTopBar"
+                         actionListener="#{favoriteActivityController.addFavorite}"/>
+
+        <p:remoteCommand name="changeLocale" actionListener="#{locateBean.changeLanguage}"
+                         process="@this" update="@all"
+                         oncomplete="try{window.location.href='#{request.contextPath}/home';}catch(e){}"/>
+
+        <p:remoteCommand name="redirectFavorite" actionListener="#{menuBean.redirectUrl}"
+                         process="@this"/>
+
+
+        <div id="layout-header" class="Unselectable favoriteDropPoint">
+
+
+            <div title="#{lang['dashboard.bar.home.title']}" class="divLogo" id="divLogo" onclick="backHome()"
+                 style="float: left"/>
+
+            <!--<div>-->
+                <!--<img src="#{resource['images/support.png']}" style="height: 1%;width: 1%; margin-right: 0.5%"/>-->
+                <!--<p:outputLabel value="#{lang['dashboard.support']}" style="font-weight: 500!important;color: white;"/>-->
+
+                <!--<div style="display: block">-->
+                    <!--<img src="#{resource['images/support_tel.png']}"-->
+                         <!--style="height: 1%;width: 1%; margin-right: 0.5%"/>-->
+                    <!--<p:outputLabel value="#{lang['dashboard.support.phone']}"-->
+                                   <!--style="font-weight: 400!important;color: white;"/>-->
+                    <!--<img src="#{resource['images/support_email.png']}"-->
+                         <!--style="height: 1%;width: 1%; margin-right: 0.5%;margin-left: 0.5%"/>-->
+                    <!--<p:outputLabel title="#{lang['dashboard.support.email.title']}" onclick="onClickEmail()"-->
+                                   <!--value="#{lang['dashboard.support.email']}" styleClass="link-logo-poiter"-->
+                            <!--/>-->
+                <!--</div>-->
+            <!--</div>-->
+
+
+            <ul id="sm-topmenu" class="layout-header-widgets white Fs14" style="padding-right: 30px">
+                <li class="Fleft"
+                    style="background: none; width: auto;"
+                    title="#{loginBean.userToken.userName}">
+                    <h:outputText style="margin-top:8px;display:block;"
+                                  value="#{loginBean.userToken.userName} - #{loginBean.userToken.fullName}"/>
+                </li>
+                <li class="Fleft BordRadHalf TexAlCenter "> <!-- iconProfile -->
+                    <i class="icon-user-male"/>
+                    <ul class="layout-header-widgets-submenu BordRad5 shadows white Animated05">
+                        <li class="Animated05" style="width: 200px"><a class="white Unselectable"><i
+                                class="icon-user-male blue Fs26 OvHidden"></i><span
+                                class="Fs14">#{loginBean.userToken.userName}<br/>
+                            <span
+                                    class="Fs10">#{lang['dashboard.user.login']}
+                                <h:outputText value="#{loginBean.loginDate}">
+                                    <f:convertDateTime timeStyle="medium" type="date"/>
+                                </h:outputText>
+                        </span>
+                        </span></a></li>
+
+                        <li class="Animated05"><i class=" icon-th-1 iconPadTop10"/> <a
+                                href="#{request.contextPath}/businessCode" class="white Unselectable">
+                            #{lang['businessCode']}</a></li>
+
+                        <li class="Animated05"><i class="icon-logout iconPadTop10"/> <a
+                                href="#{request.contextPath}/logout" class="white Unselectable">
+                            #{lang['logout']}</a></li>
+                    </ul>
+                </li>
+
+                <li class="Fleft BordRadHalf TexAlCenter" title="#{lang['topbar.menu.notify']}">
+                    <i
+                            class="icon-mail"></i>
+                    <p:outputLabel id="countNotify" styleClass="alertBubble BordRad10 Fs10"
+                                   value="#{notifyController.countNotify}"></p:outputLabel>
+                    <ul class="layout-header-widgets-submenu BordRad5 shadows white Animated05">
+                        <li class="Animated05" style="width: 200px"><a class="white Unselectable"><i
+                                class="icon-mail blue Fs20 OvHidden"></i><span
+                                class="Fs14">#{lang['topbar.menu.notify']}<br/>
+                            <span class="Fs10">#{lang['topbar.menu.notify.sub']}
+                        </span>
+                        </span></a></li>
+                        <c:if test="#{notifyResource.runNotify}">
+                            <li class="Animated05">
+                                <i class="icon-align-justify red iconPadTop10"/>
+                                <a onclick="reloadNotification()" class="white Unselectable">
+                                    #{lang['topbar.menu.notify.reload']}</a></li>
+                        </c:if>
+                        <p:outputPanel id="notificationBar">
+                            <c:if test="#{notifyResource.runNotify}">
+                                <c:forEach var="notify" items="#{notifyController.unreadNotifiContents}">
+                                    <li class="Animated05">
+                                        <i class="icon-mail iconPadTop10"></i>
+                                        <i class="icon-cancel red iconPadTop10"
+                                           onclick="removeNotify([{name: 'id',value:'#{notify.id}'}])"
+                                           title="#{lang['topbar.menu.notify.delete']}" style="float: right"></i>
+                                        <p:commandLink styleClass="white Unselectable Fs13 TexAlLeft nounderlink"
+                                                       onclick="selectNotify([{name: 'id',value:'#{notify.id}'}])">
+                                            <span class="Fs12">#{notify.subject}</span>
+                                            <br/>
+                                            <span class="Fs9">#{notify.text}</span>
+                                            <br/>
+                                            <span class="Fs9">#{humanTime.format(notify.createdDate)}</span>
+                                        </p:commandLink>
+                                    </li>
+                                </c:forEach>
+                            </c:if>
+                        </p:outputPanel>
+                    </ul>
+                </li>
+
+                <li class="Fleft BordRadHalf TexAlCenter" title="#{lang['topbar.menu.history']}"><i
+                        class="icon-history"></i>
+                    <ul class="layout-header-widgets-submenu BordRad5 shadows white Animated05">
+                        <li class="Animated05" style="width: 200px"><a class="white Unselectable"><i
+                                class="icon-history blue Fs20 OvHidden"></i><span
+                                class="Fs14">#{lang['topbar.menu.history']}<br/>
+                            <span class="Fs10">#{lang['topbar.menu.history.sub']}
+                        </span>
+                        </span></a></li>
+                        <p:outputPanel id="history">
+                            <c:forEach var="activity" items="#{userActivityController.recentUrlActions}">
+                                <li class="Animated05">
+                                    <i class="icon-link white i iconPadTop10"></i>
+                                    <a onclick="redirectFavorite([{name: 'url',value:'#{activity.url}'}])"
+                                       class="white Unselectable Fs13 TexAlLeft">
+                                        #{menuBean.getUrlName(activity.url).length() gt 30? menuBean.getUrlName(activity.url).substring(0,30).concat('...'):menuBean.getUrlName(activity.url)}
+                                        <br/>
+                                        <span class="Fs9">#{humanTime.format(activity.createDate)}</span>
+                                    </a>
+                                </li>
+                            </c:forEach>
+                        </p:outputPanel>
+                    </ul>
+                </li>
+
+                <li class="Fleft BordRadHalf TexAlCenter" title="#{lang['topbar.menu.favorite']}"><i
+                        class="icon-bookmark"></i>
+                    <ul class="layout-header-widgets-submenu BordRad5 shadows white Animated05">
+                        <li class="Animated05" style="width: 200px"><a class="white Unselectable"><i
+                                class="icon-bookmark blue Fs20 OvHidden"></i><span
+                                class="Fs14">#{lang['topbar.menu.favorite']}<br/>
+                            <span class="Fs10">#{lang['topbar.menu.favorite.sub']}
+                        </span>
+                        </span></a></li>
+                        <p:outputPanel id="favoriteTopBar">
+                            <c:forEach var="activity" items="#{favoriteActivityController.activeFavoriteActivities}">
+                                <li class="Animated05">
+                                    <i class="icon-star white i iconPadTop10"></i>
+                                    <a onclick="redirectFavorite([{name: 'url',value:'#{activity.url}'}])"
+                                       class="white Unselectable Fs13 TexAlLeft">
+                                        #{menuBean.getUrlName(activity.url).length() gt 30? menuBean.getUrlName(activity.url).substring(0,30).concat('...'):menuBean.getUrlName(activity.url)}
+                                    </a>
+                                </li>
+
+                            </c:forEach>
+                        </p:outputPanel>
+                    </ul>
+                </li>
+
+                <li class="Fleft BordRadHalf TexAlCenter "
+                    title="#{lang['topbar.menu.language']}"> <!-- iconLanguage -->
+                    <i class="fa icon-flag white"/>
+                    <ul class="layout-header-widgets-submenu BordRad5 shadows white Animated05">
+                        <li class="Animated05" style="width: 200px"><a class="white Unselectable"><i
+                                class="icon-flag blue Fs20 OvHidden"></i><span
+                                class="Fs14">#{lang['topbar.menu.language']}<br/>
+                            <span class="Fs10">#{lang['topbar.menu.language.sub']}
+                        </span>
+                        </span></a></li>
+                        <p:outputPanel id="languagePanel">
+                            <c:forEach var="locale" items="#{locateBean.locales}">
+                                <li class="Animated05">
+                                    <p:outputPanel
+                                            rendered="#{locateBean.selectedLocale.language==locale.language}">
+                                        <i class="fa icon-flag red iconPadTop10"/>
+                                    </p:outputPanel>
+                                    <p:outputPanel
+                                            rendered="#{locateBean.selectedLocale.language!=locale.language}">
+                                        <i class="fa icon-flag white iconPadTop10"/>
+                                    </p:outputPanel>
+                                    <a onclick="changeLocale([{name: 'language',value:'#{locale.language}'}, {name:'country', value:'#{locale.country}'}])"
+                                       class="Fs14 white Unselectable TexAlLeft">
+                                        #{locale.displayLanguage}
+                                    </a>
+                                </li>
+                            </c:forEach>
+                        </p:outputPanel>
+                    </ul>
+                </li>
+
+                <li class="Fleft BordRadHalf TexAlCenter"
+                    title="#{lang['common.currency.code.title']} #{lang['common.currency.code']}">
+                    <h:outputText style="margin-top:8px;display:block;" value="#{lang['common.currency.code']}"/>
+                </li>
+            </ul>
+            <!-- NEVER REMOVE FOLLOWING 'UL' TAG ! BECAUSE THIS CONTAINS RESPONSIVE MODE HEADER MENU OPEN-CLOSE BUTTON -->
+            <ul id="sm-mobiletopmenu" class="layout-header-widgets white Fs14">
+                <li class="Fleft BordRadHalf TexAlCenter Animated05 DisplayOnResponsive"><i class="icon-th-1"></i></li>
+            </ul>
+            <!-- ****** -->
+        </div>
+
+    </h:form>
+
+
+</ui:composition>

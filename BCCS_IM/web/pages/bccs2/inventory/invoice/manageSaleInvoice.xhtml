@@ -1,0 +1,221 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.invoice.manageSaleInvoice']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.invoice.manageSaleInvoice']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmExportNote">
+            <p:outputPanel styleClass="container100">
+                <p:outputPanel id="pnUnderExportNote">
+                    <!--Start vung thong tin tim kiem-->
+                    <p:outputPanel id="pnInfoExportOrder" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInforExport"
+                                   toggle="true"
+                                   titleHeader="#{lang['create.note.export.info.search']}"/>
+
+                        <div class="Container100 panelInforExport" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 Responsive mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['mn.invoice.unit']}"
+                                                />
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:autoComplete placeholder="#{lang['mn.invoice.unit.placeholder']}"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 Responsive mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['mn.invoice.staff']}"
+                                                />
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:autoComplete placeholder="#{lang['mn.invoice.staff.placeholder']}"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 Responsive mg-left-15 pd-top-7">
+                                        <p:outputLabel
+                                                value="#{lang['mn.invoice.name.customer']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid ui-tooltip-fluid">
+                                        <p:inputText placeholder="#{lang['mn.invoice.name.customer.placeholder']}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 Responsive pd-top-7">
+                                        <p:outputLabel
+                                                value="#{lang['common.status']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:selectOneMenu
+                                                itemLabelEscaped="true"
+                                                id="cbxStatus" filter="true" filterMatchMode="contains">
+                                            <f:selectItem
+                                                    itemValue=""
+                                                    itemLabel="Hiệu lực"/>
+                                            <f:selectItem
+                                                    itemLabel="Hêt hiệu lực"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 Responsive mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['mn.invoice.sign.invoice']}"
+                                                       />
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:inputText placeholder="#{lang['mn.invoice.sign.invoice.placeholder']}"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 Responsive mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['mn.invoice.no.invoice']}"/>
+
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:inputText placeholder="#{lang['mn.invoice.no.invoice']}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['create.note.from.date']}"/>
+
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:calendar id="fromDate"
+                                                    placeholder="#{lang['create.note.from.date.placeholder']}"
+                                                    required="true"
+                                                    requiredMessage="Trường từ ngày bắt buộc phải nhập"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['create.note.to.date']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:calendar id="toDate"
+                                                    placeholder="#{lang['create.note.to.date.placeholder']}"
+                                                    required="true"
+                                                    requiredMessage="Trường từ ngày bắt buộc phải nhập"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive50"></div>
+                            </div>
+                            <div class="Container100 TexAlCenter mg-top-0">
+                                <p:commandButton styleClass="mg-left-5"
+                                                 value="#{lang['create.note.search']}"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin tim kiem-->
+
+                    <!--Start vung ds lenh xuat-->
+                    <p:outputPanel id="pnLstExportOrder" styleClass="ContainerIndent"
+                                   rendered="#{!manageSaleInvoiceController.infoOrderDetail}">
+                        <cbs:panel classForToggle="panelListOrderExport"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.invoice.info.sale.invoice']}"/>
+
+                        <div class="Container100 panelListOrderExport" style="margin-bottom: 10px;margin-top: 10px;">
+                            <p:dataTable
+                                    id="lstOrderExport"
+                                    var=""
+                                    rowKey=""
+                                    resizableColumns="true"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage=""
+                                    value="#{manageSaleInvoiceController.lsTest}">
+                                <p:column headerText="#{lang['mn.invoice.date.create.invoice']}">
+                                    <p:outputLabel value="1/1/2015"
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.date.create.transaction']}">
+                                    <p:outputLabel value="11/11/2015"
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.no.contract']}">
+                                    <p:outputLabel value="AC/20151111"
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.name.customer']}">
+                                    <p:outputLabel value="Nguyễn Văn A"
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.sum.money.havenot.duty']}">
+                                    <p:outputLabel value="18,182"
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.money.duty']}">
+                                    <p:outputLabel value="1,818"
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.promotion']}">
+                                    <p:outputLabel value="0"
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.discount']}">
+                                    <p:outputLabel value="0"
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.sum.money']}">
+                                    <p:outputLabel value="20,000"
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['common.status']}">
+                                    <p:outputLabel value="Hiệu lực"
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.print.invoice.cancel']}">
+                                    <p:outputLabel value=""
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.see.contract']}">
+                                    <p:outputLabel value=""
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.print.1']}">
+                                    <p:outputLabel value=""
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.print.2']}">
+                                    <p:outputLabel value=""
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.request.print.original']}">
+                                    <p:outputLabel value=""
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.type.print']}">
+                                    <p:outputLabel value=""
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.detail']}">
+                                    <p:commandLink styleClass="fa icon-zoom-in Fs12 black"
+                                                   style="text-decoration: none!important;"/>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung ds lenh xuat-->
+                </p:outputPanel>
+            </p:outputPanel>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

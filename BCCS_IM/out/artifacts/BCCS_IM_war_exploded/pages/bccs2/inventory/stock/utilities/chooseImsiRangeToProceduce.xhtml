@@ -1,0 +1,248 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+<ui:composition template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['imsiRangeProceduce.searchImsi']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmSearchImsi">
+            <p:outputPanel styleClass="container100">
+                <p:outputPanel>
+                    <div class="ContainerIndent">
+                        <p:messages id="messages" showSummary="false" showDetail="true" closable="true"/>
+                    </div>
+                    <!--Start vung nhap thong tin chi tiet-->
+                    <!--<p:focus for="typeServiceTxt"/>-->
+                    <p:outputPanel styleClass="ContainerIndent" id="pnlFormSearch">
+                        <cbs:panel classForToggle="panelSearch"
+                                   toggle="true"
+                                   titleHeader="#{lang['imsiRangeProceduce.imsiRange.searchInfo']}"/>
+
+                        <p:outputPanel id="formSearch" class="Container100 panelSearch" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['imsiRangeProceduce.chooseFirstImsi']}"
+                                                       for="firstImsi"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="firstImsi" maxlength="15" value="#{chooseProduceImsiRangeController.fromImsi}" converter="stringTrimmer" placeholder="#{lang['imsiRangeProceduce.chooseFirstImsiPlaceHolder']}"/>
+                                        <p:message for="firstImsi" />
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['imsiRangeProceduce.chooseEndImsi']}"
+                                                       for="endImsi"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="endImsi" maxlength="15" value="#{chooseProduceImsiRangeController.toImsi}" converter="stringTrimmer" placeholder="#{lang['imsiRangeProceduce.chooseEndImsiPlaceHolder']}"/>
+                                        <p:message for="endImsi" />
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['imsiRangeProceduce.docCode']}"
+                                                       for="docCode"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="docCode" maxlength="20" value="#{chooseProduceImsiRangeController.docCode}" converter="stringTrimmer" placeholder="#{lang['imsiRangeProceduce.docCodePlaceHolder']}"/>
+                                        <p:message for="docCode" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['imsi.info.start.date']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                                        <p:calendar
+                                                mask="true"
+                                                pattern="#{lang['common.datetime.format']}"
+                                                converterMessage="#{lang['imsi.info.start.date.invalid']}"
+                                                validatorMessage="#{lang['imsi.info.start.date.invalid']}"
+                                                value="#{chooseProduceImsiRangeController.fromDate}"
+                                                placeholder="#{lang['common.datetime.format']}"
+                                                required="false"
+                                                id="fromDate">
+                                            <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                        </p:calendar>
+                                        <p:message for="fromDate"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['imsi.info.end.date']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                                        <p:calendar
+                                                mask="true"
+                                                pattern="#{lang['common.datetime.format']}"
+                                                converterMessage="#{lang['imsi.info.end.date.invalid']}"
+                                                validatorMessage="#{lang['imsi.info.end.date.invalid']}"
+                                                value="#{chooseProduceImsiRangeController.toDate}"
+                                                placeholder="#{lang['common.datetime.format']}"
+                                                required="false"
+                                                id="toDate">
+                                            <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                        </p:calendar>
+                                        <p:message for="toDate"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['common.status']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="status"
+                                                         value="#{chooseProduceImsiRangeController.status}">
+                                            <f:selectItem itemLabel="#{lang['mn.stock.status.select']}" value="#{null}"/>
+                                            <f:selectItem itemLabel="#{lang['imsi.info.status.1']}"
+                                                          itemValue="#{1}"/>
+                                            <f:selectItem itemLabel="#{lang['imsi.info.status.2']}"
+                                                          itemValue="#{2}"/>
+                                            <f:selectItem itemLabel="#{lang['imsi.info.status.3']}"
+                                                          itemValue="#{3}"/>
+                                            <f:selectItem itemLabel="#{lang['imsi.info.status.4']}"
+                                                          itemValue="#{4}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="Container100 TexAlCenter">
+                                <p:commandButton styleClass="mg-left-5"
+                                                 actionListener="#{chooseProduceImsiRangeController.doSearch}"
+                                                 onclick="PF('imsiRange').getPaginator().setPage(0);"
+                                                 update="@([id$=imsiRange]), @([id$=msgTable]), @([id$=messages]), @([id$=pnlFormSearch])"
+                                                 value="#{lang['create.note.search']}"/>
+
+                                <p:commandButton value="#{lang['common.reset']}"
+                                                 process="@this"
+                                                 update="@([id$=formSearch]), @([id$=msgTable])"
+                                                 actionListener="#{chooseProduceImsiRangeController.resetFormSearch}"
+                                                 validateClient="true"
+                                                 styleClass="mg-left-5"/>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <p:outputPanel styleClass="ContainerIndent" id="pnlResult">
+                        <cbs:panel classForToggle="panelTable"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.stock.list.result.search']}"/>
+<!--
+                        oncomplete="PF('dlgCreateNumberRangeDlg').show(); setTimeout(function () {$('.typeServiceTxt').focus();}, 350);"
+-->
+                        <p:commandLink
+                                value="#{lang['imsiRangeProceduce.imsiRange.detail']}"
+                                oncomplete="PF('dlgViewDetail').show()"
+                                resetValues="true"
+                                update="@([id$=dlgViewDetail]), @([id$=msgTable])"
+                                actionListener="#{chooseProduceImsiRangeController.preToShowSearchDetail}"
+                                style="" styleClass="fa icon-plus Fs14 blue md-link" />
+                        <p:messages globalOnly="true" id="msgTable" showSummary="false" showDetail="true" closable="true"/>
+                        <div class="Container100 panelTable">
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        var="range"
+                                        rowKey=""
+                                        id="imsiRange"
+                                        widgetVar="imsiRange"
+                                        value="#{chooseProduceImsiRangeController.resultSearch}"
+                                        rowIndexVar="index"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}">
+                                    <p:column headerText="#{lang['mn.stock.limit.template.stt']}">
+                                        <p:outputLabel value="#{index + 1}" />
+                                    </p:column>
+                                    <p:column headerText="#{lang['imsiRangeProceduce.chooseFirstImsi']}" sortBy="#{range.startImsi}">
+                                        <p:outputLabel value="#{range.startImsi}" />
+                                    </p:column>
+                                    <p:column headerText="#{lang['imsiRangeProceduce.chooseEndImsi']}" sortBy="#{range.endImsi}">
+                                        <p:outputLabel value="#{range.endImsi}" />
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.quantity']}" sortBy="#{range.quatity}">
+                                        <p:outputLabel value="#{range.quatity}" />
+                                    </p:column>
+                                    <p:column headerText="#{lang['create.note.from.date']}" sortBy="#{range.startDate}">
+                                        <p:outputLabel value="#{range.startDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['create.note.to.date']}" sortBy="#{range.endDate}">
+                                        <p:outputLabel value="#{range.endDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.status']}"
+                                              sortBy="#{range.status}">
+                                        <p:outputLabel
+                                                value="#{chooseProduceImsiRangeController.getStatusName(range.status)}"
+                                                style="text-align: left"
+                                                title="#{chooseProduceImsiRangeController.getStatusName(range.status)}"
+                                        >
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['create.imsi.ranges.col.chooseRange']}">
+                                        <p:commandLink
+                                                rendered="#{chooseProduceImsiRangeController.renderChooseRange(range)}"
+                                                resetValues="true"
+                                                oncomplete="PF('dlgAddImsiRange').show()"
+                                                update="@([id$=dlgAddImsiRange]), @([id$=msgTable])"
+                                                actionListener="#{chooseProduceImsiRangeController.preToShowAdd(range)}"
+                                                style="" styleClass="fa icon-plus Fs14 blue md-link" />
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="top"
+                  id="dlgAddImsiRange"
+                  widgetVar="dlgAddImsiRange"
+                  header="#{lang['imsiRangeProceduce.ismiDetail']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="80%">
+            <ui:include src="dialog/dlgProduceImsiRange.xhtml"/>
+        </p:dialog>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="top"
+                  focus="@([id$=btnSearchViewDetail])"
+                  id="dlgViewDetail"
+                  widgetVar="dlgViewDetail"
+                  header="#{lang['imsiRangeProceduce.ismiDetail']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="80%">
+            <ui:include src="dialog/dlgViewImsiDetail.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
+</html>

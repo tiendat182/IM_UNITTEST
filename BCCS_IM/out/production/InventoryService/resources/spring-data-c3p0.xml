@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+      http://www.springframework.org/schema/tx
+      http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+      http://www.springframework.org/schema/data/jpa
+        http://www.springframework.org/schema/data/jpa/spring-jpa-1.1.xsd">
+
+    <!--<jpa:repositories-->
+    <!--base-package="com.viettel.bccs.sale,com.viettel.bccs.sale,com.viettel.bccs.product,com.viettel.bccs.inventory"-->
+    <!--entity-manager-factory-ref="entityManagerFactorySale"/>-->
+    <jpa:repositories base-package="com.viettel.bccs.inventory"
+                      entity-manager-factory-ref="entityManagerFactoryInventory"/>
+
+    <jpa:repositories base-package="com.viettel.bccs.partner, com.viettel.bccs.im1"
+                      entity-manager-factory-ref="entityManagerFactoryIM1"/>
+
+    <jpa:repositories base-package="com.viettel.bccs.anypay"
+                      entity-manager-factory-ref="entityManagerFactoryAnypayLib"/>
+
+    <jpa:repositories base-package="com.viettel.bccs.sale" entity-manager-factory-ref="entityManagerFactorySale"/>
+
+    <!--ket noi sale 2.0-->
+    <bean id="dataSourceSale" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          destroy-method="close"
+          p:driverClass="oracle.jdbc.driver.OracleDriver"
+          p:jdbcUrl="${sale.jdbc.url}"
+          p:user="${sale.jdbc.username}"
+          p:password="${sale.jdbc.password}"
+          p:acquireIncrement="5"
+          p:idleConnectionTestPeriod="60"
+          p:maxPoolSize="300"
+          p:maxStatements="50"
+          p:minPoolSize="0"/>
+
+    <bean id="proxyDataSourceSale" class="net.ttddyy.dsproxy.support.ProxyDataSource"
+          p:dataSource-ref="dataSourceSale"
+          p:dataSourceName="BCCS_SALE"
+          p:listener-ref="listeners"/>
+
+    <bean id="entityManagerFactorySale" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+          p:jpaVendorAdapter-ref="hibernateVendor"
+          p:persistenceXmlLocation="/WEB-INF/classes/persistence-c3p0.xml"
+          p:persistenceUnitName="BCCS_SALE"
+          p:dataSource-ref="proxyDataSourceSale"/>
+    <!--ket thuc Sale-->
+
+    <!--ket noi inventory 2.0-->
+    <bean id="dataSourceInventory" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          destroy-method="close"
+          p:driverClass="oracle.jdbc.driver.OracleDriver"
+          p:jdbcUrl="${inventory.jdbc.url}"
+          p:user="${inventory.jdbc.username}"
+          p:password="${inventory.jdbc.password}"
+          p:acquireIncrement="5"
+          p:idleConnectionTestPeriod="60"
+          p:maxPoolSize="300"
+          p:maxStatements="50"
+          p:minPoolSize="0"/>
+
+    <bean id="proxyDataSourceInventory" class="net.ttddyy.dsproxy.support.ProxyDataSource"
+          p:dataSource-ref="dataSourceInventory"
+          p:dataSourceName="BCCS_IM"
+          p:listener-ref="listeners"/>
+
+    <bean id="entityManagerFactoryInventory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+          p:jpaVendorAdapter-ref="hibernateVendor"
+          p:persistenceXmlLocation="/WEB-INF/classes/persistence-c3p0.xml"
+          p:persistenceUnitName="BCCS_IM"
+          p:dataSource-ref="proxyDataSourceInventory"/>
+    <!--ket thuc inventory-->
+
+    <!--ket noi anypay db-->
+    <bean id="dataSourceAnyPay" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          destroy-method="close"
+          p:driverClass="oracle.jdbc.driver.OracleDriver"
+          p:jdbcUrl="${anypaylib.jdbc.url}"
+          p:user="${anypaylib.jdbc.username}"
+          p:password="${anypaylib.jdbc.password}"
+          p:acquireIncrement="5"
+          p:idleConnectionTestPeriod="60"
+          p:maxPoolSize="300"
+          p:maxStatements="50"
+          p:minPoolSize="0"/>
+
+    <bean id="proxyDataSourceAnyPay" class="net.ttddyy.dsproxy.support.ProxyDataSource"
+          p:dataSource-ref="dataSourceAnyPay"
+          p:dataSourceName="PUAnypayLib"
+          p:listener-ref="listeners"/>
+
+    <bean id="entityManagerFactoryAnypayLib" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+          p:jpaVendorAdapter-ref="hibernateVendor"
+          p:persistenceXmlLocation="/WEB-INF/classes/persistence-c3p0.xml"
+          p:persistenceUnitName="PUAnypayLib"
+          p:dataSource-ref="proxyDataSourceAnyPay"/>
+    <!--ket thuc anypay-->
+
+    <!--ket noi im 1.0-->
+    <bean id="dataSourceIm1" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          destroy-method="close"
+          p:driverClass="oracle.jdbc.driver.OracleDriver"
+          p:jdbcUrl="${imlib.jdbc.url}"
+          p:user="${imlib.jdbc.username}"
+          p:password="${imlib.jdbc.password}"
+          p:acquireIncrement="5"
+          p:idleConnectionTestPeriod="60"
+          p:maxPoolSize="300"
+          p:maxStatements="50"
+          p:minPoolSize="0"/>
+
+    <bean id="proxyDataSourceIm1" class="net.ttddyy.dsproxy.support.ProxyDataSource"
+          p:dataSource-ref="dataSourceIm1"
+          p:dataSourceName="BCCS_IM_LIB"
+          p:listener-ref="listeners"/>
+
+    <bean id="entityManagerFactoryIM1" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+          p:jpaVendorAdapter-ref="hibernateVendor"
+          p:persistenceXmlLocation="/WEB-INF/classes/persistence-c3p0.xml"
+          p:persistenceUnitName="BCCS_IM_LIB"
+          p:dataSource-ref="proxyDataSourceIm1"/>
+    <!---->
+
+    <!-- Specify our ORM vendor -->
+    <bean id="hibernateVendor" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+          p:showSql="false"/>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <bean id="sale" class="org.springframework.orm.jpa.JpaTransactionManager"
+          p:entityManagerFactory-ref="entityManagerFactorySale"/>
+    <bean id="im2" class="org.springframework.orm.jpa.JpaTransactionManager"
+          p:entityManagerFactory-ref="entityManagerFactoryInventory"/>
+    <bean id="im1" class="org.springframework.orm.jpa.JpaTransactionManager"
+          p:entityManagerFactory-ref="entityManagerFactoryIM1"/>
+    <bean id="anypay" class="org.springframework.orm.jpa.JpaTransactionManager"
+          p:entityManagerFactory-ref="entityManagerFactoryAnypayLib"/>
+
+    <bean id="transactionManager" class="org.springframework.data.transaction.ChainedTransactionManager">
+        <constructor-arg>
+            <list>
+                <ref bean="sale"/>
+                <ref bean="im1"/>
+                <ref bean="im2"/>
+                <ref bean="anypay"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="listeners" class="net.ttddyy.dsproxy.listener.ChainListener">
+        <property name="listeners">
+            <list>
+                <!--<bean class="net.ttddyy.dsproxy.listener.CommonsQueryLoggingListener">-->
+                <bean class="net.ttddyy.dsproxy.listener.CommonsQueryLoggingListener"
+                      p:logLevel="INFO"
+                      p:writeAsJson="true"
+                      p:writeDataSourceName="true"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>

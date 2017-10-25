@@ -1,0 +1,127 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h:form id="frmLookupSerialCardAndKitByFile">
+        <p:outputPanel styleClass="container100">
+            <div class="ContainerIndent">
+                <p:messages id="message" showSummary="false" showDetail="true" closable="true"/>
+            </div>
+            <p:outputPanel id="pnImport" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="panelImport"
+                           toggle="true"
+                           titleHeader="#{lang['lookup.serial.card.and.kit.by.file.title']}"/>
+
+                <div class="Container100 panelImport" style="margin-bottom: 10px;margin-top: 10px;">
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container66 Responsive66" style="margin-top: 10px!important;">
+                            <div class="Container30 Responsive25 mg-left-15 pd-top-7">
+                                <p:outputLabel
+                                        for="outputAttachFile"
+                                        styleClass="lb-sentinel"
+                                        value="#{lang['create.order.file.data']}"/>
+                            </div>
+                            <div class="Container70 Responsive75 ui-fluid">
+                                <p:inputText id="outputAttachFile"
+                                             styleClass="outputAttachFile"
+                                             maxlength="100"
+                                             required="true"
+                                             placeholder="#{lang['search.number.range.input.fileName']}"
+                                             value="#{lookupSerialCardAndKitByFileController.fileName}"
+                                             readonly="true"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container100">
+                                <p:fileUpload id="fileAttach"
+                                              process="@this"
+                                              label="#{lang['mn.stock.limit.createFile']}"
+                                              update="@this, @([id$=outputAttachFile]),@([id$=message]),@([id$=pnDown])"
+                                              dragDropSupport="true" required="true" mode="advanced"
+                                              auto="true"
+                                              allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                              invalidFileMessage="#{lang['mn.isdn.rule.invalid.file.type']}"
+                                              value="#{lookupSerialCardAndKitByFileController.uploadedFile}"
+                                              fileUploadListener="#{lookupSerialCardAndKitByFileController.fileUploadAction}">
+                                </p:fileUpload>
+                            </div>
+                        </div>
+                        <div class="Container100 Responsive100">
+                            <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                                <p:outputLabel
+                                        for="searchOption"
+                                        styleClass="lb-sentinel"
+                                        value="#{lang['lookup.serial.card.and.kit.by.file.type']}"></p:outputLabel>
+                            </div>
+                            <div class="Container80 Responsive75 ui-fluid">
+                                <p:selectOneRadio
+                                        id="searchOption"
+                                        value="#{lookupSerialCardAndKitByFileController.searchOption}"
+                                        requiredMessage="#{lang['lookup.serial.card.and.kit.by.file.type.message']}"
+                                        required="true">
+                                    <f:selectItem
+                                            itemLabel="#{lang['lookup.serial.card.and.kit.by.file.type.card']}"
+                                            itemValue="1"/>
+                                    <f:selectItem itemLabel="#{lang['lookup.serial.card.and.kit.by.file.type.kit']}"
+                                                  itemValue="2"/>
+                                </p:selectOneRadio>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container100">
+                            <p:outputPanel id="pnDown" style="margin-left: 20px">
+                                <p:commandLink
+                                        id="btnDownloadTemplate"
+                                        value="#{lang['mn.stock.status.isdn.update.status.file_template']}"
+                                        rendered="#{empty lookupSerialCardAndKitByFileController.serialListResult}"
+                                        title="#{lang['create.note.download.file.title']}"
+                                        ajax="false"
+                                        immediate="true"
+                                        style="text-decoration: none!important;">
+                                    <p:fileDownload
+                                            value="#{lookupSerialCardAndKitByFileController.downloadFileTemplate()}"/>
+                                </p:commandLink>
+                            </p:outputPanel>
+                        </div>
+                    </div>
+                </div>
+                <div class="Container100 TexAlCenter" style="margin-bottom: 10px !important;">
+                    <cbs:confirmDialog
+                            idComponent="search"
+                            id="search"
+                            valueButton="#{lang['common.button.search']}"
+                            headerConfirm="#{lang['lookup.serial.card.and.kit.by.file.confirm.header']}"
+                            messageConfirm="#{lang['lookup.serial.card.and.kit.by.file.confirm.body']}"
+                            actionOK="#{lookupSerialCardAndKitByFileController.search()}"
+                            resetValueButton="true"
+                            process="@this,@([id$=frmLookupSerialCardAndKitByFile])"
+                            updateArea="@this,@([id$=frmLookupSerialCardAndKitByFile])"
+                            processOK="@this,@([id$=frmLookupSerialCardAndKitByFile])"
+                            updateOK="@([id$=frmLookupSerialCardAndKitByFile])"
+                            actionValidate="#{lookupSerialCardAndKitByFileController.validateSearch}"
+                            focusCancel="true"
+                            isButton="true"/>
+                    <div class="Container100 TexAlCenter" style="margin-bottom: 10px !important;">
+                        <p:commandLink
+                                id="bthDownloadResult"
+                                value="#{lang['button.export.excel.result']}"
+                                rendered="#{not empty lookupSerialCardAndKitByFileController.serialListResult}"
+                                title="#{lang['create.note.download.file.title']}"
+                                ajax="false"
+                                immediate="true"
+                                style="text-decoration: none!important;">
+                            <p:fileDownload
+                                    value="#{lookupSerialCardAndKitByFileController.downloadFileResult()}"/>
+                        </p:commandLink>
+                    </div>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

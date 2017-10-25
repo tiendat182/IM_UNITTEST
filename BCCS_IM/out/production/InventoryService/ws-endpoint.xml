@@ -1,0 +1,1274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:cxf="http://cxf.apache.org/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+            http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+            http://www.springframework.org/schema/util
+            http://www.springframework.org/schema/util/spring-util.xsd
+            http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
+
+    <!-- these are included in the dependency jar -->
+    <import resource="classpath:META-INF/cxf/cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+    <import resource="ws-client.xml"/>
+
+    <cxf:bus>
+        <cxf:properties>
+            <!--entry key="ws-security.global.ehcachemanager"
+                   value-ref="cacheManagerFactory"/>
+            <entry>
+                <key><util:constant static-field="org.apache.cxf.ws.security.SecurityConstants.CACHE_CONFIG_FILE"/></key>
+                <value>classpath*:cxf-ehcache.xml</value>
+            </entry-->
+
+            <entry>
+                <key>
+                    <util:constant static-field="org.apache.cxf.ws.security.SecurityConstants.ENABLE_NONCE_CACHE"/>
+                </key>
+                <value>false</value>
+            </entry>
+        </cxf:properties>
+        <cxf:inInterceptors>
+            <!--bean id="loggingInInterceptor"
+                  class="com.viettel.fw.logging.LoggingInInterceptor">
+                <property name="prettyLogging" value="false"/>
+            </bean-->
+
+            <bean id="wss4JInInterceptor" class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+                <constructor-arg>
+                    <map>
+                        <entry key="action" value="UsernameToken"/>
+                        <entry key="passwordType" value="PasswordText"/>
+                        <entry key="passwordCallbackRef" value-ref="cxfWsClientFactory"/>
+                    </map>
+                </constructor-arg>
+            </bean>
+        </cxf:inInterceptors>
+        <cxf:outInterceptors>
+            <bean class="org.apache.cxf.transport.common.gzip.GZIPOutInterceptor"/>
+            <!--bean id="loggingOutInterceptor" class="com.viettel.fw.logging.LoggingOutInterceptor">
+                <property name="prettyLogging" value="false"/>
+            </bean-->
+        </cxf:outInterceptors>
+
+    </cxf:bus>
+
+    <bean id="genericWebInfoHandler" class="com.viettel.ws.common.utils.GenericWebInfoHandler"/>
+
+    <!--<jaxws:endpoint-->
+    <!--id="networkAddressConfiguration"-->
+    <!--implementor="#networkAddressValidator"-->
+    <!--address="/NetworkAddressConfiguration">-->
+    <!--</jaxws:endpoint>-->
+
+    <!--<bean id="networkAddressValidator"-->
+    <!--class="com.viettel.web.network.NetworkAddressValidator">-->
+    <!--</bean>-->
+
+    <!--<bean id="networkAddressValidatingInterceptor"-->
+    <!--class="com.viettel.web.network.NetworkAddressValidatingInterceptor">-->
+    <!--<constructor-arg index="0" ref="networkAddressValidator"/>-->
+    <!--</bean>-->
+
+
+    <jaxws:endpoint
+            id="InvoiceActionLogService"
+            implementor="#invoiceActionLogServiceImpl"
+            address="/inventory/InvoiceActionLogService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="InvoiceTemplateLogService"
+            implementor="#invoiceTemplateLogServiceImpl"
+            address="/inventory/InvoiceTemplateLogService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="InvoiceTemplateTypeService"
+            implementor="#invoiceTemplateTypeServiceImpl"
+            address="/inventory/InvoiceTemplateTypeService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="InvoiceTypeService"
+            implementor="#invoiceTypeServiceImpl"
+            address="/inventory/InvoiceTypeService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="OptionSetService"
+            implementor="#optionSetServiceImpl"
+            address="/inventory/OptionSetService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="OptionSetValueService"
+            implementor="#optionSetValueServiceImpl"
+            address="/inventory/OptionSetValueService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="DebitDayTypeService"
+            implementor="#debitDayTypeServiceImpl"
+            address="/inventory/DebitDayTypeService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="DebitLevelService"
+            implementor="#debitLevelServiceImpl"
+            address="/inventory/DebitLevelService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="DebitRequestService"
+            implementor="#debitRequestServiceImpl"
+            address="/inventory/DebitRequestService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="DebitRequestDetailService"
+            implementor="#debitRequestDetailServiceImpl"
+            address="/inventory/DebitRequestDetailService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+
+    <jaxws:endpoint
+            id="FinanceTypeService"
+            implementor="#financeTypeServiceImpl"
+            address="/inventory/FinanceTypeService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="StockDebitService"
+            implementor="#stockDebitServiceImpl"
+            address="/inventory/StockDebitService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="StaffService"
+            implementor="#staffServiceImpl"
+            address="/inventory/StaffService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="InvoiceListService"
+            implementor="#invoiceListServiceImpl"
+            address="/inventory/InvoiceListService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="InvoiceSerialService"
+            implementor="#invoiceSerialServiceImpl"
+            address="/inventory/InvoiceSerialService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="ShopService"
+            implementor="#shopServiceImpl"
+            address="/inventory/ShopService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="AreaService"
+            implementor="#areaServiceImpl"
+            address="/inventory/AreaService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="NumberActionService"
+            implementor="#numberActionServiceImpl"
+            address="/inventory/NumberActionService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="StockNumberService"
+            implementor="#stockNumberServiceImpl"
+            address="/inventory/StockNumberService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+
+    <jaxws:endpoint
+            id="ProductOfferTypeService"
+            implementor="#productOfferTypeServiceImpl"
+            address="/inventory/ProductOfferTypeService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="GroupFilterRuleService"
+            implementor="#groupFilterRuleServiceImpl"
+            address="/inventory/GroupFilterRuleService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="InvoiceTemplateService"
+            implementor="#invoiceTemplateServiceImpl"
+            address="/inventory/InvoiceTemplateService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="InvoiceTemplateIm1Service"
+            implementor="#invoiceTemplateIm1ServiceImpl"
+            address="/im1/InvoiceTemplateIm1Service">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="InvoiceTemplateLogIm1Service"
+            implementor="#invoiceTemplateLogIm1ServiceImpl"
+            address="/im1/InvoiceTemplateLogIm1Service">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="equipmentService"
+            implementor="#equipmentServiceImpl"
+            address="/inventory/EquipmentService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+
+    <jaxws:endpoint
+            id="NumberFilterRuleService"
+            implementor="#numberFilterRuleServiceImpl"
+            address="/inventory/NumberFilterRuleService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="ProductOfferingService"
+            implementor="#productOfferingServiceImpl"
+            address="/inventory/ProductOfferingService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="BrasService"
+            implementor="#brasServiceImpl"
+            address="/inventory/BrasService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="StockCardService"
+            implementor="#stockCardServiceImpl"
+            address="/inventory/StockCardService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="StockHandsetService"
+            implementor="#stockHandsetServiceImpl"
+            address="/inventory/StockHandsetService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="StockKitService"
+            implementor="#stockKitServiceImpl"
+            address="/inventory/StockKitService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="StockSimInfoService"
+            implementor="#stockSimInfoServiceImpl"
+            address="/inventory/StockSimInfoService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="StockSimService"
+            implementor="#stockSimServiceImpl"
+            address="/inventory/StockSimService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="StockTotalService"
+            implementor="#stockTotalServiceImpl"
+            address="/inventory/StockTotalService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="StockTransActionService"
+            implementor="#stockTransActionServiceImpl"
+            address="/inventory/StockTransActionService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="StockTransDetailService"
+            implementor="#stockTransDetailServiceImpl"
+            address="/inventory/StockTransDetailService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockTransDetailRescueService"
+            implementor="#stockTransDetailRescueServiceImpl"
+            address="/inventory/StockTransDetailRescueService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockHandsetRescueService"
+            implementor="#stockHandsetRescueServiceImpl"
+            address="/inventory/StockHandsetRescueService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockTransSerialRescueService"
+            implementor="#stockTransSerialRescueServiceImpl"
+            address="/inventory/StockTransSerialRescueService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockTransSerialService"
+            implementor="#stockTransSerialServiceImpl"
+            address="/inventory/StockTransSerialService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="StockTransService"
+            implementor="#stockTransServiceImpl"
+            address="/inventory/StockTransService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="ExecuteStockTransService"
+            implementor="#executeStockTransServiceImpl"
+            address="/inventory/ExecuteStockTransService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="ReasonGroupService"
+            implementor="#reasonGroupServiceImpl"
+            address="/inventory/ReasonGroupService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="ReasonService"
+            implementor="#reasonServiceImpl"
+            address="/inventory/ReasonService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="DomainService"
+            implementor="#domainServiceImpl"
+            address="/inventory/DomainService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="BrasIppoolService"
+            implementor="#brasIppoolServiceImpl"
+            address="/inventory/BrasIppoolService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="VofficeRoleService"
+            implementor="#vofficeRoleServiceImpl"
+            address="/inventory/VofficeRoleService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="StockTransLogisticService"
+            implementor="#stockTransLogisticServiceImpl"
+            address="/inventory/StockTransLogisticService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="SignFlowDetailService"
+            implementor="#signFlowDetailServiceImpl"
+            address="/inventory/SignFlowDetailService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="SignFlowService"
+            implementor="#signFlowServiceImpl"
+            address="/inventory/SignFlowService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="StockTransVofficeService"
+            implementor="#stockTransVofficeServiceImpl"
+            address="/inventory/StockTransVofficeService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="FilterSpecialNumberService"
+            implementor="#filterSpecialNumberServiceImpl"
+            address="/inventory/FilterSpecialNumberService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="AutoSignVOfficeService"
+            implementor="#autoSignVOfficeServiceImpl"
+            address="/inventory/AutoSignVOfficeService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockCheckReportService"
+            implementor="#stockCheckReportServiceImpl"
+            address="/inventory/StockCheckReportService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+
+    <jaxws:endpoint
+            id="NumberActionDetail"
+            implementor="#numberActionDetailServiceImpl"
+            address="/inventory/NumberActionDetailService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="CommonService"
+            implementor="#commonServiceImpl"
+            address="/inventory/CommonService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="ReceiptExpenseService"
+            implementor="#receiptExpenseServiceImpl"
+            address="/inventory/ReceiptExpenseService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="DepositService"
+            implementor="#depositServiceImpl"
+            address="/inventory/DepositService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="DepositDetailService"
+            implementor="#depositDetailServiceImpl"
+            address="/inventory/DepositDetailService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="ProductOfferPriceService"
+            implementor="#productOfferPriceServiceImpl"
+            address="/inventory/ProductOfferPriceService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="RescueInformationExportStockService"
+            implementor="#rescueInformationExportStockServiceImpl"
+            address="/inventory/RescueInformationExportStockService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="SaleWs"
+            implementor="#saleWsImpl"
+            address="/inventory/SaleWs">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="StockIsdnTransService"
+            implementor="#stockIsdnTransServiceImpl"
+            address="/inventory/StockIsdnTransService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockInspectService"
+            implementor="#stockInspectServiceImpl"
+            address="/inventory/StockInspectService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockInspectSysService"
+            implementor="#stockInspectSysServiceImpl"
+            address="/inventory/StockInspectSysService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockInspectRealService"
+            implementor="#stockInspectRealServiceImpl"
+            address="/inventory/StockInspectRealService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockIsdnTransDetailService"
+            implementor="#stockIsdnTransDetailServiceImpl"
+            address="/inventory/StockIsdnTransDetailService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="AccountAgentService"
+            implementor="#accountAgentServiceImpl"
+            address="/inventory/AccountAgentService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="AccountBalanceService"
+            implementor="#accountBalanceServiceImpl"
+            address="/inventory/AccountBalanceService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="AccountBookBankplusService"
+            implementor="#accountBookBankplusServiceImpl"
+            address="/inventory/AccountBookBankplusService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="InventoryService"
+            implementor="#inventoryServiceImpl"
+            address="/inventory/InventoryService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="ImportPartnerRequestService"
+            implementor="#importPartnerRequestServiceImpl"
+            address="/inventory/ImportPartnerRequestService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="ImportPartnerDetailService"
+            implementor="#importPartnerDetailServiceImpl"
+            address="/inventory/ImportPartnerDetailService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="MtService"
+            implementor="#mtServiceImpl"
+            address="/inventory/MtService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="PartnerService"
+            implementor="#partnerServiceImpl"
+            address="/inventory/PartnerService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="ProductWs"
+            implementor="#productWsImpl"
+            address="/inventory/ProductWs">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="PayNoteAndReportService"
+            implementor="#payNoteAndReportServiceImpl"
+            address="/inventory/PayNoteAndReportService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="StockDocumentService"
+            implementor="#stockDocumentServiceImpl"
+            address="/inventory/StockDocumentService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="ImportStockFromPartnerToBranchService"
+            implementor="#importStockFromPartnerToBranchServiceImpl"
+            address="/inventory/ImportStockFromPartnerToBranchService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="ImportStockFromPartnerService"
+            implementor="#importStockFromPartnerServiceImpl"
+            address="/inventory/ImportStockFromPartnerService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="PartnerUpdateSimService"
+            implementor="#partnerUpdateSimServiceImpl"
+            address="/inventory/PartnerUpdateSimService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="ApnService"
+            implementor="#apnServiceImpl"
+            address="/inventory/ApnService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="ApnIpService"
+            implementor="#apnIpServiceImpl"
+            address="/inventory/ApnIpService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="PartnerContractService"
+            implementor="#partnerContractServiceImpl"
+            address="/inventory/PartnerContractService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockTransRescueService"
+            implementor="#stockTransRescueServiceImpl"
+            address="/inventory/StockTransRescueService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="DivideSerialActionService"
+            implementor="#divideSerialActionServiceImpl"
+            address="/inventory/DivideSerialActionService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="RequestLiquidateService"
+            implementor="#requestLiquidateServiceImpl"
+            address="/inventory/RequestLiquidateService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="RequestLiquidateDetailService"
+            implementor="#requestLiquidateDetailServiceImpl"
+            address="/inventory/RequestLiquidateDetailService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="RequestLiquidateSerialService"
+            implementor="#requestLiquidateSerialServiceImpl"
+            address="/inventory/RequestLiquidateSerialService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="HandleVOfficeResultService"
+            implementor="#handleVOfficeResultServiceImpl"
+            address="/inventory/HandleVOfficeResultService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockOrderAgentService"
+            implementor="#stockOrderAgentServiceImpl"
+            address="/inventory/StockOrderAgentService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockOrderAgentDetailService"
+            implementor="#stockOrderAgentDetailServiceImpl"
+            address="/inventory/StockOrderAgentDetailService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockBalanceRequestService"
+            implementor="#stockBalanceRequestServiceImpl"
+            address="/inventory/StockBalanceRequestService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockBalanceDetailService"
+            implementor="#stockBalanceDetailServiceImpl"
+            address="/inventory/StockBalanceDetailService"
+            >
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockBalanceSerialService"
+            implementor="#stockBalanceSerialServiceImpl"
+            address="/inventory/StockBalanceSerialService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockOwnerTmpService"
+            implementor="#stockOwnerTmpServiceImpl"
+            address="/inventory/StockOwnerTmpService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="ChangeDamagedProductService"
+            implementor="#changeDamagedProductServiceImpl"
+            address="/inventory/ChangeDamagedProductService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="KttsService"
+            implementor="#kttsServiceImpl"
+            address="/inventory/KttsService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="CreateUnderlyingFromPartnerService"
+            implementor="#createUnderlyingFromPartnerServiceImpl"
+            address="/inventory/CreateUnderlyingFromPartnerService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="SmartphoneService"
+            implementor="#smartphoneServiceImpl"
+            address="/inventory/SmartphoneService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="VtShopService"
+            implementor="#vtShopServiceImpl"
+            address="/inventory/VtShopService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="WarrantyService"
+            implementor="#warrantyServiceImpl"
+            address="/inventory/WarrantyService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="ExternalInventoryService"
+            implementor="#externalInventoryServiceImpl"
+            address="/inventory/ExternalInventoryService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="InventoryExternalService"
+            implementor="#inventoryExternalServiceImpl"
+            address="/inventory/InventoryExternalService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="LogisticService"
+            implementor="#logisticServiceImpl"
+            address="/inventory/LogisticService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="HotlineService"
+            implementor="#hotlineServiceImpl"
+            address="/inventory/HotlineService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockTotalCycleService"
+            implementor="#stockTotalCycleServiceImpl"
+            address="/inventory/StockTotalCycleService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="BankPlusService"
+            implementor="#bankPlusServiceImpl"
+            address="/inventory/BankPlusService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockRequestService"
+            implementor="#stockRequestServiceImpl"
+            address="/inventory/StockRequestService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="ChangeModelTransService"
+            implementor="#changeModelTransServiceImpl"
+            address="/inventory/ChangeModelTransService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <!-- hopnv -->
+    <jaxws:endpoint
+            id="OrderDivideDeviceService"
+            implementor="#orderDivideDeviceServiceImpl"
+            address="/inventory/OrderDivideDeviceService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockDeviceTransferService"
+            implementor="#stockDeviceTransferServiceImpl"
+            address="/inventory/StockDeviceTransferService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="ApproachOrderDivideDeviceService"
+            implementor="#approachOrderDivideDeviceServiceImpl"
+            address="/inventory/ApproachOrderDivideDeviceService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="DeviceConfigService"
+            implementor="#deviceConfigServiceImpl"
+            address="/inventory/DeviceConfigService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="ChangeModelTransDetailService"
+            implementor="#changeModelTransDetailServiceImpl"
+            address="/inventory/ChangeModelTransDetailService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="ChangeModelTransSerialService"
+            implementor="#changeModelTransSerialServiceImpl"
+            address="/inventory/ChangeModelTransSerialService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockDepositService"
+            implementor="#stockDepositServiceImpl"
+            address="/inventory/StockDepositService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="ReportChangeHandsetService"
+            implementor="#reportChangeHandsetServiceImpl"
+            address="/inventory/ReportChangeHandsetService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="ReturnStockService"
+            implementor="#returnStockServiceImpl"
+            address="/inventory/ReturnStockService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="ProductExchangeService"
+            implementor="#productExchangeServiceImpl"
+            address="/inventory/ProductExchangeService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockRequestOrderDetailService"
+            implementor="#stockRequestOrderDetailServiceImpl"
+            address="/inventory/StockRequestOrderDetailService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockRequestOrderService"
+            implementor="#stockRequestOrderServiceImpl"
+            address="/inventory/StockRequestOrderService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="KcsService"
+            implementor="#kcsServiceImpl"
+            address="/inventory/KcsService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="LockUserInfoService"
+            implementor="#lockUserInfoServiceImpl"
+            address="/inventory/LockUserInfoService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="VoucherInfoService"
+            implementor="#voucherInfoServiceImpl"
+            address="/inventory/VoucherInfoService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="InvoiceUsedService"
+            implementor="#invoiceUsedServiceImpl"
+            address="/inventory/InvoiceUsedService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="LockUserTypeService"
+            implementor="#lockUserTypeServiceImpl"
+            address="/inventory/LockUserTypeService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="TestAllService"
+            implementor="#testAllServiceImpl"
+            address="/inventory/TestAllService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockTransMaterialService"
+            implementor="#stockTransMaterialServiceImpl"
+            address="/inventory/StockTransMaterialService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockTransDocumentService"
+            implementor="#stockTransDocumentServiceImpl"
+            address="/inventory/StockTransDocumentService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="RevokeKitDetailService"
+            implementor="#revokeKitDetailServiceImpl"
+            address="/inventory/RevokeKitDetailService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockDeliverDetailService"
+            implementor="#stockDeliverDetailServiceImpl"
+            address="/inventory/StockDeliverDetailService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="StockDeliverService"
+            implementor="#stockDeliverServiceImpl"
+            address="/inventory/StockDeliverService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    
+    <jaxws:endpoint
+            id="PaymentGroupService"
+            implementor="#paymentGroupServiceImpl"
+            address="/inventory/PaymentGroupService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="PaymentGroupServiceService"
+            implementor="#paymentGroupServiceServiceImpl"
+            address="/inventory/PaymentGroupServiceService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="PaymentDebitService"
+            implementor="#paymentDebitServiceImpl"
+            address="/inventory/PaymentDebitService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint
+            id="PaymentGroupServiceDetailService"
+            implementor="#paymentGroupServiceDetailServiceImpl"
+            address="/inventory/PaymentGroupServiceDetailService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+<jaxws:endpoint
+            id="ImsiMadeService"
+            implementor="#imsiMadeServiceImpl"
+            address="/inventory/ImsiMadeService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="ImsiInfoService"
+            implementor="#imsiInfoServiceImpl"
+            address="/inventory/ImsiInfoService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+    <jaxws:endpoint
+            id="PartnerMngService"
+            implementor="#partnerMngServiceImpl"
+            address="/inventory/PartnerMngService">
+        <jaxws:handlers>
+            <bean parent="genericWebInfoHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+</beans>

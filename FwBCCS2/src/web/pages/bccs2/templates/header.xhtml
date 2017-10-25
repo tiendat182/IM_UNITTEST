@@ -1,0 +1,459 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition>
+        <link rel="shortcut icon" href="#{request.contextPath}/resources/themes/logo/1.png"/>
+        <h:form id="headerForm">
+            <style type="text/css">
+                #sub-header2 div:first-child  {
+                    left: -0.5px !important;
+                    height: 108px;
+                }
+                .over_subMenu div {
+                    margin-left: -1px;
+                }
+            </style>
+            <div id="sub-header" class="w100 h100">
+                <!-- LOGO -->
+                <p:outputPanel id="logo_area" styleClass="logo-area float-left h100">
+                    <div id="logo" class="float-left">
+                        <img width="82px" height="30px" src="#{request.contextPath}/resources/themes/images/vCbs.png"/>
+                    </div>
+                    <div id="vCbsDiv" class="float-right">
+                        <span id="span1">viettel convergent</span>
+                        <br/>
+                        <span id="span2">billing system</span>
+                    </div>
+                    <div class="clear-both"></div>
+                    <p:overlayPanel for="logo_area" showEvent="mouseover" hideEvent="mouseout" id="over_logo_pn" styleClass="logo-over-pn" style="background-color: transparent;box-shadow: 0 0px 0px rgba(0, 0, 0, 0.8);border: 0px;">
+                        <div id="sw_bar" class="swBar  UnifiedHeader" style="display: block; top: 0px; opacity: 1;">
+                            <ul id="sw_tileList" class="swTileList">
+                                <p:remoteCommand name="resetBar" process="@this" update="@([id$=headerForm])"
+                                                 immediate="true">
+                                </p:remoteCommand>
+                                <c:forEach var="parent" items="#{loginBean.authoLstCache}" varStatus="parentStt">
+                                    <li class="swTile " style="text-align: center;">
+                                        <a href="#{loginBean.mapContextPath.get(parent.objectCode)}" class="swTileLink" style="background-color:#0072c6;border-color:#0072c6;">
+                                            <span class="clip110x110_#{parentStt.count} ci " ></span>
+                                            <span class="swTileText AppTileUIFont" >
+                                                <h:outputText value="#{parent.objectName}" escape="true"/>
+                                            </span>
+                                        </a>
+                                        <!--<p:commandLink ajax="false"-->
+                                        <!--immediate="true"-->
+                                        <!--action="#{loginBean.doSelectSubSystem(parent)}"-->
+                                        <!--styleClass="swTileLink "-->
+                                        <!--style="background-color:#0072c6;border-color:#0072c6;"-->
+                                        <!-->-->
+                                    <!--<span class="clip110x110_#{parentStt.count} ci " ></span>-->
+                                        <!--<span class="swTileText AppTileUIFont" >-->
+                                            <!--<h:outputText value="#{parent.objectName}" escape="true"/>-->
+                                        <!--</span>-->
+                                        <!--</p:commandLink>-->
+                                    </li>
+                                </c:forEach>
+
+                            </ul>
+                            <!--<span class="border-arrow arrow"></span>-->
+                            <!--<span class="arrow"></span>-->
+                        </div>
+                    </p:overlayPanel>
+                </p:outputPanel>
+
+                <!-- LOGO -->
+                <div id="splitter-logo" class="splitterHeader float-left"></div>
+                <!--UTILITY-->
+                <div id="home-area" class="newFeature float-left" onmouseup="gotoHome();" title="Home">
+                    <div class="bg"/>
+                </div>
+                <div id="utility-area" class="float-left">
+                    <div id="pnFe" class="float-left pnFe">
+                        <p:outputPanel id="subFe" styleClass="newFeature float-left"  rendered="#{loginBean.grantedAuthorityPassportSelected != null}">
+                            <h:outputText escape="true" value="#{loginBean.grantedAuthorityPassportSelected.objectName}" />
+                        </p:outputPanel>
+                    </div>
+                    <div id="notify-area" class="newFeature float-left" onmouseup="showNotifi();" over="false">notification
+                        <h:form>
+                            <div id="noti-count"><h:outputText value="#{notificationController.countNewNoti}"/></div>
+                        </h:form>
+                    </div>
+                    <div id="feedback-area" class="newFeature float-left" onmouseup="checkOpenDlg('fbDlg');">feedback</div>
+                    <div id="favorite-area" class="newFeature float-left">favorite</div>
+                    <div id="help-area" class="newFeature float-left" onmouseup="checkOpenDlg('helpDlg');" title="F1 to open Help">help</div>
+                    <div class="clear-both"></div>
+
+                </div>
+                <!--UTILITY-->
+                <!--THEME-->
+                <div id="theme-area" class="float-right h100">
+                    <p:themeSwitcher value="#{themeSwitcherBean.theme}"
+                                     effect="fade" id="statefulSwitcher" style="width:110px!important;">
+                        <f:selectItems value="#{themeSwitcherBean.themes}" />
+                        <p:ajax listener="#{themeSwitcherBean.saveTheme}" />
+                    </p:themeSwitcher>
+                </div>
+                <!--THEME-->
+                <div id="splitter-theme" class="splitterHeader float-right"></div>
+                <!--PROFILE-->
+                <!--<div id="language" class="float-right" align="center">-->
+                    <!--<c:if test="#{loginBean.countriesInMap.size() le 2}">-->
+                        <!--<c:forEach var="language" items="#{loginBean.countriesInMap}">-->
+                            <!--<p:commandLink id="#{language.value}" process="@this" update="@all" actionListener="#{loginBean.countryLocaleCodeChanged}" ajax="true">-->
+                                <!--<img src="#{request.contextPath}/resources/themes/logo/#{language.value}.png" title="#{language.key}"/>-->
+                            <!--</p:commandLink>-->
+                        <!--</c:forEach>-->
+                    <!--</c:if>-->
+                    <!--<c:if test="#{loginBean.countriesInMap.size() gt 2}">-->
+                        <!--<c:forEach var="language" items="#{loginBean.countriesInMap}" varStatus="index">-->
+                            <!--<c:if test="#{index.count le 2}">-->
+                                <!--<p:commandLink id="#{language.value}" process="@this" update="@all" actionListener="#{loginBean.countryLocaleCodeChanged}" ajax="true">-->
+                                    <!--<img src="#{request.contextPath}/resources/themes/logo/#{language.value}.png" title="#{language.key}"/>-->
+                                <!--</p:commandLink>-->
+                            <!--</c:if>-->
+                            <!--<c:if test="#{index.count eq 3}">-->
+                                <!--<span title="more language"><p:outputPanel styleClass="ui-icon ui-icon-carat-1-s float-right moreLanguage">-->
+                                        <!--<p:overlayPanel for="@parent" hideEffect="fade" styleClass="ovl-profile" style="width:80px;">-->
+                                            <!--<c:forEach var="item" items="#{loginBean.countriesInMap}" varStatus="stt" begin="2">-->
+                                                <!--<div></div>-->
+                                                <!--<p:commandLink id="#{item.value}" process="@this" update="@all" actionListener="#{loginBean.countryLocaleCodeChanged}" ajax="true" styleClass="pf-item" style="padding:5px;vertical-align:top;">-->
+                                                    <!--<img src="#{request.contextPath}/resources/themes/logo/#{item.value}.png" title="#{item.key}" height="10px"/><h:outputText value="#{item.key}" style="padding-left:5px;"/>-->
+                                                <!--</p:commandLink>-->
+                                                <!--<div></div>-->
+                                            <!--</c:forEach>-->
+                                        <!--</p:overlayPanel>-->
+                                    <!--</p:outputPanel></span>-->
+                            <!--</c:if>-->
+                        <!--</c:forEach>-->
+                    <!--</c:if>-->
+                <!--</div>-->
+                <div id="vt-profile" class="float-right">
+                    <p:outputPanel id="profileLink" styleClass="newFeature" style="padding-right:30px;">
+                        <h:outputText value="#{loginBean.rememberMe}"/>
+                        <div class="ui-icon ui-icon-carat-1-s" style="position:absolute;top:35%;right:5%;"></div>
+                    </p:outputPanel>
+                    <p:overlayPanel for="profileLink" hideEffect="fade" styleClass="ovl-profile" style="width:120px;">
+                        <p:commandLink action="#{loginController.logout}" process="@this">
+                            <div class="pf-item" style="padding:10px;">
+                                <h:outputText value="#{lang['logout']}"/>
+                            </div>
+                        </p:commandLink>
+                    </p:overlayPanel>
+                </div>
+                <!--PROFILE-->
+                <div class="clear-both"></div>
+            </div>
+            <div id="sub-header2">
+                <p:overlayPanel for="subFe"  id="ovlPanelSubMenu" my="right bottom" at=" top bottom" showEvent="click" hideEvent="click" styleClass="over_subMenu" style="height: auto;width: 99.89%;" onHide="resetSubMenu();resetSubHeightMenuPanel();" >
+                    <p:remoteCommand name="resetSubMenu" process="@this" update="@([id$=subMenuNavbar])" action="#{loginBean.resetSubMenu}" immediate="true" global="false"/>
+                    <h:panelGroup id="subMenu">
+                        <div class="nav-scrl">
+                            <div class="ui-grid ui-grid-responsive">
+                                <div class="ui-grid-row">
+
+                                    <h:panelGroup rendered="#{loginBean.show3}">
+                                        <div style="display: block;height: 89px;" id="actionGroupControl_leftNavContainer" class="nav-scrl-left-lnk">
+                                            <p:commandLink ajax="true"
+                                                           process="@form"
+                                                           actionListener="#{loginBean.hiddenMenu()}"
+                                                           resetValues="true"
+                                                           update="@form:subMenu"
+                                                           title="Preview"
+                                                           styleClass="leftNavLink"
+                                                           global="false"
+                                                           >
+                                                <span class="leftNavLinkImg">
+                                                    <img alt="" src="#{request.contextPath}/resources/themes/images/navbar/NavGalleryArrowLeft.png"></img>
+                                                </span>
+                                            </p:commandLink>
+                                        </div>
+                                    </h:panelGroup>
+
+                                    <div id="actionGroupControl_scrollableContainer"  class="nav-scrl-cont" style="width: 98%; margin-left: 10px; margin-top: -6px;">
+                                        <div id="actionGroupControl_viewport" class="nav-scrl-view">
+                                            <div id="actionGroupControl">
+                                                <ul class="nav-tabBody">
+
+                                                    <c:forEach var="item" items="#{loginBean.grantedAuthorityPassportSelected.childObjects}" varStatus="stt">
+                                                        <c:set var="count1" value="${stt.count}"/>
+                                                        <li class="nav-subgroup" >
+                                                            <span class="nav-groupContainer" >
+                                                                <span class="nav-groupBody" >
+                                                                    <span class="nav-layout" >
+                                                                        <c:if test="#{empty item.childObjects}">
+                                                                            <span class="nav-group"  style="background: #e0e0e0;">
+                                                                                <span class="navActionButtonContainer">
+                                                                                    <a class="navActionButton navActionButtonLeft" style="background-color: #{loginBean.switchColor(stt.count)}" id="nav_accts_#{stt}" role="button"  title="" href="#{loginBean.mapContextPath.get(loginBean.grantedAuthorityPassportSelected.objectCode)}#{item.objectUrl}" >
+                                                                                        <span class="navActionButtonIconContainer" >
+                                                                                            <span class="navActionButtonIcon" >
+                                                                                                <img src="#{request.contextPath}/resources/themes/images/navbar/Account_32.png" ></img>
+                                                                                            </span>
+                                                                                        </span>
+                                                                                        <span class="navActionButtonLabel" ><p:outputLabel value="#{item.objectName}"/></span>
+                                                                                    </a>
+                                                                                    <p:commandLink styleClass="navActionButton navActionButtonRight" style="background-color: #{loginBean.switchColor(stt.count)}"  >
+                                                                                        <span class="navActionButtonSplitterContainer" >
+                                                                                            <img src="#{request.contextPath}/resources/themes/images/navbar/ActionButtonSplit.png" alt="|" class="navActionButtonSplitter"></img>
+                                                                                        </span>
+                                                                                        <span class="navActionButtonDownImageContainer" >
+                                                                                            <img src="#{request.contextPath}/resources/themes/images/navbar/ArrowUnderScoreDown.png"  class="navActionButtonDropDown"></img>
+                                                                                        </span>
+                                                                                    </p:commandLink>
+                                                                                    <span class="navActionButtonContainerShadow normal"></span>
+                                                                                </span>
+                                                                            </span>
+                                                                        </c:if>
+
+                                                                        <c:if test="#{not empty item.childObjects}">
+                                                                            <c:if test="${stt.count gt 0 and stt.count le 6}">
+                                                                                <h:panelGroup rendered="#{!loginBean.show3}">
+                                                                                    <span class="nav-group">
+                                                                                        <span class="navActionButtonContainer">
+                                                                                            <a class="navActionButton navActionButtonLeft" style="background-color: #{loginBean.switchColor(stt.count)}" id="nav_accts#{stt}" role="button"  title="#{item.objectName}" href="#" >
+                                                                                                <span class="navActionButtonIconContainer" >
+                                                                                                    <span class="navActionButtonIcon" >
+                                                                                                        <img src="#{request.contextPath}/resources/themes/images/navbar/Account_32.png" ></img>
+                                                                                                    </span>
+                                                                                                </span>
+                                                                                                <span class="navActionButtonLabel" ><p:outputLabel value="#{item.objectName}"/></span>
+                                                                                            </a>
+                                                                                            <p:commandLink styleClass="navActionButton navActionButtonRight navLinkSub"
+                                                                                                           update="@([id$=subMenuNavbar])"
+                                                                                                           style="background-color: #{loginBean.switchColor(stt.count)}"  global="false"
+                                                                                                           action="#{loginBean.showDispalySubMenu(item,loginBean.switchColor(stt.count))}"
+                                                                                                           process="@this"
+                                                                                                           >
+                                                                                                <span class="navActionButtonSplitterContainer" >
+                                                                                                    <img src="#{request.contextPath}/resources/themes/images/navbar/ActionButtonSplit.png" alt="|" class="navActionButtonSplitter"></img>
+                                                                                                </span>
+                                                                                                <span class="navActionButtonDownImageContainer" >
+                                                                                                    <img src="#{request.contextPath}/resources/themes/images/navbar/ArrowUnderScoreDown.png"  class="navActionButtonDropDown"></img>
+                                                                                                </span>
+                                                                                            </p:commandLink>
+                                                                                            <span class="navActionButtonContainerShadow normal"></span>
+                                                                                        </span>
+                                                                                    </span>
+                                                                                </h:panelGroup>
+                                                                            </c:if>
+                                                                            <c:if test="${stt.count gt 3 and stt.count le 11}">
+                                                                                <h:panelGroup rendered="#{loginBean.show3}">
+                                                                                    <span class="nav-group">
+                                                                                        <span class="navActionButtonContainer">
+                                                                                            <a class="navActionButton navActionButtonLeft" style="background-color: #{loginBean.switchColor(stt.count)}" id="nav_accts#{stt}" role="button"  title="#{item.objectName}" href="#" >
+                                                                                                <span class="navActionButtonIconContainer" >
+                                                                                                    <span class="navActionButtonIcon" >
+                                                                                                        <img src="#{request.contextPath}/resources/themes/images/navbar/Account_32.png" ></img>
+                                                                                                    </span>
+                                                                                                </span>
+                                                                                                <span class="navActionButtonLabel" ><p:outputLabel value="#{item.objectName}"/></span>
+                                                                                            </a>
+                                                                                            <p:commandLink styleClass="navActionButton navActionButtonRight navLinkSub"
+                                                                                                           update="@([id$=subMenuNavbar])"
+                                                                                                           style="background-color: #{loginBean.switchColor(stt.count)}"  global="false"
+                                                                                                           action="#{loginBean.showDispalySubMenu(item,loginBean.switchColor(stt.count))}"
+                                                                                                           process="@this"
+                                                                                                           >
+                                                                                                <span class="navActionButtonSplitterContainer" >
+                                                                                                    <img src="#{request.contextPath}/resources/themes/images/navbar/ActionButtonSplit.png" alt="|" class="navActionButtonSplitter"></img>
+                                                                                                </span>
+                                                                                                <span class="navActionButtonDownImageContainer" >
+                                                                                                    <img src="#{request.contextPath}/resources/themes/images/navbar/ArrowUnderScoreDown.png"  class="navActionButtonDropDown"></img>
+                                                                                                </span>
+                                                                                            </p:commandLink>
+                                                                                            <span class="navActionButtonContainerShadow normal"></span>
+                                                                                        </span>
+                                                                                    </span>
+                                                                                </h:panelGroup>
+                                                                            </c:if>
+
+                                                                        </c:if>
+
+                                                                    </span>
+                                                                </span>
+                                                            </span>
+                                                        </li>
+                                                    </c:forEach>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <c:if test="${count1 gt 4}">
+                                        <h:panelGroup rendered="#{loginBean.show4}">
+                                            <div style="display: block;height: 89px;" id="actionGroupControl_rightNavContainer" class="nav-scrl-right-lnk">
+                                                <p:commandLink ajax="true"
+                                                               process="@form"
+                                                               actionListener="#{loginBean.showMenu()}"
+                                                               resetValues="true"
+                                                               update="@form:subMenu"
+                                                               title="Next"
+                                                               styleClass="rightNavLink"
+                                                               global="false"
+                                                               >
+                                                    <span class="rightNavLinkImg">
+                                                        <img src="#{request.contextPath}/resources/themes/images/navbar/NavGalleryArrowRight.png" ></img>
+                                                    </span>
+                                                </p:commandLink>
+                                            </div>
+                                        </h:panelGroup>
+                                    </c:if>
+
+                                </div>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                    <p:outputPanel id="subMenuNavbar" styleClass="navActionListContainer" style="margin-left: -1.5px;">
+                        <p:outputPanel styleClass="nav-scrl" rendered="#{loginBean.subMenuNavbar != null}">
+                            <div class="ui-grid ui-grid-responsive">
+                                <div class="ui-grid-row">
+
+                                    <h:panelGroup rendered="#{loginBean.show1}">
+                                        <div style="display: block;background-color: #FFF;height: 67px;" id="actionGroupControl_leftNavContainer" class="nav-scrl-left-lnk">
+                                            <p:commandLink ajax="true"
+                                                           process="@form"
+                                                           actionListener="#{loginBean.hiddenMenuSub()}"
+                                                           resetValues="true"
+                                                           update="@form:subMenuNavbar"
+                                                           title="Preview"
+                                                           styleClass="leftNavLink"
+                                                           global="false"
+                                                           >
+                                                <span class="leftNavLinkImg">
+                                                    <img alt="" src="#{request.contextPath}/resources/themes/images/navbar/NavGalleryArrowLeft.png"></img>
+                                                </span>
+                                            </p:commandLink>
+                                        </div>
+                                    </h:panelGroup>
+
+                                    <div class="nav-scrl-view" style="margin:0px 10px 0px 10px;">
+                                        <div class="firstTabActionListFlyoutControl">
+                                            <ul class="nav-tabBody" style="margin-top: -2px;">
+
+                                                <c:forEach var="item" items="#{loginBean.subMenuNavbar.childObjects}" varStatus="stt2">
+                                                    <c:set var="count" value="${stt2.count}"/>
+                                                    <c:if test="${empty item.childObjects}">
+                                                        <c:if test="${stt2.count gt 0 and stt2.count le 10}">
+                                                            <h:panelGroup rendered="#{!loginBean.show1}">
+                                                                <li class="nav-group">
+                                                                    <a class="navActionButtonContainer navActionButton navActionButtonSmall normal"  title="#{item.objectName}" href="#{loginBean.mapContextPath.get(loginBean.grantedAuthorityPassportSelected.objectCode)}#{item.objectUrl}"  style="background-color: #{loginBean.colorSub}">
+                                                                        <span class="navActionButtonLabel" ><p:outputLabel value="#{item.objectName}"/></span>
+                                                                        <span class="navActionButtonIconContainer" >
+                                                                            <img src="#{request.contextPath}/resources/themes/images/navbar/Dashboard_32.png" ></img>
+                                                                        </span>
+                                                                    </a>
+                                                                    <span class="navActionButtonSmallShadow normal"></span>
+                                                                </li>
+                                                            </h:panelGroup>
+
+                                                        </c:if>
+                                                        <c:if test="${stt2.count gt 6 and stt2.count le 17}">
+                                                            <h:panelGroup rendered="#{loginBean.show1}">
+                                                                <li class="nav-group">
+                                                                    <a class="navActionButtonContainer navActionButton navActionButtonSmall normal" title="#{item.objectName}" href="#{loginBean.mapContextPath.get(loginBean.grantedAuthorityPassportSelected.objectCode)}#{item.objectUrl}"  style="background-color: #{loginBean.colorSub}">
+                                                                        <span class="navActionButtonLabel" ><p:outputLabel value="#{item.objectName}"/></span>
+                                                                        <span class="navActionButtonIconContainer" >
+                                                                            <img alt="" src="#{request.contextPath}/resources/themes/images/navbar/Dashboard_32.png" ></img>
+                                                                        </span>
+                                                                    </a>
+                                                                    <span class="navActionButtonSmallShadow normal"></span>
+                                                                </li>
+                                                            </h:panelGroup>
+                                                        </c:if>
+                                                    </c:if>
+                                                </c:forEach>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <c:if test="${count gt 6}">
+                                        <h:panelGroup rendered="#{loginBean.show2}">
+                                            <div style="display: block;background-color: #FFF;height: 67px;" id="actionGroupControl_rightNavContainer" class="nav-scrl-right-lnk">
+                                                <p:commandLink ajax="true"
+                                                               process="@form"
+                                                               actionListener="#{loginBean.showMenuSub()}"
+                                                               resetValues="true"
+                                                               update="@form:subMenuNavbar"
+                                                               title="Next"
+                                                               styleClass="rightNavLink"
+                                                               global="false"
+                                                               >
+                                                    <span class="rightNavLinkImg">
+                                                        <img alt="" src="#{request.contextPath}/resources/themes/images/navbar/NavGalleryArrowRight.png" ></img>
+                                                    </span>
+                                                </p:commandLink>
+                                            </div>
+                                        </h:panelGroup>
+                                    </c:if>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                </p:overlayPanel>
+            </div>
+        </h:form>
+        <p:hotkey bind="f1" handler="checkOpenDlg('helpDlg');" />
+        <p:dialog appendTo="@(body)" closable="true" closeOnEscape="true"
+                  maximizable="false" width="600" height="550"
+                  id="helpDlg" widgetVar="helpDlg"
+                  header="Help" resizable="false" position="right top"
+                  style="z-index:10000">
+            <ui:include src="helpDlg.xhtml" />
+        </p:dialog>
+        <p:dialog appendTo="@(body)" closable="true" closeOnEscape="true"
+                  maximizable="false" width="500" height="400"
+                  id="fbDlg" widgetVar="fbDlg"
+                  header="Feedback" resizable="false" position="right top"
+                  style="z-index:10000">
+            <ui:include src="feedbackDlg.xhtml" />
+        </p:dialog>
+        <div id="noti-dlg" class="display-none" style="z-index:10000;width:20%;border:1px solid #2c60a9">
+            <ui:include src="notiDlg.xhtml"/>
+        </div>
+        <script type="text/javascript">
+            // Attach the event keypress to exclude the F5 refresh
+//            $(document).keydown(function (e)
+//            {
+//                var key = e.which || e.keyCode;
+//                if (key === 116)
+//                {
+//                   // alert("F55");
+//                    $("#headerForm\\:ovlPanelSubMenu").css("height", "auto;");
+//                }
+//            });
+            $(".navLinkSub").on("click", function () {
+                $("#headerForm\\:ovlPanelSubMenu").css("height", "210px");
+            });
+            function resetSubHeightMenuPanel() {
+                $("#headerForm\\:ovlPanelSubMenu").css("height", "auto;");
+            }
+            function gotoHome() {
+                window.location.href = '#{request.contextPath}/home';
+            }
+            jQuery(document).ready(function () {
+
+                jQuery("#vt-profile").mouseup(function () {
+                    if (jQuery(this).attr("focus") == "false") {
+                        jQuery(this).attr("focus", "true");
+                        jQuery(this).find(".newFeature").addClass("newFeature-hover");
+                    }
+                    else {
+                        jQuery(this).attr("focus", "false");
+                        jQuery(this).find(".newFeature").removeClass("newFeature-hover");
+                    }
+                });
+                jQuery("#vt-profile").mouseout(function () {
+                    jQuery(this).attr("focus", "false");
+                });
+                jQuery(window).mouseup(function () {
+                    if (jQuery("#vt-profile").attr("focus") == "false") {
+                        jQuery("#vt-profile").find(".newFeature").removeClass("newFeature-hover");
+                    }
+                });
+            });
+        </script>
+    </ui:composition>
+</html>
+

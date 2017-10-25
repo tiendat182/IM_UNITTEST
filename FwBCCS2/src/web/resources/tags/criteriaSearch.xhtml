@@ -1,0 +1,330 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        >
+<composite:interface>
+    <composite:attribute name="formCode" shortDescription="Code of form"/>
+    <composite:attribute name="searchFunction" required="true" shortDescription="Search function"/>
+    <composite:attribute name="update" required="" shortDescription="Update area"/>
+    <composite:attribute name="filters" required="" shortDescription="Update area"/>
+    <composite:attribute name="controller" required="" shortDescription="Update area"/>
+    <composite:attribute name="idComponent" required="" shortDescription="Idcomponent"/>
+    <composite:attribute name="idMessage" required="" shortDescription="id of message from basic table"/>
+    <composite:attribute name="useWithBasicDataTable" default="false" required=""
+                         shortDescription="Use this component with datatable or not"/>
+
+</composite:interface>
+<composite:implementation>
+    <style type="text/css">
+        .ui-datatable.myownclass thead,
+        .ui-datatable.myownclass th {
+            background-color: #ffffff !important;
+            border-style: none;
+        }
+
+        .ui-datatable.myownclass tbody,
+        .ui-datatable.myownclass tbody tr,
+        .ui-datatable.myownclass tbody td {
+            background-color: #ffffff;
+            border-style: none;
+        }
+
+        .ui-datatable.myownclass th
+    </style>
+    <p:remoteCommand autoRun="true"
+                     process="@this"
+                     global="false"
+                     action="#{criteriaSeachController.doSetId(cc.attrs.formCode)}"
+                     update="tblCriteriaSearch, cbxUserProfile"/>
+    <p:outputPanel rendered="#{empty cc.attrs.idMessage}">
+        <p:messages id="msgCriteria" showSummary="false" showDetail="true" closable="true"/>
+    </p:outputPanel>
+    <p:remoteCommand name="updateTable" process="@this" update="tblCriteriaSearch"/>
+    <p:dataTable id="tblCriteriaSearch" value="#{criteriaSeachController.profileDetails}"
+                 var="profileDetail" rowIndexVar="idx" style="margin-bottom: 10px;"
+                 rowStyleClass="myownclass" styleClass="myownclass">
+        <p:column style="width: 1%">
+            <p:outputLabel value="#{idx + 1}."/>
+        </p:column>
+        <p:column>
+            <p:selectOneMenu id="cbxEntity" style="width: 100% !important;"
+                             value="#{criteriaSeachController.getProfile(idx).entityId}"
+                             disabled="#{profileDetail.require}">
+                <f:selectItem itemValue="" itemLabel="#{lang['common.select.one']}"/>
+                <f:selectItems value="#{criteriaSeachController.getProfile(idx).entityList}" var="entity"
+                               itemLabel="#{entity.name}" itemValue="#{entity.entityId}"/>
+                <p:ajax event="change" process="@this"
+                        update="cbxExtAttr, cbxOperator, pnlTxtFrom, pnlTxtTo"
+                        global="false"
+                        listener="#{criteriaSeachController.selectEntity(idx)}"/>
+            </p:selectOneMenu>
+        </p:column>
+        <p:column>
+            <p:selectOneMenu id="cbxExtAttr" converter="omnifaces.SelectItemsConverter"
+                             value="#{criteriaSeachController.getProfile(idx).entityExtAssign}"
+                             disabled="#{profileDetail.require}" style="width: 100% !important;">
+                <f:selectItem itemValue="" itemLabel="#{lang['common.select.one']}"/>
+                <f:selectItems value="#{criteriaSeachController.getProfile(idx).csEntityExtattrAssignList}"
+                               var="extattr"
+                               itemLabel="#{extattr.attributeName}" itemValue="#{extattr}"/>
+                <p:ajax event="change" process="@this" update="cbxOperator, pnlTxtFrom, pnlTxtTo"
+                        global="false"
+                        listener="#{criteriaSeachController.selectExtAttr(idx)}"/>
+            </p:selectOneMenu>
+        </p:column>
+        <p:column>
+            <p:selectOneMenu id="cbxOperator"
+                             value="#{criteriaSeachController.getProfile(idx).operator}"
+                             disabled="#{profileDetail.require}" converter="omnifaces.SelectItemsConverter"
+                             style="width: 100% !important;">
+                <f:selectItem itemValue="" itemLabel="#{lang['common.select.one']}"/>
+                <f:selectItems value="#{criteriaSeachController.getProfile(idx).operatorList}"
+                               var="operator"
+                               itemLabel="#{operator.name}" itemValue="#{operator}"/>
+                <p:ajax event="change" listener="#{criteriaSeachController.selectOperator(idx)}"
+                        global="false"
+                        process="@this, pnlTxtFrom, pnlTxtTo" update="pnlTxtFrom, pnlTxtTo"/>
+            </p:selectOneMenu>
+        </p:column>
+        <p:column>
+            <p:outputPanel id="pnlTxtFrom">
+                <p:inputText id="txtFrom" value="#{profileDetail.valueFrom}"
+                             placeholder="#{lang['sale.conn.sub.fromValue']}"
+                             disabled="#{profileDetail.valueFromDisable}"
+                             rendered="#{dataTypeConfig.isText(profileDetail.dataType)}"
+                             styleClass="w100"/>
+
+                <p:outputPanel rendered="#{dataTypeConfig.isLookup(profileDetail.dataType)}">
+                    <cbs:lookUpLazyTextboxWrapper
+                            selectMode="single"
+                            serviceName="#{profileDetail.serviceName}"
+                            displayColumnList="#{profileDetail.displayColumnList}"
+                            controller="#{criteriaSeachController}"
+                            displayInputTextColumnList="#{profileDetail.displayInputTextColumnList}"
+                            label="CS_SEARCH"
+                            idComponent="csSearch"
+                            setDataMethod="setLookupData"
+                            objectName="#{profileDetail.objectName}"
+                            styleClass="lookupDynamic"
+                            updateAddArea="@(.lookupDynamic)"
+                            currentObjectIdList="#{profileDetail.valueFrom}"
+                            modifier="#{profileDetail.idComponentValueFrom}"
+                            passIdComponent="true"
+                            resetAllCurrMap="false"
+                            />
+                </p:outputPanel>
+
+                <!--tam thoi chua ho tro tim kiem look up optionset-->
+                <!--<p:outputPanel rendered="#{dataTypeConfig.isOptionSetLookup(profileDetail.dataType)}">-->
+                <!--<cbs:lookUpLazyTextboxWrapper-->
+                <!--idComponent="csSearch"-->
+                <!--selectMode="single"-->
+                <!--objectName="#{profileDetail.srcRefKey}"-->
+                <!--serviceName="optionSetValueServiceImpl"-->
+                <!--displayColumnList="id,name,value "-->
+                <!--controller="#{criteriaSeachController}"-->
+                <!--setDataMethod="setOptionSetLookupData"-->
+                <!--displayInputTextColumnList="name,value"-->
+                <!--filterKeyList="OPTIONSETCODE"-->
+                <!--filterValueList="#{profileDetail.srcRefKey}"-->
+                <!--passIdComponent="true"-->
+                <!--modifier="#{profileDetail.idComponentValueFrom}"-->
+                <!--currentObjectIdList="#{profileDetail.valueFrom}"-->
+                <!--label="#{profileDetail.valueFrom}"-->
+                <!--styleClass="lookupDynamic"-->
+                <!--updateAddArea="@(.lookupDynamic)"-->
+                <!--resetAllCurrMap="false"/>-->
+                <!--</p:outputPanel>-->
+
+                <p:calendar id="calendarFrom" value="#{profileDetail.valueFrom}"
+                            styleClass="iconInline calSearch"
+                            converter="extAttrDateConverter"
+                            pattern="#{lang['common.datetime.format']}"
+                            disabled="#{profileDetail.valueFromDisable}"
+                            navigator="true"
+                            rendered="#{dataTypeConfig.isCalendar(profileDetail.dataType)}">
+                </p:calendar>
+                <p:inputMask id="maskFrom" value="#{profileDetail.valueFrom}"
+                             disabled="#{profileDetail.valueFromDisable}"
+                             rendered="#{dataTypeConfig.isNumber(profileDetail.dataType)}"
+                             mask="#{profileDetail.extAttr.defaultDataFormat}"
+                             styleClass="w100"/>
+                <p:selectOneMenu id="cbxFrom" value="#{profileDetail.valueFrom}"
+                                 disabled="#{profileDetail.valueFromDisable}"
+                                 rendered="#{dataTypeConfig.isCombobox(profileDetail.dataType)}"
+                                 style="width: 102.6% !important;">
+                    <f:selectItem itemValue="" itemLabel="#{lang['common.select.one']}"/>
+                    <f:selectItems value="#{profileDetail.optionSetValueList}" var="optionSet"
+                                   itemValue="#{optionSet.value}" itemLabel="#{optionSet.name}"
+                                   itemLabelEscaped="true"/>
+                </p:selectOneMenu>
+            </p:outputPanel>
+        </p:column>
+        <p:column>
+            <p:outputPanel id="pnlTxtTo" style="width: 100% !important;">
+                <p:inputText id="txtTo" value="#{profileDetail.valueTo}"
+                             placeholder="#{lang['sale.conn.sub.toValue']}"
+                             disabled="#{profileDetail.valueToDisable}"
+                             rendered="#{dataTypeConfig.isText(profileDetail.dataType)}"
+                             styleClass="w100"/>
+
+                <p:outputPanel rendered="#{dataTypeConfig.isLookup(profileDetail.dataType)}">
+                    <cbs:lookUpLazyTextboxWrapper
+                            selectMode="single"
+                            serviceName="#{profileDetail.serviceName}"
+                            displayColumnList="#{profileDetail.displayColumnList}"
+                            controller="#{criteriaSeachController}"
+                            displayInputTextColumnList="#{profileDetail.displayInputTextColumnList}"
+                            label="CS_SEARCH"
+                            idComponent="csSearch"
+                            setDataMethod="setLookupData"
+                            objectName="#{profileDetail.objectName}"
+                            styleClass="lookupDynamic"
+                            updateAddArea="@(.lookupDynamic)"
+                            currentObjectIdList="#{profileDetail.valueTo}"
+                            modifier="#{profileDetail.idComponentValueTo}"
+                            passIdComponent="true"
+                            resetAllCurrMap="false"
+                            />
+                </p:outputPanel>
+
+                <p:calendar id="calendarTo" value="#{profileDetail.valueTo}"
+                            styleClass="iconInline calSearch"
+                            converter="extAttrDateConverter"
+                            pattern="#{lang['common.datetime.format']}"
+                            disabled="#{profileDetail.valueToDisable}"
+                            rendered="#{dataTypeConfig.isCalendar(profileDetail.dataType)}"
+                            navigator="true"
+                        />
+                <p:inputMask id="maskTo" value="#{profileDetail.valueTo}"
+                             disabled="#{profileDetail.valueToDisable}"
+                             rendered="#{dataTypeConfig.isNumber(profileDetail.dataType)}"
+                             mask="#{profileDetail.extAttr.defaultDataFormat}"
+                             styleClass="w100"/>
+                <p:selectOneMenu id="cbxTo" value="#{profileDetail.valueTo}"
+                                 rendered="#{dataTypeConfig.isCombobox(profileDetail.dataType)}"
+                                 style="width: 102.7% !important;"
+                                 disabled="#{profileDetail.valueToDisable}">
+                    <f:selectItem itemValue="" itemLabel="#{lang['common.select.one']}"/>
+                    <f:selectItems value="#{profileDetail.optionSetValueList}" var="optionSet"
+                                   itemValue="#{optionSet.value}" itemLabel="#{optionSet.name}"
+                                   itemLabelEscaped="true"
+                            />
+                </p:selectOneMenu>
+            </p:outputPanel>
+        </p:column>
+        <p:column>
+            <p:outputPanel id="pnlButton">
+                <p:commandLink
+                        actionListener="#{criteriaSeachController.doRemoveSearch(idx)}"
+                        process="@this, @([id$=tblCriteriaSearch])"
+                        global="false"
+                        resetValues="true"
+                        oncomplete="updateTable()"
+                        style="margin-right: 5px"
+                        rendered="#{!criteriaSeachController.getProfile(idx).require and !criteriaSeachController.profileListOneProfileLeft}">
+                    <p:graphicImage
+                            value="/resources/themes/images/icon-delete.png"/>
+                </p:commandLink>
+                <p:commandLink
+                        actionListener="#{criteriaSeachController.doAddSearch}"
+                        process="@this, @([id$=tblCriteriaSearch])"
+                        global="false"
+                        resetValues="true"
+                        oncomplete="updateTable()"
+                        update="@([id$=msgCriteria]), @([id$=#{cc.attrs.idMessage}])">
+                    <p:graphicImage value="/resources/themes/images/icon-add.png"/>
+
+                </p:commandLink>
+            </p:outputPanel>
+        </p:column>
+    </p:dataTable>
+
+    <p:outputPanel id="pnlCsSearch" styleClass="sale" style="width: 100%;clear: both;">
+        <p:focus context="pnlCsSearch"/>
+        <span class="vt-button sale" style="float:left;height: 20px;padding-left: 0px;">
+              <p:commandButton styleClass="bg-button "
+                               action="#{criteriaSeachController.genFilterRequestList(cc.attrs.controller, cc.attrs.searchFunction)}"
+                               update="#{cc.attrs.update}"
+                               process="@this, @([id$=tblCriteriaSearch])"
+                               global="false"
+                               resetValues="true"
+                               icon="ui-icon-search2"
+                               value="#{lang['common.button.search']}"
+                      >
+              </p:commandButton>
+        </span>
+
+        <span class="vt-button sale" style="float:left;">
+            <p:commandButton styleClass="bg-button "
+                             action="#{criteriaSeachController.clearSearchToDefault}"
+                             update="@([id$=tblCriteriaSearch]), @([id$=cbxUserProfile]), @([id$=txtProfileName]), @([id$=msgCriteria]), @([id$=#{cc.attrs.idMessage}])"
+                             process="@this"
+                             global="false"
+                             resetValues="true"
+                             icon="ui-icon-reset"
+                             value="#{lang['common.button.reset']}"
+                    >
+            </p:commandButton>
+        </span>
+        <p:outputPanel rendered="#{cc.attrs.useWithBasicDataTable}">
+        <span style="display: block;float:left;margin-top: 12px;">
+            <p:commandLink action="#{lookUpLazyController.doClickModeSearch()}"
+                           update="@([id$=#{cc.attrs.idComponent}areaInputSearch])"
+                           process="@this"
+                           resetValues="true"
+                           ajax="true"
+                           global="false"
+                           style="margin-top: 12px;">
+                <p:outputLabel value="#{lang['common.link.simpleSearchField']}"/>
+            </p:commandLink>
+        </span>
+        </p:outputPanel>
+
+        <span class="vt-button sale" style="float:right;">
+            <p:inputText id="txtProfileName" widgetVar="txtProfileName123" style="float: left; width: 300px"
+                         placeholder="#{lang['sale.cs.save.config']}"
+                         maxlength="150" tabindex="0"
+                         title="Configuration name can not be empty and larger than 150 characters"
+                         value="#{criteriaSeachController.selectedUserProfile.name}"
+                         />
+
+            <span class="vt-button sale" style="float:left;">
+                <p:commandLink
+                        process="@this, txtProfileName, @([id$=pnlTxtTo]), @([id$=pnlTxtFrom]), @([id$=tblCriteriaSearch])"
+                        style="color:black;"
+                        update="txtProfileName, @([id$=msgCriteria]), @([id$=#{cc.attrs.idMessage}]), @([id$=cbxUserProfile])"
+                        actionListener="#{criteriaSeachController.saveSearchConfig}"
+                        >
+                    <p:graphicImage style="float: left;margin-right: 5px;"
+                                    styleClass="ui-icon ui-icon-save-add"/>
+                <span style="font-weight: bold;">
+                    <p:outputLabel value="#{lang['common.button.save.cap']}"/>
+                </span>
+                </p:commandLink>
+            </span>
+        </span>
+
+    </p:outputPanel>
+    <p:outputPanel style="clear: both;width: 1000px">
+        <p:selectOneMenu id="cbxUserProfile" value="#{criteriaSeachController.selectedUserProfile}"
+                         style="width: 500px !important;" styleClass="w100"
+                         converter="omnifaces.SelectItemsConverter">
+            <f:selectItem itemValue="" itemLabel="#{lang['sale.cs.select.defined']}"/>
+            <f:selectItems value="#{criteriaSeachController.userProfileList}" var="userProfile"
+                           itemLabel="#{userProfile.name}" itemValue="#{userProfile}"
+                           itemLabelEscaped="true"
+                    />
+            <p:ajax event="change" process="@this"
+                    listener="#{criteriaSeachController.selectUserProfile}"
+                    global="false"
+                    update="tblCriteriaSearch, txtProfileName"/>
+        </p:selectOneMenu>
+    </p:outputPanel>
+</composite:implementation>
+</html>

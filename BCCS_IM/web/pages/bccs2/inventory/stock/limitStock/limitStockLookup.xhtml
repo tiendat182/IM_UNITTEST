@@ -1,0 +1,324 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.limit.lookup.stock.limit']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmExportNote">
+            <p:outputPanel styleClass="Container100">
+                <div class="ContainerIndent">
+                    <p:messages id="msgComp" showSummary="false" showDetail="true"
+                                closable="true"/>
+                </div>
+                <p:outputPanel id="pnLimitStockLookup" styleClass="Container100">
+                    <!--Start vung nhap thong tin tra cuu-->
+                    <!--<p:focus for="pnLimitStockLookup"/>-->
+                    <p:outputPanel id="pnInfoExportOrder" styleClass="ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="panelInforExport"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.stock.limit.information.search']}"/>
+
+                        <div class="Container100 panelInforExport">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container50 Responsive50">
+                                    <div class="Container30 Responsive mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['range.time.promotion.limit.type']}"
+                                                       for="cbxTypeService"/>
+                                    </div>
+                                    <div class="Container70 Responsive ui-fluid">
+                                        <p:selectOneMenu id="cbxTypeService"
+                                                         value="#{limitStockLookupController.stockDebitDTO.ownerType}"
+                                                         required="true"
+                                                         requiredMessage="">
+                                            <f:selectItem itemLabel="#{lang['lookup.limit.stock.shop']}"
+                                                          itemValue="1"/>
+                                            <f:selectItem itemLabel="#{lang['lookup.limit.stock.staff']}"
+                                                          itemValue="2"/>
+                                            <p:ajax event="change"
+                                                    listener="#{limitStockLookupController.changeTypeService}"
+                                                    process="@this"
+                                                    update="pnInfoExportOrder, @([id$=staff])"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="cbxTypeService"/>
+                                        <p:remoteCommand update="@([id$=cbxTypeService])"
+                                                         process="@this"
+                                                         name="updateSelect"/>
+                                    </div>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <p:outputPanel styleClass="Container100"
+                                                   rendered="#{limitStockLookupController.stockDebitDTO.ownerType ==1}">
+                                        <cbs:inputShop value="#{limitStockLookupController.shopInfoTag}"
+                                                       id="shop"
+                                                       idComponent="shop"
+                                                       forceSelection="false"
+                                                       clearMethodName="clearOwner"
+                                                       methodName="receiveShop"
+                                                       update="@this"
+                                                       require="true"
+                                                       label="#{lang['lookup.limit.stock.label.shop']}"
+                                                       classDivLabel="Container40 Responsive50 pd-top-4 mg-left-15"
+                                                       placeholder="#{lang['mn.stock.limit.store.code.placeholder']}"
+                                                       classDivInput="Container60 Responsive50 ui-fluid"
+                                                       requiredMessage="#{lang['mn.stock.limit.store.code.require.msg']}"
+                                                       oncomplete="">
+                                        </cbs:inputShop>
+                                        <p:message for="shop"/>
+                                    </p:outputPanel>
+                                    <p:outputPanel styleClass="Container100"
+                                                   rendered="#{!(limitStockLookupController.stockDebitDTO.ownerType ==1)}">
+                                        <cbs:inputStaff value="#{limitStockLookupController.staffInfoTag}"
+                                                        id="staff"
+                                                        methodName="receiveStaff"
+                                                        update="@this"
+                                                        require="true"
+                                                        label="#{lang['lookup.limit.stock.label.staff']}"
+                                                        placeholder="#{lang['mn.stock.limit.staff.code.placeholder']}"
+                                                        classDivLabel="Container40 pd-top-4 Responsive50 mg-left-15 AlignLb sProduct_col"
+                                                        classDivInput="Container60 Responsive50 sProduct ui-fluid"
+                                                        requiredMessage="#{lang['mn.stock.limit.staff.code.require.msg']}"
+                                                        oncomplete=""
+                                                        forceSelection="false"
+                                                        clearMethodName="clearOwner">
+                                        </cbs:inputStaff>
+                                        <p:message for="staff"/>
+                                    </p:outputPanel>
+                                </div>
+                            </div>
+
+                            <div class="Container100 TexAlCenter mg-top-0">
+                                <p:commandButton
+                                        value="#{lang['create.note.search']}"
+                                        process="pnInfoExportOrder"
+                                        update="@form"
+                                        actionListener="#{limitStockLookupController.doSearch}"/>
+                                <p:commandButton style="margin-left: 5px" value="#{lang['common.reset']}"
+                                                 process="@this"
+                                                 update="@form, @([id$=staff])"
+                                                 resetValues="true"
+                                                 actionListener="#{limitStockLookupController.resetSearch}"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung nhap thong tin tra cuu-->
+
+                    <!--Start vung ds han muc-->
+                    <p:outputPanel id="pnLstTranSaction" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelListLimit"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.stock.limit.list.limit']}"/>
+
+                        <div class="Container100 panelListLimit" style="margin-bottom: 10px;margin-top: 5px;">
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        rendered="#{!(limitStockLookupController.stockDebitDTO.ownerType==1)}"
+                                        var="item"
+                                        rowKey="#{item.stockDebitId}"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}"
+                                        rowIndexVar="index"
+                                        value="#{limitStockLookupController.stockDebitDTOs}">
+                                    <p:column headerText="#{lang['mn.stock.limit.code.staff.shop']}"
+                                              styleClass="col-left" style="width: 14%">
+                                        <p:outputLabel value="#{item.ownerCode}" title="#{item.ownerCode}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.limit']}"
+                                              style="width: 14%"
+                                              styleClass="col-left">
+                                       <h:outputLabel styleClass="lb-sentinel-bold" converter="currencyFormat"
+                                                       value="#{item.displayDebitValue}"
+                                                       title="#{item.displayDebitValue}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.limit.type.day.apply']}"
+                                              styleClass="col-left" style="width: 15%">
+                                        <p:outputLabel value="#{item.debitDayTypeName}"
+                                                       title="#{item.debitDayTypeName}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.limit.financeType.day.offer']}"
+                                              styleClass="col-right"
+                                              style="width: 15%">
+                                        <h:outputLabel converter="currencyFormat" styleClass="lb-sentinel-bold"
+                                                       value="#{item.displayFinance}"
+                                                       title="#{item.displayFinance}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.limit.price.stock']}" styleClass="TexAlRight"
+                                              style="width: 15%">
+                                        <h:outputLabel styleClass="lb-sentinel-bold" value="#{item.totalPrice}"
+                                                       title="#{item.totalPrice}"
+                                                       converter="currencyFormat"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.limit.detail.transaction.hang']}"
+                                              styleClass="col-right" style="width: 17%">
+                                        <p:commandLink
+                                                rendered="#{!limitStockLookupController.viewHangTrans || limitStockLookupController.selectedStockDebit !=item}"
+                                                style="text-decoration: none!important;"
+                                                styleClass="fa icon-zoom-in Fs13 black"
+                                                title="#{lang['common.view.detail']}"
+                                                process="@this"
+                                                update="@form"
+                                                actionListener="#{limitStockLookupController.changeViewHangTrans(item)}"/>
+                                        <p:commandLink
+                                                rendered="#{!(!limitStockLookupController.viewHangTrans || limitStockLookupController.selectedStockDebit !=item)}"
+                                                style="text-decoration: none!important; color:red!important;"
+                                                styleClass="fa icon-zoom-out Fs13 black"
+                                                title="#{lang['common.view.detail']}"
+                                                process="@this"
+                                                update="@form"
+                                                actionListener="#{limitStockLookupController.changeViewHangTrans(null)}"/>
+                                    </p:column>
+                                </p:dataTable>
+                                <p:dataTable
+                                        rendered="#{limitStockLookupController.stockDebitDTO.ownerType==1}"
+                                        var="item"
+                                        rowKey="#{item.stockDebitId}"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}"
+                                        rowIndexVar="index"
+                                        value="#{limitStockLookupController.stockDebitDTOs}">
+                                    <p:column headerText="#{lang['mn.stock.limit.code.staff.shop']}"
+                                              styleClass="col-left" style="width: 14%">
+                                        <p:outputLabel value="#{item.ownerCode}" title="#{item.ownerCode}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.limit']}"
+                                              style="width: 14%"
+                                              styleClass="TexAlRight">
+                                        <h:outputLabel styleClass="lb-sentinel-bold"
+                                                       value="#{item.debitValue}" title="#{item.debitValue}"
+                                                       converter="currencyFormat"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.limit.type.day.apply']}"
+                                              styleClass="col-left" style="width: 15%">
+                                        <p:outputLabel value="#{item.debitDayTypeName}"
+                                                       title="#{item.debitDayTypeName}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.limit.price.stock']}" styleClass="col-right"
+                                              style="width: 15%">
+                                        <h:outputLabel styleClass="lb-sentinel-bold" value="#{item.totalPrice}"
+                                                       title="#{item.totalPrice}"
+                                                       converter="currencyFormat"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.limit.detail.transaction.hang']}"
+                                              styleClass="col-right" style="width: 17%">
+                                        <p:commandLink
+                                                rendered="#{!limitStockLookupController.viewHangTrans || limitStockLookupController.selectedStockDebit !=item}"
+                                                style="text-decoration: none!important;"
+                                                styleClass="fa icon-zoom-in Fs13 black"
+                                                title="#{lang['common.view.detail']}"
+                                                process="@this"
+                                                update="@form"
+                                                actionListener="#{limitStockLookupController.changeViewHangTrans(item)}"/>
+                                        <p:commandLink
+                                                rendered="#{!(!limitStockLookupController.viewHangTrans || limitStockLookupController.selectedStockDebit !=item)}"
+                                                style="text-decoration: none!important; color:red!important;"
+                                                styleClass="fa icon-zoom-out Fs13"
+                                                title="#{lang['common.view.detail']}"
+                                                process="@this"
+                                                update="@form"
+                                                actionListener="#{limitStockLookupController.changeViewHangTrans(null)}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <p:outputPanel id="pnLstTransHang" styleClass="ContainerIndent"
+                                   rendered="#{limitStockLookupController.viewHangTrans}">
+                        <cbs:panel classForToggle="panelListHangTrans"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.stock.limit.list.transaction.hang']}"/>
+
+                        <div class="Container100 panelListHangTrans" style="margin-bottom: 10px;margin-top: 5px;">
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        id="lstHangTrans"
+                                        var="detail"
+                                        rowKey=""
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}"
+                                        rowIndexVar="index"
+                                        value="#{limitStockLookupController.suspendDetails}">
+                                    <p:column headerText="#{lang['export.order.stock']}" styleClass="col-left"
+                                              sortBy="#{detail.fromOwnerName}"
+                                              style="width: 20%">
+                                        <p:outputLabel value="#{detail.fromOwnerName}"
+                                                       title="#{detail.fromOwnerName}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['store.import.stock']}" styleClass="col-left"
+                                              sortBy="#{detail.toOwnerName}"
+                                              style="width: 20%">
+                                        <p:outputLabel value="#{detail.toOwnerName}" title="#{detail.toOwnerName}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.debit.total.value.receive']}"
+                                              styleClass="TexAlRight"
+                                              sortBy="#{detail.totalAmount}"
+                                              style="width:17%">
+                                        <h:outputLabel converter="currencyFormat" styleClass="lb-sentinel-bold"
+                                                       value="#{detail.totalAmount}"
+                                                       title="#{detail.totalAmount}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['export.order.day']}" styleClass="col-left"
+                                              sortBy="#{detail.realTransDate}"
+                                              style="width: 15%">
+                                        <p:outputLabel title="#{detail.realTransDate}"
+                                                       value="#{detail.realTransDate}">
+                                            <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['export.order.code.field']}" styleClass="col-left"
+                                              sortBy="#{detail.actionCode}"
+                                              style="width: 20%">
+                                        <p:outputLabel title="#{detail.actionCode}" value="#{detail.actionCode}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['create.note.reason.export']}" styleClass="col-left"
+                                              sortBy="#{detail.reasonName}"
+                                              style="width: 20%">
+                                        <p:outputLabel value="#{detail.reasonName}" title="#{detail.reasonName}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.status']}"
+                                              styleClass="col-left" style="width: 17%"
+                                              sortBy="#{detail.stockTransStatusName}">
+                                        <p:outputLabel value="#{detail.stockTransStatusName}"
+                                                       title="#{detail.stockTransStatusName}"/>
+                                    </p:column>
+                                </p:dataTable>
+
+                                <div class="Container100 TexAlCenter mg-top-10 mg-bottom-10">
+                                    <p:commandButton ajax="false"
+                                                     update="@form"
+                                                     value="#{lang['button.export.excel']}">
+                                        <p:fileDownload value="#{limitStockLookupController.exportFile()}"/>
+                                    </p:commandButton>
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,403 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.underlying.createNoteExport']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.underlying.createNoteExport']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmExportNote">
+            <p:outputPanel styleClass="Container100" id="pnExportNote">
+                <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                    <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel styleClass="Container100" rendered="#{!agencyExportNoteController.infoOrderDetail}">
+                    <p:focus for="frmExportNote"/>
+                    <!--Start vung thong tin lenh xuat-->
+                    <p:outputPanel id="pnInfoExportOrderSearch" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInforExport" toggle="true"
+                                   titleHeader="#{lang['create.note.export.info.search']}"/>
+
+                        <div class="Container100 panelInforExport" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['export.order.code']}" for="codeExportTxt"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="codeExportTxt"
+                                                     placeholder="#{lang['export.order.code.placehoder']}"
+                                                     value="#{agencyExportNoteController.forSearch.actionCode}"
+                                                     onblur="this.value=this.value.trim()"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['common.status']}" styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu itemLabelEscaped="true" id="cbxStatus" filter="true"
+                                                         filterMatchMode="contains"
+                                                         value="#{agencyExportNoteController.status}">
+                                            <f:selectItem itemValue=""
+                                                          itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                            <f:selectItems value="#{agencyExportNoteController.optionSetValueDTOsList}"
+                                                           var="optionSetValueDTOsList"
+                                                           itemLabel="#{optionSetValueDTOsList.name}"
+                                                           itemValue="#{optionSetValueDTOsList.value}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['create.note.warehouse.export']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText value="#{agencyExportNoteController.forSearch.fromOwnerName}"
+                                                     readonly="true"/>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive50">
+                                    <cbs:inputShop value="#{agencyExportNoteController.shopInfoTagReceive}"
+                                                   idComponent="ipReceiveShop"
+                                                   methodName="doReceiveShop"
+                                                   update="@this"
+                                                   limit="#{agencyExportNoteController.limitAutoComplete}"
+                                                   label="#{lang['create.note.warehouse.import']}"
+                                                   require="false"
+                                                   forceSelection="false"
+                                                   clearMethodName="clearCurrentShop"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-7"
+                                                   classDivInput="Container60 Responsive50 ui-fluid"
+                                                   requiredMessage="#{lang['export.order.stock.require.msg']}"
+                                                   placeholder="#{lang['export.order.stock.receive.product']}"
+                                            >
+                                    </cbs:inputShop>
+                                </div>
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['create.note.from.date']}" for="fromDate"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:calendar id="fromDate"
+                                                    converterMessage="#{lang['mn.stock.from.date.validate.from']}"
+                                                    value="#{agencyExportNoteController.forSearch.startDate}"
+                                                    placeholder="#{lang['create.note.from.date.placeholder']}"
+                                                    required="true"
+                                                    requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['create.note.to.date']}" for="toDate"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:calendar id="toDate"
+                                                    converterMessage="#{lang['mn.stock.from.date.validate.to']}"
+                                                    value="#{agencyExportNoteController.forSearch.endDate}"
+                                                    required="true"
+                                                    placeholder="#{lang['create.note.to.date.placeholder']}"
+                                                    requiredMessage="#{lang['mn.stock.to.date.not.blank']}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="Container100 TexAlCenter mg-top-0">
+                                <p:commandButton value="#{lang['create.note.search']}"
+                                                 process="@([id$=pnInfoExportOrderSearch])"
+                                                 action="#{agencyExportNoteController.doSearchStockTrans()}"
+                                                 update="@form"/>
+                                <p:commandButton value="#{lang['common.reset']}" process="@this" styleClass="mg-left-5"
+                                                 action="#{agencyExportNoteController.doResetStockTrans}"
+                                                 update="@form"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin lenh xuat-->
+                    <!--Start vung danh sach lenh xuat-->
+                    <p:outputPanel id="pnLstExportOrder" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelListOrderExport" toggle="true"
+                                   titleHeader="#{lang['create.note.list.order.export']}"/>
+
+                        <div class="Container100 panelListOrderExport" style="margin-bottom: 10px;margin-top: 10px;">
+                            <p:dataTable
+                                    id="lstOrderExport"
+                                    var="stockTrans"
+                                    rowKey="#{stockTrans.stockTransID}"
+                                    resizableColumns="true"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.empty.records']}"
+                                    value="#{agencyExportNoteController.vStockTransDTOList}">
+                                <p:column headerText="#{lang['create.note.code']}" styleClass="col-left"
+                                          sortBy="#{stockTrans.actionCode}">
+                                    <p:outputLabel value="#{stockTrans.actionCode}" title="#{stockTrans.actionCode}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.create.date']}"
+                                          sortBy="#{stockTrans.createDateTrans}">
+                                    <h:outputText escape="true" value="#{stockTrans.createDateTrans}"
+                                                  styleClass="lb-sentinel-bold" title="#{stockTrans.createDateTrans}">
+                                        <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.warehouse.export']}"
+                                          sortBy="#{stockTrans.toOwnerName}">
+                                    <p:outputLabel value="#{stockTrans.fromOwnerName}"
+                                                   title="#{stockTrans.fromOwnerName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.warehouse.import']}"
+                                          sortBy="#{stockTrans.fromOwnerName}">
+                                    <p:outputLabel value="#{stockTrans.toOwnerName}" title="#{stockTrans.toOwnerName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.reason.export']}"
+                                          sortBy="#{stockTrans.reasonName}">
+                                    <p:outputLabel value="#{stockTrans.reasonName}" title="#{stockTrans.reasonName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.status']}" sortBy="#{stockTrans.statusName}">
+                                    <p:outputLabel value="#{stockTrans.statusName}" title="#{stockTrans.statusName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.note']}" sortBy="#{stockTrans.note}">
+                                    <p:outputLabel value="#{stockTrans.note}" title="#{stockTrans.note}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.origin.export']}"
+                                          sortBy="#{stockTrans.stockBase}">
+                                    <p:outputLabel value="#{stockTrans.stockBase}" title="#{stockTrans.stockBase}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.history.effect']}"
+                                          sortBy="#{stockTrans.hisAction}">
+                                    <p:outputLabel value="#{stockTrans.hisAction}" title="#{stockTrans.hisAction}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.effect']}" style="text-align: center">
+                                    <!--Dat coc-->
+                                    <p:outputPanel rendered="#{stockTrans.stockTransAgent == '1'}">
+                                        <p:commandLink styleClass="fa icon-zoom-in Fs16 blue"
+                                                       style="text-decoration: none!important;" resetValues="true"
+                                                       update="@form" process="@this"
+                                                       title="#{lang['common.view.detail']}"
+                                                       disabled="#{stockTrans.stockTransStatus == '2'
+                                                               or stockTrans.stockTransStatus == '3'
+                                                               or stockTrans.stockTransStatus == '6'
+                                                               or stockTrans.stockTransStatus == '7'}"
+                                                       actionListener="#{agencyExportNoteController.doShowInfoOrderDetail(stockTrans.actionID,stockTrans.stockTransStatus)}"/>
+                                        <cbs:confirmDialog
+                                                idComponent="btnCancelTransDeposit_#{stockTrans.actionID}"
+                                                valueButton=""
+                                                disableButton="#{stockTrans.stockTransStatus == '2'
+                                                            or stockTrans.stockTransStatus == '3'
+                                                            or stockTrans.stockTransStatus == '6'
+                                                            or stockTrans.stockTransStatus == '7'}"
+                                                styleClassButton="fa icon-cancel-2 Fs14 blue "
+                                                headerConfirm="#{lang['export.order.stock.confirm.cancel']}"
+                                                messageConfirm="#{lang['export.order.stock.confirm.cancel.msg']}"
+                                                actionOK="#{agencyExportNoteController.doDeleteOrder(stockTrans.actionID)}"
+                                                resetValueButton="false"
+                                                process="@([id$=form])"
+                                                updateArea="@([id$=form])"
+                                                titleButton="#{lang['common.cancel.trans']}"
+                                                focusCancel="false"
+                                                isButton="false"
+                                                />
+                                    </p:outputPanel>
+                                    <p:outputPanel rendered="#{stockTrans.stockTransAgent == '2'}">
+                                        <!--Ban dut-->
+                                        <p:commandLink styleClass="fa icon-zoom-in Fs16 blue"
+                                                       style="text-decoration: none!important;" resetValues="true"
+                                                       update="@form" process="@this"
+                                                       title="#{lang['common.view.detail']}"
+                                                       disabled="#{stockTrans.payStatus == '0'
+                                                               or stockTrans.stockTransStatus == '2'
+                                                               or stockTrans.stockTransStatus == '3'
+                                                               or stockTrans.stockTransStatus == '7'}"
+                                                       actionListener="#{agencyExportNoteController.doShowInfoOrderDetail(stockTrans.actionID,stockTrans.stockTransStatus)}"/>
+
+                                        <cbs:confirmDialog
+                                                idComponent="btnCancelTrans_#{stockTrans.actionID}"
+                                                valueButton=""
+                                                disableButton="#{stockTrans.payStatus == '1'
+                                                            or stockTrans.stockTransStatus == '3'
+                                                            or stockTrans.stockTransStatus == '7'}"
+                                                styleClassButton="fa icon-cancel-2 Fs14 blue "
+                                                headerConfirm="#{lang['export.order.stock.confirm.cancel']}"
+                                                messageConfirm="#{lang['export.order.stock.confirm.cancel.msg']}"
+                                                actionOK="#{agencyExportNoteController.doDeleteOrder(stockTrans.actionID)}"
+                                                resetValueButton="false"
+                                                process="@([id$=form])"
+                                                updateArea="@([id$=form])"
+                                                titleButton="#{lang['common.cancel.trans']}"
+                                                focusCancel="false"
+                                                isButton="false"
+                                                />
+                                    </p:outputPanel>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung ds lenh xuat-->
+                </p:outputPanel>
+                <p:outputPanel id="pnlViewDetailUnderExportNote" styleClass="Container100"
+                               rendered="#{agencyExportNoteController.infoOrderDetail}">
+                    <!--Start vung thong tin view phieu xuat-->
+                    <cbs:inputOrderStock id="exportStocksabc" title="#{lang['export.order.view.export.note.field']}"
+                                         methodNameOffice="receiveWriteOffice"
+                                         lblActionCode="#{lang['export.order.code']}"
+                                         value="#{agencyExportNoteController.orderStockTag}" mode="2"
+                                         styleClassDiv="mg-top-0"/>
+                    <!--End vung thong tin view phieu xuat-->
+                    <!--Start vung thong tin chi tiet hang hoa-->
+                    <p:outputPanel id="pnlInfoDetailStockModel" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelDetailStock" toggle="true"
+                                   titleHeader="#{lang['create.note.detail.stock']}"/>
+
+                        <div class="Container100 panelDetailStock" style="margin-bottom: 10px;margin-top: 10px;">
+                            <p:dataTable id="lstDetailStock"
+                                         var="stockTransFull"
+                                         resizableColumns="true"
+                                         paginator="#{lang['common.paging.paginator']}"
+                                         rows="#{lang['common.paging.rows.default']}"
+                                         rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                         paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                         paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                         paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                         currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                         emptyMessage="#{lang['common.empty.records']}"
+                                         value="#{agencyExportNoteController.lsStockTransFull}">
+                                <p:column headerText="#{lang['export.order.type.product.name']}" style="width: 18%"
+                                          styleClass="col-left" sortBy="#{stockTransFull.productOfferTypeName}">
+                                    <p:outputLabel value="#{stockTransFull.productOfferTypeName}"
+                                                   title="#{stockTransFull.productOfferTypeId}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['export.order.name.product.type']}" style="width: 18%"
+                                          styleClass="col-left" sortBy="#{stockTransFull.prodOfferName}">
+                                    <p:outputLabel value="#{stockTransFull.prodOfferName}"
+                                                   title="#{stockTransFull.prodOfferName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.status']}" styleClass="col-left" style="width: 15%"
+                                          sortBy="#{stockTransFull.stateName}">
+                                    <p:outputLabel value="#{stockTransFull.stateName}"
+                                                   title="#{stockTransFull.stateName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.unit']}" styleClass="col-left" style="width: 14%"
+                                          sortBy="#{stockTransFull.unit}">
+                                    <p:outputLabel value="#{stockTransFull.unit}" title="#{stockTransFull.unit}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['export.order.price']}"
+                                          style="width: 10%;text-align: right" sortBy="#{stockTransFull.basisPrice}">
+                                    <h:outputText escape="true" converter="currencyFormat"
+                                                  value="#{stockTransFull.basisPrice}" title=""/>
+                                </p:column>
+                                <p:column headerText="#{lang['export.order.code.TC']}" styleClass="col-left"
+                                          style="width: 15%" sortBy="#{stockTransFull.accountingModelCode}">
+                                    <p:outputLabel value="#{stockTransFull.accountingModelCode}"
+                                                   title="#{stockTransFull.accountingModelCode}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.number']}" style="width: 10%;text-align: right"
+                                          sortBy="#{stockTransFull.quantity}">
+                                    <h:outputText escape="true" converter="currencyFormat"
+                                                  value="#{stockTransFull.quantity}"
+                                                  title="#{stockTransFull.quantity}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin chi tiet hang hoa-->
+
+                    <!--Start vung thong tin ky voffice cua phieu xuat-->
+                    <p:outputPanel id="pnlInfoExportNote" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="pnViewExportField" toggle="true"
+                                   titleHeader="#{lang['export.order.view.export.trans']}"/>
+
+                        <div class="Container100 pnViewExportField">
+                            <div class="ContainerIndent mg-top-10">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                        <p:outputLabel for="ipExportCodeField"
+                                                       value="#{lang['export.order.code.field']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText placeholder="#{lang['export.order.code.field.placehoder']}"
+                                                     value="#{agencyExportNoteController.actionCodeNote}"
+                                                     id="ipExportCodeField" required="true"
+                                                     requiredMessage="#{lang['export.order.transCode.require.msg']}"
+                                                     validatorMessage="#{lang['export.order.transCode.error.format.msg']}"/>
+                                        <pe:keyFilter for="ipExportCodeField" regEx="/[0-9a-zA-Z_-]{1,50}/i"
+                                                      preventPaste="false"/>
+                                        <p:message for="ipExportCodeField"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50">
+                                        <p:outputLabel styleClass="lb-sentinel" for="ipWriteOffice"
+                                                       value="#{lang['export.order.write.office']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectBooleanCheckbox id="ipWriteOffice" styleClass="mg-left-5"
+                                                                 value="#{agencyExportNoteController.writeOffice}">
+                                            <p:ajax event="change" process="@this"
+                                                    listener="#{agencyExportNoteController.doChangeWriteOffice()}"
+                                                    update="@([id$=pnExportNoteOffice])"/>
+                                        </p:selectBooleanCheckbox>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive"></div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin ky voffice cua phieu xuat-->
+                    <!--Start vung thong tin ky view office-->
+                    <p:outputPanel id="pnExportNoteOffice" styleClass="Container100">
+                        <p:outputPanel styleClass="Container100" rendered="#{agencyExportNoteController.writeOffice}">
+                            <cbs:inputSignOffice value="#{agencyExportNoteController.writeOfficeTag}"
+                                                 title="#{lang['export.order.view.office']}"
+                                                 idComponent="writeOfficeExport"/>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <!--Start Vung data button-->
+                    <p:outputPanel id="pnlDataButton" styleClass="Container100">
+                        <div class="ContainerIndent TexAlCenter">
+                            <cbs:confirmDialog
+                                    idComponent="btnExportOrder"
+                                    disableButton="#{agencyExportNoteController.canPrint or agencyExportNoteController.logictis}"
+                                    valueButton="#{lang['export.order.btn.submit.field']}"
+                                    headerConfirm="#{lang['export.note.btn.submit.deposit.header.confirm']}"
+                                    messageConfirm="#{lang['export.note.btn.submit.deposit.header.confirm.msg']}"
+                                    actionOK="#{agencyExportNoteController.doCreateExportNote}"
+                                    resetValueButton="false"
+                                    process="@form"
+                                    updateArea="@form"
+                                    focusCancel="false"
+                                    isButton="true"
+                                    />
+                            <p:commandButton value="#{lang['export.order.btn.print.field']}"
+                                             process="@this"
+                                             disabled="#{!agencyExportNoteController.canPrint}"
+                                             update="@form"
+                                             ajax="false"
+                                             immediate="true"
+                                             styleClass="mg-left-5">
+                                <p:fileDownload value="#{agencyExportNoteController.exportStockTransDetail()}"/>
+                            </p:commandButton>
+                            <p:commandButton value="#{lang['common.back.page']}" process="@this"
+                                             actionListener="#{agencyExportNoteController.doBackPage}" immediate="true"
+                                             styleClass="mg-left-5" update="@form"/>
+                        </div>
+                    </p:outputPanel>
+                    <!--End Vung data button-->
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

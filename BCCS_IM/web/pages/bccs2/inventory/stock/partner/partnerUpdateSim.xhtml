@@ -1,0 +1,214 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:o="http://omnifaces.org/ui"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.partner.update.sim.file']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.partner.update.sim.file']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmPartnerUpdateSim" styleClass="Container100">
+            <p:outputPanel styleClass="Container100" id="pnlPartnerUpdateSim">
+
+                <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                    <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel styleClass="Container100">
+                    <p:focus for="frmPartnerUpdateSim"/>
+                    <p:outputPanel id="pnlInforPartner" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="pnlInforPartner"
+                                   titleHeader="#{lang['mn.stock.partner.update.sim.info']}"/>
+
+                        <div class="pnlInforPartner Container100 paddingTopBottom10">
+                            <div class="ContainerIndent  mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <cbs:inputShop value="#{partnerUpdateSimController.shopInfoTag}"
+                                                   idComponent="inputStore"
+                                                   methodName="receiveShop"
+                                                   clearMethodName="clearShop"
+                                                   update="@this"
+                                                   label="#{lang['mn.stock.partner.update.sim.shop']}"
+                                                   placeholder="#{lang['mn.stock.partner.update.sim.shop.placeholder']}"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                   classDivInput="Container60 Responsive50 ui-fluid"
+                                                   require="true"
+                                                   requiredMessage="#{lang['mn.stock.partner.update.sim.shop.require']}"
+                                                   forceSelection="false"
+                                                   limit="#{partnerUpdateSimController.limitAutoComplete}">
+
+                                    </cbs:inputShop>
+                                </div>
+                                <c:if test="#{partnerUpdateSimController.threeProvince}">
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-4">
+                                            <p:outputLabel value="#{lang['mn.stock.partner.update.sim.shop.region']}"
+                                                           for="cboThreeProvince"
+                                                           styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:selectOneMenu id="cboThreeProvince"
+                                                             value="#{partnerUpdateSimController.regionStockId}">
+                                                <f:selectItem itemValue=""
+                                                              itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                                <f:selectItems value="#{partnerUpdateSimController.lsRegionShop}"
+                                                               var="shop"
+                                                               itemLabelEscaped="true"
+                                                               itemLabel="#{shop.shopCode}-#{shop.name}"
+                                                               itemValue="#{shop.shopId}"/>
+                                            </p:selectOneMenu>
+                                            <p:message for="cboThreeProvince"/>
+                                        </div>
+                                    </div>
+                                </c:if>
+
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-4">
+                                        <p:outputLabel value="#{lang['type.product']}" for="txtTypeProduct"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                        <p:outputLabel id="txtTypeProduct"
+                                                       value="#{partnerUpdateSimController.productOfferTypeDTO.name}"
+                                                       title="#{partnerUpdateSimController.productOfferTypeDTO.name}"
+                                                       readonly="true">
+                                        </p:outputLabel>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                        <p:outputLabel value="#{lang['mn.stock.liquidate.model']}"
+                                                       for="cplProductOffer" styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ui-relative">
+                                        <p:autoComplete id="cplProductOffer"
+                                                        required="true"
+                                                        requiredMessage="#{lang['mn.stock.liquidate.model.required']}"
+                                                        value="#{partnerUpdateSimController.productOfferingTotalDTO}"
+                                                        disabled="#{!(partnerUpdateSimController.productOfferingTotalDTO == null || partnerUpdateSimController.productOfferingTotalDTO == '')}"
+                                                        completeMethod="#{partnerUpdateSimController.searchListProductOffering}"
+                                                        placeholder="#{lang['mn.stock.liquidate.model.placeholder']}"
+                                                        var="productOfferingTotalDTO"
+                                                        itemValue="#{productOfferingTotalDTO}"
+                                                        itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                        autoHighlight="true"
+                                                        maxResults="10"
+                                                        forceSelection="true">
+                                            <o:converter converterId="productOfferingConverter"
+                                                         list="#{partnerUpdateSimController.lstProductOfferingTotalDTO}"/>
+                                            <p:ajax event="itemSelect"
+                                                    listener="#{partnerUpdateSimController.doSelectProductOffering}"
+                                                    process="@([id$=cplProductOffer])"
+                                                    update="@([id$=cplProductOffer]),@([id$=txtProfile]),@([id$=msgSearch])"/>
+                                            <p:column style="width: 40%"
+                                                      headerText="#{lang['common.lb.code']}"
+                                                      filterable="true">
+                                                <p:outputLabel value="#{productOfferingTotalDTO.code}"/>
+                                            </p:column>
+                                            <p:column style="width: 60%"
+                                                      headerText="#{lang['common.lb.name']}"
+                                                      filterable="true">
+                                                <p:outputLabel value="#{productOfferingTotalDTO.name}"/>
+                                            </p:column>
+                                            <p:ajax event="query" global="false"/>
+                                        </p:autoComplete>
+                                        <p:commandLink id="btnResetLstProduct"
+                                                       styleClass="ui-link-right"
+                                                       update="@this, @([id$=cplProductOffer]), @([id$=txtProfile])"
+                                                       actionListener="#{partnerUpdateSimController.resetLstProductOfferingTotal}"
+                                                       process="@this">
+                                            <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                        </p:commandLink>
+                                        <p:message for="cplProductOffer"/>
+                                    </div>
+                                </div>
+                                <div class="Container66 Responsive">
+                                    <div class="Container20 Responsive25 mg-left-15 pd-top-4">
+                                        <p:outputLabel value="#{lang['mn.stock.partner.template']}"
+                                                       styleClass="lb-sentinel" for="txtProfile"/>
+                                    </div>
+                                    <div class="Container80 Responsive75 ui-fluid">
+                                        <p:inputText id="txtProfile" disabled="true"
+                                                     value="#{partnerUpdateSimController.importPartnerRequestDTO.profile}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <p:outputPanel styleClass="Container33 Responsive33 ui-fluid" id="pnTemplate">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7 outputAttach_col">
+                                        <p:outputLabel value="#{lang['create.order.file.data']}" for="outputAttach"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 pd-top-7 ui-fluid outputAttach">
+                                        <p:inputText id="outputAttach" maxlength="100" required="true"
+                                                     value="#{partnerUpdateSimController.uploadedFile.fileName}"
+                                                     readonly="true"/>
+                                    </div>
+                                </p:outputPanel>
+
+                                <div class="Container66 Responsive66">
+                                    <p:fileUpload id="fileDataUpload"
+                                                  styleClass="fileDataUpload Fleft"
+                                                  label="#{lang['select.file']}"
+                                                  invalidFileMessage="#{lang['import.partner.valid.fileDataFormat']}"
+                                                  requiredMessage="#{lang['mn.stock.limit.attachFile.msg.require']}"
+                                                  invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                  fileLimitMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                  update="@([id$=msgSearch]),@([id$=outputAttach]),@([id$=pnlErrorFile])"
+                                                  dragDropSupport="true" required="true" mode="advanced"
+                                                  auto="true"
+                                                  process="@this"
+                                                  widgetVar="wgUploadFile"
+                                                  allowTypes="/(\.|\/)(txt)$/"
+                                                  sizeLimit="5242880"
+                                                  value="#{partnerUpdateSimController.uploadedFile}"
+                                                  fileUploadListener="#{partnerUpdateSimController.handlFileUpload}">
+                                    </p:fileUpload>
+                                    <p:message for="fileDataUpload"/>
+                                </div>
+                            </div>
+                        </div>
+                        <p:outputPanel styleClass="ContainerIndent TexAlCenter" id="pnlErrorFile">
+                            <p:commandLink value="#{lang['mn.stock.status.isdn.update.status.file_error']}"
+                                           ajax="false"
+                                           process="@this"
+                                           immediate="true"
+                                           styleClass="mg-left-5 break-word" style="color:red!important;"
+                                           rendered="#{partnerUpdateSimController.renderedError}">
+                                <p:fileDownload value="#{partnerUpdateSimController.exportErrorFile()}"/>
+                            </p:commandLink>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <p:outputPanel styleClass="Container100 TexAlCenter" id="pnlCallAction">
+                        <cbs:confirmDialog
+                                idComponent="btnAction"
+                                id="btnAction"
+                                valueButton="#{lang['common.action']}"
+                                headerConfirm="#{lang['mn.stock.partner.update.sim.btn.header']}"
+                                messageConfirm="#{lang['mn.stock.partner.update.sim.btn.msg']}"
+                                actionOK="#{partnerUpdateSimController.doUpdate}"
+                                resetValueButton="false"
+                                process="@form"
+                                updateArea="@form"
+                                updateOK="@form"
+                                actionValidate="#{partnerUpdateSimController.doValidate}"
+                                isButton="true"
+                                focusCancel="false"/>
+                        <p:commandButton styleClass="mg-left-5" value="#{lang['common.reset']}"
+                                         immediate="true"
+                                         resetValues="true"
+                                         process="@form"
+                                         update="@form"
+                                         action="#{partnerUpdateSimController.doReset}"/>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

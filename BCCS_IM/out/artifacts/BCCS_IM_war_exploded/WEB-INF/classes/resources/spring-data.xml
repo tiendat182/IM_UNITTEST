@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+			http://www.springframework.org/schema/tx 
+			http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+			http://www.springframework.org/schema/data/jpa
+   			http://www.springframework.org/schema/data/jpa/spring-jpa-1.1.xsd">
+
+    <jpa:repositories base-package="com.viettel.bccs.inventory"
+                      entity-manager-factory-ref="entityManagerFactoryInventory"/>
+
+    <jpa:repositories base-package="com.viettel.bccs.partner, com.viettel.bccs.im1"
+                      entity-manager-factory-ref="entityManagerFactoryImLib"/>
+
+    <jpa:repositories base-package="com.viettel.bccs.anypay" entity-manager-factory-ref="entityManagerFactoryAnypay"/>
+
+    <jpa:repositories base-package="com.viettel.bccs.sale" entity-manager-factory-ref="entityManagerFactorySale"/>
+
+    <bean id="dataSourceInventory" parent="xaDatasourceBase">
+        <property name="uniqueResourceName" value="XA_IM"/>
+        <property name="xaProperties">
+            <props>
+                <prop key="user">${inventory.jdbc.username}</prop>
+                <prop key="password">${inventory.jdbc.password}</prop>
+                <prop key="URL">${inventory.jdbc.url}</prop>
+            </props>
+        </property>
+        <property name="minPoolSize" value="0"/>
+        <property name="maxPoolSize" value="300"/>
+    </bean>
+
+    <bean id="entityManagerFactoryInventory" parent="emfBase">
+        <property name="persistenceXmlLocation" value="classpath:persistence.xml"/>
+        <property name="persistenceUnitName" value="BCCS_IM"/>
+        <property name="dataSource" ref="proxyDataSourceInventory"/>
+    </bean>
+
+    <bean id="proxyDataSourceInventory" class="net.ttddyy.dsproxy.support.ProxyDataSource">
+        <property name="dataSource" ref="dataSourceInventory"/>
+        <property name="listener" ref="listeners"/>
+    </bean>
+
+
+    <bean id="dataSourceImLib" parent="xaDatasourceBase">
+        <property name="uniqueResourceName" value="XA_IM_LIB"/>
+        <property name="xaProperties">
+            <props>
+                <prop key="user">${imlib.jdbc.username}</prop>
+                <prop key="password">${imlib.jdbc.password}</prop>
+                <prop key="URL">${imlib.jdbc.url}</prop>
+            </props>
+        </property>
+        <property name="minPoolSize" value="0"/>
+        <property name="maxPoolSize" value="300"/>
+    </bean>
+
+    <bean id="entityManagerFactoryImLib" parent="emfBase">
+        <property name="persistenceXmlLocation" value="classpath:persistence.xml"/>
+        <property name="persistenceUnitName" value="BCCS_IM_LIB"/>
+        <property name="dataSource" ref="proxyDataSourceIm"/>
+    </bean>
+
+    <bean id="proxyDataSourceIm" class="net.ttddyy.dsproxy.support.ProxyDataSource">
+        <property name="dataSource" ref="dataSourceImLib"/>
+        <property name="listener" ref="listeners"/>
+    </bean>
+
+    <bean id="dataSourceAnypay" parent="xaDatasourceBase">
+        <property name="uniqueResourceName" value="XA_ANYPAY"/>
+        <property name="xaProperties">
+            <props>
+                <prop key="user">${anypaylib.jdbc.username}</prop>
+                <prop key="password">${anypaylib.jdbc.password}</prop>
+                <prop key="URL">${anypaylib.jdbc.url}</prop>
+            </props>
+        </property>
+        <property name="minPoolSize" value="0"/>
+        <property name="maxPoolSize" value="300"/>
+    </bean>
+
+    <bean id="entityManagerFactoryAnypay" parent="emfBase">
+        <property name="persistenceXmlLocation" value="classpath:persistence.xml"/>
+        <property name="persistenceUnitName" value="PUAnypayLib"/>
+        <property name="dataSource" ref="proxyDataSourceAnypay"/>
+    </bean>
+
+    <!--DB sale-->
+    <bean id="dataSourceSale" parent="xaDatasourceBase">
+        <property name="uniqueResourceName" value="XA_SALE"/>
+        <property name="xaProperties">
+            <props>
+                <prop key="user">${sale.jdbc.username}</prop>
+                <prop key="password">${sale.jdbc.password}</prop>
+                <prop key="URL">${sale.jdbc.url}</prop>
+            </props>
+        </property>
+        <property name="minPoolSize" value="0"/>
+        <property name="maxPoolSize" value="300"/>
+    </bean>
+
+    <bean id="entityManagerFactorySale" parent="emfBase">
+        <property name="persistenceXmlLocation" value="classpath:persistence.xml"/>
+        <property name="persistenceUnitName" value="BCCS_SALE"/>
+        <property name="dataSource" ref="proxyDataSourceSale"/>
+    </bean>
+
+    <bean id="proxyDataSourceSale" class="net.ttddyy.dsproxy.support.ProxyDataSource">
+        <property name="dataSource" ref="dataSourceSale"/>
+        <property name="listener" ref="listeners"/>
+    </bean>
+    <!--end DB sale-->
+
+    <bean id="proxyDataSourceAnypay" class="net.ttddyy.dsproxy.support.ProxyDataSource">
+        <property name="dataSource" ref="dataSourceAnypay"/>
+        <property name="listener" ref="listeners"/>
+    </bean>
+
+    <bean id="listeners" class="net.ttddyy.dsproxy.listener.ChainListener">
+        <property name="listeners">
+            <list>
+                <!--<bean class="net.ttddyy.dsproxy.listener.CommonsQueryLoggingListener">-->
+                <bean class="net.ttddyy.dsproxy.listener.CommonsQueryLoggingListener">
+                    <property name="logLevel" value="INFO"/>
+                    <property name="writeAsJson" value="true"/>
+                    <property name="writeDataSourceName" value="true"/>
+                    <!-- Default is DEBUG -->
+                </bean>
+                <bean class="net.ttddyy.dsproxy.listener.DataSourceQueryCountListener"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="xaDatasourceBase" class="com.atomikos.jdbc.AtomikosDataSourceBean"
+          abstract="true"
+          init-method="init"
+          destroy-method="close">
+        <property name="xaDataSourceClassName" value="oracle.jdbc.xa.client.OracleXADataSource"/>
+        <property name="minPoolSize" value="0"/>
+        <property name="maxPoolSize" value="300"/>
+        <!--<property name="testQuery" value="select 1 from dual"/>-->
+    </bean>
+
+    <bean id="emfBase" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" abstract="true">
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">
+                    <!--org.hibernate.dialect.Oracle10gDialect-->
+                    com.viettel.fw.hibernate.CbsOracleDialect
+                </prop>
+
+                <!-- BEGIN Atomikos -->
+                <prop key="hibernate.transaction.factory_class">
+                    org.hibernate.engine.transaction.internal.jta.CMTTransactionFactory
+                </prop>
+                <prop key="hibernate.transaction.jta.platform">com.atomikos.icatch.jta.hibernate4.AtomikosPlatform
+                </prop>
+
+                <!-- END Atomikos -->
+
+                <prop key="javax.persistence.transactionType">jta</prop>
+                <prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="javax.persistence.lock.timeout">0</prop>
+            </props>
+        </property>
+    </bean>
+
+
+
+    <!--Start - TheTM thay cau hinh transaction -->
+    <!--<bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager"-->
+          <!--init-method="init"-->
+          <!--destroy-method="close">-->
+        <!--<property name="forceShutdown" value="false"/>-->
+        <!--<property name="transactionTimeout" value="180000"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.J2eeUserTransaction">-->
+        <!--&lt;!&ndash;<property name="transactionTimeout" value="180000"/>&ndash;&gt;-->
+    <!--</bean>-->
+
+    <!--&lt;!&ndash;  Configure the Spring framework to use JTA transactions from Atomikos&ndash;&gt;-->
+    <!--<bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager"-->
+          <!--depends-on="atomikosTransactionManager,atomikosUserTransaction">-->
+        <!--<property name="transactionManager" ref="atomikosTransactionManager"/>-->
+        <!--<property name="userTransaction" ref="atomikosUserTransaction"/>-->
+        <!--<property name="allowCustomIsolationLevels" value="true"/>-->
+    <!--</bean>-->
+    <!--End - TheTM thay cau hinh transaction -->
+
+
+    <bean id="txService" class="com.atomikos.icatch.config.UserTransactionServiceImp"
+          init-method="init" destroy-method="shutdownWait">
+    </bean>
+
+    <bean id="txManager" class="com.atomikos.icatch.jta.J2eeTransactionManager" depends-on="txService"/>
+
+    <bean id="userTx" class="com.atomikos.icatch.jta.J2eeUserTransaction" depends-on="txService"/>
+
+    <!--  Configure the Spring framework to use JTA transactions from Atomikos-->
+    <bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager"
+          depends-on="txManager, userTx">
+        <property name="transactionManager" ref="txManager"/>
+        <property name="userTransaction" ref="userTx"/>
+        <property name="allowCustomIsolationLevels" value="true"/>
+    </bean>
+
+
+    <!--
+
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="save*" propagation="REQUIRED" />
+            <tx:method name="update*" propagation="REQUIRED" />
+            <tx:method name="del*" propagation="REQUIRED" />
+            <tx:method name="find*" propagation="REQUIRED" read-only="true" />
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config expose-proxy="true" proxy-target-class="true">
+        <aop:pointcut id="txPointcut" expression="execution(* com.viettel.bccs.sale.service.*(..))" />
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+    </aop:config>
+    -->
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!--<tx:annotation-driven transaction-manager="transactionManager" modex="aspectj"/>    -->
+
+    <!--<tx:jta-transaction-manager/>-->
+
+</beans>

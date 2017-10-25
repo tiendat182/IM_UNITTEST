@@ -1,0 +1,51 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:form id="frmViewDetailSerial" styleClass="Container100">
+        <p:outputPanel id="pnlViewDetailSerial" styleClass="Container100">
+            <cbs:panel classForToggle="pnlLitstDetailSerial"
+                       titleHeader="#{lang['mn.invoice.invoiceSerial.list.serial']}"/>
+            <p:outputPanel id="pnlLitstDetailSerial" styleClass="Container100 pnlLitstDetailSerial">
+                <div class="ContainerIndent">
+                    <p:dataTable
+                            id="tblListSerial"
+                            var="item" value="#{manageTransWarehouseController.stockTransSerialDTOs}"
+                            rowIndexVar="index"
+                            resizableColumns="true"
+                            paginator="#{lang['common.paging.paginator']}"
+                            rows="#{lang['common.paging.rows.default']}"
+                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                            emptyMessage="#{lang['common.empty.records']}">
+                        <p:column headerText="#{lang['common.stt']}" styleClass="TexAlLeft" style="width:8%">
+                            <p:outputLabel value="#{index + 1}"/>
+                        </p:column>
+                        <p:column headerText="#{lang['mn.stock.utilities.from.serial.imei']}"
+                                  styleClass="ui-fluid" sortBy="">
+                            <p:outputLabel value="#{item.fromSerial}" title="#{item.fromSerial}"/>
+                        </p:column>
+                        <p:column headerText="#{lang['mn.stock.utilities.to.serial.imei']}" styleClass="ui-fluid"
+                                  sortBy="">
+                            <p:outputLabel value="#{item.toSerial}" title="#{item.toSerial}"/>
+                        </p:column>
+                        <p:column headerText="#{lang['common.number']}" styleClass="TexAlRight" sortBy="">
+                            <h:outputLabel styleClass="lb-sentinel-bold" converter="currencyFormat"
+                                           value="#{item.quantity}" title="#{item.quantity}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+                <div class="ContainerIndent mg-top-0 TexAlCenter">
+                    <p:commandButton value="#{lang['mn.stock.utilities.export.excel']}" ajax="false">
+                        <p:fileDownload value="#{manageTransWarehouseController.exportSerialsDlg()}"/>
+                    </p:commandButton>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

@@ -1,0 +1,293 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['BCCS2_IM_QLKHO_DOI_THIET_BI_DAU_CUOI']}</ui:define>
+    <ui:define name="featureName">#{lang['BCCS2_IM_QLKHO_DOI_THIET_BI_DAU_CUOI']}</ui:define>
+    <ui:define name="content">
+    <h:form id="frmViewStockOffer">
+        <p:focus for="@form"></p:focus>
+        <!--start vung thong tin nhap-->
+        <p:outputPanel styleClass="ContainerIndent mg-top-0">
+            <div class="Container pd-bottom-0 mg-bottom-0">
+                <p:messages id="msgExport" showDetail="true" showSummary="false" closable="true" />
+            </div>
+            <p:outputPanel styleClass="Container" id="pnInputSearch">
+                <cbs:panel classForToggle="pnInputChange" titleHeader="#{lang['mn.sale.change.terminal.devide.header']}"/>
+                <div class="Container pnInputChange">
+                    <div class="ContainerIndent">
+                        <p:outputLabel value="#{changeTerminalDevideController.strNoteLimitDayChangeHandset}" styleClass="red" />
+                    </div>
+                    <!--<div class="ContainerIndent">
+                        <div class="Container50 Responsive50">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['mn.sale.change.terminal.type.change']}" for="cbxTypeChange" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneRadio id="cbxTypeChange" value="#{changeTerminalDevideController.sourceType}"
+                                                  required="true" requiredMessage="#{lang['stock.sale.change.terminal.empty.EmpModelType']}">
+                                    <f:selectItem itemLabel="#{lang['mn.sale.change.terminal.same.product']}" itemValue="2"/>
+                                    <f:selectItem itemLabel="#{lang['mn.sale.change.terminal.not.same.product']}" itemValue="1"/>
+                                    <p:ajax event="click" process="@this" update="@([id$=pnProduct])" resetValues="true"
+                                            listener="#{changeTerminalDevideController.doChangeType}"></p:ajax>
+                                </p:selectOneRadio>
+                            </div>
+                        </div>
+                        <div class="Container50 Responsive50"></div>
+                     </div>-->
+                    <p:outputPanel styleClass="ContainerIndent" id="pnProduct">
+                        <p:outputPanel styleClass="Container50 Responsive50" id="pnDamage">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.sale.change.terminal.model.damage.product']}"
+                                               for="cplDamageProd" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid ui-relative">
+                                <p:autoComplete id="cplDamageProd"
+                                                requiredMessage="#{lang['stock.sale.change.terminal.empty.product.damage']}"
+                                                value="#{changeTerminalDevideController.prodOfferDamageDTO}"
+                                                completeMethod="#{changeTerminalDevideController.searchListProdDamage}"
+                                                placeholder="#{lang['mn.stock.liquidate.model.placeholder']}"
+                                                var="productOfferingTotalDTO"
+                                                required="true"
+                                                itemValue="#{productOfferingTotalDTO}"
+                                                itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                autoHighlight="true"
+                                                disabled="#{changeTerminalDevideController.disableDamageModel}"
+                                                maxResults="#{changeTerminalDevideController.limitAutoComplete}"
+                                                forceSelection="true">
+                                    <o:converter converterId="productOfferingConverter"
+                                                 list="#{changeTerminalDevideController.lstProdOfferDamageDTO}"/>
+                                    <p:ajax event="itemSelect"
+                                            listener="#{changeTerminalDevideController.doSelectProductOffering}"
+                                            process="@([id$=cplDamageProd])"
+                                            update="@([id$=pnDamage]), @([id$=msgSearch])"/>
+                                    <p:column style="width: 40%"
+                                              headerText="#{lang['common.lb.code']}"
+                                              filterable="true">
+                                        <p:outputLabel value="#{productOfferingTotalDTO.code}"/>
+                                    </p:column>
+                                    <p:column style="width: 60%"
+                                              headerText="#{lang['common.lb.name']}"
+                                              filterable="true">
+                                        <p:outputLabel value="#{productOfferingTotalDTO.name}"/>
+                                    </p:column>
+                                    <p:ajax event="query" global="false"/>
+                                </p:autoComplete>
+                                <p:commandLink
+                                               styleClass="ui-link-right"
+                                               update="@this,@([id$=pnDamage])"
+                                               actionListener="#{changeTerminalDevideController.resetLstProdDamage}"
+                                               process="@this">
+                                    <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                </p:commandLink>
+                                <p:message for="cplDamageProd"/>
+                            </div>
+                        </p:outputPanel>
+                        <p:outputPanel styleClass="Container50 Responsive50" id="pnChange" rendered="#{changeTerminalDevideController.showChangeProduct}">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.sale.change.terminal.model.change.product']}"
+                                               for="cplchangeProd" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid ui-relative">
+                                <p:autoComplete id="cplchangeProd"
+                                                requiredMessage="#{lang['stock.sale.change.terminal.empty.product.change']}"
+                                                value="#{changeTerminalDevideController.prodOfferChangeDTO}"
+                                                completeMethod="#{changeTerminalDevideController.searchListProdChange}"
+                                                placeholder="#{lang['mn.stock.liquidate.model.placeholder']}"
+                                                var="productOfferingTotalDTO"
+                                                itemValue="#{productOfferingTotalDTO}"
+                                                itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                autoHighlight="true"
+                                                required="true"
+                                                disabled="#{changeTerminalDevideController.disableChangeModel}"
+                                                maxResults="#{changeTerminalDevideController.limitAutoComplete}"
+                                                forceSelection="true">
+                                    <o:converter converterId="productOfferingConverter"
+                                                 list="#{changeTerminalDevideController.lstProdOfferChangeDTO}"/>
+                                    <p:ajax event="itemSelect"
+                                            listener="#{changeTerminalDevideController.doSelectProductOffering}"
+                                            process="@([id$=cplchangeProd])"
+                                            update="@([id$=pnChange]), @([id$=msgSearch])"/>
+                                    <p:column style="width: 40%"
+                                              headerText="#{lang['common.lb.code']}"
+                                              filterable="true">
+                                        <p:outputLabel value="#{productOfferingTotalDTO.code}"/>
+                                    </p:column>
+                                    <p:column style="width: 60%"
+                                              headerText="#{lang['common.lb.name']}"
+                                              filterable="true">
+                                        <p:outputLabel value="#{productOfferingTotalDTO.name}"/>
+                                    </p:column>
+                                    <p:ajax event="query" global="false"/>
+                                </p:autoComplete>
+                                <p:commandLink
+                                               styleClass="ui-link-right"
+                                               update="@this,@([id$=pnChange])"
+                                               actionListener="#{changeTerminalDevideController.resetLstProdChange}"
+                                               process="@this">
+                                    <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                </p:commandLink>
+                                <p:message for="cplchangeProd"/>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <div class="ContainerIndent">
+                        <div class="Container50 Responsive50">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4 damageSerial_col">
+                                <p:outputLabel value="#{lang['mn.sale.change.terminal.model.damage.product.serial']}"
+                                               for="damageSerial" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid ui-relative damageSerial">
+                                <p:inputText id="damageSerial" value="#{changeTerminalDevideController.damageSerial}" maxlength="19"
+                                             required="true" onblur="this.value=this.value.trim()" styleClass="damageSerial"
+                                             requiredMessage="#{lang['stock.sale.change.terminal.empty.serial.damage']}"
+                                />
+                                <pe:keyFilter for="damageSerial" regEx="/[a-z0-9A-Z]+/i" preventPaste="false"/>
+                                <p:message for="damageSerial"/>
+                            </div>
+                        </div>
+                        <p:outputPanel styleClass="Container50 Responsive50">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4 changeSerial_col">
+                                <p:outputLabel value="#{lang['mn.sale.change.terminal.model.change.product.serial']}"
+                                               for="changeSerial" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid ui-relative changeSerial">
+                                <p:inputText id="changeSerial" value="#{changeTerminalDevideController.changeSerial}"
+                                             required="true" onblur="this.value=this.value.trim()"
+                                             styleClass="changeSerial" maxlength="19"
+                                             validatorMessage="#{lang['mm.divide.upload.valid.serial.length']}"
+                                             requiredMessage="#{lang['stock.sale.change.terminal.empty.serial.change']}"
+                                             />
+                                <pe:keyFilter for="changeSerial" regEx="/[a-z0-9A-Z]+/i" preventPaste="false"/>
+                                <p:message for="changeSerial"/>
+                            </div>
+                        </p:outputPanel>
+                    </div>
+                    <div class="ContainerIndent">
+                        <div class="Container20 Responsive25 mg-left-15 pd-top-4">
+                            <p:outputLabel value="#{lang['mn.sale.change.terminal.note']}" for="note" styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container80 Responsive75 ui-fluid ui-relative">
+                            <p:inputText id="note" value="#{changeTerminalDevideController.note}"
+                                         placeholder="#{lang['mn.sale.change.terminal.note.placehoder']}"
+                                         maxlength="500" onblur="this.value=this.value.trim()" />
+                        </div>
+
+                    </div>
+                    <div class="ContainerIndent">
+                        <div class="Container50 Responsive50">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.from.date']}" for="fromDate"
+                                               styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                <p:calendar id="fromDate"
+                                            value="#{changeTerminalDevideController.fromDate}"
+                                            placeholder="#{lang['create.note.from.date.placeholder']}"
+                                            required="true"
+                                            converterMessage="#{lang['mn.stock.from.date.not.format']}"
+                                            requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                            </div>
+                        </div>
+                        <div class="Container50 Responsive50">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.to.date']}" for="toDate"
+                                               styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                <p:calendar id="toDate"
+                                            value="#{changeTerminalDevideController.toDate}"
+                                            required="true"
+                                            placeholder="#{lang['create.note.to.date.placeholder']}"
+                                            converterMessage="#{lang['mn.stock.from.date.not.format']}"
+                                            requiredMessage="#{lang['mn.stock.to.date.not.blank']}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent TexAlCenter">
+                        <p:commandButton value="#{lang['mn.stock.track.pass']}"
+                                         process="@form"
+                                         action="#{changeTerminalDevideController.doCheckHandset}" update="@form"
+                                         resetValues="true"/>
+                        <cbs:confirmDialog
+                                idComponent="btnConfirm2"
+                                id="btnConfirm2"
+                                valueButton="#{lang['stock.change.damaged.button']}"
+                                headerConfirm="#{lang['mn.sale.change.terminal.change.confirm.header']}"
+                                messageConfirm="#{lang['mn.sale.change.terminal.change.confirm.content']}"
+                                actionOK="#{changeTerminalDevideController.doChangeHandset}"
+                                actionValidate="#{changeTerminalDevideController.doValidateHandset}"
+                                resetValueButton="false"
+                                styleClassButton="mg-left-5"
+                                process="@form"
+                                updateArea="@form"
+                                updateOK="@form"
+                                focusCancel="false"
+                                oncompleteOK=""
+                                isButton="true"
+                        />
+                        <p:commandButton value="#{lang['common.reset']}" process="@this" styleClass="mg-left-5"
+                                         action="#{changeTerminalDevideController.doResetHandSet}"
+                                         update="@form"
+                                         resetValues="true"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+        <!--end vung thong tin nhap-->
+        <!--start vung thong tin ket qua tim kiem-->
+        <p:outputPanel styleClass="ContainerIndent" id="pnResult">
+            <cbs:panel classForToggle="pnViewChangeHandset" titleHeader="#{lang['mn.sale.change.terminal.infor.sell.product']}"/>
+            <div class="container pnViewChangeHandset">
+                <p:dataTable
+                        id="tblHandset"
+                        value="#{changeTerminalDevideController.lstChangeHandsetDTO}"
+                        var="changeHandset"
+                        resizableColumns="true"
+                        paginator="false"
+                        rowIndexVar="index"
+                        scrollable="true"
+
+                        emptyMessage="#{lang['common.empty.records']}">
+                    <p:column headerText="#{lang['common.stt']}" style="width: 10%">
+                        <p:outputLabel value="#{index + 1}"/>
+                    </p:column>
+                    <p:column headerText="#{lang['agent.sale.label.saleDate']}" styleClass="col-left"
+                              sortBy="#{changeHandset.saleTransDate}">
+                        <h:outputText escape="true" value="#{changeHandset.strSaleTransDate}" title="#{changeHandset.strSaleTransDate}" styleClass="lb-sentinel-bold" >
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{lang['mn.sale.change.terminal.shop.sell']}" styleClass="col-left"
+                              sortBy="#{changeHandset.shopName}">
+                        <p:outputLabel value="#{changeHandset.shopName}" title="#{changeHandset.shopName}"/>
+                    </p:column>
+                    <p:column headerText="#{lang['mn.sale.change.terminal.staff.sell']}" styleClass="col-left"
+                           sortBy="#{changeHandset.staffName}" >
+                        <h:outputText escape="true" value="#{changeHandset.staffName}" title="#{changeHandset.staffName}" />
+                    </p:column>
+                    <p:column headerText="#{lang['mn.sale.change.terminal.product.name']}" styleClass="col-left"
+                              sortBy="#{changeHandset.prodOfferName}" >
+                        <h:outputText escape="true" value="#{changeHandset.prodOfferName}" title="#{changeHandset.prodOfferName}" />
+                    </p:column>
+                    <p:column headerText="#{lang['mn.sale.change.terminal.serial.sell']}" styleClass="col-left"
+                              sortBy="#{changeHandset.serialSaled}" >
+                        <h:outputText escape="true" value="#{changeHandset.serialSaled}" title="#{changeHandset.serialSaled}" />
+                    </p:column>
+                    <p:column headerText="#{lang['mn.sale.change.terminal.price']}" styleClass="col-right"
+                              sortBy="#{changeHandset.priceSaled}" >
+                        <h:outputText escape="true" value="#{changeHandset.priceSaled}" converter="currencyFormat" title="#{changeHandset.priceSaled}" />
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+        <!--end vung thong tin ket qua tim kiem-->
+    </h:form>
+    </ui:define>
+</ui:composition>

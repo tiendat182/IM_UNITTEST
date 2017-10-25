@@ -1,0 +1,731 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:composite="http://java.sun.com/jsf/composite"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.rescue.warranty']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.rescue.warranty']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmStockTransRescueWarranty">
+            <p:outputPanel styleClass="Container100" id="pnlStockWarranty">
+
+                <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                    <p:messages id="msgSearchInit" showSummary="false" showDetail="true" closable="true"
+                                rendered="#{!stockRescueWarrantyController.permission}"/>
+                    <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"
+                                rendered="#{stockRescueWarrantyController.permission}"/>
+                </div>
+                <p:outputPanel styleClass="Container100" rendered="#{stockRescueWarrantyController.permission}">
+                    <!--Start vung kiem giao dich bao hanh-->
+                    <p:outputPanel styleClass="Container100"
+                                   rendered="#{!stockRescueWarrantyController.showDetail and !stockRescueWarrantyController.createRequest and
+                                   !stockRescueWarrantyController.giveProduct}">
+                        <p:focus for="frmStockTransRescueWarranty"/>
+                        <p:outputPanel id="pnInfoStockTransWarranty" styleClass="ContainerIndent">
+                            <cbs:panel classForToggle="pnInfoStockTransWarranty" toggle="true"
+                                       titleHeader="#{lang['stock.rescue.warranty.pnl.search']}"/>
+
+                            <div class="Container100 panelInforStockInspect"
+                                 style="margin-bottom: 10px;margin-top: 10px;">
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container50 Responsive50">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel
+                                                    value="#{lang['stock.rescue.warranty.stock.rescue.request.code']}"
+                                                    styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50  ui-fluid pd-top-7">
+                                            <p:inputText id="requestCodeIdSearch"
+                                                         placeholder="#{lang['stock.rescue.warranty.stock.rescue.request.code.placeholder']}"
+                                                         value="#{stockRescueWarrantyController.stockTransRescueDTOSearch.requestCode}"
+                                                         onblur="this.value=this.value.trim()"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container50 Responsive50">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel value="#{lang['common.status']}" for="cobState"
+                                                           styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:selectOneMenu filter="true" filterMatchMode="contains"
+                                                             id="cobState"
+                                                             value="#{stockRescueWarrantyController.stockTransRescueDTOSearch.status}">
+                                                <f:selectItem itemEscaped="true"
+                                                              itemValue=""
+                                                              itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                                <f:selectItems
+                                                        value="#{stockRescueWarrantyController.statusList}"
+                                                        itemLabelEscaped="true"
+                                                        var="state" itemValue="#{state.value}"
+                                                        itemLabel="#{state.name}"/>
+                                            </p:selectOneMenu>
+                                            <p:message for="cobState"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ContainerIndent">
+                                    <div class="Container50 Responsive50">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel value="#{lang['create.note.from.date']}" for="fromDate"
+                                                           styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:calendar id="fromDate"
+                                                        value="#{stockRescueWarrantyController.stockTransRescueDTOSearch.fromDate}"
+                                                        placeholder="#{lang['create.note.from.date.placeholder']}"
+                                                        converterMessage="#{lang['stock.rescue.warranty.date.validate']}"
+                                                        required="true"
+                                                        requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                                            <p:message for="fromDate"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container50 Responsive50">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel value="#{lang['create.note.to.date']}" for="toDate"
+                                                           styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:calendar id="toDate"
+                                                        value="#{stockRescueWarrantyController.stockTransRescueDTOSearch.toDate}"
+                                                        required="true"
+                                                        converterMessage="#{lang['stock.rescue.warranty.date.validate']}"
+                                                        placeholder="#{lang['create.note.to.date.placeholder']}"
+                                                        requiredMessage="#{lang['mn.stock.to.date.not.blank']}"/>
+                                            <p:message for="toDate"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="Container100 TexAlCenter mg-top-0">
+                                    <p:commandButton value="#{lang['create.note.search']}"
+                                                     process="@([id$=pnInfoStockTransWarranty])"
+                                                     action="#{stockRescueWarrantyController.doSearchStockRescue}"
+                                                     update="@form"/>
+                                    <p:commandButton value="#{lang['mn.stock.branch.btn.create.request']}"
+                                                     process="@this" styleClass="mg-left-5"
+                                                     action="#{stockRescueWarrantyController.doShowCreateRequest}"
+                                                     rendered="#{stockRescueWarrantyController.permissionCreateRequest()}"
+                                                     resetValues="true"
+                                                     update="@form"/>
+
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                        <!--End vung kiem kho hang thuc te-->
+                        <!--Start vung ket qua-->
+                        <p:outputPanel styleClass="ContainerIndent" id="pnlListStock">
+                            <cbs:panel classForToggle="pnlListStock"
+                                       titleHeader="#{lang['create.note.list.trans']}"/>
+
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        id="tblListTransRescue"
+                                        var="transRescue" value="#{stockRescueWarrantyController.lstSearch}"
+                                        rowIndexVar="index"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}">
+                                    <p:column headerText="#{lang['common.stt']}" styleClass="TexAlCenter"
+                                              style="width: 7%">
+                                        <p:outputLabel value="#{index + 1}"/>
+                                    </p:column>
+                                    <p:column style="width: 10%;" sortBy="#{transRescue.requestCode}">
+                                        <f:facet name="header">
+                                            <h:outputText
+                                                    value="#{lang['stock.rescue.warranty.stock.rescue.request.code']}"
+                                                    title="#{lang['stock.rescue.warranty.stock.rescue.request.code']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{transRescue.requestCode}"
+                                                      title="#{transRescue.requestCode}"/>
+                                    </p:column>
+                                    <p:column style="width: 10%;" sortBy="#{transRescue.strCreateDate}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['stock.rescue.warranty.create.date']}"
+                                                          title="#{lang['stock.rescue.warranty.create.date']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{transRescue.strCreateDate}"
+                                                      title="#{transRescue.strCreateDate}"/>
+                                    </p:column>
+                                    <p:column style="width: 15%;" sortBy="#{transRescue.fromStock}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['stock.rescue.warranty.create.fromStock']}"
+                                                          title="#{lang['stock.rescue.warranty.create.fromStock']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{transRescue.fromStock}"
+                                                      title="#{transRescue.fromStock}"/>
+                                    </p:column>
+                                    <p:column style="width: 15%;" sortBy="#{transRescue.toStock}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['stock.rescue.warranty.create.toStock']}"
+                                                          title="#{lang['stock.rescue.warranty.create.toStock']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{transRescue.toStock}"
+                                                      title="#{transRescue.toStock}"/>
+                                    </p:column>
+                                    <p:column style="width: 15%;" sortBy="#{transRescue.reasonName}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['stock.rescue.warranty.create.reason']}"
+                                                          title="#{lang['stock.rescue.warranty.create.reason']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{transRescue.reasonName}"
+                                                      title="#{transRescue.reasonName}"/>
+                                    </p:column>
+                                    <p:column style="width: 10%;" sortBy="#{transRescue.strStaus}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['stock.rescue.warranty.create.status']}"
+                                                          title="#{lang['stock.rescue.warranty.create.status']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{transRescue.strStaus}"
+                                                      title="#{transRescue.strStaus}"/>
+                                    </p:column>
+                                    <p:column style="width: 8%;text-align: center">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['create.note.detail']}"
+                                                          title="#{lang['create.note.detail']}"/>
+                                        </f:facet>
+                                        <p:commandLink styleClass="fa icon-zoom-in Fs16 blue"
+                                                       process="@this" update="@([id$=frmStockTransRescueWarranty])"
+                                                       title="#{lang['create.note.detail.serial']}"
+                                                       actionListener="#{stockRescueWarrantyController.doViewDetail(transRescue.stockTransId)}"/>
+                                        <p:commandLink styleClass="fa icon-print Fs16 blue"
+                                                       process="@this" update="@([id$=frmStockTransRescueWarranty])"
+                                                       title="#{lang['list.order.import.print.BBBG']}"
+                                                       actionListener="#{stockRescueWarrantyController.downloadBBBG}"/>
+
+                                    </p:column>
+                                    <p:column style="width: 10%;text-align: center">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['stock.rescue.warranty.create.action']}"
+                                                          title="#{lang['stock.rescue.warranty.create.action']}"/>
+                                        </f:facet>
+                                        <p:outputPanel
+                                                rendered="#{stockRescueWarrantyController.roleExport and transRescue.status == 1}">
+                                            <cbs:confirmDialog
+                                                    idComponent="btnDelete"
+                                                    valueButton=""
+                                                    headerConfirm="#{lang['stock.rescue.warranty.delete.confirm']}"
+                                                    messageConfirm="#{lang['stock.rescue.warranty.delete.mgs']}"
+                                                    actionOK="#{stockRescueWarrantyController.deleteRequest}"
+                                                    resetValueButton="false"
+                                                    styleClassButton="fa icon-trash Fs16 blue"
+                                                    process="@this"
+                                                    updateArea="@this,@([id$=frmStockTransRescueWarranty])"
+                                                    actionValidate="#{stockRescueWarrantyController.validateActionRequest(transRescue)}"
+                                                    focusCancel="true"
+                                                    titleButton="#{lang['stock.rescue.warranty.delete']}"
+                                                    isButton="false"
+                                                    />
+                                        </p:outputPanel>
+                                        <p:outputPanel
+                                                rendered="#{stockRescueWarrantyController.roleExport and transRescue.status == 5}">
+                                            <p:commandLink styleClass="fa icon-left-outline Fs16 blue"
+                                                           process="@this" update="@([id$=frmStockTransRescueWarranty])"
+                                                           title="#{lang['stock.rescue.warranty.receive']}"
+                                                           actionListener="#{stockRescueWarrantyController.doShowReceiveRequest(transRescue)}"/>
+                                        </p:outputPanel>
+                                        <p:outputPanel
+                                                rendered="#{stockRescueWarrantyController.roleReceive and transRescue.status == 1}">
+                                            <cbs:confirmDialog
+                                                    idComponent="btnAccept"
+                                                    valueButton=""
+                                                    messageConfirm="#{lang['stock.rescue.warranty.accept.mgs']}"
+                                                    headerConfirm="#{lang['stock.rescue.warranty.accept.confirm']}"
+                                                    actionOK="#{stockRescueWarrantyController.acceptRequest}"
+                                                    resetValueButton="false"
+                                                    styleClassButton="fa icon-ok-outline Fs16 blue"
+                                                    process="@this"
+                                                    updateArea="@this,@([id$=frmStockTransRescueWarranty])"
+                                                    actionValidate="#{stockRescueWarrantyController.validateActionRequest(transRescue)}"
+                                                    focusCancel="false"
+                                                    titleButton="#{lang['stock.rescue.warranty.accept']}"
+                                                    isButton="false"
+                                                    />
+                                            <cbs:confirmDialog
+                                                    idComponent="btnNoAccept"
+                                                    valueButton=""
+                                                    messageConfirm="#{lang['stock.rescue.warranty.not.accept.mgs']}"
+                                                    headerConfirm="#{lang['stock.rescue.warranty.not.accept.confirm']}"
+                                                    actionOK="#{stockRescueWarrantyController.notAcceptRequest}"
+                                                    resetValueButton="false"
+                                                    styleClassButton="fa icon-cancel-outline Fs16 blue"
+                                                    process="@this"
+                                                    updateArea="@this,@([id$=frmStockTransRescueWarranty])"
+                                                    actionValidate="#{stockRescueWarrantyController.validateActionRequest(transRescue)}"
+                                                    focusCancel="true"
+                                                    titleButton="#{lang['stock.rescue.warranty.not.accept']}"
+                                                    isButton="false"
+                                                    />
+                                        </p:outputPanel>
+                                        <p:outputPanel
+                                                rendered="#{stockRescueWarrantyController.roleReceive and transRescue.status == 3}">
+                                            <p:commandLink styleClass="fa icon-left-outline Fs16 blue"
+                                                           process="@this" update="@([id$=frmStockTransRescueWarranty])"
+                                                           title="#{lang['stock.rescue.warranty.give']}"
+                                                           actionListener="#{stockRescueWarrantyController.doShowGiveRequest(transRescue)}"/>
+                                        </p:outputPanel>
+                                    </p:column>
+
+                                </p:dataTable>
+                            </div>
+                        </p:outputPanel>
+                        <!--End vung ket qua-->
+                    </p:outputPanel>
+                    <!--End vung kiem giao dich bao hanh-->
+                    <!--Start vung lap yeu cau-->
+                    <p:outputPanel id="pnlRC" styleClass="Container100"
+                                   rendered="#{stockRescueWarrantyController.createRequest}">
+                        <p:focus for="pnlRC"/>
+                        <p:outputPanel id="pnlCreateRequest" styleClass="ContainerIndent">
+                            <cbs:panel classForToggle="pnlCreateRequest" toggle="true"
+                                       titleHeader="#{lang['stock.rescue.warranty.btn.create.request']}"/>
+
+                            <div class="Container100 panelInforCreateRequest"
+                                 style="margin-bottom: 10px;margin-top: 10px;">
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container50 Responsive50">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel
+                                                    value="#{lang['stock.rescue.warranty.stock.rescue.request.code']}"
+                                                    styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50  ui-fluid ui-relative pd-top-7">
+                                            <h:outputText
+                                                    id="txtCode"
+                                                    value="#{stockRescueWarrantyController.stockTransRescueAdd.requestCode}"
+                                                    escape="true"
+                                                    styleClass="lb-sentinel-bold break-all">
+                                            </h:outputText>
+                                            <p:commandLink id="btnResetRequestCode"
+                                                           styleClass="ui-link-right"
+                                                           update="@this, @([id$=txtCode])"
+                                                           actionListener="#{stockRescueWarrantyController.resetRequestCode}"
+                                                           process="@this">
+                                                <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                            </p:commandLink>
+                                        </div>
+                                    </div>
+                                    <div class="Container50 Responsive50">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel
+                                                    value="#{lang['stock.rescue.warranty.create.request.staff']}"
+                                                    styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50  ui-fluid pd-top-7">
+                                            <h:outputText
+                                                    value="#{stockRescueWarrantyController.stockTransRescueAdd.staffRequest}"
+                                                    escape="true"
+                                                    styleClass="lb-sentinel-bold break-all">
+                                            </h:outputText>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ContainerIndent">
+                                    <div class="Container50 Responsive50">
+                                        <cbs:inputShop value="#{stockRescueWarrantyController.shopInfoTag}"
+                                                       idComponent="inputStore"
+                                                       methodName="receiveShop"
+                                                       clearMethodName="clearShop"
+                                                       placeholder="#{lang['stock.rescue.warranty.create.request.shop.placeholder']}"
+                                                       update="@this"
+                                                       label="#{lang['stock.rescue.warranty.create.request.shop']}"
+                                                       classDivLabel="Container40 mg-left-15 Responsive50 pd-top-7"
+                                                       classDivInput="Container60 Responsive50 ui-fluid"
+                                                       require="true"
+                                                       requiredMessage="#{lang['stock.rescue.warranty.create.request.shop.require']}"
+                                                       forceSelection="false"
+                                                       limit="#{stockRescueWarrantyController.limitAutoComplete}">
+
+                                        </cbs:inputShop>
+                                    </div>
+                                    <div class="Container50 Responsive50">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel value="#{lang['stock.rescue.warranty.create.request.date']}"
+                                                           styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid pd-top-7 ">
+                                            <h:outputText
+                                                    value="#{stockRescueWarrantyController.stockTransRescueAdd.requestDate}"
+                                                    escape="true"
+                                                    styleClass="lb-sentinel-bold break-all">
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="Container100 TexAlCenter mg-top-0">
+                                    <cbs:confirmDialog
+                                            idComponent="btnCreateRequest"
+                                            valueButton="#{lang['stock.rescue.warranty.btn.create.request']}"
+                                            headerConfirm="#{lang['stock.rescue.warranty.btn.create.request.confirm']}"
+                                            messageConfirm="#{lang['stock.rescue.warranty.btn.create.request.msg']}"
+                                            actionOK="#{stockRescueWarrantyController.doCreateRequest}"
+                                            resetValueButton="false"
+                                            process="@([id$=pnlCreateRequest]),@([id$=pnlListCreateSerial])"
+                                            updateArea="@([id$=pnlCreateRequest]),@([id$=msgSearch])"
+                                            actionValidate="#{stockRescueWarrantyController.validateCreateRequest}"
+                                            disableButton="#{stockRescueWarrantyController.download}"
+                                            focusCancel="false"
+                                            isButton="true"
+                                            />
+                                    <p:commandButton value="#{lang['reset.selected']}"
+                                                     process="@this" styleClass="mg-left-5"
+                                                     action="#{stockRescueWarrantyController.doReset}"
+                                                     resetValues="true"
+                                                     update="@form"/>
+                                    <p:commandButton value="#{lang['common.back.page']}"
+                                                     process="@this" styleClass="mg-left-5"
+                                                     action="#{stockRescueWarrantyController.doComeBack}"
+                                                     resetValues="true"
+                                                     update="@form"/>
+                                </div>
+                                <div class="Container100 TexAlCenter mg-top-0">
+                                    <p:commandLink value="#{lang['stock.rescue.warranty.create.request.download']}"
+                                                   rendered="#{stockRescueWarrantyController.download}"
+                                                   title="#{lang['create.note.download.file.title']}"
+                                                   ajax="false"
+                                                   immediate="true"
+                                                   style="text-decoration: none!important;">
+                                        <p:fileDownload
+                                                value="#{stockRescueWarrantyController.downloadFileExport()}"/>
+                                    </p:commandLink>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                        <!--End vung kiem kho hang thuc te-->
+                        <!--Start vung ket qua-->
+                        <p:outputPanel styleClass="ContainerIndent" id="pnlListCreateSerial">
+                            <cbs:panel classForToggle="pnlListStock"
+                                       titleHeader="#{lang['stock.rescue.warranty.create.list.serial']}"/>
+
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        id="tblListCreateSerial"
+                                        var="handsetRescue"
+                                        value="#{stockRescueWarrantyController.lstStockHansetRescue}"
+                                        selection="#{stockRescueWarrantyController.lstSelection}"
+                                        rowKey="#{handsetRescue.id}"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}">
+                                    <p:column selectionMode="multiple" styleClass="width5 TexAlCenter"/>
+                                    <p:column style="width: 30%;" sortBy="#{handsetRescue.serial}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['col.serial']}"
+                                                          title="#{lang['col.serial']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{handsetRescue.serial}"
+                                                      title="#{handsetRescue.serial}"/>
+                                    </p:column>
+                                    <p:column style="width: 30%;" sortBy="#{handsetRescue.productCode}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.utilities.code.stock']}"
+                                                          title="#{lang['mn.stock.utilities.code.stock']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{handsetRescue.productCode}"
+                                                      title="#{handsetRescue.productCode}"/>
+                                    </p:column>
+                                    <p:column style="width: 35%;" sortBy="#{handsetRescue.productName}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['import.partner.product.name']}"
+                                                          title="#{lang['import.partner.product.name']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{handsetRescue.productName}"
+                                                      title="#{handsetRescue.productName}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </p:outputPanel>
+                        <!--End vung ket qua-->
+                    </p:outputPanel>
+                    <!--End vung lap yeu cau-->
+                    <!--Start chi tiet serial-->
+                    <p:outputPanel id="pnlDetail" styleClass="Container100"
+                                   rendered="#{stockRescueWarrantyController.showDetail}">
+                        <p:outputPanel id="pnInfoDetail" styleClass="ContainerIndent">
+                            <cbs:panel classForToggle="pnlViewDetail" toggle="true"
+                                       titleHeader="#{lang['stock.rescue.warranty.view.detail.lst.product']}"/>
+                            <p:outputPanel id="pnlViewDetail" styleClass="Container100">
+                                <div class="ContainerIndent">
+                                    <p:dataTable
+                                            id="tblListDetail"
+                                            var="item" value="#{stockRescueWarrantyController.lstDetail}"
+                                            rowIndexVar="index"
+                                            resizableColumns="true"
+                                            paginator="#{lang['common.paging.paginator']}"
+                                            rows="#{lang['common.paging.rows.default']}"
+                                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                            emptyMessage="#{lang['common.empty.records']}">
+                                        <p:column headerText="#{lang['common.stt']}" styleClass="TexAlCenter"
+                                                  style="width: 10%">
+                                            <p:outputLabel value="#{index + 1}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.stock.utilities.code.stock']}"
+                                                  sortBy="#{item.productCode}">
+                                            <p:outputLabel value="#{item.productCode}"
+                                                           title="#{item.productCode}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['import.partner.product.name']}"
+                                                  sortBy="#{item.productName}">
+                                            <p:outputLabel value="#{item.productName}"
+                                                           title="#{item.productName}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['common.status']}" sortBy="#{item.status}">
+                                            <h:outputLabel value="#{lang['stock.rescue.warranty.status']}"
+                                                           title="#{lang['stock.rescue.warranty.status']}"
+                                                           styleClass="lb-sentinel-bold">
+                                            </h:outputLabel>
+                                        </p:column>
+                                        <p:column headerText="#{lang['common.number']}" style="text-align:right"
+                                                  sortBy="#{item.quantity}">
+                                            <h:outputLabel value="#{item.quantity}"
+                                                           title="#{item.quantity}"
+                                                           styleClass="lb-sentinel-bold"
+                                                           converter="currencyFormat">
+                                            </h:outputLabel>
+                                        </p:column>
+                                        <p:column headerText="#{lang['create.note.detail.serial']}"
+                                                  style="width: 10%;text-align:center">
+                                            <p:commandLink styleClass="fa icon-zoom-in Fs16 blue"
+                                                           process="@this" update="@([id$=pnlDetail])"
+                                                           title="#{lang['create.note.detail.serial']}"
+                                                           actionListener="#{stockRescueWarrantyController.doViewDetailSerial(item)}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                                <div class="Container100 TexAlCenter marT10">
+                                    <p:outputPanel styleClass="Container100">
+                                        <p:commandButton value="#{lang['common.back.page']}" process="@this"
+                                                         styleClass="mg-left-5"
+                                                         actionListener="#{stockRescueWarrantyController.doComeBack}"
+                                                         update="@form"/>
+                                    </p:outputPanel>
+                                </div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+
+                        <p:outputPanel id="pnInfoDetailSerial" styleClass="ContainerIndent"
+                                       rendered="#{stockRescueWarrantyController.showDetailSerial}">
+                            <cbs:panel classForToggle="pnlViewDetailSerial" toggle="true"
+                                       titleHeader="#{lang['create.note.detail.serial']}"/>
+                            <p:outputPanel id="pnlViewDetailSerial" styleClass="Container100">
+                                <div class="ContainerIndent">
+                                    <p:dataTable
+                                            id="tblListSerial"
+                                            var="detailSerial" value="#{stockRescueWarrantyController.lstDetailSerial}"
+                                            rowIndexVar="index"
+                                            resizableColumns="true"
+                                            paginator="#{lang['common.paging.paginator']}"
+                                            rows="#{lang['common.paging.rows.default']}"
+                                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                            emptyMessage="#{lang['common.empty.records']}">
+                                        <p:column headerText="#{lang['common.stt']}" styleClass="TexAlCenter"
+                                                  style="width: 10%">
+                                            <p:outputLabel value="#{index + 1}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.stock.fromSerial']}"
+                                                  sortBy="#{detailSerial.fromSerial}">
+                                            <p:outputLabel value="#{detailSerial.fromSerial}"
+                                                           title="#{detailSerial.fromSerial}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.stock.ToSerial']}"
+                                                  sortBy="#{detailSerial.toSerial}">
+                                            <p:outputLabel value="#{detailSerial.toSerial}"
+                                                           title="#{detailSerial.toSerial}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['common.number']}" style="text-align:right"
+                                                  sortBy="#{detailSerial.quantity}">
+                                            <h:outputLabel value="#{detailSerial.quantity}"
+                                                           title="#{detailSerial.quantity}"
+                                                           styleClass="lb-sentinel-bold"
+                                                           converter="currencyFormat">
+                                            </h:outputLabel>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <!--End chi tiet serial-->
+                    <!--gui tra hang start-->
+                    <p:outputPanel id="pnlRequest" styleClass="Container100"
+                                   rendered="#{stockRescueWarrantyController.giveProduct}">
+                        <p:outputPanel id="pnlGiveRequest" styleClass="ContainerIndent">
+                            <cbs:panel classForToggle="pnlGiveProduct" toggle="true"
+                                       titleHeader="#{lang['stock.rescue.warranty.view.detail.lst.product']}"/>
+                            <p:outputPanel id="pnlGiveProduct" styleClass="Container100">
+                                <div class="ContainerIndent">
+                                    <p:dataTable
+                                            id="tblGive"
+                                            var="item" value="#{stockRescueWarrantyController.lstDetailGive}"
+                                            rowIndexVar="index"
+                                            resizableColumns="true"
+                                            paginator="#{lang['common.paging.paginator']}"
+                                            rows="#{lang['common.paging.rows.default']}"
+                                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                            emptyMessage="#{lang['common.empty.records']}">
+                                        <p:column headerText="#{lang['common.stt']}" styleClass="TexAlCenter"
+                                                  style="width: 10%">
+                                            <p:outputLabel value="#{index + 1}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.stock.utilities.code.stock']}"
+                                                  sortBy="#{item.productCode}">
+                                            <p:outputLabel value="#{item.productCode}"
+                                                           title="#{item.productCode}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['import.partner.product.name']}"
+                                                  sortBy="#{item.productName}">
+                                            <p:outputLabel value="#{item.productName}"
+                                                           title="#{item.productName}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['stock.rescue.warranty.serial.to']}"
+                                                  sortBy="#{item.fromSerial}">
+                                            <p:outputLabel value="#{item.fromSerial}"
+                                                           title="#{item.fromSerial}"/>
+                                        </p:column>
+                                        <c:if test="#{!stockRescueWarrantyController.receiveProduct}">
+                                            <p:column headerText="#{lang['stock.rescue.warranty.product.give']}">
+                                                <div class="Container ui-fluid ui-relative">
+                                                    <p:autoComplete id="cplProductOffer"
+                                                                    value="#{item.productOfferingTotalDTO}"
+                                                                    disabled="#{!(item.productOfferingTotalDTO == null || item.productOfferingTotalDTO == '')}"
+                                                                    completeMethod="#{stockRescueWarrantyController.searchListProductOffering}"
+                                                                    placeholder="#{lang['mn.stock.liquidate.model.placeholder']}"
+                                                                    var="productOfferingTotalDTO"
+                                                                    itemValue="#{productOfferingTotalDTO}"
+                                                                    itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                                    autoHighlight="true"
+                                                                    maxResults="10"
+                                                                    styleClass="txtProduct#{index} Wid100"
+                                                                    forceSelection="true">
+                                                        <f:attribute name="index" value="#{index}"/>
+                                                        <o:converter converterId="productOfferingConverter"
+                                                                     list="#{item.lstProductOfferingTotalDTO}"/>
+                                                        <p:ajax event="itemSelect"
+                                                                listener="#{stockRescueWarrantyController.doSelectProductOffering}"
+                                                                process="@this"
+                                                                update="@([id$=cplProductOffer]),@([id$=messages])"/>
+                                                        <p:column style="width: 40%"
+                                                                  headerText="#{lang['common.lb.code']}"
+                                                                  filterable="true">
+                                                            <p:outputLabel value="#{productOfferingTotalDTO.code}"/>
+                                                        </p:column>
+                                                        <p:column style="width: 60%"
+                                                                  headerText="#{lang['common.lb.name']}"
+                                                                  filterable="true">
+                                                            <p:outputLabel value="#{productOfferingTotalDTO.name}"/>
+                                                        </p:column>
+                                                        <p:ajax event="query" global="false"/>
+                                                    </p:autoComplete>
+                                                    <p:commandLink id="btnResetLstProduct"
+                                                                   styleClass="ui-link-right ui-icon ui-c fa icon-ccw Fs12"
+                                                                   update="@this,@([id$=cplProductOffer])"
+                                                                   actionListener="#{stockRescueWarrantyController.resetLstProductOfferingTotal(index)}"
+                                                                   process="@this">
+                                                        <!--<span class="ui-icon ui-c fa icon-ccw Fs12"/>-->
+                                                    </p:commandLink>
+                                                </div>
+                                            </p:column>
+                                            <p:column headerText="#{lang['stock.rescue.warranty.serial.give']}">
+                                                <p:inputText id="serialGive"
+                                                             styleClass="txtNumber#{index} Wid100"
+                                                             maxlength="20"
+                                                             value="#{item.serialReturn}"
+                                                             placeholder="#{lang['mn.balance.stock.request.serial']}"
+                                                             onblur="this.value = this.value.trim()"
+                                                             title="#{item.serialReturn}"/>
+                                                <pe:keyFilter for="serialGive" regEx="/[a-z0-9A-Z]+/i"
+                                                              preventPaste="false"/>
+                                            </p:column>
+                                        </c:if>
+                                        <c:if test="#{stockRescueWarrantyController.receiveProduct}">
+                                            <p:column headerText="#{lang['stock.rescue.warranty.product.give']}"
+                                                      sortBy="#{item.prodCodeReturn}">
+                                                <p:outputLabel value="#{item.prodCodeReturn}"
+                                                               title="#{item.prodCodeReturn}"/>
+                                            </p:column>
+                                            <p:column headerText="#{lang['stock.rescue.warranty.serial.give']}"
+                                                      sortBy="#{item.serialReturn}">
+                                                <p:outputLabel value="#{item.serialReturn}"
+                                                               title="#{item.serialReturn}"/>
+                                            </p:column>
+                                        </c:if>
+                                    </p:dataTable>
+                                </div>
+                                <div class="Container100 TexAlCenter marT10">
+                                    <p:outputPanel styleClass="Container100">
+                                        <cbs:confirmDialog
+                                                idComponent="btnGive"
+                                                disableButton="#{stockRescueWarrantyController.disableGive}"
+                                                valueButton="#{lang['stock.rescue.warranty.give']}"
+                                                messageConfirm="#{lang['stock.rescue.warranty.give.mgs']}"
+                                                headerConfirm="#{lang['stock.rescue.warranty.give.confirm']}"
+                                                actionOK="#{stockRescueWarrantyController.giveRequest}"
+                                                resetValueButton="false"
+                                                process="@form"
+                                                actionValidate="#{stockRescueWarrantyController.doValidateGive}"
+                                                updateArea="@form"
+                                                focusCancel="false"
+                                                renderedBtn="#{!stockRescueWarrantyController.receiveProduct}"
+                                                isButton="true"
+                                                />
+                                        <cbs:confirmDialog
+                                                idComponent="btnReceive"
+                                                disableButton="#{stockRescueWarrantyController.disableGive}"
+                                                valueButton="#{lang['stock.rescue.warranty.receive']}"
+                                                messageConfirm="#{lang['stock.rescue.warranty.receive.mgs']}"
+                                                headerConfirm="#{lang['stock.rescue.warranty.receive.confirm']}"
+                                                actionOK="#{stockRescueWarrantyController.receiveRequest}"
+                                                resetValueButton="false"
+                                                process="@form"
+                                                updateArea="@form"
+                                                focusCancel="false"
+                                                renderedBtn="#{stockRescueWarrantyController.receiveProduct}"
+                                                isButton="true"
+                                                />
+                                        <p:commandButton value="#{lang['common.back.page']}" process="@this"
+                                                         styleClass="mg-left-5"
+                                                         actionListener="#{stockRescueWarrantyController.doComeBack}"
+                                                         update="@form"/>
+                                    </p:outputPanel>
+                                </div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <!--gui tra hang end-->
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

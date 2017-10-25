@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition>
+        <h:form id="ssFormOvl" styleClass="h100">
+            <div id="sub-system-container" class="h100">
+                <div id="right-arrow" class="cursor-pointer"></div>
+                <div id="right-arrow-splitter" class="splitter-horizontal"></div>
+                 <c:forEach var="item" items="#{loginBean.authoLstCache}" varStatus="stt">
+                    <p:outputPanel styleClass="sub-system-overlay">
+                        <div class="ss" over="false" click="false">
+                            <a class="autoMenu">#{item.objectName}</a>
+                            <p:tieredMenu overlay="true" trigger="@parent" style="width:250px" my="left bottom" at="right bottom">  
+                                <c:forEach var="item2" items ="#{item.childObjects}" >        				 
+                                    <c:if test="${not empty item2.childObjects}">
+                                        <p:submenu label="#{item2.objectName}">
+                                            <c:forEach var="item3" items="#{item2.childObjects}">
+                                                <c:if test="${empty item3.childObjects}">
+                                                    <p:menuitem value="#{item3.objectName}" url="#{item3.objectUrl}" action="#{loginBean.loadBreadCrumb}">
+                                                    </p:menuitem>
+                                                    <p:separator/>
+                                                </c:if>
+                                                <c:if test="${not empty item3.childObjects}">
+                                                    <p:submenu label="#{item3.objectName}">
+                                                        <c:forEach var="item4" items="#{item3.childObjects}">
+                                                            <p:menuitem value="#{item4.objectName}" action="#{loginBean.loadBreadCrumb}" url="#{item4.objectUrl}">
+                                                            </p:menuitem>
+                                                            <p:separator/>
+                                                        </c:forEach>
+                                                    </p:submenu>
+                                                </c:if>
+                                            </c:forEach>
+                                        </p:submenu>
+                                        <p:separator/>
+                                    </c:if>	       	
+                                    <c:if test="${empty item2.childObjects}">
+                                        <p:menuitem  value="#{item2.objectName}" url="#{item2.objectUrl}" action="#{loginBean.loadBreadCrumb}"
+                                                     title="#{item2.objectName.length() > 10 ? item2.objectName : null}">
+                                        </p:menuitem>
+                                        <p:separator/>
+                                    </c:if>
+                                </c:forEach>
+                            </p:tieredMenu>
+                        </div>
+                    </p:outputPanel>
+                    <div class="splitter-horizontal"></div>
+                </c:forEach>
+            </div>
+            <script type="text/javascript">
+                jQuery(document).ready(function(){
+                    jQuery(".ss").mouseup(function(){
+                        reloadDatatable();
+                    });
+                });
+            </script>
+        </h:form>
+    </ui:composition>
+</html>
+

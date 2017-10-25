@@ -1,0 +1,208 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.isdn.manage']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.isdn.manage']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmManaTransDigital" styleClass="Container100">
+            <p:outputPanel id="pnlInforTrans" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="pnlInforTrans"
+                           titleHeader="#{lang['information.transaction']}"/>
+                <div class="Container100 pnlInforTrans paddingTopBottom10">
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['code.transaction']}"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:inputText value="" />
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid  mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.from.date']}" for="txtFromDate"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:calendar id="txtFromDate" rendered="true"
+                                            requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid  mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.to.date']}" for="txtToDate"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:calendar id="txtToDate" rendered="true"
+                                            requiredMessage="#{lang['mn.stock.to.date.not.blank']}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['mn.type.export.warehouse']}"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:selectOneMenu value="">
+                                    <f:selectItem itemLabel="#{lang['mn.type.export.warehouse.select']}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Resposive ui-fluid  mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.warehouse.export']}"/>
+                            </div>
+                            <div class="Container60 Resposive ui-fluid">
+                                <p:autoComplete styleClass="autoCpl"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid  mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['mn.isdn.user.create.trans']}"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:autoComplete styleClass="autoCpl"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['mn.type.import.warehouse']}"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:selectOneMenu value="">
+                                    <f:selectItem itemValue="" itemLabel="#{lang['mn.type.import.warehouse.select']}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid  mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.warehouse.import']}"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:autoComplete styleClass="autoCpl"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid  mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['common.reason']}"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:selectOneMenu >
+                                    <f:selectItem itemLabel="#{lang['common.reason.placeholder']}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container100">
+                            <div class="Container15 Responsive ui-fluid mg-left-15 pd-top-7" style="width: 13.6%">
+                                <p:outputLabel value="#{lang['export.order.note']}"/>
+                            </div>
+                            <div class="Container85 Responsive ui-fluid" style="width: 86.4%">
+                                <p:inputText value=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Container100 TexAlCenter">
+                        <p:commandButton value="#{lang['create.note.search']}"
+                                         process="@this"
+                                         update="@([id$=abcTest])"
+                                         actionListener="#{manageIsdn.viewDetail}"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel id="pnlListTransIsdn" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="pnlListTransIsdn" titleHeader="#{lang['mn.stock.utilities.list.trans']}"/>
+                <div class="pnlListTransIsdn Container100 paddingTopBottom10">
+                    <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                        <p:dataTable
+                                id="tblListTrans"
+                                var=""
+                                rowKey=""
+                                resizableColumns="true"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.empty.records']}"
+                                value="">
+                            <p:column headerText="#{lang['code.transaction']}">
+                                <p:outputLabel value="001254801254" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['create.note.warehouse.export']}">
+                                <p:outputLabel value="INVENTORY" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['create.note.warehouse.import']}">
+                                <p:outputLabel value="HNI" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['create.order.file.count.sum']}">
+                                <p:outputLabel value="2" title="" styleClass="Fright"/>
+                            </p:column>
+                            <p:column headerText="#{lang['common.reason']}">
+                                <p:outputLabel value="" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['export.order.note']}">
+                                <p:outputLabel value="" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.isdn.user.create.trans']}">
+                                <p:outputLabel value="Vu Vuong Anh" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.isdn.date.create.trans']}">
+                                <p:outputLabel value="12/11/2015" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['create.note.detail']}" styleClass="TexAlCenter">
+                                <p:commandLink styleClass="fa icon-zoom-in Fs12 black"
+                                               process="@this"
+                                               update="@([id$=pnlListDetailIsdn])"
+                                               actionListener="#{manageIsdn.viewDetail}" />
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel id="pnlListDetailIsdn" styleClass="Container100">
+            <p:outputPanel rendered="#{manageIsdn.renderDetailTrans}" styleClass="ContainerIndent mg-top-0">
+                <cbs:panel classForToggle="pnlListDetailIsdn" titleHeader="#{lang['mn.stock.utilities.infor.detail.trans']}"/>
+                <div class="pnlListDetailIsdn Container100 paddingTopBottom10">
+                    <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                        <p:dataTable
+                                id="tblListTransDetail"
+                                var=""
+                                rowKey=""
+                                resizableColumns="true"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.empty.records']}"
+                                value="">
+                            <p:column headerText="#{lang['from.number']}">
+                                <p:outputLabel value="001254801254" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['to.number']}">
+                                <p:outputLabel value="001254801255" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['common.number']}">
+                                <p:outputLabel value="2" title="" styleClass="Fright"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

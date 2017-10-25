@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+<composite:interface>
+    <composite:attribute name="idComponent" shortDescription="id of form" required="true"/>
+</composite:interface>
+<composite:implementation>
+    <p:outputPanel>
+        <div class="ui-grid ui-grid-responsive" style="width:350px;">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4 pdt3">
+                    <p:outputLabel for="#{cc.attrs.idComponent}txtProviceCity" value="Tỉnh-TP"/>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p:inputText id="#{cc.attrs.idComponent}txtProviceCity" value="" required="true" styleClass="float-left"/>
+                    <p:commandLink
+                            resetValues="true"
+                            ajax="true"
+                            global="false"
+                            immediate="true"
+                            style="border: none"
+                            styleClass="ui-icon ui-icon-search2"
+                            onclick="checkOpenDlg('')">
+                    </p:commandLink>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4 pdt3">
+                    <p:outputLabel for="#{cc.attrs.idComponent}txtDistrict" value="Quận-Huyện"/>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p:inputText id="#{cc.attrs.idComponent}txtDistrict" value="" required="true" styleClass="float-left"/>
+                    <p:commandLink
+                            resetValues="true"
+                            ajax="true"
+                            global="false"
+                            immediate="true"
+                            style="border: none"
+                            styleClass="ui-icon ui-icon-search2"
+                            onclick="checkOpenDlg('')">
+                    </p:commandLink>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4 pdt3">
+                    <p:outputLabel for="#{cc.attrs.idComponent}txtWard" value="Phường-Xã"/>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p:inputText id="#{cc.attrs.idComponent}txtWard" value="" required="true" styleClass="float-left"/>
+                    <p:commandLink
+                            resetValues="true"
+                            ajax="true"
+                            global="false"
+                            immediate="true"
+                            style="border: none"
+                            styleClass="ui-icon ui-icon-search2"
+                            onclick="checkOpenDlg('')">
+                    </p:commandLink>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4 pdt3">
+                    <p:outputLabel for="#{cc.attrs.idComponent}txtGroup" value="Tổ"/>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p:inputText id="#{cc.attrs.idComponent}txtGroup" value="" required="true"/>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4 pdt3">
+                    <p:outputLabel for="#{cc.attrs.idComponent}txtRoad" value="Đường"/>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p:inputText id="#{cc.attrs.idComponent}txtRoad" value="" styleClass="float-left"/>
+                    <!--<p:commandLink-->
+                            <!--resetValues="true"-->
+                            <!--ajax="true"-->
+                            <!--global="false"-->
+                            <!--immediate="true"-->
+                            <!--style="border: none"-->
+                            <!--styleClass="ui-icon ui-icon-search2 bg-button"-->
+                            <!--onclick="checkOpenDlg('')">-->
+                    <!--</p:commandLink>-->
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4 pdt3">
+                    <p:outputLabel for="#{cc.attrs.idComponent}txtHomeNumber" value="Số nhà"/>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p:inputText id="#{cc.attrs.idComponent}txtHomeNumber" value="" required="false"/>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4 pdt3">
+                    <p:outputLabel value="Địa chỉ"/>
+                </div>
+                <div class="ui-grid-col-8 pdt3 alightLeft" style="color: red;">
+                    <p:outputLabel value="12 A, Mai Dịch Cầu Giấy Hà Nội"/>
+                </div>
+            </div>
+            <div class="ui-grid-row" style="padding-top: 15px;">
+                <div class="ui-grid-col-6">
+                    <p:button value="Xác nhận" style="float:right;width:50%" />
+                </div>
+                <div class="ui-grid-col-6">
+                    <p:button value="Hủy" style="float:left;width: 50%"/>
+                </div>
+            </div>
+        </div>
+    </p:outputPanel>
+</composite:implementation>
+</html>
+

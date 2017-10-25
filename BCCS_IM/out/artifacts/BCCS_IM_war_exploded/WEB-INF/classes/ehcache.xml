@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+    <defaultCache eternal="true" maxElementsInMemory="100" overflowToDisk="false"/>
+
+    <!--start cache cho optionSetValueServiceImpl-->
+    <cache name="productOfferTypeServiceImpl.getListProductOfferTypeByPay" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <cache name="productOfferTypeServiceImpl.getListProductOfferTypeByDeposit" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <cache name="productOfferTypeServiceImpl.getListByOwnerIdOwnerTypeState" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <cache name="productOfferTypeServiceImpl.getListProductOfferTypeByOwnerIdAndTableName" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <cache name="productOfferTypeServiceImpl.getListProductOfferTypeByOwnerId" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <cache name="productOfferTypeServiceImpl.getListProductOfferType" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <cache name="productOfferTypeServiceImpl.getAllProductOfferTypePhone" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <!--end cache cho optionSetValueServiceImpl-->
+
+    <!--start cache cho optionSetValueServiceImpl-->
+    <cache name="optionSetValueServiceImpl.getLsOptionSetValueByCode" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <cache name="optionSetValueServiceImpl.getValueByNameFromOptionSetValue" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <cache name="optionSetValueServiceImpl.getByOptionSetCode" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <cache name="optionSetValueServiceImpl.getValueByTwoCodeOption" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <cache name="optionSetValueServiceImpl.getByOptionSetValueByNameCode" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <cache name="optionSetValueServiceImpl.getSysdateFromDB" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <cache name="optionSetValueServiceImpl.getByOptionsetCodeAndValue" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <cache name="optionSetValueServiceImpl.getDebitDayTypeByDebitLevel" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <cache name="optionSetValueServiceImpl.getStatusOptionSetValueByStockState" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <cache name="optionSetValueServiceImpl.getDebitLevel" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <cache name="optionSetValueServiceImpl.getFinanceType" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <!--end cache cho optionSetValueServiceImpl-->
+
+    <!--start cache cho ProductOfferPriceServiceImpl-->
+    <cache name="productOfferingServiceImpl.getLsProductOfferingIsdnDTO" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>
+    <!--end cache cho ProductOfferPriceServiceImpl-->
+
+    <!--start cache cho productOfferPriceServiceImpl-->
+    <!--<cache name="productOfferPriceServiceImpl.getPriceDepositAmount" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>-->
+    <!--<cache name="productOfferPriceServiceImpl.getPriceSaleAmount" copyOnRead="true" copyOnWrite="true" timeToIdleSeconds="300" maxElementsInMemory="500" overflowToDisk="false"/>-->
+    <!--end cache cho productOfferPriceServiceImpl-->
+    <cache name="WsSaleProgramService.findAllSalesProgramActive" copyOnRead="false" copyOnWrite="true" timeToIdleSeconds="3600" maxElementsInMemory="500" overflowToDisk="false"/>
+
+</ehcache>

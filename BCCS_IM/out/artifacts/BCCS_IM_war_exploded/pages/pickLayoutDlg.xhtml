@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <style type="text/css">
+        .ui-dashboard-icon{
+            position:relative;
+            width:130px;
+            height:115px;
+            cursor: pointer;
+        }
+        .ui-dashboard-icon div{
+            position:relative;
+            width:130px;
+            height:80px;
+        }
+        .ui-regular3col-db{
+            background: url('./resources/themes/images/dashbord.png') 0 0 no-repeat transparent;
+        }
+        .ui-multifocus-db{
+            background: url("./resources/themes/images/dashbord.png") no-repeat scroll -118px 0 transparent;
+        }
+        .ui-overview3col-db{
+            background: url("./resources/themes/images/dashbord.png") no-repeat scroll -235px 0 transparent;
+        }
+        .ui-regular2col-db{
+            background: url("./resources/themes/images/dashbord.png") no-repeat scroll 0 -75px transparent;
+        }
+        .ui-overview2col-db{
+            background: url("./resources/themes/images/dashbord.png") no-repeat scroll -118px -75px transparent;
+        }
+        .ui-focus-db{
+            background: url("./resources/themes/images/dashbord.png") no-repeat scroll -235px -75px transparent;
+        }
+        .layoutCol{width:50%;text-align:center;}
+        .desCol{width:50%;}
+        .layoutCol .ui-inputtext {width: 80%;}
+        .ui-dashboard-hover{background:#e0ecf8;}
+        .ui-dashboard-active{background:#a9d0f5;}
+    </style>
+    <h:form id="pickLayoutFrm" prependId="false">
+        <p:inputText type="hidden" widgetVar="hdDashboard" id="hddDashboard" value="#{dashBoardController.dashBoardType}"/>
+        <h:outputText value="Choose a layout as a basic outline to create a dashboard. You can then add or rearrange components in this layout, and also resize it."/>
+        <p:panelGrid columns="2" columnClasses="layoutCol,desCol" styleClass="w100">
+            <p:outputPanel style="padding:5px;">
+                <h:panelGrid columns="3" >
+                    <p:outputPanel id="regular3col" styleClass="ui-dashboard-icon ui-dashboard-active">
+                        <div class="ui-regular3col-db"></div>
+                        <h:outputText value="3-Column Regular Dashboard"/>
+                    </p:outputPanel>
+                    <p:outputPanel id="multiFocused" styleClass="ui-dashboard-icon">
+                        <div class="ui-multifocus-db"></div>
+                        <h:outputText value="3-Column Multi-focused Dashboard"/>
+                    </p:outputPanel>
+                    <p:outputPanel id="overview4" styleClass="ui-dashboard-icon">
+                        <div class="ui-overview3col-db"></div>
+                        <h:outputText value="4-Column Overview Dashboard"/>
+                    </p:outputPanel>
+                    <p:outputPanel id="regular2col" styleClass="ui-dashboard-icon">
+                        <div class="ui-regular2col-db"></div>
+                        <h:outputText value="2-Column Regular Dashboard"/>
+                    </p:outputPanel>
+                    <p:outputPanel id="overview3" styleClass="ui-dashboard-icon">
+                        <div class="ui-overview2col-db"></div>
+                        <h:outputText value="3-Column Overview Dashboard"/>
+                    </p:outputPanel>
+                    <p:outputPanel id="focused" styleClass="ui-dashboard-icon">
+                        <div class="ui-focus-db"></div>
+                        <h:outputText value="3-Column Focused Dashboard"/>
+                    </p:outputPanel>
+                </h:panelGrid>
+            </p:outputPanel>
+            <p:outputPanel style="padding:5px;">
+                <p:graphicImage/>
+                <h:outputText/>
+                <h:outputText/>
+            </p:outputPanel>
+        </p:panelGrid>
+        <p:commandButton value="Create" icon="ui-icon-document" 
+                         action="#{dashBoardController.onChooseDashboard()}"
+                         process="@form" 
+                         update="@([id$=dashBoardFrm])"
+                         oncomplete="if(!args.validaionFailed){checkCloseDlg('dbDlg');}"
+                         style="float:right"><!-- -->
+        </p:commandButton>
+    </h:form>
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            jQuery(".ui-dashboard-icon").mouseup(function() {
+                jQuery(".ui-dashboard-icon").removeClass("ui-dashboard-active");
+                jQuery(this).addClass("ui-dashboard-active");
+                PF('hdDashboard').getJQ().val(jQuery(this).attr("id"));
+            });
+            jQuery(".ui-dashboard-icon").hover(function() {
+                if (!jQuery(this).attr("class").contains("ui-dashboard-active")) {
+                    jQuery(this).addClass("ui-dashboard-hover");
+                }
+            });
+            jQuery(".ui-dashboard-icon").mouseout(function() {
+                jQuery(this).removeClass("ui-dashboard-hover");
+            });
+        });
+    </script>
+</html>
+

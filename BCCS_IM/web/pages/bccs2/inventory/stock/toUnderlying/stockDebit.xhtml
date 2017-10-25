@@ -1,0 +1,52 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/composite"
+        >
+    <p:outputPanel styleClass="ContainerIndent mg-top-0">
+        <cbs:panel classForToggle="pnStockDebitView" titleHeader="#{lang['mn.stock.title.limit.header']}" toggle="true" />
+        <p:outputPanel styleClass="Container100 pnStockDebitView" >
+            <div class="ContainerIndent">
+                <div class="Container33 Responsive">
+                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.debit.limit.receive']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid pd-top-4 TexAlRight">
+                        <h:outputText escape="true" styleClass="lb-sentinel-bold" value="#{stockDebitDTO.debitValue}" converter="currencyFormat" />
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.debit.total.value.receive']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid pd-top-4 TexAlRight">
+                        <h:outputText escape="true" styleClass="lb-sentinel-bold" value="#{stockDebitDTO.totalValueReceiveStock}" converter="currencyFormat" />
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.debit.total.value.suspend.receive']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid pd-top-4 TexAlRight">
+                        <h:outputText escape="true" styleClass="lb-sentinel-bold" value="#{stockDebitDTO.totalValueTransSuspendReceiveStock}" converter="currencyFormat" />
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent">
+                <div class="Container33 Responsive">
+                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.debit.total.value.can.receive']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid pd-top-4 TexAlRight">
+                        <h:outputText escape="true" styleClass="text-sentinel-bold" value="#{stockDebitDTO.totalCanReceive}" converter="currencyFormat" />
+                    </div>
+                </div>
+                <div class="Container33 Responsive" />
+                <div class="Container33 Responsive" />
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+   
+</ui:composition>

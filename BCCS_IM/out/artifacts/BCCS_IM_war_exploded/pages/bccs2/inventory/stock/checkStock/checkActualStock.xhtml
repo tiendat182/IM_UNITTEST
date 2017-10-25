@@ -1,0 +1,239 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.track.actual.warehouse']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.track.actual.warehouse']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmTrackActualWarehouse" styleClass="Container100">
+            <p:outputPanel id="pnlInforSearch" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="pnlInforSearch"
+                           titleHeader="#{lang['create.note.export.info.search']}"/>
+                <div class="pnlInforSearch Container100 paddingTopBottom10">
+                    <p:messages id="msgInforSearch" closable="true"/>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['mn.stock.utilities.unit.code']}" for="auCplUnitCode"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:autoComplete id="auCplUnitCode"
+                                                required="true"
+                                                requiredMessage="#{lang['mn.stock.utilities.unit.code.not.blank']}"
+                                                styleClass="autoCpl"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['mn.stock.limit.staff.code']}" for="auCplStaffCode"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:autoComplete id="auCplStaffCode"
+                                                required="true"
+                                                requiredMessage="#{lang['mn.stock.track.staff.code.not.blank']}"
+                                                styleClass="autoCpl"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['mn.stock.track.state.stock']}"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu>
+                                    <f:selectItem itemLabel="Hàng mới" escape="true"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['type.product']}" for="cobTypeStock"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu id="cobTypeStock" required="true"
+                                                 value="#{trackActualWarehouseController.stockSerial}"
+                                                 requiredMessage="#{lang['export.order.type.product.not.blank']}">
+                                    <f:selectItem itemLabel="#{lang['type.product.select']}" escape="true"/>
+                                    <f:selectItem itemLabel="Điện thoại" itemValue="0" escape="true"/>
+                                    <f:selectItem itemLabel="Mặt hàng không có serial" itemValue="1" escape="true"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['export.order.name']}"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:autoComplete styleClass="autoCpl"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['mn.invoice.invoiceType.dateCreate']}" for="txtCreateDate"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar id="txtCreateDate"
+                                            required="true"
+                                            requiredMessage="#{lang['mn.invoice.invoiceType.dateCreate.not.blank']}" />
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Container100 TexAlCenter">
+                        <p:commandButton actionListener="#{trackActualWarehouseController.search}"
+                                         update="@([id$=pnlInforStock]),@([id$=msgInforSearch])"
+                                         process="@this,@([id$=pnlInforSearch])"
+                                         value="#{lang['mn.stock.track.pass']}"/>
+                    <p:commandButton styleClass="mg-left-5" value="Xuất kết quả thực tế"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel id="pnlInforStock" styleClass="ContainerIndent">
+                <p:outputPanel id="pnlInforStockNoSerial"
+                               rendered="#{trackActualWarehouseController.beforSearch and trackActualWarehouseController.stockSerial eq '1'}"
+                               styleClass="Container100">
+                   <cbs:panel classForToggle="pnlInforStockNoSerial" titleHeader="#{lang['mn.stock.track.stock.no.serial']}"/>
+                    <div class="Container100 paddingTopBottom10 pnlInforStock">
+                       <div class="ContainerIndent mg-top-0">
+                           <p:dataTable
+                                   id="tblListStockNoSerial"
+                                   var="item"
+                                   rowIndexVar="index"
+                                   resizableColumns="true"
+                                   paginator="#{lang['common.paging.paginator']}"
+                                   rows="#{lang['common.paging.rows.default']}"
+                                   rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                   paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                   paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                   paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                   currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                   emptyMessage="#{lang['common.empty.records']}"
+                                   value="">
+                               <p:column headerText="#{lang['mn.stock.utilities.code.stock']}">
+                                   <p:outputLabel value="TCDT"/>
+                               </p:column>
+                               <p:column headerText="#{lang['export.order.name.product']}">
+                                   <p:outputLabel value="Thẻ cào điện tử"/>
+                               </p:column>
+                               <p:column headerText="#{lang['mn.stock.track.stock.number.real']}">
+                                   <p:outputLabel value="1.000.000" styleClass="Fright"/>
+                               </p:column>
+                               <p:column headerText="#{lang['mn.stock.track.stock.number']}">
+                                   <p:outputLabel value="1.000.000" styleClass="Fright"/>
+                               </p:column>
+                               <p:column headerText="#{lang['mn.stock.track.state.stock']}">
+                                   <p:outputLabel value="Hàng mới"/>
+                               </p:column>
+                               <p:column headerText="#{lang['mn.stock.track.input.number']}">
+                                   <p:inputText value=""/>
+                               </p:column>
+                           </p:dataTable>
+                       </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <p:selectBooleanCheckbox itemLabel="#{lang['mn.stock.track.confirm.stock']}"/>
+                        </div>
+                        <div class="Container100 TexAlCenter">
+                            <p:commandButton value="#{lang['mn.stock.track.check']}"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel id="pnlInforStockSerial"
+                               rendered="#{trackActualWarehouseController.beforSearch and trackActualWarehouseController.stockSerial eq '0'}"
+                               styleClass="Container100">
+                    <cbs:panel classForToggle="pnlInforStockSerial" titleHeader="#{lang['mn.stock.track.serial']}"/>
+                    <div class="Container100 pnlInforStockSerial paddingTopBottom10">
+                        <div class="ContainerIndent mg-top-0">
+                           <div class="Container50 Responsive">
+                               <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                   <p:outputLabel value="#{lang['mn.stock.track.input']}"/>
+                               </div>
+                               <div class="Container60 Responsive ui-fluid">
+                                   <p:selectOneMenu value="">
+                                       <f:selectItem itemLabel="Bắn máy"/>
+                                   </p:selectOneMenu>
+                               </div>
+                           </div>
+                           <div class="Container50 Responsive">
+                               <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                       <p:outputLabel value="#{lang['mn.stock.track.serial.number']}"/>
+                               </div>
+                               <div class="Container60 Responsive ui-fluid">
+                                   <p:autoComplete styleClass="autoCpl"/>
+                               </div>
+                           </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container50 Responsive">
+                                <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['mn.stock.fromSerial']}"/>
+                                </div>
+                                <div class="Container60 Responsive ui-fluid">
+                                    <p:inputText value=""/>
+                                </div>
+                            </div>
+                            <div class="Container50 Responsive">
+                                <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['mn.stock.ToSerial']}"/>
+                                </div>
+                                <div class="Container60 Responsive ui-fluid">
+                                    <p:inputText value=""/>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container20 Responsive ui-fluid mg-left-15 pd-top-7">
+                            <p:outputLabel value="Serial 2D"/>
+                        </div>
+                        <div class="Container80 Responsive ui-fluid">
+                            <p:inputText value=""/>
+                        </div>
+                    </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <p:dataTable
+                                    id="tblListStockSerial"
+                                    var="item"
+                                    rowIndexVar="index"
+                                    resizableColumns="true"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.empty.records']}"
+                                    value="">
+                                <p:column headerText="#{lang['export.order.name.product']}">
+                                    <p:outputLabel value="Thẻ cào điện tử"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.stock.fromSerial']}">
+                                    <p:outputLabel value="11112"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.stock.ToSerial']}">
+                                    <p:outputLabel value="111123" />
+                                </p:column>
+                                <p:column headerText="#{lang['common.number']}">
+                                    <p:outputLabel value="11" styleClass="Fright"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.delete']}" styleClass="TexAlCenter">
+                                  <p:commandLink styleClass="fa icon-trash Fs14 blue"/>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <p:selectBooleanCheckbox itemLabel="#{lang['mn.stock.track.confirm.stock']}"/>
+                        </div>
+                        <div class="Container100 TexAlCenter">
+                            <p:commandButton value="#{lang['mn.stock.track.check']}"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

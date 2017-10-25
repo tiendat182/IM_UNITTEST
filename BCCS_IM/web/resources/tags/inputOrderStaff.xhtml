@@ -1,0 +1,279 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+      xmlns:composite="http://java.sun.com/jsf/composite" xmlns:h="http://java.sun.com/jsf/html">
+<composite:interface>
+    <composite:attribute name="id" shortDescription="id component cua doi tuong " required="true"/>
+    <composite:attribute name="title" shortDescription="title " required="true"/>
+    <composite:attribute name="mode" required="true"
+                         shortDescription="1 la lap lenh xuat kho, 2 la lap phieu xuat kho, 3 la xuat kho"
+                         default="1"/>
+    <composite:attribute name="methodNameOffice" shortDescription="ten method office"/>
+    <composite:attribute name="methodNameReceiveStaff" shortDescription="ten method nhan office" default=""/>
+    <composite:attribute name="value" shortDescription="Doi tuong chua ket qua tra ve"
+                         required="true" type="com.viettel.bccs.inventory.tag.OrderStaffTagNameable"/>
+    <composite:attribute name="styleClassDiv" shortDescription="ten method" default="ContainerIndent"/>
+    <composite:attribute name="param" shortDescription="param"/>
+    <composite:attribute name="methodNameAutoOrderNote"
+                         shortDescription="ten mehtod nhan du lieu checkBox lap phieu tu dong" default=""/>
+</composite:interface>
+<composite:implementation>
+    <p:outputPanel id="#{cc.attrs.id}pnViewExportOrder" styleClass="ContainerIndent #{cc.attrs.styleClassDiv}">
+        <cbs:panel classForToggle="pnViewExportOrder#{cc.attrs.id}" titleHeader="#{cc.attrs.title}" toggle="true"/>
+
+        <div class="Container100 pnViewExportOrder#{cc.attrs.id}" style="margin-bottom: 10px;margin-top: 10px;">
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container33 Responsive">
+                    <div class="Container40 mg-left-15 Responsive50 pd-top-4 lb-sentinel">
+                        <c:if test="#{cc.attrs.mode == '1' or cc.attrs.mode == '2'}">
+                            <p:outputLabel styleClass="lb-sentinel" for="#{cc.attrs.id}ipExportCode"
+                                           value="#{lang['export.order.code']}"/>
+                        </c:if>
+                        <c:if test="#{cc.attrs.mode == '3'}">
+                            <p:outputLabel styleClass="lb-sentinel" for="#{cc.attrs.id}ipExportCode"
+                                           value="#{lang['export.order.code.field']}"/>
+                        </c:if>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid #{cc.attrs.value.isDisableEdit ? 'pd-top-4' : ''}">
+                        <p:inputText placeholder="#{lang['export.order.code.placehoder']}"
+                                     disabled="#{cc.attrs.mode != '1'}" required="#{!cc.attrs.value.isDisableEdit}"
+                                     id="#{cc.attrs.id}ipExportCode" rendered="#{!cc.attrs.value.isDisableEdit}"
+                                     maxlength="50"
+                                     onblur="this.value = this.value.trim()"
+                                     requiredMessage="#{lang['export.order.code.require.msg']}"
+                                     value="#{cc.attrs.value.transInputDTO.actionCode}"
+                                     validatorMessage="#{lang['export.order.code.format.msg']}"/>
+                        <pe:keyFilter for="#{cc.attrs.id}ipExportCode" regEx="/[0-9a-zA-Z_-]{1,50}/i"
+                                      preventPaste="false"/>
+                        <p:message for="#{cc.attrs.id}ipExportCode" style="font-size: 11px!important;"/>
+
+                        <p:outputLabel styleClass="lb-sentinel-bold break-all"
+                                       value="#{cc.attrs.value.transInputDTO.actionCode}"
+                                       rendered="#{cc.attrs.value.isDisableEdit}"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['export.order.by.whom']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                        <p:outputLabel escape="true" value="#{cc.attrs.value.transInputDTO.createUser}"
+                                       styleClass="lb-sentinel-bold"></p:outputLabel>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['export.order.day']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                        <h:outputText value="#{cc.attrs.value.transInputDTO.createDatetime}" escape="true"
+                                      styleClass="lb-sentinel-bold">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent">
+                <div class="Container33 Responsive">
+                    <cbs:inputShop value="#{cc.attrs.value.shopInfoExportTag}"
+                                   idComponent="#{cc.attrs.id}ipExportShop"
+                                   methodName="exportShop"
+                                   update="@this"
+                                   limit="#{cc.attrs.value.limitAutoComplete}"
+                                   label="#{lang['export.order.stock']}"
+                                   require="false"
+                                   clearMethodName=""
+                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                   classDivInput="Container60 Responsive50 ui-fluid"
+                                   requiredMessage="#{lang['export.order.stock.require.msg']}"
+                                   placeholder="#{lang['export.order.stock.placehoder']}">
+                    </cbs:inputShop>
+                </div>
+                <div class="Container33 Responsive">
+                    <cbs:inputStaff value="#{cc.attrs.value.staffInfoReceiveTag}"
+                                    id="#{cc.attrs.id}ipReceiveStaff"
+                                    methodName="receiveStaff"
+                                    update="@this"
+                                    label="#{lang['mn.stock.staff.receive.staff']}"
+                                    require="#{!cc.attrs.value.isDisableEdit}"
+                                    forceSelection="#{cc.attrs.value.isDisableEdit}"
+                                    classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                    classDivInput="Container60 Responsive50 ui-fluid"
+                                    clearMethodName="clearCurrentStaff"
+                                    requiredMessage="#{lang['mn.stock.staff.receive.staff.not.blank']}"
+                                    param="#{cc.attrs.param}"
+                                    placeholder="#{lang['mn.stock.staff.receive.staff.placehoder']}">
+                    </cbs:inputStaff>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                        <p:outputLabel styleClass="lb-sentinel" for="#{cc.attrs.id}ipExportReason"
+                                       value="#{lang['export.order.by.reason']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid #{cc.attrs.value.isDisableEdit ? 'pd-top-4' : ''}">
+                        <p:outputLabel styleClass="lb-sentinel-bold"
+                                       value="#{cc.attrs.value.transInputDTO.reasonName}"
+                                       rendered="#{cc.attrs.value.isDisableEdit}"/>
+                        <p:selectOneMenu id="#{cc.attrs.id}ipExportReason"
+                                         value="#{cc.attrs.value.transInputDTO.reasonId}"
+                                         rendered="#{!cc.attrs.value.isDisableEdit}"
+                                         requiredMessage="#{lang['create.note.reason.export.require.msg']}"
+                                         disabled="#{cc.attrs.mode != '1'}"
+                                         required="#{!cc.attrs.value.isDisableEdit}">
+                            <f:selectItem itemValue="" itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                            <f:selectItems value="#{cc.attrs.value.lsReasonDto}" var="item"
+                                           itemValue="#{item.reasonId}"
+                                           itemLabel="#{item.reasonName}">
+                            </f:selectItems>
+                        </p:selectOneMenu>
+                        <p:message for="#{cc.attrs.id}ipExportReason"/>
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent">
+                <div class="Container66 Responsive66">
+                    <!--Start ghi chu -->
+                    <div class="Container20 mg-left-15 Responsive25 pd-top-4">
+                        <p:outputLabel styleClass="lb-sentinel" for="#{cc.attrs.id}ipNote"
+                                       value="#{lang['export.order.note']}"/>
+                    </div>
+                    <div class="Container80 Responsive75 ui-fluid #{cc.attrs.value.isDisableEdit ? 'pd-top-4' : ''}">
+                        <!--<pe:keyFilter for="#{cc.attrs.id}ipNote"-->
+                        <!--regEx="/[a-z0-9A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\._\-+]/i"/>-->
+                        <p:outputLabel styleClass="lb-sentinel-bold" value="#{cc.attrs.value.transInputDTO.note}"
+                                       rendered="#{cc.attrs.value.isDisableEdit}"/>
+                        <p:inputText value="#{cc.attrs.value.transInputDTO.note}" disabled="#{cc.attrs.mode != '1'}"
+                                     maxlength="500"
+                                     validatorMessage="#{lang['export.order.note.validate.maxlength']}"
+                                     rendered="#{!cc.attrs.value.isDisableEdit}"
+                                     placeholder="#{lang['export.order.note.placehoder']}"
+                                     id="#{cc.attrs.id}ipNote"/>
+                        <p:message for="#{cc.attrs.id}ipNote"/>
+                    </div>
+                    <!--End ghi chu-->
+                </div>
+                <div class="Container33 Responsive"></div>
+            </div>
+            <!--check dieu kien neu la man hinh lap lenh xuat kho-->
+            <c:if test="#{cc.attrs.mode == '1'}">
+                <div class="ContainerIndent">
+                    <!--Start check dieu kien hien thi checkBox logistic -->
+                    <c:if test="#{cc.attrs.value.showLogistic}">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 mg-left-15 Responsive50">
+                                <p:outputLabel styleClass="lb-sentinel" for="#{cc.attrs.id}logicstic"
+                                               value="#{lang['export.order.logicstics']}"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectBooleanCheckbox styleClass="mg-left-5" id="#{cc.attrs.id}logicstic"
+                                                         value="#{cc.attrs.value.tranLogistics}"
+                                                         disabled="#{cc.attrs.value.isDisableEdit || cc.attrs.value.autoCreateNote}"/>
+                            </div>
+                        </div>
+                    </c:if>
+                    <c:if test="#{!cc.attrs.value.showLogistic}">
+                        <div class="Container33 Responsive"></div>
+                    </c:if>
+                    <!--End check dieu kien hien thi checkBox logistic -->
+
+                    <!--start check dieu kien hien thi checkBox van chuyen -->
+                    <c:if test="#{cc.attrs.value.showTransfer}">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 mg-left-15 Responsive50">
+                                <p:outputLabel styleClass="lb-sentinel" for="#{cc.attrs.id}tranfer"
+                                               value="#{lang['export.order.tranfer']}"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectBooleanCheckbox styleClass="mg-left-5" id="#{cc.attrs.id}tranfer"
+                                                         value="#{cc.attrs.value.tranfer}"
+                                                         disabled="#{cc.attrs.value.isDisableEdit}"/>
+                            </div>
+                        </div>
+                    </c:if>
+                    <c:if test="#{!cc.attrs.value.showTransfer}">
+                        <div class="Container33 Responsive"></div>
+                    </c:if>
+                    <!--End check dieu kien hien thi checkBox van chuyen -->
+
+                    <!--Start check dieu kien hien thi checkBox ERP -->
+                    <c:if test="#{cc.attrs.value.showCheckErp}">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 mg-left-15 Responsive50">
+                                <p:outputLabel styleClass="lb-sentinel" for="#{cc.attrs.id}ipERP"
+                                               value="#{lang['export.order.not.synchronize.ERP']}"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectBooleanCheckbox id="#{cc.attrs.id}ipERP" styleClass="mg-left-5"
+                                                         value="#{cc.attrs.value.transInputDTO.checkErp}"
+                                                         disabled="#{cc.attrs.mode != '1' or cc.attrs.value.isDisableEdit}"/>
+                            </div>
+                        </div>
+                    </c:if>
+                    <!--End check dieu kien hien thi checkBox ERP -->
+                </div>
+            </c:if>
+            <c:if test="#{cc.attrs.mode != '1' and cc.attrs.value.showCheckErp}">
+                <div class="ContainerIndent">
+                    <!--Start check dieu kien hien thi checkBox ERP -->
+                    <div class="Container33 Responsive">
+                        <div class="Container40 mg-left-15 Responsive50">
+                            <p:outputLabel styleClass="lb-sentinel" for="#{cc.attrs.id}ipERP"
+                                           value="#{lang['export.order.not.synchronize.ERP']}"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:selectBooleanCheckbox id="#{cc.attrs.id}ipERP" styleClass="mg-left-5"
+                                                     value="#{cc.attrs.value.transInputDTO.checkErp}"
+                                                     disabled="#{cc.attrs.mode != '1' or cc.attrs.value.isDisableEdit}"/>
+                        </div>
+                    </div>
+                    <!--End check dieu kien hien thi checkBox ERP -->
+                    <div class="Container33 Responsive"></div>
+                    <div class="Container33 Responsive"></div>
+                </div>
+            </c:if>
+            <!--Start check dieu kien hien thi ky Office-->
+            <c:if test="#{!cc.attrs.value.isDisableEdit and cc.attrs.mode == '1'}">
+                <div class="ContainerIndent">
+                    <div class="Container33 Responsive">
+                        <div class="Container40 mg-left-15 Responsive50">
+                            <p:outputLabel styleClass="lb-sentinel" for="#{cc.attrs.id}ipWriteOffice"
+                                           value="#{lang['export.order.write.office']}"
+                                           rendered="#{cc.attrs.mode == '1'}"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:selectBooleanCheckbox id="#{cc.attrs.id}ipWriteOffice" styleClass="mg-left-5"
+                                                     value="#{cc.attrs.value.writeOffice}"
+                                                     disabled="#{cc.attrs.value.isDisableEdit}">
+                                <p:ajax event="change" process="@this"
+                                        listener="#{cc.attrs.value.doChangeWriteOffice(cc.attrs.methodNameOffice)}"/>
+                            </p:selectBooleanCheckbox>
+                        </div>
+                    </div>
+                    <div class="Container33 Responsive">
+                        <c:if test="#{cc.attrs.value.showAutoOrderNote}">
+                            <div class="Container40 mg-left-15 Responsive50">
+                                <p:outputLabel styleClass="lb-sentinel" for="#{cc.attrs.id}autoNote"
+                                               value="#{lang['export.order.and.note.auto']}"
+                                               rendered="#{cc.attrs.mode == '1'}"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectBooleanCheckbox id="#{cc.attrs.id}autoNote" styleClass="mg-left-5"
+                                                         value="#{cc.attrs.value.autoCreateNote}">
+                                    <p:ajax event="change" process="@this"
+                                            listener="#{cc.attrs.value.doChangeAutoCreateNote(cc.attrs.methodNameAutoOrderNote)}"/>
+                                </p:selectBooleanCheckbox>
+                            </div>
+                        </c:if>
+                    </div>
+                    <div class="Container33 Responsive"></div>
+                </div>
+            </c:if>
+            <!--End check dieu kien hien thi ky Office-->
+        </div>
+    </p:outputPanel>
+</composite:implementation>
+</html>
+

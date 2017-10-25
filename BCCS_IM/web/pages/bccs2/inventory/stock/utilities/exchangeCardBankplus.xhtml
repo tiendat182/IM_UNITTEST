@@ -1,0 +1,198 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:o="http://omnifaces.org/ui"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['utilities.exchange.card.bankplus']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmUpdateSerial">
+            <p:outputPanel styleClass="container100">
+                <div class="ContainerIndent">
+                    <p:messages id="messages" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel id="panelImport" styleClass="ContainerIndent">
+                    <p:focus for="panelImport"/>
+                    <cbs:panel classForToggle="panelImport"
+                               toggle="true"
+                               titleHeader="#{lang['utilities.exchange.card.bankplus']}"/>
+
+                    <div class="Container100 panelImport" style="margin-bottom: 10px;margin-top: 10px;">
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['mn.stock.liquidate.model']}"
+                                                   for="cplProductOffer" styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid ui-relative">
+                                    <p:autoComplete id="cplProductOffer"
+                                                    required="true"
+                                                    requiredMessage="#{lang['mn.stock.liquidate.model.required']}"
+                                                    value="#{exchangeCardBankplusController.productOfferingTotalDTO}"
+                                                    disabled="#{!(exchangeCardBankplusController.productOfferingTotalDTO == null || exchangeCardBankplusController.productOfferingTotalDTO == '')}"
+                                                    completeMethod="#{exchangeCardBankplusController.searchListProductOffering}"
+                                                    placeholder="#{lang['mn.stock.liquidate.model.placeholder']}"
+                                                    var="productOfferingTotalDTO"
+                                                    itemValue="#{productOfferingTotalDTO}"
+                                                    itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                    autoHighlight="true"
+                                                    maxResults="10"
+                                                    forceSelection="true">
+                                        <o:converter converterId="productOfferingConverter"
+                                                     list="#{exchangeCardBankplusController.lstProductOfferingTotalDTO}"/>
+                                        <p:ajax event="itemSelect"
+                                                listener="#{exchangeCardBankplusController.doSelectProductOffering}"
+                                                process="@([id$=cplProductOffer])"
+                                                update="@([id$=cplProductOffer]),@([id$=messages])"/>
+                                        <p:column style="width: 40%"
+                                                  headerText="#{lang['common.lb.code']}"
+                                                  filterable="true">
+                                            <p:outputLabel value="#{productOfferingTotalDTO.code}"/>
+                                        </p:column>
+                                        <p:column style="width: 60%"
+                                                  headerText="#{lang['common.lb.name']}"
+                                                  filterable="true">
+                                            <p:outputLabel value="#{productOfferingTotalDTO.name}"/>
+                                        </p:column>
+                                        <p:ajax event="query" global="false"/>
+                                    </p:autoComplete>
+                                    <p:commandLink id="btnResetLstProduct"
+                                                   styleClass="ui-link-right"
+                                                   update="@this,@form"
+                                                   actionListener="#{exchangeCardBankplusController.resetLstProductOfferingTotal}"
+                                                   process="@this">
+                                        <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                    </p:commandLink>
+                                    <p:message for="cplProductOffer"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50  mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['utilities.exchange.card.bankplus.isdn']}"
+                                                   for="txtIsdn" styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:inputText id="txtIsdn"
+                                                 required="true"
+                                                 onblur="this.value = this.value.trim()"
+                                                 requiredMessage="#{lang['utilities.exchange.card.bankplus.isdn.require']}"
+                                                 placeholder="#{lang['utilities.exchange.card.bankplus.isdn.placeholder']}"
+                                                 maxlength="11"
+                                                 value="#{exchangeCardBankplusController.exchangeCardBankplusDTO.isdn}"/>
+                                    <pe:keyFilter for="txtIsdn" regEx="/^[0-9]+$/i" preventPaste="false"/>
+                                    <p:message for="txtIsdn"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['utilities.exchange.card.bankplus.date']}"
+                                                   for="saleDate"
+                                                   styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:calendar id="saleDate"
+                                                value="#{exchangeCardBankplusController.exchangeCardBankplusDTO.saleDate}"
+                                                placeholder="#{lang['create.note.from.date.placeholder']}"
+                                                converterMessage="#{lang['utilities.exchange.card.bankplus.date.invalid']}"
+                                                required="true"
+                                                requiredMessage="#{lang['utilities.exchange.card.bankplus.date.require']}"/>
+                                    <p:message for="saleDate"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['utilities.exchange.card.bankplus.serial.error']}"
+                                                   for="txtSerialError" styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:inputText id="txtSerialError"
+                                                 required="true"
+                                                 onblur="this.value = this.value.trim()"
+                                                 requiredMessage="#{lang['utilities.exchange.card.bankplus.serial.error.require']}"
+                                                 placeholder="#{lang['utilities.exchange.card.bankplus.serial.error.placehoder']}"
+                                                 maxlength="11"
+                                                 value="#{exchangeCardBankplusController.exchangeCardBankplusDTO.serialError}"/>
+                                    <pe:keyFilter for="txtSerialError" regEx="/^[0-9]+$/i" preventPaste="false"/>
+                                    <p:message for="txtSerialError"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['utilities.exchange.card.bankplus.serial.change']}"
+                                                   for="txtSerialChange" styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:inputText id="txtSerialChange"
+                                                 required="true"
+                                                 onblur="this.value = this.value.trim()"
+                                                 requiredMessage="#{lang['utilities.exchange.card.bankplus.serial.change.require']}"
+                                                 placeholder="#{lang['utilities.exchange.card.bankplus.serial.change.placeholder']}"
+                                                 maxlength="11"
+                                                 value="#{exchangeCardBankplusController.exchangeCardBankplusDTO.serialChange}"/>
+                                    <pe:keyFilter for="txtSerialChange" regEx="/^[0-9]+$/i" preventPaste="false"/>
+                                    <p:message for="txtSerialChange"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:commandLink styleClass="fa icon-eye Fs32 blue"
+                                                   resetValues="true"
+                                                   value="#{lang['mn.stock.utilities.view.ware.house']}"
+                                                   oncomplete="if(!args.validationFailed){PF('dlgViewStock').show()}"
+                                                   process="@this" update="@this,@([id$=dlgViewStock])"
+                                                   actionListener="#{exchangeCardBankplusController.doViewStock}"
+                                            />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p:outputPanel id="pnlButton" styleClass="ContainerIndent TexAlCenter">
+                        <cbs:confirmDialog
+                                idComponent="exchangeCard"
+                                id="exchangeCard"
+                                valueButton="#{lang['utilities.exchange.card.bankplus.btn.exchange']}"
+                                headerConfirm="#{lang['utilities.exchange.card.bankplus.btn.exchange.header']}"
+                                messageConfirm="#{lang['utilities.exchange.card.bankplus.btn.exchange.confirm']}"
+                                actionOK="#{exchangeCardBankplusController.doExchange()}"
+                                resetValueButton="true"
+                                process="@form"
+                                updateArea="@form"
+                                processOK="@form"
+                                updateOK="@form"
+                                actionValidate="#{exchangeCardBankplusController.doValidate()}"
+                                focusCancel="false"
+                                isButton="true"/>
+                        <p:commandButton styleClass="mg-left-5" value="#{lang['common.reset']}"
+                                         immediate="true"
+                                         resetValues="true"
+                                         process="@form"
+                                         update="@form"
+                                         action="#{exchangeCardBankplusController.doReset}"/>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgViewStock"
+                  widgetVar="dlgViewStock"
+                  header="#{lang['utilities.exchange.card.bankplus.view.stock']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <div class="Container" style="overflow-y: scroll;height: 500px;">
+                <ui:include src="viewInforWarehouseCommon.xhtml"/>
+            </div>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

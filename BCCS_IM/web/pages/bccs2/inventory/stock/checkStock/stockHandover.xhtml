@@ -1,0 +1,475 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.handover']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.handover']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmStockHandover" styleClass="Container100">
+            <p:focus for="@form"/>
+            <style type="text/css">
+                .ui-treetable .ui-treetable-indent {
+                    height: 0px;
+                    width: 0px;
+                }
+            </style>
+            <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                <p:messages id="msgSearchInit" showSummary="false" showDetail="true" closable="true"
+                            rendered="#{!stockHandoverController.checkShopKeeper}"/>
+                <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"
+                            rendered="#{stockHandoverController.checkShopKeeper}"/>
+            </div>
+            <!--danh sach tim kiem start-->
+            <p:outputPanel styleClass="ContainerIndent"
+                           rendered="#{stockHandoverController.checkShopKeeper and !stockHandoverController.createStockDeliver}">
+                <p:focus for="@form"/>
+                <p:outputPanel styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="pnSearch" toggle="true"
+                               titleHeader="#{lang['mn.stock.limit.info.range.time.promotion']}"/>
+                    <p:outputPanel styleClass="Container pnSearch" id="pnSearchOrder">
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['mn.stock.handover.deliver.code']}"
+                                                   for="requestCodeTxt"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:inputText id="requestCodeTxt"
+                                                 maxlength="50"
+                                                 onblur="this.value = this.value.trim();"
+                                                 value="#{stockHandoverController.deliverHistorySearchDTO.code}"
+                                                 placeholder="#{lang['mn.stock.handover.deliver.code.placeholder']}"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50  mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['create.note.from.date']}" styleClass="lb-sentinel"
+                                                   for="fromDate"/>
+                                </div>
+                                <div class="Container60 Responsive50  ui-fluid">
+                                    <p:calendar
+                                            mask="true"
+                                            pattern="#{lang['common.datetime.format']}"
+                                            converterMessage="#{lang['invalid.date.message']}"
+                                            validatorMessage="#{lang['start.date.validate.message']}"
+                                            value="#{stockHandoverController.deliverHistorySearchDTO.fromDate}"
+                                            placeholder="#{lang['common.datetime.format']}"
+                                            required="true"
+                                            requiredMessage="#{lang['mn.stock.from.date.not.blank']}"
+                                            styleClass="fromDate"
+                                            id="fromDate">
+                                        <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                    </p:calendar>
+                                    <p:message for="fromDate"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['create.note.to.date']}" for="toDate"
+                                                   styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:calendar id="toDate"
+                                                mask="true"
+                                                pattern="#{lang['common.datetime.format']}"
+                                                converterMessage="#{lang['invalid.date.message']}"
+                                                validatorMessage="#{lang['start.date.validate.message']}"
+                                                value="#{stockHandoverController.deliverHistorySearchDTO.toDate}"
+                                                required="true"
+                                                styleClass="toDate"
+                                                placeholder="#{lang['create.note.to.date.placeholder']}"
+                                                requiredMessage="#{lang['mn.stock.to.date.not.blank']}">
+                                        <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                    </p:calendar>
+                                    <p:message for="toDate"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15  pd-top-4">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['common.status']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid ">
+                                    <p:selectOneMenu id="status"
+                                                     value="#{stockHandoverController.deliverHistorySearchDTO.status}">
+                                        <f:selectItem itemValue="" itemLabel="#{lang['common.select.all']}"/>
+                                        <f:selectItem itemValue="0"
+                                                      itemLabel="#{lang['mn.stock.handover']}"/>
+                                        <f:selectItem itemValue="1"
+                                                      itemLabel="#{lang['import.partner.request.status1']}"/>
+                                        <f:selectItem itemValue="2"
+                                                      itemLabel="#{lang['import.partner.request.status2']}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['lookup.limit.stock.label.shop']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 pd-top-7">
+                                    <p:outputLabel
+                                            value="#{stockHandoverController.shopDeliverDTO.shopCode} - #{stockHandoverController.shopDeliverDTO.name}"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive"></div>
+                        </div>
+                        <div class="Conatiner TexAlCenter">
+                            <p:commandButton value="#{lang['create.note.search']}"
+                                             process="@this,@([id$=pnSearchOrder])"
+                                             actionListener="#{stockHandoverController.doSearchHistory}"
+                                             update="@form"/>
+                            <p:commandButton value="#{lang['common.reset']}" process="@this" update="@form"
+                                             styleClass="mg-left-5"
+                                             actionListener="#{stockHandoverController.doResetHistory}"/>
+                            <p:commandButton value="#{lang['mn.stock.handover']}"
+                                             actionListener="#{stockHandoverController.doCreateDeliver}"
+                                             disabled="#{stockHandoverController.haveDeliver}"
+                                             process="@this" resetValues="true" update="@form" validateClient="true"
+                                             styleClass="mg-left-5"/>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+                <p:outputPanel id="pnListSearch" styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="pViewSeach" toggle="true"
+                               titleHeader="#{lang['mn.stock.list.result.search']}"/>
+
+                    <div class="pViewSeach Container">
+                        <p:dataTable
+                                var="deliverHistory"
+                                resizableColumns="true"
+                                reflow="false"
+                                rowIndexVar="index"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.empty.records']}"
+                                value="#{stockHandoverController.lstDeliverHistory}">
+                            <p:column headerText="#{lang['common.stt']}" style="width: 6%;"
+                                      styleClass="col-left">
+                                <h:outputLabel value="#{index + 1}" styleClass="lb-sentinel-bold"
+                                               title="#{index + 1}"/>
+                            </p:column>
+                            <p:column styleClass="col-left" sortBy="#{deliverHistory.code}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.stock.handover.deliver.code']}"
+                                                  title="#{lang['mn.stock.handover.deliver.code']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{deliverHistory.code}" title="#{deliverHistory.code}"/>
+                            </p:column>
+                            <p:column styleClass="col-left" sortBy="#{deliverHistory.ownerFullName}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.balance.stock.request.shop']}"
+                                                  title="#{lang['mn.balance.stock.request.shop']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{deliverHistory.ownerFullName}"
+                                               title="#{deliverHistory.ownerFullName}"/>
+                            </p:column>
+                            <p:column sortBy="#{deliverHistory.statusName}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['stock.rescue.warranty.create.status']}"
+                                                  title="#{lang['stock.rescue.warranty.create.status']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{deliverHistory.statusName}"
+                                               title="#{deliverHistory.statusName}"/>
+                            </p:column>
+                            <p:column sortBy="#{deliverHistory.createDateStr}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['stock.rescue.warranty.create.date']}"
+                                                  title="#{lang['stock.rescue.warranty.create.date']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{deliverHistory.createDateStr}"
+                                               title="#{deliverHistory.createDateStr}">
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column sortBy="#{deliverHistory.createUser}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['export.order.create.whom']}"
+                                                  title="#{lang['export.order.create.whom']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{deliverHistory.createUser}"
+                                               title="#{deliverHistory.createUser}"/>
+                            </p:column>
+                            <p:column style="text-align: center">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['mn.stock.handover.deliver.file']}"
+                                                  title="#{lang['mn.stock.handover.deliver.file']}"/>
+                                </f:facet>
+                                <p:commandLink styleClass="fa icon-download Fs14 black"
+                                               title="#{lang['create.note.download.file.title']}"
+                                               ajax="false"
+                                               style="text-decoration: none!important;">
+                                    <p:fileDownload
+                                            value="#{stockHandoverController.downloadFileAttach(deliverHistory.stockDeliverId)}"/>
+                                </p:commandLink>
+                            </p:column>
+                        </p:dataTable>
+
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+            <!--danh sach tim kiem end-->
+            <p:outputPanel styleClass="Container100" rendered="#{stockHandoverController.createStockDeliver}">
+                <p:outputPanel styleClass="ContainerIndent" id="pnlInforStockHandover">
+                    <p:focus for="pnlInforStockHandover"/>
+                    <cbs:panel classForToggle="pnlInforStockHandover" toggle="true"
+                               titleHeader="#{lang['mn.stock.handover.info']}"/>
+
+                    <div class="pnlInforStockHandover Container100 marginTopBottom10 ">
+                        <div class="ContainerIndent mg-top-10">
+                            <div class="Container50 Responsive50">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel
+                                            value="#{lang['mn.stock.handover.deliver.code']}"
+                                            styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50  ui-fluid ui-relative pd-top-7">
+                                    <h:outputText
+                                            id="txtCode"
+                                            value="#{stockHandoverController.stockDeliverSearchDTO.code}"
+                                            escape="true"
+                                            styleClass="lb-sentinel-bold break-all">
+                                    </h:outputText>
+                                    <p:commandLink id="btnResetCode"
+                                                   styleClass="ui-link-right"
+                                                   update="@this, @([id$=txtCode])"
+                                                   actionListener="#{stockHandoverController.resetCode}"
+                                                   process="@this">
+                                        <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                    </p:commandLink>
+                                </div>
+                            </div>
+                            <div class="Container50 Responsive50">
+                                <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-4">
+                                    <p:outputLabel value="#{lang['mn.stock.handover.shop']}"
+                                                   for="shopDeliver"
+                                                   styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                    <p:outputLabel id="shopDeliver"
+                                                   value="#{stockHandoverController.shopDeliverDTO.shopCode} - #{stockHandoverController.shopDeliverDTO.name}"
+                                                   title="#{stockHandoverController.shopDeliverDTO.shopCode} - #{stockHandoverController.shopDeliverDTO.name}"
+                                                   readonly="true">
+                                    </p:outputLabel>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-10">
+                            <div class="Container50 Responsive50">
+                                <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-4">
+                                    <p:outputLabel value="#{lang['mn.stock.handover.staff.delivery']}"
+                                                   for="staffDelivery"
+                                                   styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                    <p:outputLabel id="staffDelivery"
+                                                   value="#{stockHandoverController.staffDeliveryDTO.staffCode} - #{stockHandoverController.staffDeliveryDTO.name}"
+                                                   title="#{stockHandoverController.staffDeliveryDTO.staffCode} - #{stockHandoverController.staffDeliveryDTO.name}"
+                                                   readonly="true">
+                                    </p:outputLabel>
+                                </div>
+                            </div>
+                            <div class="Container50 Responsive50">
+                                <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-4">
+                                    <p:outputLabel value="#{lang['mn.stock.handover.staff.owner.delivery']}"
+                                                   for="staffOwnerDelivery"
+                                                   styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                    <p:outputLabel id="staffOwnerDelivery"
+                                                   value="#{stockHandoverController.staffDeliveryOwnerDTO.staffCode} - #{stockHandoverController.staffDeliveryOwnerDTO.name}"
+                                                   title="#{stockHandoverController.staffDeliveryOwnerDTO.staffCode} - #{stockHandoverController.staffDeliveryOwnerDTO.name}"
+                                                   readonly="true">
+                                    </p:outputLabel>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ContainerIndent mg-top-10">
+                            <div class="Container50 Responsive50">
+                                <cbs:inputStaff value="#{stockHandoverController.staffInfoTagRecieve}"
+                                                id="staffInfoTagRecieve"
+                                                methodName="receiveStaffRecieve"
+                                                clearMethodName="clearStaffRecieve"
+                                                update="@this"
+                                                limit="#{stockHandoverController.limitAutoComplete}"
+                                                label="#{lang['mn.stock.handover.staff.recieve']}"
+                                                require="true"
+                                                forceSelection="false"
+                                                classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                classDivInput="Container60 Responsive50 ui-fluid"
+                                                requiredMessage="#{lang['mn.stock.handover.staff.recieve.require']}"
+                                                placeholder="#{lang['mn.stock.handover.staff.recieve.placeholder']}">
+                                </cbs:inputStaff>
+                            </div>
+                            <div class="Container50 Responsive50">
+                                <cbs:inputStaff value="#{stockHandoverController.staffInfoTagOwnerRecieve}"
+                                                id="staffInfoTagOwnerRecieve"
+                                                methodName="receiveStaffOwnerRecieve"
+                                                clearMethodName="clearStaffOwnerRecieve"
+                                                update="@this"
+                                                limit="#{stockHandoverController.limitAutoComplete}"
+                                                label="#{lang['mn.stock.handover.staff.owner.recieve']}"
+                                                require="true"
+                                                forceSelection="false"
+                                                classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                classDivInput="Container60 Responsive50 ui-fluid"
+                                                requiredMessage="#{lang['mn.stock.handover.staff.owner.recieve.require']}"
+                                                placeholder="#{lang['mn.stock.handover.staff.owner.recieve.placeholder']}">
+                                </cbs:inputStaff>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-10">
+                            <div class="Container100 Responsive100">
+                                <div class="Container20 mg-left-15 Responsive25 pd-top-4">
+                                    <p:outputLabel styleClass="lb-sentinel" for="ipOrderNote"
+                                                   value="#{lang['export.order.note']}"/>
+                                </div>
+                                <div class="Container80 Responsive75 ui-fluid">
+                                    <p:inputText value="#{stockHandoverController.stockDeliverSearchDTO.note}"
+                                                 placeholder="#{lang['export.order.note.placehoder']}"
+                                                 id="ipOrderNote"
+                                                 maxlength="100"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent TexAlCenter">
+                        <p:commandButton id="btnView"
+                                         value="#{lang['mn.stock.handover.view.stock']}"
+                                         process="@this"
+                                         update="@([id$=pnlListStock])"
+                                         actionListener="#{stockHandoverController.viewStock}"/>
+                        <p:commandButton value="#{lang['reset.selected']}"
+                                         process="@this"
+                                         styleClass="mg-left-5"
+                                         action="#{stockHandoverController.doReset}"
+                                         update="@form"/>
+                        <p:commandButton value="#{lang['common.back.page']}"
+                                         process="@this" styleClass="mg-left-5"
+                                         action="#{stockHandoverController.doComeBack}"
+                                         resetValues="true"
+                                         update="@form"/>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ContainerIndent" id="pnlListStock">
+                    <cbs:panel classForToggle="pnlListStock"
+                               titleHeader="#{lang['export.order.view.list.product']}"/>
+
+                    <div class="pnlListStock Container100" style="margin-bottom: 10px;margin-top: 10px;">
+                        <p:outputPanel styleClass="ContainerIndent mg-top-0">
+                            <p:dataTable
+                                    id="tblProduct"
+                                    var="item"
+                                    resizableColumns="true"
+                                    rowIndexVar="index"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="100"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.empty.records']}"
+                                    value="#{stockHandoverController.lstStockDeliverDetailDTOs}">
+                                <p:column headerText="#{lang['common.stt']}" style="width: 6%;"
+                                          styleClass="col-left">
+                                    <h:outputLabel value="#{index + 1}" styleClass="lb-sentinel-bold"
+                                                   title="#{index + 1}"/>
+                                </p:column>
+                                <p:column styleClass="col-left" style="width: 20%;">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['agent.sale.table.productOffering.code']}"
+                                                      title="#{lang['agent.sale.table.productOffering.code']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{item.productCode}"
+                                                   title="#{item.productCode}"/>
+                                </p:column>
+                                <p:column styleClass="col-left" sortBy="#{item.productName}" style="width: 25%;">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['export.order.name.product']}"
+                                                      title="#{lang['export.order.name.product']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{item.productName}"
+                                                   title="#{item.productName}"/>
+                                </p:column>
+                                <p:column styleClass="col-left" sortBy="#{item.stateName}" style="width: 15%;">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['common.status']}"
+                                                      title="#{lang['common.status']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{item.stateName}"
+                                                   title="#{item.stateName}"/>
+                                </p:column>
+                                <p:column styleClass="TexAlRight" sortBy="#{item.quantitySys}" style="width: 10%;">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['mn.stock.handover.view.quantity.sys']}"
+                                                      title="#{lang['mn.stock.handover.view.quantity.sys']}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.quantitySys}"
+                                                  title="#{item.quantitySys}"
+                                                  converter="currencyFormat"
+                                                  escape="true"/>
+                                </p:column>
+                                <p:column style="width: 10%;" styleClass="col-right ">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['mn.stock.handover.view.quantity.real']}"
+                                                      title="#{lang['mn.stock.handover.view.quantity.real']}"/>
+                                    </f:facet>
+                                    <pe:inputNumber value="#{item.quantityReal}" id="productOfferNumber"
+                                                    decimalPlaces="0" maxValue="99999999999999999999"
+                                                    maxlength="20"
+                                                    styleClass="txtNumber#{index} TexAlRight">
+                                    </pe:inputNumber>
+                                    <pe:keyFilter for="productOfferNumber" regEx="/[0-9]+/i"
+                                                  preventPaste="true"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel id="pnlOffice" styleClass="Container100">
+                    <p:outputPanel styleClass="Container100">
+                        <cbs:inputSignOffice value="#{stockHandoverController.writeOfficeTag}"
+                                             title="#{lang['export.order.view.office']}"
+                                             idComponent="writeOfficeExport"/>
+                    </p:outputPanel>
+                </p:outputPanel>
+
+                <div class="ContainerIndent TexAlCenter">
+                    <cbs:confirmDialog
+                            id="btnDeliver"
+                            idComponent="btnDeliver"
+                            titleButton="#{lang['mn.stock.handover.btnDeliver']}"
+                            valueButton="#{lang['mn.stock.handover.btnDeliver']}"
+                            headerConfirm="#{lang['mn.stock.handover.btnDeliver.header']}"
+                            messageConfirm="#{lang['mn.stock.handover.btnDeliver.confirm']}"
+                            actionOK="#{stockHandoverController.doDeliver}"
+                            resetValueButton="false"
+                            process="@this, @([id$=pnlOffice]),@([id$=pnlInforStockHandover]),@([id$=pnlListStock])"
+                            updateArea="@form"
+                            updateOK="@form"
+                            isButton="true"
+                            disableButton="#{stockHandoverController.haveDeliver}"
+                            actionValidate="#{stockHandoverController.doDeliverValidate}"
+                            oncompleteOK=""
+                            focusCancel="false"/>
+                </div>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

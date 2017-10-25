@@ -1,0 +1,189 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:pe="http://primefaces.org/ui/extensions">
+    <h:form id="frmAddBras" styleClass="Container100">
+        <p:outputPanel id="pnlAddApn" styleClass="Container100">
+            <p:focus for="pnlAddApn"/>
+
+            <p:messages id="messagesAdd" showSummary="false" showDetail="true" closable="true"/>
+
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel apnCodeTxt"
+                                       value="#{lang['mn.import.apn.code']}"
+                                       for="apnCodeTxt"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:inputText id="apnCodeTxt"
+                                     styleClass="apnCodeTxt"
+                                     maxlength="50"
+                                     onchange="this.value=this.value.trim()"
+                                     required="true"
+                                     disabled="#{importApnController.isEdit}"
+                                     title="#{importApnController.inputAPNAdd.apnCode}"
+                                     requiredMessage="#{lang['mn.import.apn.code.require']}"
+                                     placeholder="#{lang['mn.import.apn.code.holder']}"
+                                     value="#{importApnController.inputAPNAdd.apnCode}">
+                            <pe:keyFilter regEx="/[a-zA-Z0-9_.]/i"/>
+                        </p:inputText>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel apnNameTxt"
+                                       value="#{lang['mn.import.apn.name']}"
+                                       for="apnCodeTxt"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:inputText id="apnNameTxt"
+                                     styleClass="apnNameTxt"
+                                     required="true"
+                                     maxlength="100"
+                                     title="#{importApnController.inputAPNAdd.apnName}"
+                                     onchange="this.value=this.value.trim()"
+                                     requiredMessage="#{lang['mn.import.apn.name.require']}"
+                                     placeholder="#{lang['mn.import.apn.name.holder']}"
+                                     value="#{importApnController.inputAPNAdd.apnName}">
+                            <pe:keyFilter regEx="/[a-zA-Z0-9_\.\-*?\s/]/i" preventPaste="false"/>
+                        </p:inputText>
+                    </div>
+                </div>
+
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['common.status']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 mg-left-15 pd-top-7">
+                        <!--<p:selectOneMenu value="#{importApnController.inputAPNAdd.status}"-->
+                        <!--disabled="#{importApnController.isEdit!= true}"-->
+                        <!-->-->
+                        <!--<f:selectItem itemValue="1"-->
+                        <!--itemLabel="#{lang['list.import.apn.status.renew']}"/>-->
+                        <!--<f:selectItem itemValue="0"-->
+                        <!--itemLabel="#{lang['list.import.apn.status.used']}"/>-->
+                        <!--</p:selectOneMenu>-->
+                        <p:outputLabel
+                                value="#{lang['list.import.apn.status.renew']}"
+                                rendered="#{importApnController.inputAPNAdd.status eq '1'}"
+                                />
+                        <p:outputLabel
+                                value="#{lang['list.import.apn.status.used']}"
+                                rendered="#{importApnController.inputAPNAdd.status eq '0'}"
+                                />
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel centerCode"
+                                       value="#{lang['mn.import.apn.center.code']}"
+                                       for="centerCode"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:inputText id="centerCode"
+                                     styleClass="centerCode"
+                                     maxlength="50"
+                                     required="true"
+                                     title="#{importApnController.inputAPNAdd.centerCode}"
+                                     onchange="this.value=this.value.trim()"
+                                     requiredMessage="#{lang['mn.import.apn.center.code.require']}"
+                                     placeholder="#{lang['mn.import.apn.center.code.holder']}"
+                                     value="#{importApnController.inputAPNAdd.centerCode}"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel decscription"
+                                       value="#{lang['mn.import.apn.description']}"
+                                       for="decscription"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:inputText id="decscription"
+                                     styleClass="decscription"
+                                     onchange="this.value=this.value.trim()"
+                                     maxlength="500"
+                                     title="#{importApnController.inputAPNAdd.description}"
+                                     placeholder="#{lang['mn.import.apn.description.holder']}"
+                                     value="#{importApnController.inputAPNAdd.description}"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive"/>
+            </div>
+            <div class="Container100 TexAlCenter">
+                <p:outputPanel rendered="#{not importApnController.isEdit}">
+                    <cbs:confirmDialog
+                            idComponent="btnConfirm"
+                            valueButton="#{lang['common.add']}"
+                            headerConfirm="#{lang['common.confirm']}"
+                            messageConfirm="#{lang['mn.import.apn.create.msg']} #{importApnController.inputAPNAdd.apnCode} ?"
+                            actionOK="#{importApnController.doAddApn(false)}"
+                            resetValueButton="true"
+                            process="@this, @([id$=pnlAddApn])"
+                            updateArea="@([id$=pnlAddApn])"
+                            processOK="@([id$=pnlAddApn])"
+                            updateOK="@([id$=pnlAddApn]),@([id$=pnLstAPN])"
+                            actionValidate="#{importApnController.doValidate()}"
+                            focusCancel="false"
+                            isButton="true"
+                            />
+                    <!--<cbs:confirmButton-->
+                    <!--dlgWidgetVar="confirm"-->
+                    <!--appendTo="@(body)"-->
+                    <!--valueButton="#{lang['common.add']}"-->
+                    <!--headerConfirm="#{lang['common.confirm']}"-->
+                    <!--messageConfirm="#{lang['mn.import.apn.create.msg']} #{importApnController.inputAPNAdd.apnCode} ?"-->
+                    <!--action="#{importApnController.doAddApn(false)}"-->
+                    <!--resetValueButton="true"-->
+                    <!--process="@this, @form, @([id$=pnlAddApn])"-->
+                    <!--updateArea="@([id$=pnlAddApn]),@([id$=pnLstAPN])"-->
+                    <!--actionValidate="#{importApnController.doValidate()}"-->
+                    <!--focusCancel="false"-->
+                    <!--isButton="true"-->
+                    <!--&gt;</cbs:confirmButton>-->
+                    <cbs:confirmDialog
+                            idComponent="btnConfirmAddClose"
+                            valueButton="#{lang['common.add.close']}"
+                            headerConfirm="#{lang['common.confirm']}"
+                            messageConfirm="#{lang['mn.import.apn.create.msg']} #{importApnController.inputAPNAdd.apnCode} ?"
+                            actionOK="#{importApnController.doAddApn(false)}"
+                            resetValueButton="false"
+                            process="@this, @([id$=pnlAddApn])"
+                            updateArea="@([id$=pnlAddApn])"
+                            processOK="@([id$=pnlAddApn])"
+                            updateOK="@([id$=messages]),@([id$=pnLstAPN])"
+                            oncompleteOK="if(!args.validationFailed) {PF('dlgAddEditApn').hide();}"
+                            actionValidate="#{importApnController.doValidate()}"
+                            focusCancel="false"
+                            isButton="true"
+                            />
+                </p:outputPanel>
+                <p:outputPanel rendered="#{importApnController.isEdit}">
+                    <cbs:confirmDialog
+                            idComponent="btnConfirmAddClose"
+                            valueButton="#{lang['common.edit']}"
+                            headerConfirm="#{lang['common.confirm']}"
+                            messageConfirm="#{lang['mn.invoice.invoiceType.msg.edit.confirm']}"
+                            actionOK="#{importApnController.doAddApn(true)}"
+                            resetValueButton="false"
+                            process="@([id$=pnlAddApn])"
+                            updateArea="@([id$=pnlAddApn]),@([id$=messagesAdd])"
+                            processOK="@([id$=pnlAddApn])"
+                            updateOK="@([id$=messages]),@([id$=pnLstAPN]),@([id$=pnlAddApn]),@([id$=apnInfo]) "
+                            oncompleteOK="if(!args.validationFailed) {PF('dlgAddEditApn').hide();}"
+                            actionValidate="#{importApnController.doValidate()}"
+                            focusCancel="false"
+                            isButton="true"
+                            />
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition>
+            <c:forEach var="item" items="#{loginBean.authoLstCache}" varStatus="stt">
+                <c:if test="${empty item.childObjects}">    
+                    <p:button id="dynaButton-#{stt.count}" value="#{item.objectName}" styleClass="menu-button" href="#{item.objectUrl}" /> 
+                </c:if>
+                <c:if test="${not empty item.childObjects}">
+                    <p:commandButton id="dynaButton-#{stt.count}" value="#{item.objectName}" type="button" styleClass="menu-button" /> 
+                    <p:tieredMenu overlay="true" trigger="dynaButton-#{stt.count}" my="right bottom" at="left bottom">  
+                        <c:forEach var="item2" items ="#{item.childObjects}" >        				 
+                            <c:if test="${not empty item2.childObjects}">
+                                <p:submenu label="#{item2.objectName}" >
+                                    <c:forEach var="item3" items="#{item2.childObjects}" varStatus="status">
+                                        <p:menuitem value="#{item3.objectName}" update="@([id$=bodyForm]):bodyContent" url="#{item3.objectUrl}" process="@this" global="true" onstart="PF('statusDialog').show();"  oncomplete="PF('statusDialog').hide()">
+                                        </p:menuitem>
+                                        <p:separator/>
+                                    </c:forEach>
+                                </p:submenu>
+                            </c:if>	       	
+                            <c:if test="${empty item2.childObjects}">
+                                <p:menuitem  value="#{item2.objectName}" update="@([id$=bodyForm]):bodyContent" url="#{item2.objectUrl}" global="true" process="@this" onstart="PF('statusDialog').show();"  oncomplete="PF('statusDialog').hide()">
+                                </p:menuitem>
+                                <p:separator/>
+                            </c:if>				
+                        </c:forEach>
+                    </p:tieredMenu>
+                </c:if>
+                <br/>
+            </c:forEach>
+
+            
+            <script>
+                jQuery(function() {
+                var url = window.location.href;
+                var pattern = url.substring(url.lastIndexOf("/") + 1);
+                var pat = new RegExp(pattern, "g");
+                jQuery("#menuForm button").each(function() {
+                    if (pat.test(jQuery(this).attr("onclick")))
+                    {
+                        jQuery(this).addClass("menuHightlight");
+                    }
+                });
+            });
+            </script>
+    </ui:composition>
+</html>
+
+

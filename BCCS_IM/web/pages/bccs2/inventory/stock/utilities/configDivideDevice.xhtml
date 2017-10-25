@@ -1,0 +1,451 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.utilities.config.divide.device']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.utilities.config.divide.device']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmConfigDivideDevice">
+            <p:tabView id="numberTabView" dynamic="true" styleClass="abc"
+                       tabindex="#{deviceConfigController.tabIndex}">
+                <p:ajax event="tabChange" resetValues="true"
+                        listener="#{deviceConfigController.onTabChange}"
+                        update="@([id$=msgExportFile]), @([id$=msgConfigDivideDevice]), @([id$=tab1]), @([id$=tab2])"/>
+                <p:tab id="tabInput" title="#{lang['im.number.assign.status.by.normal']}">
+                    <p:outputPanel id="pnConfigDivideDevice" styleClass="Container">
+                    <div class="ContainerIndent">
+                        <p:messages id="msgConfigDivideDevice" showSummary="false" showDetail="true" closable="true"/>
+                    </div>
+                    <p:remoteCommand name="updateControls" update="@form" process="@this"/>
+                    <!--Start vung tra cuu-->
+                    <p:outputPanel styleClass="Container100" id="pnlConfigDivideDeviceInfor">
+                        <div class="ContainerIndent mg-top-0">
+                            <cbs:panel classForToggle="pnInputSearch"
+                                       titleHeader="#{lang['mn.stock.limit.info.range.time.promotion']}" toggle="true"/>
+
+                            <div class="Container100 pnInputSearch pd-top-10">
+
+                                <div class="ContainerIndent ">
+                                    <div class="Container33 Responsive50">
+                                        <div class="Container33 Responsive ui-fluid mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel" for="txtName"
+                                                           value="#{lang['type.product']}"/>
+                                        </div>
+                                        <div class="Container66 Responsive ui-fluid">
+                                            <p:inputText id="txtName"
+                                                         disabled="true"
+                                                         value="#{lang['deviceConfig.mobile']}"/>
+                                        </div>
+                                    </div>
+                                    <p:outputPanel styleClass="Container33 Responsive50" id="pnProduct">
+                                        <div class="Container33 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel value="#{lang['create.order.file.stock.model']}"
+                                                           for="productOfferTotal" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container66 Responsive50 ui-fluid ui-relative">
+                                            <p:autoComplete id="productOfferTotal"
+                                                            value="#{deviceConfigController.productOfferingTotalNewDTO}"
+                                                            forceSelection="true"
+                                                            completeMethod="#{deviceConfigController.doChangeOfferingNew}"
+                                                            placeholder="#{lang['view.warehouse.product.info.holder']}"
+                                                            onfocus="this.setSelectionRange(0, this.value.length)"
+                                                            var="productOfferingTotalNewDTO"
+                                                            maxResults="100"
+                                                            styleClass="ignore-confirm"
+                                                            inputStyleClass="ignore-confirm"
+                                                            itemLabel="#{productOfferingTotalNewDTO.itemLabel}"
+                                                            itemValue="#{productOfferingTotalNewDTO}"
+                                                            required="false"
+                                                            requiredMessage="#{lang['export.order.stock.inputText.require.msg']}"
+                                                            maxlength="100" scrollHeight="300">
+                                                <o:converter converterId="productOfferingConverter"
+                                                             list="#{deviceConfigController.lsProductOfferingTotalNewDTO}"/>
+                                                <p:ajax event="itemSelect" listener="#{deviceConfigController.receiveProduct}"
+                                                        update="@([id$=pnProduct])" process="@this"/>
+                                                <p:column headerText="#{lang['common.lb.code']}"><h:outputText escape="true"
+                                                                                                               value="#{productOfferingTotalNewDTO.code}"/></p:column>
+                                                <p:column headerText="#{lang['common.lb.name']}"><h:outputText escape="true"
+                                                                                                               value="#{productOfferingTotalNewDTO.name}"/></p:column>
+                                                <p:ajax event="query" global="false"/>
+                                            </p:autoComplete>
+                                            <p:commandLink styleClass="ui-link-right"
+                                                           update="@([id$=pnProduct])"
+                                                           actionListener="#{deviceConfigController.resetProduct}"
+                                                           process="@this">
+                                                <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                            </p:commandLink>
+                                            <p:message for="productOfferTotal"/>
+                                        </div>
+                                    </p:outputPanel>
+                                    <div class="Container33 Responsive50">
+                                        <div class="Container33 Responsive ui-fluid mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel" for="txtName"
+                                                           value="#{lang['deviceConfig.status']}"/>
+                                        </div>
+                                        <div class="Container66 Responsive ui-fluid">
+                                            <p:selectOneMenu id="cbxTypeInput"
+                                                              value="#{deviceConfigController.inputSearch.stateId}">
+                                                <f:selectItem itemLabel="#{lang['common.selectOneMenu.select']}"
+                                                              itemValue="#{null}"/>
+                                                <f:selectItems value="#{deviceConfigController.lsProductStatus}"
+                                                               itemLabel="#{status.name}" var="status"
+                                                               itemValue="#{status.value}"/>
+                                                <f:converter converterId="javax.faces.Long"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="Container100 TexAlCenter pd-top-10">
+                                    <p:commandButton value="#{lang['create.note.search']}"
+                                                     actionListener="#{deviceConfigController.searchDeviceConfig}"
+                                                     update="@([id$=lstDeviceConfig]),@([id$=msgConfigDivideDevice])"
+                                                     resetValues="true"
+                                                     process="@this,@([id$=pnlConfigDivideDeviceInfor])"/>
+                                    <p:commandButton value="#{lang['common.reset']}" styleClass="mrg-left-5"
+                                                     actionListener="#{deviceConfigController.resetForm}"
+                                                     update="@form"
+                                                     immediate="true"
+                                                     resetValues="true"
+                                                     process="@this"/>
+
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung tra cuu-->
+                    <!--Start vung lap yeu cau-->
+                    <p:outputPanel styleClass="Container100" id="pnlDeviceConfigList">
+                        <div class="ContainerIndent mg-top-0">
+                            <cbs:panel classForToggle="pnViewExport" titleHeader="#{lang['deviceConfig.list.deviceConfig']}"
+                                       toggle="false"/>
+
+                            <div class="pnViewExport ContainerIndent">
+                                <div class="Container TexAlLeft">
+                                    <p:commandLink value="#{lang['mn.stock.limit.createNew']}"
+                                                   styleClass="fa icon-plus Fs14 blue md-link"
+                                                   oncomplete="PF('dlgAddDeviceConfig').show();"
+                                                   update="dlgAddDeviceConfig,@([id$=msgConfigDivideDevice])" resetValues="false"
+                                                   actionListener="#{deviceConfigController.preAddDeviceConfig}"
+                                                   process="@this">
+                                        <f:setPropertyActionListener value="#{true}" target="#{deviceConfigController.create}" />
+                                    </p:commandLink>
+                                    <cbs:confirmDialog
+                                            idComponent="btnDelete"
+                                            valueButton="#{lang['common.delete']}"
+                                            headerConfirm="#{lang['mn.stock.limit.financeType.header.delete']}"
+                                            messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                            actionOK="#{deviceConfigController.deleteSelection}"
+                                            resetValueButton="true"
+                                            actionValidate="#{deviceConfigController.preToDelete}"
+                                            process="@this,@([id$=lstDeviceConfig])"
+                                            updateArea="@([id$=frmConfigDivideDevice])"
+                                            updateOK="@([id$=frmConfigDivideDevice])"
+                                            styleClassButton="fa icon-trash Fs14 blue md-link mg-left-5"
+                                            focusCancel="true"
+                                            isButton="false"/>
+                                </div>
+                                <div class="Container">
+                                    <p:dataTable
+                                            id="lstDeviceConfig"
+                                            var="deviceConfig"
+                                            value="#{deviceConfigController.lstDeviceConfig}"
+                                            rowIndexVar="index"
+                                            rowKey="#{deviceConfigController.getRowKey(deviceConfig)}"
+                                            selection="#{deviceConfigController.lstDeviceConfigSelection}"
+                                            resizableColumns="true"
+                                            paginator="#{lang['common.paging.paginator']}"
+                                            rows="#{lang['common.paging.rows.default']}"
+                                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                            emptyMessage="#{lang['common.empty.records']}">
+                                        <p:column selectionMode="multiple" styleClass="width5 TexAlCenter"/>
+
+                                        <p:column headerText="#{lang['deviceConfig.product.type']}"
+                                                  sortBy="#{deviceConfig.offerTypeName}">
+                                            <p:outputLabel
+                                                    value="#{deviceConfig.offerTypeName}"
+                                                    title="#{deviceConfig.offerTypeName}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['deviceConfig.product']}"
+                                                  sortBy="#{deviceConfig.productOfferName}">
+                                            <p:outputLabel
+                                                    value="#{deviceConfigController.getNameAndCodeDeviceConfig(deviceConfig)}"
+                                                    title="#{deviceConfigController.getNameAndCodeDeviceConfig(deviceConfig)}"/>
+                                        </p:column>
+
+                                        <p:column headerText="#{lang['deviceConfig.status']}"
+                                                  sortBy="#{deviceConfig.stateName}">
+                                            <p:outputLabel value="#{deviceConfig.stateName}"
+                                                           title="#{deviceConfig.stateName}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['deviceConfig.preview.edit.delete']}" style="width: 15%;"
+                                                  styleClass="col-left">
+                                            <p:commandLink styleClass="fa icon-zoom-in Fs16 blue icon-link"
+                                                           resetValues="true"
+                                                           update="dlgAddDeviceConfig, @form" process="@this"
+                                                           title="#{lang['common.view.detail.trans']}"
+                                                           oncomplete="if(!args.validationFailed) {PF('dlgAddDeviceConfig').show();}"
+                                                           action="#{deviceConfigController.preToUpdate(index)}">
+                                                <f:setPropertyActionListener value="#{true}" target="#{deviceConfigController.preview}" />
+                                            </p:commandLink>
+                                            <p:commandLink styleClass="fa  icon-edit Fs14 blue icon-link"
+                                                           style="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                                           oncomplete="if(!args.validationFailed) {PF('dlgAddDeviceConfig').show();}"
+                                                           title="#{lang['common.edit.record']}"
+                                                           update="dlgAddDeviceConfig,@([id$=msgConfigDivideDevice])"
+                                                           actionListener="#{deviceConfigController.preToUpdate(index)}"
+                                                           process="@this">
+                                                <f:setPropertyActionListener value="#{false}" target="#{deviceConfigController.create}" />
+                                            </p:commandLink>
+                                            <cbs:confirmDialog
+                                                    idComponent="btnDeleteOnePackageGoods#{deviceConfigController.getRowKey(deviceConfig)}"
+                                                    valueButton=""
+                                                    headerConfirm="#{lang['common.confirm']}"
+                                                    messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                                    actionValidate="#{deviceConfigController.actionSetIndexDelete(index)}"
+                                                    actionOK="#{deviceConfigController.deleteOne}"
+                                                    resetValueButton="true"
+                                                    process="@this"
+                                                    titleButton="#{lang['common.delete']}"
+                                                    updateArea="@this,@([id$=msgConfigDivideDevice])"
+                                                    updateOK="@([id$=lstDeviceConfig]),@([id$=msgConfigDivideDevice])"
+                                                    styleClassButton="fa icon-trash Fs14 blue #{deviceConfigController.getRowKey(deviceConfig)}"
+                                                    styleButton="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                                    focusCancel="true"
+                                                    oncompleteOK=""
+                                                    isButton="false"
+                                            />
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung lap yeu cau-->
+                </p:outputPanel>
+                </p:tab>
+                <p:tab id="tabFile" title="#{lang['im.number.assign.status.by.file']}">
+                    <p:outputPanel id="tab2" styleClass="Container100">
+                        <div class="ContainerIndent mg-top-10 mg-bottom-0 msgExportFile ">
+                            <p:messages id="msgExportFile" showSummary="false" showDetail="true" closable="true"/>
+                            <p:outputPanel id="pnImport" styleClass="">
+                                <cbs:panel classForToggle="panelInforRequest" toggle="true"
+                                           titleHeader="#{lang['deviceConfig.config.file']}"/>
+
+                                <div class="Container panelInforRequest" style="margin-bottom: 10px;margin-top: 10px;">
+                                    <div class="ContainerIndent">
+                                        <p:outputPanel styleClass="Container33 Responsive" id="divFileName">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7"
+                                                 style="margin-top: 20px">
+                                                <p:outputLabel styleClass="lb-sentinel" for="outputAttachFile"
+                                                               value="#{lang['attach.file']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid" style="margin-top: 20px">
+                                                <p:inputText id="outputAttachFile" styleClass="outputAttachFile"
+                                                             maxlength="100"
+                                                             placeholder="#{lang['search.number.range.input.fileName']}"
+                                                             value="#{deviceConfigController.attachFileName}"
+                                                             readonly="true"/>
+                                            </div>
+                                        </p:outputPanel>
+
+                                        <div class="Container33 Responsive">
+                                            <p:fileUpload id="upLoadFile"
+                                                          styleClass="Fleft"
+                                                          label="#{lang['select.file']}"
+                                                          invalidFileMessage="#{lang['mn.stock.limit.importFile.msg.format']}"
+                                                          requiredMessage="#{lang['mn.stock.limit.attachFile.msg.require']}"
+                                                          invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                          fileLimitMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                          update="@([id$=divFileName]), @([id$=lstPreviewFile]), @([id$=btnPreviewFile]),@([id$=pnViewFile]), @([id$=divDownloadFile]),@([id$=msgExportFile]), @([id$=btnSendRequestImportbtn])"
+                                                          dragDropSupport="true" required="true" mode="advanced"
+                                                          auto="true"
+                                                          process="@this"
+                                                          allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                                          sizeLimit="5242880"
+                                                          value="#{deviceConfigController.uploadedFile}"
+                                                          fileUploadListener="#{deviceConfigController.doFileUploadAction}">
+                                            </p:fileUpload>
+                                        </div>
+                                        <p:outputPanel id="divDownloadFile" class="Container33">
+                                            <p:commandLink
+                                                    id="downloadTemplateBtn"
+                                                    value="#{lang['mn.stock.status.isdn.update.status.file_template']}"
+                                                    title="#{lang['create.note.download.file.title']}"
+                                                    ajax="false"
+                                                    immediate="true">
+                                                <p:fileDownload
+                                                        value="#{deviceConfigController.downloadFileTemplate()}"/>
+                                            </p:commandLink>
+                                            <!--<p:commandLink
+                                                    id="downloadErrBtn" styleClass="mg-left-5" process="@this"
+                                                    value="#{lang['mn.stock.status.isdn.update.status.file_error']}"
+                                                    rendered="#{createOrderDivideDeviceController.hasFileError}"
+                                                    title="#{lang['create.note.download.file.title']}"
+                                                    ajax="false"
+                                                    immediate="true" style="color: #e90c45!important;">
+                                                <p:fileDownload
+                                                        value="#{createOrderDivideDeviceController.downloadFileError()}"/>
+                                            </p:commandLink>-->
+                                            <p:commandLink
+                                                    id="downloadErrBtn" styleClass="mg-left-5" process="@this"
+                                                    value="#{lang['mn.stock.status.isdn.update.status.file_error']}"
+                                                    rendered="#{deviceConfigController.showDownResult}"
+                                                    title="#{lang['create.note.download.file.title']}"
+                                                    ajax="false"
+                                                    immediate="true" style="color: #e90c45!important;">
+                                                <p:fileDownload
+                                                        value="#{deviceConfigController.prepareDownloadFileResult()}"/>
+                                            </p:commandLink>
+                                            <!--<p:outputPanel id="downloadErrFile">
+                                                <p:commandLink
+                                                        styleClass="mg-left-5" style="color: #e90c45!important;"
+                                                        value="#{lang['mn.stock.status.isdn.update.status.file_error']}"
+                                                        rendered="#{createOrderDivideDeviceController.showDownResult}"
+                                                        title="#{lang['mn.stock.status.isdn.update.status.file_error']}"
+                                                        actionListener="#{createOrderDivideDeviceController.prepareDownloadFileResult}"
+                                                        ajax="false"
+                                                        immediate="true">
+                                                    <p:fileDownload
+                                                            value="#{createOrderDivideDeviceController.resultImportFile}"/>
+                                                </p:commandLink>
+                                            </p:outputPanel>-->
+                                        </p:outputPanel>
+                                        <p:outputPanel styleClass="ContainerIndent TexAlCenter" id="pnViewFile">
+                                            <!--<p:commandButton value="#{lang['see.previous']}"
+                                                             process="@this, @([id$=logicstic]),@([id$=tranfer])"
+                                                             update="@this, @([id$=pnLstField]),@([id$=pnUnderExportOrderFile]),@([id$=msgExportFile])"
+                                                             disabled="#{!createOrderDivideDeviceController.selectedFile}"
+                                                             actionListener="#{createOrderDivideDeviceController.doPreviewField}"/>-->
+                                            <!--<cbs:confirmDialog
+                                                    idComponent="submitOrderFile"
+                                                    id="submitOrderFile"
+                                                    valueButton="#{!underExportOrderController.showAutoOrderNote ? lang['export.order.btn.submit'] : lang['export.order.btn.submit.field']}(F8)"
+                                                    headerConfirm="#{lang['export.order.btn.submit.header.confirm']}"
+                                                    messageConfirm="#{lang['export.order.btn.submit.header.confirm.msg']}"
+                                                    actionOK="#{createOrderDivideDeviceController.doCreateUnderlyingOrderByFile}"
+                                                    disableButton="#{!createOrderDivideDeviceController.showCreateOrder}"
+                                                    resetValueButton="false"
+                                                    styleClassButton="mg-left-5"
+                                                    process="@this,@([id$=pnExportOfficeFile])"
+                                                    updateArea="@this,@([id$=pnExportOfficeFile])"
+                                                    updateOK="@form"
+                                                    actionValidate="#{createOrderDivideDeviceController.doValdiateCreateUnderlyingOrderByFile}"
+                                                    focusCancel="false"
+                                                    oncompleteOK=""
+                                                    isButton="true"
+                                            />-->
+                                        </p:outputPanel>
+                                    </div>
+                                </div>
+                            </p:outputPanel>
+                            <p:outputPanel id="pnLstProduct" styleClass="">
+                                <cbs:panel classForToggle="panelInforRequest" toggle="true"
+                                           titleHeader="#{lang['deviceConfig.config.file.item']}"/>
+
+                                <div class="Container panelInforRequest" style="margin-bottom: 10px;margin-top: 10px;">
+                                    <div class="ContainerIndent">
+                                        <p:dataTable
+                                                id="lstPreviewFile"
+                                                var="preview"
+                                                value="#{deviceConfigController.previewFileClone}"
+                                                rowIndexVar="index"
+                                                rowKey="#{index}"
+                                                resizableColumns="true"
+                                                paginator="#{lang['common.paging.paginator']}"
+                                                rows="#{lang['common.paging.rows.default']}"
+                                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                                emptyMessage="#{lang['common.empty.records']}">
+
+                                            <p:column headerText="#{lang['order.divide.product.code']}"
+                                                      sortBy="#{preview.productCode}">
+                                                <p:outputLabel
+                                                        value="#{preview.productCode}"
+                                                        title="#{preview.productCode}"/>
+                                            </p:column>
+                                            <p:column headerText="#{lang['order.divide.product.status']}"
+                                                      sortBy="#{preview.status}">
+                                                <p:outputLabel
+                                                        value="#{preview.status}"
+                                                        title="#{preview.status}"/>
+                                            </p:column>
+                                            <p:column headerText="#{lang['deviceConfig.item.code']}"
+                                                      sortBy="#{preview.serial}">
+                                                <p:outputLabel
+                                                        value="#{preview.serial}"
+                                                        title="#{preview.serial}"/>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </div>
+                                </div>
+                            </p:outputPanel>
+                            <!--Start Vung data button-->
+                            <div class="Container">
+                                <div class="ContainerIndent TexAlCenter mg-top-0">
+                                    <p:commandButton value="#{lang['see.previous']}"
+                                                     process="@this"
+                                                     actionListener="#{deviceConfigController.doShowPreview}"
+                                                     id="btnPreviewFile"
+                                                     update="@([id$=lstPreviewFile])"
+                                                     disabled="#{!deviceConfigController.showPreview}"/>
+                                    <cbs:confirmDialog
+                                            idComponent="btnSendRequestImport"
+                                            disableButton="#{deviceConfigController.disableConfigDevice}"
+                                            id="btnSendRequestImport"
+                                            valueButton="#{lang['deviceConfig.create.import']}"
+                                            headerConfirm="#{lang['deviceConfig.header.confirm.import']}"
+                                            messageConfirm="#{lang['deviceConfig.msg.confirm.import']}"
+                                            actionOK="#{deviceConfigController.doImportConfigDevice}"
+                                            resetValueButton="false"
+                                            process="@this"
+                                            updateArea="@form"
+                                            styleClassButton="mg-left-5"
+                                            updateOK="@form"
+                                            focusCancel="false"
+                                            oncompleteOK=""
+                                            isButton="true"
+                                    />
+                                    <p:commandButton value="#{lang['reset.selected']}"
+                                                     process="@this"
+                                                     update="@form"
+                                                     styleClass="mg-left-5"
+                                                     actionListener="#{deviceConfigController.doResetRequestImport}">
+                                    </p:commandButton>
+                                </div>
+                            </div>
+                            <!--End Vung data button-->
+                        </div>
+                    </p:outputPanel>
+                </p:tab>
+            </p:tabView>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="top"
+                  id="dlgAddDeviceConfig"
+                  widgetVar="dlgAddDeviceConfig"
+                  header="#{deviceConfigController.dlgHeader}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="60%">
+            <ui:include src="dlgDeviceConfig.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

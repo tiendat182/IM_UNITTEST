@@ -1,0 +1,294 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['import.stock.from.partner.to.branch']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmImportPartner">
+            <p:focus for="inputRequestCodeForSearch"/>
+            <!--Start vung duyet yc nhap kho tu chi nhanh -->
+            <p:outputPanel id="pnlImportPartner" styleClass="Container100">
+                <div class="ContainerIndent">
+                    <p:messages id="msgContainer" showSummary="false" showDetail="true"
+                                closable="true"/>
+                </div>
+                <p:outputPanel class="Container100" rendered="#{!importStockController.renderedDetail}">
+                    <p:outputPanel id="pnlInforRequest" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInforRequest" toggle="true"
+                                   titleHeader="#{lang['mn.stock.limit.info.range.time.promotion']}"/>
+
+                        <div class="Container100 mg-top-10">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50  mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['mn.stock.limit.order.code']}"
+                                                   styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:inputText id="inputRequestCodeForSearch"
+                                                 placeholder="#{lang['mn.stock.limit.order.code.placehoder']}"
+                                                 value="#{importStockController.requestDTO.requestCode}"/>
+                                </div>
+                            </div>
+
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50  mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['mn.invoice.invoiceSerial.unit']}"
+                                                   styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                    <p:outputLabel value="#{importStockController.requestDTO.toOwnerName}"
+                                                   styleClass="lb-sentinel-bold break-word"
+                                                   title="#{importStockController.requestDTO.toOwnerName}"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['mn.stock.partner.text']}"
+                                                   for="cbxPartner" styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:selectOneMenu id="cbxPartner"
+                                                     styleClass="Wid100"
+                                                     filter="true" filterMatchMode="contains"
+                                                     value="#{importStockController.requestDTO.partnerId}">
+                                        <f:selectItem itemValue=""
+                                                      itemLabel="#{lang['mn.stock.partner.text.select']}"/>
+                                        <f:selectItems value="#{importStockController.lstPartnerDTO}"
+                                                       var="partner"
+                                                       itemLabelEscaped="true"
+                                                       itemValue="#{partner.partnerId}"
+                                                       itemLabel="#{partner.partnerName}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Container100 mg-top-10">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['common.status']}" styleClass="lb-sentinel"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:selectOneMenu
+                                            itemLabelEscaped="true"
+                                            value="#{importStockController.requestDTO.status}">
+                                        <f:selectItem itemLabel="#{lang['mn.isdn.status.default']}"
+                                                      noSelectionOption="true"/>
+                                        <f:selectItem itemValue="0"
+                                                      itemLabel="#{lang['import.partner.request.status0']}"/>
+                                        <f:selectItem itemValue="1"
+                                                      itemLabel="#{lang['import.partner.request.status1']}"/>
+                                        <f:selectItem itemValue="2"
+                                                      itemLabel="#{lang['import.partner.request.status2']}"/>
+                                        <f:selectItem itemValue="3"
+                                                      itemLabel="#{lang['import.partner.request.status3']}"/>
+                                    </p:selectOneMenu>
+                                    <p:remoteCommand update="@form" name="updateControls"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50  mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['create.note.from.date']}" styleClass="lb-sentinel"
+                                                   for="fromDate"/>
+                                </div>
+                                <div class="Container60 Responsive50  ui-fluid">
+                                    <p:calendar
+                                            mask="true"
+                                            pattern="#{lang['common.datetime.format']}"
+                                            converterMessage="#{lang['invalid.date.message']}"
+                                            validatorMessage="#{lang['start.date.validate.message']}"
+                                            value="#{importStockController.requestDTO.fromDate}"
+                                            placeholder="#{lang['common.datetime.format']}"
+                                            required="true"
+                                            requiredMessage="#{lang['mn.stock.from.date.not.blank']}"
+                                            styleClass="fromDate"
+                                            id="fromDate">
+                                        <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                    </p:calendar>
+                                    <p:message for="fromDate"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50  mg-left-15 pd-top-7">
+                                    <p:outputLabel value="#{lang['create.note.to.date']}" styleClass="lb-sentinel"
+                                                   for="toDate"/>
+                                </div>
+                                <div class="Container60 Responsive50  ui-fluid">
+                                    <p:calendar
+                                            mask="true"
+                                            pattern="#{lang['common.datetime.format']}"
+                                            converterMessage="#{lang['invalid.date.message']}"
+                                            validatorMessage="#{lang['end.date.validate.message']}"
+                                            value="#{importStockController.requestDTO.toDate}"
+                                            placeholder="#{lang['common.datetime.format']}"
+                                            required="true"
+                                            styleClass="toDate"
+                                            requiredMessage="#{lang['mn.stock.to.date.not.blank']}"
+                                            id="toDate">
+                                        <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                    </p:calendar>
+                                    <p:message for="toDate"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="Container100 TexAlCenter pd-top-10">
+                            <p:commandButton value="#{lang['create.note.search']}"
+                                             process="@form"
+                                             update="@form"
+                                             actionListener="#{importStockController.doSearchRequest()}"/>
+                            <p:commandButton value="#{lang['common.reset']}" styleClass="mg-left-5"
+                                             update="@form" resetValues="true"
+                                             actionListener="#{importStockController.init()}"/>
+                        </div>
+                    </p:outputPanel>
+                    <p:outputPanel id="pnlListRequest" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="pnlListRequest" titleHeader="#{lang['import.partner.list']}"
+                                   toggle="true"></cbs:panel>
+
+                        <div class="Container100 mg-top-10 pnlListRequest">
+                            <p:dataTable
+                                    id="listRequest"
+                                    var="item"
+                                    rowKey=""
+                                    rowIndexVar="index"
+                                    resizableColumns="true"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.emty.records']}"
+                                    value="#{importStockController.listImportPartnerRequestDTOs}">
+                                <p:column styleClass=" TexAlLeft" style="width: 10%">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['mn.invoice.invoiceSerial.unit']}"
+                                                title="#{lang['mn.invoice.invoiceSerial.unit']}"/>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{importStockController.getOwnerCode(item.toOwnerId, 1)}"
+                                            title="#{importStockController.getOwnerCode(item.toOwnerId, 1)}"/>
+                                </p:column>
+                                <p:column styleClass=" TexAlLeft" style="width: 10%" sortBy="#{item.createStaffId}">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['mn.stock.limit.men.order']}"
+                                                title="#{lang['mn.stock.limit.men.order']}"/>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{importStockController.getOwnerCode(item.createStaffId, 2)}"
+                                            title="#{importStockController.getOwnerCode(item.createStaffId, 2)}"/>
+                                </p:column>
+                                <p:column styleClass=" TexAlLeft" style="width: 10%" sortBy="#{item.createDate}">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['mn.stock.limit.order.day']}"
+                                                title="#{lang['mn.stock.limit.order.day']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{item.createDate}"
+                                                   title="#{importStockController.formatDateTime(item.createDate)}">
+                                        <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column styleClass=" TexAlLeft" style="width: 10%" sortBy="#{item.requestCode}">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['mn.stock.limit.order.code']}"
+                                                title="#{lang['mn.stock.limit.order.code']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{item.requestCode}" title="#{item.requestCode}"/>
+                                </p:column>
+                                <p:column styleClass=" TexAlLeft" style="width: 10%" sortBy="#{item.contractCode}">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['mn.stock.branch.contract.code']}"
+                                                title="#{lang['mn.stock.branch.contract.code']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{item.contractCode}" title="#{item.contractCode}"/>
+                                </p:column>
+                                <p:column styleClass=" TexAlLeft" style="width: 8%" sortBy="#{item.status}">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['common.status']}"
+                                                title="#{lang['common.status']}"/>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{importStockController.getDisplayName('import.partner.request.status',item.status)}"
+                                            title="#{importStockController.getDisplayName('import.partner.request.status',item.status)}"/>
+                                </p:column>
+                                <p:column styleClass="TexAlLeft" style="width: 10%" sortBy="#{item.approveStaffId}">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['mn.stock.branch.people.confirm.refuse']}"
+                                                title="#{lang['mn.stock.branch.people.confirm.refuse']}"/>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{importStockController.getOwnerCode(item.approveStaffId, 2)}"
+                                            title="#{importStockController.getOwnerCode(item.approveStaffId, 2)}"/>
+                                </p:column>
+                                <p:column styleClass=" TexAlLeft" style="width: 10%">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['list.order.import.reason.reject']}"
+                                                title="#{lang['list.order.import.reason.reject']}"/>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{item.reason}"
+                                            title="#{item.reason}"/>
+                                </p:column>
+                                <p:column styleClass=" TexAlLeft" style="width: 10%">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['mn.stock.branch.people.import.stock']}"
+                                                title="#{lang['mn.stock.branch.people.import.stock']}"/>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{importStockController.getOwnerCode(item.importStaffId, 2)}"
+                                            title="#{importStockController.getOwnerCode(item.importStaffId, 2)}"/>
+                                </p:column>
+
+                                <p:column styleClass="TexAlCenter" style="width: 10%">
+                                    <f:facet name="header">
+                                        <h:outputText
+                                                value="#{lang['create.note.effect']}"
+                                                title="#{lang['create.note.effect']}"/>
+                                    </f:facet>
+                                    <p:commandLink styleClass="fa icon-attach Fs14  black mg-left-5 mg-right-3"
+                                                   style="text-decoration: none!important;"
+                                                   title="#{item.documentName}"
+                                                   process="@this"
+                                                   ajax="false">
+                                        <p:fileDownload
+                                                value="#{importStockController.downloadAttackFile(item)}"/>
+                                    </p:commandLink>
+
+                                    <p:commandLink styleClass="fa icon-zoom-in Fs14 black mg-left-5"
+                                                   style="text-decoration: none!important;"
+                                                   title="#{lang['mn.stock.above.ImportStock']}"
+                                                   resetValues="true"
+                                                   disabled="#{!(item.status eq 1)}"
+                                                   actionListener="#{importStockController.onDetail(item)}"
+                                                   process="@this"
+                                                   update="@form"/>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung duyet yc nhap kho tu chi nhanh -->
+                </p:outputPanel>
+                <p:outputPanel class="Container100"
+                               rendered="#{importStockController.renderedDetail}">
+                    <ui:include src="sub/infoImportStock.xhtml"/>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

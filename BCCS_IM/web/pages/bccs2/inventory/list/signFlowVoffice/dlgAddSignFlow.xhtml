@@ -1,0 +1,222 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://java.sun.com/jsf/core">
+    <h:form id="frmAddSignFlow">
+        <p:outputPanel id="pnAddSignFlow" styleClass="Containe100">
+            <div class="ContainerIndent mg-top-0">
+                <p:messages id="mesageAdd" showSummary="false" showDetail="true" closable="true"/>
+            </div>
+            <div class="ContainerIndent ">
+                <div class="Container50 Responsive50">
+                    <div class="Container33 Responsive ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="txtNameAdd"
+                                       value="#{lang['signFlow.input.name']}"/>
+                    </div>
+                    <div class="Container66 Responsive ui-fluid">
+                        <p:inputText id="txtNameAdd"
+                                     maxlength="100"
+                                     required="true"
+                                     requiredMessage="#{lang['signFlow.require.name']}"
+                                     onblur="this.value = this.value.trim();"
+                                     placeholder="#{lang['signFlow.name.placeholder']}"
+                                     value="#{signFlowController.addSignFlow.name}"
+                                     title="#{signFlowController.addSignFlow.name}"/>
+                        <pe:keyFilter for="txtNameAdd" preventPaste="false"
+                        regEx="/[a-z0-9A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\._\-+]/i"/>
+                        <p:message for="txtNameAdd"/>
+                    </div>
+                </div>
+                <div class="Container50 Responsive50">
+                    <cbs:inputShop value="#{signFlowController.shopInfoExportTagAdd}"
+                                   idComponent="ipExportShopAdd"
+                                   methodName="exportShopAdd"
+                                   clearMethodName="clearExportShopAdd"
+                                   update="@this"
+                                   limit="#{signFlowController.limitAutoComplete}"
+                                   label="#{lang['signFlow.input.shop']}"
+                                   require="true"
+                                   forceSelection="false"
+                                   classDivLabel="Container33 Responsive mg-left-15 pd-top-4"
+                                   classDivInput="Container66 Responsive ui-fluid pd-top-4"
+                                   placeholder="#{lang['search.number.range.shop.placehoder']}"
+                                   requiredMessage="#{lang['signFlow.require.shopId']}"
+                            >
+                    </cbs:inputShop>
+                </div>
+            </div>
+            <div class="Container100 TexAlCenter marT10">
+                <p:outputPanel rendered="#{signFlowController.addSignFlow.signFlowId != null}" styleClass="Container100 TexAlCenter">
+                    <cbs:confirmDialog
+                            idComponent="btnEdit"
+                            valueButton="#{lang['common.edit.record']}"
+                            headerConfirm="#{lang['mn.stock.limit.financeType.header.edit']}"
+                            messageConfirm="#{lang['common.msg.edit.confirm']}"
+                            actionOK="#{signFlowController.editSignFlowProcess()}"
+                            resetValueButton="true"
+                            process="@([id$=frmAddSignFlow])"
+                            updateArea="@form"
+                            updateOK="@form,@([id$=lstSignFlow]),@([id$=pnlSignFlowInfor])"
+                            oncompleteOK="if(!args.validationFailed) {PF('dlgAddSignFlow').hide();}"
+                            actionValidate="#{signFlowController.doConfirmAdd}"
+                            focusCancel="false"
+                            isButton="true"
+                            />
+                </p:outputPanel>
+                <p:outputPanel rendered="#{signFlowController.addSignFlow.signFlowId == null}" styleClass="Container100 TexAlCenter">
+                    <cbs:confirmDialog
+                            idComponent="btnAdd"
+                            valueButton="#{lang['mn.stock.limit.createNew']}"
+                            headerConfirm="#{lang['mn.stock.limit.financeType.header.add']}"
+                            messageConfirm="#{lang['common.msg.add.confirm']}"
+                            actionOK="#{signFlowController.addSignFlowProcess(false)}"
+                            resetValueButton="true"
+                            process="@([id$=frmAddSignFlow])"
+                            updateArea="@form"
+                            updateOK="@form,@([id$=lstSignFlow]),@([id$=pnlSignFlowInfor])"
+                            oncompleteOK=""
+                            actionValidate="#{signFlowController.doConfirmAdd}"
+                            focusCancel="false"
+                            isButton="true"
+                            />
+                    <cbs:confirmDialog
+                            idComponent="btnAddAndClose"
+                            valueButton="#{lang['common.add.close']}"
+                            headerConfirm="#{lang['mn.stock.limit.financeType.header.add']}"
+                            messageConfirm="#{lang['common.msg.add.confirm']}"
+                            actionOK="#{signFlowController.addSignFlowProcess(true)}"
+                            resetValueButton="true"
+                            process="@([id$=frmAddSignFlow])"
+                            updateArea="@form"
+                            updateOK="@form,@([id$=lstSignFlow]),@([id$=pnlSignFlowInfor])"
+                            oncompleteOK='if(!args.validationFailed) {PF("dlgAddSignFlow").hide();}'
+                            actionValidate="#{signFlowController.doConfirmAdd}"
+                            focusCancel="false"
+                            isButton="true"
+                            />
+                </p:outputPanel>
+            </div>
+            <p:outputPanel id="pnListSignFlowDetail" styleClass="Container mg-top-0">
+                <cbs:panel classForToggle="pnViewOffice" titleHeader="#{lang['signFlow.listSignFlowDetail']}"
+                           toggle="true"/>
+
+                <div class="Container100 pnViewOffice" style="margin-bottom: 10px;margin-top: 10px;">
+                    <div class="Container100">
+                        <p:commandLink value="#{lang['mn.stock.limit.createNew']}"
+                                       styleClass="fa icon-plus Fs14 blue md-link" id="AddNew"
+                                       update="@([id$=tblLsSignflowdetail]),@([id$=mesageAdd])"
+                                       actionListener="#{signFlowController.doAddItem()}"
+                                       process="@this,@([id$=pnListSignflowdetail])">
+                        </p:commandLink>
+                    </div>
+                    <div class="Container100 ui-fluid">
+                        <p:dataTable
+                                id="tblLsSignflowdetail"
+                                sortMode="single"
+                                paginator="false"
+                                rows="100"
+                                style="overflow: auto; height: 300px;"
+                                reflow="false"
+                                emptyMessage="#{lang['common.empty.records']}"
+                                styleClass="Width100" value="#{signFlowController.listAddSignFlowDetail}"
+                                rowIndexVar="index" var="signflowdetail">
+                        <!--<p:dataTable-->
+                                <!--id="tblLsSignflowdetail"-->
+                                <!--sortMode="single"-->
+                                <!--reflow="false"-->
+                                <!--styleClass="Width100" value="#{signFlowController.listAddSignFlowDetail}"-->
+                                <!--rowIndexVar="index" var="signflowdetail"-->
+                                <!--resizableColumns="true"-->
+                                <!--paginator="#{lang['common.paging.paginator']}"-->
+                                <!--rows="#{lang['common.paging.rows.default']}"-->
+                                <!--rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"-->
+                                <!--paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"-->
+                                <!--paginatorPosition="#{lang['common.paging.paginatorPosition']}"-->
+                                <!--paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"-->
+                                <!--currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"-->
+                                <!--emptyMessage="#{lang['common.empty.records']}">-->
+                            <p:column style="width:7%;"
+                                      styleClass="col-left pd-top-6">
+                                <f:facet name="header">
+                                    <h:outputText id="name"
+                                                  value="#{lang['signRoleVoffice.voficeRole.roleName']}"
+                                                  title="#{lang['signRoleVoffice.voficeRole.roleName']}"/>
+                                </f:facet>
+                                <p:selectOneMenu value="#{signflowdetail.vofficeRoleId}"
+                                                 styleClass="Wid100  voficeRole#{index}"
+                                                 filter="true" filterMatchMode="contains">
+                                    <p:ajax event="change" process="@this"
+                                            listener="#{signFlowController.doChangeDetail(indext)}"
+                                            update="@([id$=tblLsSignflowdetail])"/>
+                                    <f:selectItem itemLabel="#{lang['common.selectOneMenu.select']}"
+                                                  escape="true"/>
+                                    <f:selectItems value="#{signFlowController.listVofficeRole}"
+                                                   var="itemVofficeRole"
+                                                   itemLabelEscaped="true"
+                                                   itemValue="#{itemVofficeRole.vofficeRoleId}"
+                                                   itemLabel="#{itemVofficeRole.roleName}"/>
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column style="width: 15%;" styleClass="col-left">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['signFlow.input.email']}"
+                                                  title="#{lang['signFlow.input.email']}"/>
+                                </f:facet>
+                                <p:inputText value="#{signflowdetail.email}"
+                                             styleClass="email#{index}"
+                                             requiredMessage="#{lang['signFlow.require.email']}"
+                                             validatorMessage="#{lang['signFlow.validate.email']}"
+                                             title="#{signflowdetail.email}">
+                                    <p:ajax event="change" process="@this"
+                                            update="@([id$=tblLsSignflowdetail])"/>
+                                </p:inputText>
+                            </p:column>
+                            <p:column style="width: 8%;" styleClass="col-right ">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['signFlow.detail.signOrder']}"
+                                                  title="#{lang['signFlow.detail.signOrder']}"/>
+                                </f:facet>
+                                <pe:inputNumber value="#{signflowdetail.signOrder}" id="signOrder"
+                                                decimalPlaces="0" maxValue="99"
+                                                styleClass="signOrder#{index} Wid100 TexAlRight">
+                                    <p:ajax event="change" process="@this"
+                                            update="@([id$=tblLsSignflowdetail])"/>
+                                </pe:inputNumber>
+                                <pe:keyFilter for="signOrder" regEx="/[0-9]+/i"
+                                              preventPaste="true"/>
+                            </p:column>
+                            <p:column headerText="#{lang['common.status']}"
+                                      styleClass=" pd-top-6"
+                                       style="width: 15%;">
+                            <p:outputLabel
+                                    value="#{signFlowController.getStrStatus(signflowdetail.status)}"
+                                    title="#{signFlowController.getStrStatus(signflowdetail.status)}"/>
+                        </p:column>
+                            <p:column style="width: 5%; "
+                                      styleClass="col-left  pd-top-10 ">
+                                <f:facet name="header">
+                                    <h:outputText value="#{lang['common.delete']}"
+                                                  title="#{lang['common.delete']}"/>
+                                </f:facet>
+                                <p:commandLink styleClass="fa icon-trash Fs14 blue link-icon"
+                                               style="font-size: 16px!important;" immediate="true"
+                                               update="@([id$=tblLsSignflowdetail])"
+                                               actionListener="#{signFlowController.doRemoveItem(signflowdetail)}"
+                                               title="#{lang['range.time.promotion.day.header.confirm']}"
+                                               process="@this"/>
+                            </p:column>
+                            <f:facet name="header">
+
+                            </f:facet>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+    </h:form>
+
+</ui:composition>

@@ -1,0 +1,360 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.isdn.manage']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.isdn.manage']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmManaTransDigital" styleClass="Container100">
+            <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                <p:messages id="messageRange" showDetail="true" showSummary="false" closable="true"/>
+            </div>
+            <p:outputPanel id="pnlInforTrans" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="pnlInforTrans"
+                           titleHeader="#{lang['information.transaction']}"/>
+                <p:focus for="txtTransCode"/>
+
+                <div class="Container100 pnlInforTrans paddingTopBottom10">
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7 ">
+                                <p:outputLabel styleClass="lb-sentinel" value="#{lang['code.transaction']}"/>
+                            </div>
+                            <pe:keyFilter mask="alphanum" preventPaste="false" for="txtTransCode"/>
+
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="txtTransCode"
+                                             onchange="this.value=this.value.replace(new RegExp('[^a-zA-Z0-9_ ]','gm'),'').trim()"
+                                             value="#{manageTransStockIsdnController.transStock.transCode}"
+                                             maxlength="50"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel txtFromDate"
+                                               value="#{lang['create.note.from.date']}"
+                                               for="txtFromDate"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid txtFromDate">
+                                <p:calendar id="txtFromDate" rendered="true" required="true" readonlyInput="false"
+                                            converterMessage="#{lang['from.date.invalid']}"
+                                            pattern="dd/MM/yyyy"
+                                            mask="true"
+                                            value="#{manageTransStockIsdnController.transStock.fromDate}"
+                                            requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                                <p:message for="txtFromDate"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel txtToDate" value="#{lang['create.note.to.date']}"
+                                               for="txtToDate"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid txtToDate">
+                                <p:calendar id="txtToDate" rendered="true"
+                                            required="true"
+                                            mask="true"
+                                            pattern="dd/MM/yyyy"
+                                            converterMessage="#{lang['to.date.invalid']}"
+                                            value="#{manageTransStockIsdnController.transStock.toDate}"
+                                            requiredMessage="#{lang['mn.stock.to.date.not.blank']}">
+                                </p:calendar>
+                                <p:message for="txtToDate"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel cbxTypeReceiveStock"
+                                               value="#{lang['type.receive.stock']}"
+                                               for="cbxTypeReceiveStock"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu id="cbxTypeReceiveStock"
+                                                 styleClass="cbxTypeReceiveStock"
+                                                 value="#{manageTransStockIsdnController.typeReceiptStock}"
+                                                 required="false"
+                                                 requiredMessage="#{lang['type.receive.stock']} #{lang['is.not.null']}">
+                                    <f:selectItem itemLabel="#{lang['shop.stock']}"
+                                                  itemValue="#{manageTransStockIsdnController.TYPE_SHOP}"/>
+                                    <f:selectItem itemLabel="#{lang['staff.stock']}"
+                                                  itemValue="#{manageTransStockIsdnController.TYPE_STAFF}"/>
+                                    <p:ajax event="change" process="@this" update="cellReceiptStock"/>
+                                </p:selectOneMenu>
+                                <p:message for="cbxTypeReceiveStock"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <p:outputPanel id="cellReceiptStock" class="Container100">
+                                <cbs:inputShop value="#{manageTransStockIsdnController.shopReceiveInfoTag}"
+                                               id="inputStore"
+                                               idComponent="inputStore"
+                                               methodName="receiveStock"
+                                               clearMethodName="clearReceiveStock"
+                                               forceSelection="false"
+                                               rendered="#{empty manageTransStockIsdnController.typeReceiptStock or manageTransStockIsdnController.typeReceiptStock eq '1'}"
+                                               update="@this"
+                                               label="#{lang['receive.stock.no']}"
+                                               require="false"
+                                               placeholder="#{lang['common.search.shop.placehoder']}"
+                                               classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                               classDivInput="Container60 Responsive50 ui-fluid"
+                                               requiredMessage="#{lang['mn.stock.limit.store.code.require.msg']}"
+                                               oncomplete="setFocusByClass('inputStaff')">
+                                </cbs:inputShop>
+                                <cbs:inputStaff value="#{manageTransStockIsdnController.staffReceiveInfoTag}"
+                                                id="inputStaff"
+                                                rendered="#{not empty manageTransStockIsdnController.typeReceiptStock and manageTransStockIsdnController.typeReceiptStock eq '2'}"
+                                                methodName="receiveStock"
+                                                clearMethodName="clearReceiveStock"
+                                                forceSelection="false"
+                                                update="@this"
+                                                label="#{lang['receive.stock.no']}"
+                                                require="false"
+                                                placeholder="#{lang['common.search.staff.placehoder']}"
+                                                classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                classDivInput="Container60 Responsive50 ui-fluid"
+                                                requiredMessage="#{lang['mn.stock.limit.staff.code.require.msg']}"
+                                                oncomplete="">
+                                </cbs:inputStaff>
+                            </p:outputPanel>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <cbs:inputStaff value="#{manageTransStockIsdnController.createStaffInfoTag}"
+                                            id="staffCreate"
+                                            rendered="true"
+                                            methodName="createStaff"
+                                            clearMethodName="clearCreateStaff"
+                                            forceSelection="false"
+                                            update="@this"
+                                            label="#{lang['mn.isdn.user.create.trans']}"
+                                            require="false"
+                                            placeholder="#{lang['common.search.staff.placehoder']}"
+                                            classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                            classDivInput="Container60 Responsive50 ui-fluid"
+                                            requiredMessage="#{lang['mn.stock.limit.staff.code.require.msg']}"
+                                            oncomplete="">
+                            </cbs:inputStaff>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel cbxTypeGetStock"
+                                               value="#{lang['type.get.stock']}"
+                                               for="cbxTypeGetStock"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu id="cbxTypeGetStock"
+                                                 styleClass="cbxTypeGetStock"
+                                                 required="false"
+                                                 value="#{manageTransStockIsdnController.typeDeliverStock}"
+                                                 requiredMessage="#{lang['type.get.stock']} #{lang['is.not.null']}">
+                                    <p:ajax event="change" process="@this" update="cellGetStock"/>
+                                    <f:selectItem itemLabel="#{lang['shop.stock']}"
+                                                  itemValue="#{manageTransStockIsdnController.TYPE_SHOP}"/>
+                                    <f:selectItem itemLabel="#{lang['staff.stock']}"
+                                                  itemValue="#{manageTransStockIsdnController.TYPE_STAFF}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <p:outputPanel id="cellGetStock" class="Container100">
+                                <cbs:inputShop value="#{manageTransStockIsdnController.shopGetInfoTag}"
+                                               idComponent="inputGetStore"
+                                               id="inputGetStore"
+                                               clearMethodName="clearTakeStock"
+                                               rendered="#{empty manageTransStockIsdnController.typeDeliverStock or manageTransStockIsdnController.typeDeliverStock eq '1'}"
+                                               methodName="takeStock"
+                                               update="@this"
+                                               forceSelection="false"
+                                               label="#{lang['get.stock.no']}"
+                                               require="false"
+                                               placeholder="#{lang['common.search.shop.placehoder']}"
+                                               classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                               classDivInput="Container60 Responsive50 ui-fluid"
+                                               oncomplete="setFocusByClass('inputStaff')">
+                                </cbs:inputShop>
+                                <cbs:inputStaff value="#{manageTransStockIsdnController.staffGetInfoTag}"
+                                                id="inputGetStaff"
+                                                clearMethodName="receiveClearGetStaff"
+                                                forceSelection="false"
+                                                methodName="getStaff"
+                                                rendered="#{not empty manageTransStockIsdnController.typeDeliverStock and manageTransStockIsdnController.typeDeliverStock eq '2'}"
+                                                update="@this"
+                                                label="#{lang['get.stock.no']}"
+                                                require="false"
+                                                placeholder="#{lang['common.search.staff.placehoder']}"
+                                                classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                classDivInput="Container60 Responsive50 ui-fluid"
+                                                oncomplete="">
+                                </cbs:inputStaff>
+                            </p:outputPanel>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel cbxReason"
+                                               value="#{lang['common.reason']}"
+                                               for="cbxReason"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu id="cbxReason"
+                                                 styleClass="cbxReason"
+                                                 required="false"
+                                                 requiredMessage="#{lang['common.reason']} #{lang['is.not.null']}"
+                                                 value="#{manageTransStockIsdnController.transStock.reasonId}">
+                                    <f:selectItem itemLabel="#{lang['common.reason.placeholder']}"
+                                                  noSelectionOption="true"/>
+                                    <f:selectItems value="#{manageTransStockIsdnController.listReason}"
+                                                   var="reason"
+                                                   itemLabel="#{reason.reasonName}"
+                                                   itemValue="#{reason.reasonId}"/>
+                                </p:selectOneMenu>
+                                <p:message for="cbxReason"/>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container66 Responsive66" >
+                            <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel" value="#{lang['export.order.note']}"/>
+                            </div>
+                            <div class="Container80 Responsive75 ui-fluid">
+                                <p:inputText value="#{manageTransStockIsdnController.transStock.notes}"
+                                             onchange="this.value=this.value.trim()"
+                                             maxlength="600"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Container100 TexAlCenter">
+                        <p:commandButton value="#{lang['create.note.search']}"
+                                         process="@form"
+                                         update="@form"
+                                         resetValues="false"
+                                         actionListener="#{manageTransStockIsdnController.search}"/>
+                        <p:commandButton value="#{lang['common.reset']}" styleClass="mg-left-5"
+                                         process="@this"
+                                         update="@form"
+                                         actionListener="#{manageTransStockIsdnController.resetForm}"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel id="pnlListTransIsdn" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="pnlListTransIsdn" titleHeader="#{lang['mn.stock.utilities.list.trans']}"/>
+
+                <div class="pnlListTransIsdn Container100 paddingTopBottom10">
+                    <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                        <p:dataTable
+                                id="tblListTrans"
+                                var="stockTrans"
+                                rowKey=""
+                                resizableColumns="true"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.empty.records']}"
+                                value="#{manageTransStockIsdnController.listTrans}">
+                            <p:column headerText="#{lang['code.transaction']}"
+                                      sortBy="#{stockTrans.stockIsdnTransCode}">
+                                <p:outputLabel value="#{stockTrans.stockIsdnTransCode}"
+                                               title="#{stockTrans.stockIsdnTransCode}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['create.note.warehouse.export']}"
+                                      sortBy="#{stockTrans.fromOwnerCode}">
+                                <p:outputLabel value="#{stockTrans.fromOwnerCode} - #{stockTrans.fromOwnerName}"
+                                               title="#{stockTrans.fromOwnerCode} - #{stockTrans.fromOwnerName}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['create.note.warehouse.import']}"
+                                      sortBy=" #{stockTrans.toOwnerCode}">
+                                <p:outputLabel value="#{stockTrans.toOwnerCode} - #{stockTrans.toOwnerName}"
+                                               title="#{stockTrans.toOwnerCode} - #{stockTrans.toOwnerName}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['quota.establish.status']}"
+                                      sortBy="#{manageTransStockIsdnController.getStatus(stockTrans.status)}">
+                                <p:outputLabel
+                                        value="#{manageTransStockIsdnController.getStatus(stockTrans.status)}"
+                                        title="#{manageTransStockIsdnController.getStatus(stockTrans.status)}"
+                                        styleClass="Fleft"/>
+                            </p:column>
+                            <p:column headerText="#{lang['common.reason']}" sortBy=" #{stockTrans.reasonName}">
+                                <p:outputLabel value="#{stockTrans.reasonName}" title="#{stockTrans.reasonName}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['export.order.note']}" sortBy=" #{stockTrans.note}">
+                                <p:outputLabel value="#{stockTrans.note}" title="#{stockTrans.note}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.isdn.user.create.trans']}"
+                                      sortBy=" #{stockTrans.createdUserName}">
+                                <p:outputLabel value="#{stockTrans.createdUserName}"
+                                               title="#{stockTrans.createdUserName}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.isdn.date.create.trans']}"
+                                      sortBy=" #{stockTrans.createdTime}">
+                                <p:outputLabel value="#{stockTrans.createdTime}" title="#{stockTrans.createdTime}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="#{lang['create.note.detail']}" styleClass="TexAlCenter">
+                                <p:commandLink styleClass="fa icon-zoom-in Fs12 black"
+                                               process="@this"
+                                               title="#{lang['common.view.detail']}"
+                                               update="@([id$=pnlListDetailIsdn])"
+                                               actionListener="#{manageTransStockIsdnController.viewDetail(stockTrans.stockIsdnTransId)}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel id="pnlListDetailIsdn" styleClass="Container100">
+                <p:outputPanel rendered="#{manageTransStockIsdnController.renderDetail}"
+                               styleClass="ContainerIndent mg-top-0">
+                    <cbs:panel classForToggle="pnlListDetailIsdn"
+                               titleHeader="#{lang['mn.stock.utilities.infor.detail.trans']}"/>
+
+                    <div class="pnlListDetailIsdn Container100 paddingTopBottom10">
+                        <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                            <p:dataTable
+                                    id="tblListTransDetail"
+                                    var="detail"
+                                    rowKey=""
+                                    resizableColumns="true"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.empty.records']}"
+                                    value="#{manageTransStockIsdnController.listTransDetail}">
+                                <p:column headerText="#{lang['from.number']}" sortBy="#{detail.fromIsdn}">
+                                    <p:outputLabel value="#{detail.fromIsdn}" title="#{detail.fromIsdn}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['to.number']}" sortBy="#{detail.toIsdn}">
+                                    <p:outputLabel value="#{detail.toIsdn}" title="#{detail.toIsdn}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.number']}" style="text-align: right;"
+                                          sortBy="#{detail.quantity}">
+                                    <p:outputLabel value="#{detail.quantity}" title="#{detail.quantity}"
+                                                   styleClass="Fright">
+                                        <f:convertNumber pattern="#,###"/>
+                                    </p:outputLabel>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

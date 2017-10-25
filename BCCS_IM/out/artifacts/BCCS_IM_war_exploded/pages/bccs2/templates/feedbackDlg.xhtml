@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+>
+    <h:form id="feedbackForm">
+        <h:panelGrid styleClass="w100" cellpadding="5">
+            <p:outputPanel>
+                Please tell us what do you think, any kind of feedack is highly appreciated.
+            </p:outputPanel>
+            <p:outputPanel styleClass="fb-option">
+                <div id="idea-op" class="item-option float-left item-option-active">
+                    <div class="ui-icon ui-icon-signal-diag float-left"></div>
+                    <div>Idea</div>
+                    <div class="ui-icon ui-icon-triangle-1-s display-none absolute-ps"></div>
+                </div>
+                <div id="problem-op" class="item-option float-left">
+                    <div class="ui-icon ui-icon-alert float-left"></div>
+                    <div>Problem</div>
+                    <div class="ui-icon ui-icon-triangle-1-s display-none absolute-ps"></div>
+                </div>
+                <div id="question-op" class="item-option float-left">
+                    <div class="ui-icon ui-icon-help float-left"></div>
+                    <div>Question</div>
+                    <div class="ui-icon ui-icon-triangle-1-s display-none absolute-ps"></div>
+                </div>
+                <div id="praise-op" class="item-option float-left">
+                    <div class="ui-icon ui-icon-heart float-left"></div>
+                    <div>Praise</div>
+                    <div class="ui-icon ui-icon-triangle-1-s display-none absolute-ps"></div>
+                </div>
+                <div class="clear-both"></div>
+            </p:outputPanel>
+            <p:inputTextarea autoResize="false" placeholder="Your feedback"
+                             rows="6" styleClass="w100"/>
+            <p:inputText  placeholder="Short summary"
+                          styleClass="w100"/>
+            <p:inputText  placeholder="Your email (will not be published)"
+                          styleClass="w100"/>
+
+            <p:commandButton value="Submit feedback" type="button"/>
+        </h:panelGrid>
+    </h:form>
+    <script type="text/javascript">
+        var lastOption = "idea-op";
+        jQuery(".item-option").mouseup(function(){
+            if(jQuery(this).attr("id") == lastOption){
+                return;
+            }
+            jQuery(this).addClass("item-option-active");
+            jQuery(document.getElementById(lastOption)).removeClass("item-option-active");
+            lastOption = jQuery(this).attr("id");
+        });
+    </script>
+</html>
+

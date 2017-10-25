@@ -1,0 +1,53 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+        >
+    <p:dialog header="#{lang['topbar.menu.notify']}" appendTo="@(body)"
+              closable="true"
+              closeOnEscape="true"
+              id="contentDlg"
+              widgetVar="contentDlgVar"
+              modal="true"
+              dynamic="true"
+            >
+        <h:form id="contentDlgForm">
+            <p:panelGrid columns="2" layout="grid"
+                         style="border:0px !important; background:none;" styleClass="ui-panelgrid-blank">
+                <p:outputLabel value="#{lang['notification.from']}"></p:outputLabel>
+                <p:outputLabel value="#{notifyController.selectedNotify.from}"
+                               readonly="true">
+                </p:outputLabel>
+
+                <p:outputLabel value="#{lang['notification.createDate']}"></p:outputLabel>
+                <p:outputLabel value="#{notifyController.selectedNotify.createdDate}"
+                               >
+                    <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                </p:outputLabel>
+
+                <p:outputLabel value="#{lang['notification.subject']}"/>
+                <p:outputLabel
+                        readonly="true"
+                        value="#{notifyController.selectedNotify.subject==null?'No Subject':notifyController.selectedNotify.subject}"/>
+
+                <p:outputLabel value="#{lang['notification.content']}"/>
+                <p:outputLabel readonly="true" value="#{notifyController.selectedNotify.text}"/>
+                <f:facet name="footer">
+                    <div align="right" style="margin: 10px">
+                        <p:commandButton value="#{lang['notification.goToUrl']}"
+                                         disabled="#{notifyController.selectedNotify.url==null}"
+                                         actionListener="#{menuBean.redirect(notifyController.selectedNotify.url)}"
+                                         style="margin-left: 20px"></p:commandButton>
+
+                        <p:commandButton value="#{lang['notification.close']}"
+                                         onclick="PF('contentDlgVar').hide()"
+                                         style="margin-left: 20px"></p:commandButton>
+                    </div>
+                </f:facet>
+            </p:panelGrid>
+        </h:form>
+    </p:dialog>
+
+</ui:composition>

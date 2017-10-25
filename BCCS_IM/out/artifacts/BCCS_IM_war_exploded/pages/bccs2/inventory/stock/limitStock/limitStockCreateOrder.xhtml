@@ -1,0 +1,761 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.limit.createOrder']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.limit.createOrder']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmCreateOrderStockStaff" enctype="multipart/form-data">
+            <h:panelGrid styleClass="Container100">
+                <p:tabView id="numberTabView" dynamic="true" cache="true"
+                           tabindex="#{limitStockCreateOrderController.tabIndex}">
+                    <p:ajax event="tabChange" resetValues="true"
+                            listener="#{limitStockCreateOrderController.onTabChange}"
+                            update="@([id$=pnlTabSingle]), @([id$=pnlTabFile])"/>
+                    <p:tab id="tabSingle" title="#{lang['mn.stock.limit.createOrder.single']}">
+                        <p:outputPanel id="pnlTabSingle" styleClass="ContainerIndent">
+                            <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                                <p:messages id="msgLimitStockCreateOrder" escape="true" showDetail="true"
+                                            showSummary="false" closable="true"/>
+                            </div>
+                            <p:outputPanel id="pnCreateOrder" styleClass="Container100"
+                                           rendered="#{limitStockCreateOrderController.limitCreateOrderType == '1'}">
+                                <!--Start vung thong tin view yeu cau-->
+                                <p:outputPanel id="rangeChoiceFile" class="ContainerIndent mg-top-0">
+                                    <cbs:panel classForToggle="pnCreateOrder"
+                                               titleHeader="#{lang['mn.stock.limit.view.order']}"
+                                               toggle="true">
+                                    </cbs:panel>
+
+                                    <div class="Container100 pnCreateOrder"
+                                         style="margin-bottom: 10px;margin-top: 10px;">
+                                        <div class="ContainerIndent">
+                                            <div class="Container66 Responsive66">
+                                                <div class="Container20 mg-left-15 Responsive25 pd-top-8">
+                                                    <p:outputLabel styleClass="lb-sentinel"
+                                                                   value="#{lang['common.type.input']}"
+                                                                   for="rdTypeInput"/>
+                                                </div>
+                                                <div class="Container80 Responsive75 ui-fluid">
+                                                    <p:selectOneRadio id="rdTypeInput"
+                                                                      value="#{limitStockCreateOrderController.typeInput}"
+                                                                      required="true">
+                                                        <f:selectItem
+                                                                itemLabel="#{lang['mn.stock.limit.createOrder.stock.staff']}"
+                                                                itemValue="1"/>
+                                                        <f:selectItem
+                                                                itemLabel="#{lang['mn.stock.limit.createOrder.stock.unit']}"
+                                                                itemValue="2"/>
+                                                        <p:ajax event="click"
+                                                                resetValues="true"
+                                                                listener="#{limitStockCreateOrderController.doRefresh}"
+                                                                process="@this"
+                                                                update="@form">
+                                                        </p:ajax>
+                                                    </p:selectOneRadio>
+                                                </div>
+                                            </div>
+                                            <div class="Container33 Responsive"></div>
+                                        </div>
+                                        <div class="ContainerIndent">
+                                            <div class="Container66 Responsive66">
+                                                <div class="Container20 mg-left-15 Responsive25 pd-top-4">
+                                                    <p:outputLabel styleClass="lb-sentinel" for="ipOrderNote"
+                                                                   value="#{lang['export.order.note']}"/>
+                                                </div>
+                                                <div class="Container80 Responsive75 ui-fluid">
+                                                    <p:inputText value="#{limitStockCreateOrderController.description}"
+                                                                 placeholder="#{lang['export.order.note.placehoder']}"
+                                                                 id="ipOrderNote"
+                                                                 maxlength="100"/>
+                                                </div>
+                                            </div>
+                                            <div class="Container33 Responsive"></div>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+                                <!--End vung thong tin view yeu cau-->
+                                <!--Start vung lap yeu cau-->
+                                <p:outputPanel styleClass="Container100" id="pnInputCreateOrder">
+                                    <div class="Container100">
+                                        <div class="ContainerIndent mg-top-0">
+                                            <cbs:panel classForToggle="pnInputDetail"
+                                                       titleHeader="#{lang['mn.stock.limit.inputDetail']}"
+                                                       toggle="true"/>
+
+                                            <div class="Container100 pnInputDetail">
+                                                <p:outputPanel styleClass="Container100" id="pnlLimitStock1"
+                                                               rendered="#{limitStockCreateOrderController.typeInput == '1'}">
+
+                                                    <div class="ContainerIndent mg-top-0">
+                                                        <!--<div class="Container33 Responsive">-->
+                                                        <!--<div class="Container40 mg-left-15 Responsive50 pd-top-4">-->
+                                                        <!--<p:outputLabel styleClass="lb-sentinel"-->
+                                                        <!--for="inputDebitType"-->
+                                                        <!--value="#{lang['mn.stock.limit.type']}"/>-->
+                                                        <!--</div>-->
+                                                        <!--<div class="Container60 Responsive50 ui-fluid">-->
+                                                        <!--<p:selectOneMenu id="inputDebitType"-->
+                                                        <!--value="#{limitStockCreateOrderController.debitRequestDtlDTO.paymentType}">-->
+                                                        <!--<f:selectItems-->
+                                                        <!--value="#{limitStockCreateOrderController.lstType}"-->
+                                                        <!--var="item" itemLabel="#{item.name}"-->
+                                                        <!--itemValue="#{item.value}"/>-->
+                                                        <!--<p:ajax event="change" process="@this"-->
+                                                        <!--update="@([id$=pnInputCreateOrder])"-->
+                                                        <!--listener="#{limitStockCreateOrderController.changeTypeDebit()}"/>-->
+                                                        <!--</p:selectOneMenu>-->
+                                                        <!--<p:message for="inputDebitType"/>-->
+                                                        <!--</div>-->
+                                                        <!--</div>-->
+                                                        <div class="Container33 Responsive">
+                                                            <cbs:inputShop
+                                                                    value="#{limitStockCreateOrderController.shopInfoTag}"
+                                                                    idComponent="inputStore"
+                                                                    methodName="receiveShop"
+                                                                    clearMethodName="receiveClear"
+                                                                    update="@this, @([id$=inputStaff])"
+                                                                    label="#{lang['mn.stock.limit.store']}"
+                                                                    require="true"
+                                                                    forceSelection="false"
+                                                                    placeholder="#{lang['mn.stock.limit.store.code.placeholder']}"
+                                                                    classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                                    classDivInput="Container60 Responsive50 ui-fluid"
+                                                                    requiredMessage="#{lang['mn.stock.limit.store.code.require.msg']}"
+                                                                    oncomplete="setFocusByClass('inputStaff')">
+                                                            </cbs:inputShop>
+                                                        </div>
+                                                        <div class="Container33 Responsive">
+                                                            <cbs:inputStaff
+                                                                    value="#{limitStockCreateOrderController.staffInfoTag}"
+                                                                    id="inputStaff"
+                                                                    methodName="receiveStaff"
+                                                                    clearMethodName="receiveClear"
+                                                                    update="@this"
+                                                                    label="#{lang['mn.stock.limit.staff']}"
+                                                                    require="true"
+                                                                    forceSelection="false"
+                                                                    placeholder="#{lang['common.search.staff.placehoder']}"
+                                                                    classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                                    classDivInput="Container60 Responsive50 ui-fluid"
+                                                                    requiredMessage="#{lang['mn.stock.limit.staff.code.require.msg']}"
+                                                                    oncomplete="setFocusByClass('inputLimitStock')">
+                                                            </cbs:inputStaff>
+                                                        </div>
+                                                        <!--Combobox Han muc kho-->
+                                                        <div class="Container33 Responsive">
+                                                            <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                                                <p:outputLabel styleClass="lb-sentinel"
+                                                                               for="inputLimitStock"
+                                                                               value="#{lang['mn.stock.limit.stock']}"/>
+                                                            </div>
+                                                            <div class="Container60 Responsive50 ui-fluid">
+                                                                <p:selectOneMenu id="inputLimitStock"
+                                                                                 value="#{limitStockCreateOrderController.debitRequestDtlDTO.debitValue}"
+                                                                                 filter="true"
+                                                                                 filterMatchMode="contains">
+                                                                    <f:selectItem itemValue=""
+                                                                                  itemLabel="#{lang['mn.stock.limit.all']}"/>
+                                                                    <f:selectItems
+                                                                            value="#{limitStockCreateOrderController.lstDebitLevel}"
+                                                                            var="item" itemLabel="#{item.name}"
+                                                                            itemValue="#{item.value}"/>
+                                                                </p:selectOneMenu>
+                                                                <p:message for="inputLimitStock"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="ContainerIndent">
+                                                        <div class="Container33 Responsive">
+                                                            <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                                                <p:outputLabel styleClass="lb-sentinel"
+                                                                               for="inputLimitPayment"
+                                                                               value="#{lang['mn.stock.limit.payment']}"/>
+                                                            </div>
+                                                            <div class="Container60 Responsive50 ui-fluid">
+                                                                <p:selectOneMenu id="inputLimitPayment"
+                                                                                 value="#{limitStockCreateOrderController.debitRequestDtlDTO.paymentGroupId}"
+                                                                                 filter="true"
+                                                                                 filterMatchMode="contains">
+                                                                    <f:selectItem itemValue=""
+                                                                                  itemLabel="#{lang['mn.stock.limit.all']}"/>
+                                                                    <f:selectItems
+                                                                            value="#{limitStockCreateOrderController.lstPaymentGroup}"
+                                                                            var="item" itemLabel="#{item.name}"
+                                                                            itemValue="#{item.paymentGroupId}"/>
+                                                                </p:selectOneMenu>
+                                                                <p:message for="inputLimitPayment"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="Container33 Responsive">
+                                                            <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                                                <p:outputLabel styleClass="lb-sentinel"
+                                                                               for="inputGroupMoney"
+                                                                               value="#{lang['mn.stock.limit.group.offerMoney']}"/>
+                                                            </div>
+                                                            <div class="Container60 Responsive50 ui-fluid">
+                                                                <p:selectOneMenu id="inputGroupMoney"
+                                                                                 value="#{limitStockCreateOrderController.debitRequestDtlDTO.paymentGroupServiceId}"
+                                                                                 filter="true"
+                                                                                 filterMatchMode="contains">
+                                                                    <f:selectItem itemValue=""
+                                                                                  itemLabel="#{lang['mn.stock.limit.group.offerMoney.all']}"/>
+                                                                    <f:selectItems
+                                                                            value="#{limitStockCreateOrderController.lstPaymentGroupService}"
+                                                                            var="item" itemLabel="#{item.code}"
+                                                                            itemValue="#{item.id}"/>
+                                                                </p:selectOneMenu>
+                                                                <p:message for="inputGroupMoney"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="Container33 Responsive">
+                                                            <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                                                <p:outputLabel styleClass="lb-sentinel"
+                                                                               for="distance"
+                                                                               value="#{lang['mn.stock.distance']} (Km)"/>
+                                                            </div>
+                                                            <div class="Container60 Responsive50 ui-fluid">
+                                                                <pe:inputNumber id="distance"
+                                                                                style="text-align:left!important"
+                                                                                placeholder="#{lang['mn.stock.distance.placeholder']}"
+                                                                                converter="javax.faces.Double"
+                                                                                decimalPlaces="1"
+                                                                                value="#{limitStockCreateOrderController.debitRequestDtlDTO.distance}"
+                                                                                required="true"
+                                                                                requiredMessage="#{lang['mn.stock.limit.distance.require.msg']}">
+                                                                </pe:inputNumber>
+                                                                <cbs:message forId="distance"/>
+                                                            </div>
+                                                            <pe:keyFilter mask="pint" for="distance"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="ContainerIndent">
+                                                        <div class="Container66 Responsive66">
+                                                            <div class="Container20 mg-left-15 Responsive25 pd-top-4">
+                                                                <p:outputLabel styleClass="lb-sentinel" for="inputNote"
+                                                                               value="#{lang['export.order.note']}"/>
+                                                            </div>
+                                                            <div class="Container80 Responsive75 ui-fluid">
+                                                                <p:inputText
+                                                                        value="#{limitStockCreateOrderController.debitRequestDtlDTO.note}"
+                                                                        placeholder="#{lang['export.order.note.placehoder']}"
+                                                                        id="inputNote"
+                                                                        maxlength="200"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </p:outputPanel>
+                                                <p:outputPanel styleClass="Container100" id="pnlLimitStock2"
+                                                               rendered="#{limitStockCreateOrderController.typeInput == '2'}">
+                                                    <div class="ContainerIndent mg-top-0">
+                                                        <!--<div class="Container33 Responsive">-->
+                                                        <!--<div class="Container40 mg-left-15 Responsive50 pd-top-4">-->
+                                                        <!--<p:outputLabel styleClass="lb-sentinel"-->
+                                                        <!--for="inputDebitTypeShop"-->
+                                                        <!--value="#{lang['mn.stock.limit.type']}"/>-->
+                                                        <!--</div>-->
+                                                        <!--<div class="Container60 Responsive50 ui-fluid">-->
+                                                        <!--<p:selectOneMenu id="inputDebitTypeShop"-->
+                                                        <!--value="#{limitStockCreateOrderController.debitRequestDtlDTO.paymentType}">-->
+                                                        <!--<f:selectItems-->
+                                                        <!--value="#{limitStockCreateOrderController.lstType}"-->
+                                                        <!--var="item" itemLabel="#{item.name}"-->
+                                                        <!--itemValue="#{item.value}"/>-->
+                                                        <!--<p:ajax event="change" process="@this"-->
+                                                        <!--update="@([id$=pnInputCreateOrder])"-->
+                                                        <!--listener="#{limitStockCreateOrderController.changeTypeDebit()}"/>-->
+                                                        <!--</p:selectOneMenu>-->
+                                                        <!--<p:message for="inputDebitTypeShop"/>-->
+                                                        <!--</div>-->
+                                                        <!--</div>-->
+                                                        <!--Combobox Cua hang-->
+                                                        <div class="Container33 Responsive">
+                                                            <cbs:inputShop
+                                                                    value="#{limitStockCreateOrderController.shopInfoTag}"
+                                                                    id="inputStore2"
+                                                                    idComponent="inputStore2"
+                                                                    methodName="receiveShop"
+                                                                    update="@this"
+                                                                    label="#{lang['mn.stock.limit.store']}"
+                                                                    require="true"
+                                                                    forceSelection="false"
+                                                                    placeholder="#{lang['common.search.shop.placehoder']}"
+                                                                    classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                                    classDivInput="Container60 Responsive50 ui-fluid"
+                                                                    requiredMessage="#{lang['mn.stock.limit.store.code.require.msg']}"
+                                                                    oncomplete="setFocusByClass('inputLimitStock2')">
+                                                                <cbs:message forId="inputStore2"/>
+                                                            </cbs:inputShop>
+                                                        </div>
+                                                        <div class="Container33 Responsive">
+                                                            <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                                                <p:outputLabel styleClass="lb-sentinel"
+                                                                               for="inputLimitStock2"
+                                                                               value="#{lang['mn.stock.limit.stock']}"/>
+                                                            </div>
+                                                            <div class="Container60 Responsive50 ui-fluid">
+                                                                <pe:inputNumber id="inputLimitStock2"
+                                                                                style="text-align:left!important"
+                                                                                placeholder="#{lang['mn.stock.limit.placehoder']}"
+                                                                                converter="javax.faces.Long"
+                                                                                decimalPlaces="0"
+                                                                                maxlength="20"
+                                                                                value="#{limitStockCreateOrderController.debitRequestDtlDTO.debitValue}"
+                                                                        >
+                                                                </pe:inputNumber>
+                                                                <cbs:message forId="inputLimitStock2"/>
+                                                            </div>
+                                                            <pe:keyFilter mask="pint" for="inputLimitStock2"/>
+                                                        </div>
+                                                        <!-- Combobox Ngay ap dung -->
+                                                        <div class="Container33 Responsive">
+                                                            <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                                                <p:outputLabel styleClass="lb-sentinel"
+                                                                               for="cbxDayUse"
+                                                                               value="#{lang['mn.stock.limit.day.use']}"/>
+                                                            </div>
+                                                            <div class="Container60 Responsive50 ui-fluid">
+                                                                <p:selectOneMenu id="cbxDayUse"
+                                                                                 value="#{limitStockCreateOrderController.debitRequestDtlDTO.debitDayType}">
+                                                                    <f:selectItem
+                                                                            itemLabel="#{lang['mn.stock.limit.day.use.all']}"/>
+                                                                    <f:selectItems
+                                                                            value="#{limitStockCreateOrderController.lstDebitDayType}"
+                                                                            var="item" itemLabel="#{item.name}"
+                                                                            itemValue="#{item.value}"/>
+                                                                </p:selectOneMenu>
+                                                                <p:message for="cbxDayUse"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="ContainerIndent">
+                                                        <div class="Container33 Responsive">
+                                                            <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                                                <p:outputLabel styleClass="lb-sentinel"
+                                                                               for="inputLimitPaymentShop"
+                                                                               value="#{lang['mn.stock.limit.payment']}"/>
+                                                            </div>
+                                                            <div class="Container60 Responsive50 ui-fluid">
+                                                                <p:selectOneMenu id="inputLimitPaymentShop"
+                                                                                 value="#{limitStockCreateOrderController.debitRequestDtlDTO.paymentGroupId}"
+                                                                                 filter="true"
+                                                                                 filterMatchMode="contains">
+                                                                    <f:selectItem itemValue=""
+                                                                                  itemLabel="#{lang['mn.stock.limit.all']}"/>
+                                                                    <f:selectItems
+                                                                            value="#{limitStockCreateOrderController.lstPaymentGroup}"
+                                                                            var="item" itemLabel="#{item.name}"
+                                                                            itemValue="#{item.paymentGroupId}"/>
+                                                                </p:selectOneMenu>
+                                                                <p:message for="inputLimitPaymentShop"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="Container33 Responsive">
+                                                            <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                                                <p:outputLabel styleClass="lb-sentinel"
+                                                                               for="inputGroupMoneyShop"
+                                                                               value="#{lang['mn.stock.limit.group.offerMoney']}"/>
+                                                            </div>
+                                                            <div class="Container60 Responsive50 ui-fluid">
+                                                                <p:selectOneMenu id="inputGroupMoneyShop"
+                                                                                 value="#{limitStockCreateOrderController.debitRequestDtlDTO.paymentGroupServiceId}"
+                                                                                 filter="true"
+                                                                                 filterMatchMode="contains">
+                                                                    <f:selectItem itemValue=""
+                                                                                  itemLabel="#{lang['mn.stock.limit.group.offerMoney.all']}"/>
+                                                                    <f:selectItems
+                                                                            value="#{limitStockCreateOrderController.lstPaymentGroupService}"
+                                                                            var="item" itemLabel="#{item.code}"
+                                                                            itemValue="#{item.id}"/>
+                                                                </p:selectOneMenu>
+                                                                <p:message for="inputGroupMoneyShop"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="Container33 Responsive">
+                                                            <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                                                <p:outputLabel styleClass="lb-sentinel"
+                                                                               for="distanceShop"
+                                                                               value="#{lang['mn.stock.distance']} (Km)"/>
+                                                            </div>
+                                                            <div class="Container60 Responsive50 ui-fluid">
+                                                                <pe:inputNumber id="distanceShop"
+                                                                                style="text-align:left!important"
+                                                                                placeholder="#{lang['mn.stock.distance.placeholder']}"
+                                                                                converter="javax.faces.Double"
+                                                                                decimalPlaces="1"
+                                                                                required="false"
+                                                                                value="#{limitStockCreateOrderController.debitRequestDtlDTO.distance}"
+                                                                        >
+                                                                </pe:inputNumber>
+                                                                <cbs:message forId="distanceShop"/>
+                                                            </div>
+                                                            <pe:keyFilter mask="pint" for="distanceShop"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="ContainerIndent">
+                                                        <div class="Container66 Responsive66">
+                                                            <div class="Container20 mg-left-15 Responsive25 pd-top-4">
+                                                                <p:outputLabel styleClass="lb-sentinel" for="inputNote2"
+                                                                               value="#{lang['export.order.note']}"/>
+                                                            </div>
+                                                            <div class="Container80 Responsive75 ui-fluid">
+                                                                <p:inputText
+                                                                        value="#{limitStockCreateOrderController.debitRequestDtlDTO.note}"
+                                                                        placeholder="#{lang['export.order.note.placehoder']}"
+                                                                        id="inputNote2"
+                                                                        maxlength="200"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </p:outputPanel>
+                                                <p:remoteCommand process="@this" update="@form" name="updateControls"/>
+                                                <!--Button Them moi-->
+                                                <div class="Container100 TexAlCenter mg-top-10 mg-bottom-10">
+                                                    <div class="ContainerIndent mg-top-0">
+                                                        <p:commandButton value="#{lang['mn.stock.limit.createNew']}"
+                                                                         process="@this, @([id$=rangeChoiceFile]), @([id$=pnlLimitStock1]), @([id$=pnlLimitStock2])"
+                                                                         update="@this, @([id$=tblViewExportStockUnit]), @([id$=tblViewExportStockStaff]), @([id$=msgLimitStockCreateOrder]), @([id$=pnInputCreateOrder])"
+                                                                         actionListener="#{limitStockCreateOrderController.doAddItem}"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="Container100">
+                                        <div class="ContainerIndent mg-top-0">
+                                            <cbs:panel classForToggle="pnViewExport"
+                                                       titleHeader="#{lang['mn.stock.limit.view.list.order']}"
+                                                       toggle="true"></cbs:panel>
+
+                                            <div class="pnViewExport ContainerIndent">
+                                                <p:dataTable styleClass="Width100 mg-top-10"
+                                                             value="#{limitStockCreateOrderController.lstRequestDtl}"
+                                                             id="tblViewExportStockUnit"
+                                                             rendered="#{limitStockCreateOrderController.typeInput=='2'}"
+                                                             rowIndexVar="index" var="item" editable="true"
+                                                             editMode="cell"
+                                                             paginator="#{lang['common.paging.paginator']}"
+                                                             rows="#{lang['common.paging.rows.default']}"
+                                                             rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                                             paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                                             paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                                             paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                                             currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}">
+                                                    <p:column headerText="#{lang['mn.stock.limit.store.code']}"
+                                                              sortBy="#{item.ownerCode}"
+                                                              style="width: 15%;"
+                                                              styleClass="TexAlLeft">
+                                                        <p:outputLabel value="#{item.ownerCode}"
+                                                                       title="#{item.ownerCode}"/>
+                                                    </p:column>
+                                                    <p:column headerText="#{lang['mn.stock.limit.stock']}"
+                                                              sortBy="#{limitStockCreateOrderController.getDebitAmount(item.debitValue,'1',item.paymentGroupId)}"
+                                                              style="width: 15%;"
+                                                              styleClass="col-left">
+                                                        <p:outputLabel
+                                                                value="#{limitStockCreateOrderController.getDebitAmount(item.debitValue,'1',item.paymentGroupId)}"
+                                                                title="#{limitStockCreateOrderController.getDebitAmount(item.debitValue,'1',item.paymentGroupId)}"
+                                                                />
+                                                    </p:column>
+                                                    <p:column headerText="#{lang['mn.stock.limit.day.use']}"
+                                                              style="width: 10%;"
+                                                              styleClass="col-left">
+                                                        <p:outputLabel
+                                                                value="#{limitStockCreateOrderController.getDebitDayTypeName(item.debitDayType)}"
+                                                                title="#{limitStockCreateOrderController.getDebitDayTypeName(item.debitDayType)}"/>
+                                                    </p:column>
+                                                    <p:column headerText="#{lang['mn.stock.limit.payment']}"
+                                                              sortBy="#{limitStockCreateOrderController.getDebitAmount(item.debitValue,'2',item.paymentGroupId)}"
+                                                              style="width: 20%;"
+                                                              styleClass="col-left">
+                                                        <p:outputLabel
+                                                                value="#{limitStockCreateOrderController.getDebitAmount(item.debitValue,'2',item.paymentGroupId)}"
+                                                                title="#{limitStockCreateOrderController.getDebitAmount(item.debitValue,'2',item.paymentGroupId)}"
+                                                                />
+                                                    </p:column>
+                                                    <p:column
+                                                            headerText="#{lang['mn.stock.limit.group.offerMoney']}"
+                                                            style="width: 15%;" styleClass="col-left">
+                                                        <p:outputLabel
+                                                                value="#{limitStockCreateOrderController.getFinanceTypeName(item.paymentGroupServiceId)}"
+                                                                title="#{limitStockCreateOrderController.getFinanceTypeName(item.paymentGroupServiceId)}"/>
+                                                    </p:column>
+                                                    <p:column
+                                                            headerText="#{lang['mn.stock.distance']}"
+                                                            style="width: 15%;" styleClass="col-right">
+                                                        <h:outputLabel value="#{item.distance} (Km)"
+                                                                       title="#{item.distance} (Km)"
+                                                                       styleClass="lb-sentinel-bold">
+                                                        </h:outputLabel>
+                                                    </p:column>
+                                                    <p:column headerText="#{lang['common.delete']}" style="width: 10%;"
+                                                              styleClass="col-left">
+                                                        <p:commandLink styleClass="fa icon-trash Fs14 blue "
+                                                                       style="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                                                       immediate="true"
+                                                                       update="@([id$=tblViewExportStockUnit])"
+                                                                       actionListener="#{limitStockCreateOrderController.doRemoveItem(index)}"
+                                                                       title="Xóa bản ghi" process="@this"/>
+                                                    </p:column>
+                                                </p:dataTable>
+                                                <p:dataTable styleClass="Width100 mg-top-10"
+                                                             value="#{limitStockCreateOrderController.lstRequestDtl}"
+                                                             id="tblViewExportStockStaff"
+                                                             rendered="#{limitStockCreateOrderController.typeInput=='1'}"
+                                                             rowIndexVar="index" var="item" editable="true"
+                                                             editMode="cell"
+                                                             paginator="#{lang['common.paging.paginator']}"
+                                                             rows="#{lang['common.paging.rows.default']}"
+                                                             rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                                             paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                                             paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                                             paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                                             currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}">
+                                                    <p:column headerText="#{lang['mn.stock.limit.store.code']}"
+                                                              sortBy="#{item.shopCode}"
+                                                              style="width: 15%;"
+                                                              styleClass="TexAlLeft">
+                                                        <p:outputLabel value="#{item.shopCode}"
+                                                                       title="#{item.shopCode}"/>
+                                                    </p:column>
+                                                    <p:column headerText="#{lang['mn.invoice.staff']}"
+                                                              sortBy="#{item.ownerCode}"
+                                                              style="width: 15%;"
+                                                              styleClass="TexAlLeft">
+                                                        <p:outputLabel value="#{item.ownerCode}"
+                                                                       title="#{item.ownerCode}"/>
+                                                    </p:column>
+                                                    <p:column headerText="#{lang['mn.stock.limit.stock']}"
+                                                              sortBy="#{limitStockCreateOrderController.getDebitAmount(item.debitValue, '1',item.paymentGroupId)}"
+                                                              style="width: 20%;"
+                                                              styleClass="TexAlLeft">
+                                                        <p:outputLabel
+                                                                value="#{limitStockCreateOrderController.getDebitAmount(item.debitValue,'1',item.paymentGroupId)}"
+                                                                title="#{limitStockCreateOrderController.getDebitAmount(item.debitValue,'1',item.paymentGroupId)}"/>
+                                                    </p:column>
+                                                    <p:column headerText="#{lang['mn.stock.limit.payment']}"
+                                                              sortBy="#{limitStockCreateOrderController.getDebitAmount(item.debitValue, '2',item.paymentGroupId)}"
+                                                              style="width: 20%;"
+                                                              styleClass="TexAlLeft">
+                                                        <p:outputLabel
+                                                                value="#{limitStockCreateOrderController.getDebitAmount(item.debitValue,'2',item.paymentGroupId)}"
+                                                                title="#{limitStockCreateOrderController.getDebitAmount(item.debitValue,'2',item.paymentGroupId)}"/>
+                                                    </p:column>
+                                                    <p:column
+                                                            headerText="#{lang['mn.stock.limit.group.offerMoney']}"
+                                                            style="width: 15%;" styleClass="col-left">
+                                                        <p:outputLabel
+                                                                value="#{limitStockCreateOrderController.getFinanceTypeName(item.paymentGroupServiceId)}"
+                                                                title="#{limitStockCreateOrderController.getFinanceTypeName(item.paymentGroupServiceId)}"/>
+                                                    </p:column>
+                                                    <p:column
+                                                            headerText="#{lang['mn.stock.distance']}"
+                                                            style="width: 15%;" styleClass="col-right">
+                                                        <h:outputLabel value="#{item.distance} (Km)"
+                                                                       title="#{item.distance} (Km)"
+                                                                       styleClass="lb-sentinel-bold">
+                                                        </h:outputLabel>
+                                                    </p:column>
+                                                    <p:column headerText="#{lang['common.delete']}" style="width: 10%;"
+                                                              styleClass="col-left">
+                                                        <p:commandLink styleClass="fa icon-trash Fs14 blue "
+                                                                       style="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                                                       immediate="true"
+                                                                       update="@([id$=tblViewExportStockStaff])"
+                                                                       actionListener="#{limitStockCreateOrderController.doRemoveItem(index)}"
+                                                                       title="Xóa bản ghi" process="@this"/>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+                                <!--End vung lap yeu cau-->
+                                <p:outputPanel id="pnlOffice" styleClass="Container100">
+                                    <p:outputPanel styleClass="Container100"
+                                                   rendered="#{limitStockCreateOrderController.writeOffice}">
+                                        <cbs:inputSignOffice value="#{limitStockCreateOrderController.writeOfficeTag}"
+                                                             title="#{lang['export.order.view.office']}"
+                                                             idComponent="writeOfficeExport"/>
+                                    </p:outputPanel>
+                                </p:outputPanel>
+                            </p:outputPanel>
+                            <!--Start vung thong tin ky view office-->
+
+                            <div class="ContainerIndent TexAlCenter">
+                                <cbs:confirmDialog
+                                        idComponent="btnConfirmCreate"
+                                        titleButton="#{lang['mn.stock.branch.btn.create.request']}"
+                                        valueButton="#{lang['mn.stock.branch.btn.create.request']}"
+                                        headerConfirm="#{lang['mn.stock.branch.btn.create.request']}"
+                                        messageConfirm="#{lang['mn.stock.limit.msg.createOrder.confirm']}"
+                                        actionOK="#{limitStockCreateOrderController.onCreateOrder()}"
+                                        resetValueButton="true"
+                                        process="@([id$=pnlOffice]),@([id$=rangeChoiceFile]), @([id$=tblViewExportStockUnit]), @([id$=tblViewExportStockStaff])"
+                                        updateArea="@form"
+                                        updateOK="@form"
+                                        actionValidate="#{limitStockCreateOrderController.onValidateConfirm()}"
+                                        isButton="true"
+                                        focusCancel="false"/>
+                            </div>
+                        </p:outputPanel>
+                    </p:tab>
+
+                    <!--########################################################################################################-->
+
+                    <p:tab id="tabFile" title="#{lang['mn.stock.limit.createOrder.file']}">
+                        <p:outputPanel id="pnlTabFile" styleClass="ContainerIndent">
+                            <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                                <p:messages id="msgLimitStockCreateOrderFile" escape="true" showDetail="true"
+                                            showSummary="false" closable="true"/>
+                            </div>
+                            <p:outputPanel id="pnCreateOrderFile" styleClass="Container100"
+                                           rendered="#{limitStockCreateOrderController.limitCreateOrderType == '2'}">
+                                <div class="ContainerIndent mg-top-0">
+                                    <cbs:panel classForToggle="pnCreateOrderFile"
+                                               titleHeader="#{lang['mn.stock.limit.view.order']}"
+                                               toggle="true"/>
+
+                                    <div class="Container100 pnCreateOrderFile"
+                                         style="margin-bottom: 10px;margin-top: 10px;">
+                                        <div class="ContainerIndent">
+                                            <div class="Container66 Responsive66">
+                                                <div class="Container20 mg-left-15 Responsive25 pd-top-8">
+                                                    <p:outputLabel styleClass="lb-sentinel"
+                                                                   value="#{lang['common.type.input']}"
+                                                                   for="rdFileInputType"/>
+                                                </div>
+                                                <div class="Container80 Responsive75 ui-fluid">
+                                                    <p:selectOneRadio id="rdFileInputType"
+                                                                      value="#{limitStockCreateOrderController.typeInput}"
+                                                                      required="true">
+                                                        <f:selectItem
+                                                                itemLabel="#{lang['mn.stock.limit.createOrder.stock.staff']}"
+                                                                itemValue="1"/>
+                                                        <f:selectItem
+                                                                itemLabel="#{lang['mn.stock.limit.createOrder.stock.unit']}"
+                                                                itemValue="2"/>
+                                                        <p:ajax event="click"
+                                                                resetValues="true"
+                                                                listener="#{limitStockCreateOrderController.doRefresh}"
+                                                                process="@this"
+                                                                update="@form">
+                                                        </p:ajax>
+                                                    </p:selectOneRadio>
+                                                </div>
+                                            </div>
+                                            <div class="Container33 Responsive"></div>
+                                        </div>
+                                        <div class="ContainerIndent">
+                                            <div class="Container66 Responsive66">
+                                                <div class="Container20 mg-left-15 Responsive25 pd-top-4">
+                                                    <p:outputLabel styleClass="lb-sentinel" for="fileImport"
+                                                                   value="#{lang['mn.stock.limit.importFile']}"/>
+                                                </div>
+                                                <div class="Container80 Responsive75 ui-fluid">
+                                                    <p:inputText id="outputImportFile"
+                                                                 maxlength="100"
+                                                                 value="#{limitStockCreateOrderController.importFileName}"
+                                                                 title="#{limitStockCreateOrderController.importFileName}"
+                                                                 readonly="true"/>
+                                                </div>
+                                            </div>
+                                            <div class="Container33 Responsive">
+                                                <p:fileUpload id="fileImport"
+                                                              validatorMessage="abc"
+                                                              invalidFileMessage="#{lang['mn.stock.limit.importFile.msg.format']}"
+                                                              requiredMessage="#{lang['mn.stock.limit.importFile.msg.require']}"
+                                                              invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                              value="#{limitStockCreateOrderController.fileImport}"
+                                                              fileUploadListener="#{limitStockCreateOrderController.handleFileImport}"
+                                                              update="@this, @([id$=outputImportFile]), @([id$=msgLimitStockCreateOrderFile])"
+                                                              dragDropSupport="true" required="true" mode="advanced"
+                                                              auto="true"
+                                                              widgetVar="wgImportFile"
+                                                              allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                                              sizeLimit="5242880"
+                                                        >
+                                                    <p:message id="messageImportFile" for="fileImport"/>
+                                                </p:fileUpload>
+                                            </div>
+                                        </div>
+                                        <div class="ContainerIndent">
+                                            <div class="Container66 Responsive66">
+                                                <div class="Container20 mg-left-15 Responsive25 pd-top-4">
+                                                    <p:outputLabel styleClass="lb-sentinel" for="noteOrderFile"
+                                                                   value="#{lang['export.order.note']}"/>
+                                                </div>
+                                                <div class="Container80 Responsive75 ui-fluid">
+                                                    <p:inputText
+                                                            value="#{limitStockCreateOrderController.descriptionFile}"
+                                                            placeholder="#{lang['export.order.note.placehoder']}"
+                                                            id="noteOrderFile"
+                                                            maxlength="100"/>
+                                                </div>
+                                            </div>
+                                            <div class="Container33 Responsive"></div>
+                                        </div>
+                                        <div class="ContainerIndent">
+                                            <p:commandLink id="linkErrorFile" ajax="false"
+                                                           immediate="true"
+                                                           rendered="#{limitStockCreateOrderController.showWhenError}"
+                                                           style="color:red !important"
+                                                           styleClass="Fleft">
+                                                <h:outputText value="#{lang['button.export.excel.error']}"/>
+                                                <p:fileDownload
+                                                        value="#{limitStockCreateOrderController.downloadErrorFile()}"/>
+                                            </p:commandLink>
+                                            <p:commandLink id="linkTemplateFile"
+                                                           value="#{lang['mn.stock.limit.template.download']}"
+                                                           rendered="true"
+                                                           title="#{lang['mn.stock.limit.template.download']}"
+                                                           ajax="false"
+                                                           immediate="true"
+                                                           styleClass="Fright">
+                                                <p:fileDownload
+                                                        value="#{limitStockCreateOrderController.downloadTemplateFile()}"/>
+                                            </p:commandLink>
+                                        </div>
+                                    </div>
+                                </div>
+                            </p:outputPanel>
+                            <p:outputPanel id="pnlOfficeFile" styleClass="Container100">
+                                <p:outputPanel styleClass="Container100"
+                                               rendered="#{limitStockCreateOrderController.writeOffice}">
+                                    <cbs:inputSignOffice value="#{limitStockCreateOrderController.writeOfficeTag}"
+                                                         title="#{lang['export.order.view.office']}"
+                                                         idComponent="writeOfficeExport"/>
+                                </p:outputPanel>
+                            </p:outputPanel>
+
+                            <div class="ContainerIndent TexAlCenter">
+                                <cbs:confirmDialog
+                                        idComponent="btnConfirmFile"
+                                        titleButton="#{lang['mn.stock.branch.btn.create.request']}"
+                                        valueButton="#{lang['mn.stock.branch.btn.create.request']}"
+                                        headerConfirm="#{lang['mn.stock.branch.btn.create.request']}"
+                                        messageConfirm="#{lang['mn.stock.limit.msg.createOrder.confirm']}"
+                                        actionOK="#{limitStockCreateOrderController.onCreateOrderFile()}"
+                                        resetValueButton="true"
+                                        process="@form"
+                                        updateArea="@form"
+                                        updateOK="@form"
+                                        actionValidate="#{limitStockCreateOrderController.onValidateConfirm()}"
+                                        focusCancel="false"
+                                        isButton="true"/>
+                            </div>
+                        </p:outputPanel>
+                    </p:tab>
+                </p:tabView>
+            </h:panelGrid>
+        </h:form>
+    </ui:define>
+</ui:composition>

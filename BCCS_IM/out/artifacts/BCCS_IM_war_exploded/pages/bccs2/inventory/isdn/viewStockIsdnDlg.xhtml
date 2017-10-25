@@ -1,0 +1,55 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:form id="frmViewInforWarehouse" styleClass="Container100">
+        <p:outputPanel styleClass="ContainerIndent mg-top-0">
+            <p:treeTable id="treeTblListStock"
+                         emptyMessage="#{lang['common.empty.records']}"
+                         var="item"
+                         style="max-height:300px; overflow:auto;"
+                         value="#{establishExportIsdnController.rootStock}">
+                <p:column styleClass="col-left" sortBy="#{item.productCode}" style="width: 35%;">
+                    <f:facet name="header">
+                        <h:outputText value="#{lang['mn.stock.utilities.code.stock']}"
+                                      title="#{lang['mn.stock.utilities.code.stock']}"/>
+                    </f:facet>
+                    <p:outputLabel value="#{item.productCode}" title="#{item.productCode}"/>
+                </p:column>
+                <p:column styleClass="col-left" sortBy="#{item.productName}" style="width:50%;">
+                    <f:facet name="header">
+                        <h:outputText value="#{lang['import.partner.product.name']}"
+                                      title="#{lang['import.partner.product.name']}"/>
+                    </f:facet>
+                    <p:outputLabel value="#{item.productName}" title="#{item.productName}"/>
+                </p:column>
+                <p:column styleClass="col-right" style="width: 15%;">
+                    <f:facet name="header">
+                        <h:outputText value="#{lang['MSG.exp.cmd.underlying.from.file.07']}"
+                                      title="#{lang['MSG.exp.cmd.underlying.from.file.07']}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.quantity}" title="#{item.quantity}"
+                                  converter="currencyFormat" escape="true"/>
+                </p:column>
+            </p:treeTable>
+        </p:outputPanel>
+
+        <div class="Container100 TexAlCenter mg-top-0">
+            <p:commandButton
+                    id="bthExportFile"
+                    value="#{lang['brasIpPool.button.export']}"
+                    rendered="#{not empty establishExportIsdnController.lstInfoStock}"
+                    title="#{lang['brasIpPool.button.export']}"
+                    ajax="false"
+                    immediate="true"
+                    style="text-decoration: none!important;">
+                <p:fileDownload
+                        value="#{establishExportIsdnController.downloadInfoStock()}"/>
+            </p:commandButton>
+        </div>
+    </h:form>
+</ui:composition>

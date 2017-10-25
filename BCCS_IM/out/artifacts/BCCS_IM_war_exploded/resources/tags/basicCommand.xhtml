@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <composite:interface >
+        <composite:attribute name="ajax" default="true" />
+        <composite:attribute name="disabledAdd" default="false" shortDescription="disable button add" />
+        <composite:attribute name="disabledDelete" default="false" shortDescription="disable button delete" />
+        <composite:attribute name="disabledReport" default="false" shortDescription="disable button report" />
+        <composite:attribute name="globalAdd" default="true" shortDescription="global button add" />
+        <composite:attribute name="globalDelete" default="true" shortDescription="global button delete" />
+        <composite:attribute name="globalReport" default="true" shortDescription="global button report" />
+        <composite:attribute name="processAdd" default="@form" shortDescription="process action add, default @form" />
+        <composite:attribute name="processDelete" default="@form" shortDescription="process action delete, default = @form" />
+        <composite:attribute name="processReport" default="@form" shortDescription="process action report, default = @form" />
+        <composite:attribute name="resetValuesAdd" default="true" shortDescription="reset value after click add, default = true" />
+        <composite:attribute name="resetValuesDelete" default="true" shortDescription="reset value after click delete, default = true" />
+        <composite:attribute name="resetValuesReport" default="true" shortDescription="reset value after click report, default = true" />
+        <composite:attribute name="actionListenerAdd" method-signature="java.lang.String action()" shortDescription="action method Add" />
+        <composite:attribute name="actionListenerDelete" method-signature="java.lang.String action()" shortDescription="action method delete" />
+        <composite:attribute name="actionListenerReport" method-signature="java.lang.String action()" shortDescription="action method report" />
+        <composite:attribute name="updateAdd" default="" shortDescription="update after click Add" />
+        <composite:attribute name="updateDelete" default="" shortDescription="update after click delete" />
+        <composite:attribute name="updateReport" default="" shortDescription="update after click report" />
+        <composite:attribute name="oncompleteAdd" shortDescription="oncomplete for button add" />
+        <composite:attribute name="oncompleteDelete" shortDescription="oncomplete for button delete" />
+        <composite:attribute name="oncompleteReport" shortDescription="oncomplete for button report" />
+        <composite:attribute name="styleClassAdd" default="ui-icon-add" shortDescription="class css action add"  />
+        <composite:attribute name="styleClassDelete" default="ui-icon-trash" shortDescription="class css action report"  />
+        <composite:attribute name="styleClassReport" default="ui-icon-report" shortDescription="class css action report"  />
+        <composite:attribute name="styleAdd" default="" shortDescription="style css action add"  />
+        <composite:attribute name="styleDelete" default="" shortDescription="style css action report"  />
+        <composite:attribute name="styleReport" default="" shortDescription="style css action report"  />
+        <composite:attribute name="renderedAdd" default="true" shortDescription="renderer action add"  />
+        <composite:attribute name="renderedDelete" default="true" shortDescription="renderer action delete"  />
+        <composite:attribute name="renderedReport" default="true" shortDescription="renderer action report"  />
+    </composite:interface>
+    <composite:implementation>
+        <p:panelGrid styleClass="w100 filterPanel">
+            <p:row>
+                <p:column>
+                    <span class="vt-button sale" style="float:left;height: 20px;">
+                        <p:commandLink 
+                            ajax="#{cc.attrs.ajax}" 
+                            disabled="false" 
+                            global="#{cc.attrs.globalAdd}"  
+                            process="#{cc.attrs.processAdd}" 
+                            resetValues="#{cc.attrs.resetValuesAdd}"
+                            actionListener="#{cc.attrs.actionListenerAdd}"
+                            update="#{cc.attrs.updateAdd}" 
+                            oncomplete="#{cc.attrs.oncompleteAdd}"
+                            style="#{cc.attrs.styleAdd}"
+                            styleClass="ui-icon #{cc.attrs.styleClassAdd}"
+                            rendered="#{cc.attrs.renderedAdd}"
+                            >
+                        </p:commandLink>
+                    </span>
+                    <span class="vt-button sale" style="float:left;height: 20px;">
+                        <p:commandLink 
+                            ajax="#{cc.attrs.ajax}" 
+                            disabled="false" 
+                            global="#{cc.attrs.globalDelete}"  
+                            process="#{cc.attrs.processDelete}" 
+                            resetValues="#{cc.attrs.resetValuesDelete}"
+                            actionListener="#{cc.attrs.actionListenerDelete}"
+                            update="#{cc.attrs.updateDelete}" 
+                            oncomplete="#{cc.attrs.oncompleteDelete}"
+                            style="#{cc.attrs.styleDelete}"
+                            styleClass="ui-icon #{cc.attrs.styleClassDelete}" 
+                            rendered="#{cc.attrs.renderedDelete}"
+                            >
+                        </p:commandLink>
+                    </span>
+                    <span class="vt-button sale" style="float:left;height: 20px;">
+                        <p:commandLink 
+                            ajax="#{cc.attrs.ajax}" 
+                            disabled="false" 
+                            global="#{cc.attrs.globalReport}"  
+                            process="#{cc.attrs.processReport}" 
+                            resetValues="#{cc.attrs.resetValuesReport}"
+                            actionListener="#{cc.attrs.actionListenerReport}"
+                            update="#{cc.attrs.updateReport}" 
+                            oncomplete="#{cc.attrs.oncompleteReport}"
+                            style="#{cc.attrs.styleReport};"
+                            styleClass="ui-icon #{cc.attrs.styleClassReport}" 
+                            rendered="#{cc.attrs.renderedReport}"
+                            >
+                        </p:commandLink>
+                    </span>
+                </p:column>
+            </p:row>
+        </p:panelGrid>
+    </composite:implementation>
+</html>
+

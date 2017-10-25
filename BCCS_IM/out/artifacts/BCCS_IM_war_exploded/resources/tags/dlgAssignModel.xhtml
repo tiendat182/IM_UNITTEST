@@ -1,0 +1,160 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:pe="http://primefaces.org/ui/extensions">
+    <h:form id="frmdlgAssignStatus">
+        <p:outputPanel id="pnlUpdateRuleList" styleClass="Container100">
+            <div class="Container100 marginTopBottom10">
+                <p:messages id="msgDlgAssignStatus" showDetail="true" showSummary="false" closable="true"/>
+
+                <div class="ContainerIndent mg-top-0">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.type.service']}"
+                                       />
+                        <!-- <div class="ContainerIndent mg-top-0"> -->
+                    </div>
+                    <div class="Container60 Responsive50">
+                        <p:outputLabel id="labelService" styleClass="lb-sentinel pd-top-7" value="#{cc.attrs.value.serviceName}" />
+                        <!--<p:selectOneMenu id="assignModelServiceType#{cc.attrs.idComponent}"-->
+                                         <!--required="true"-->
+                                         <!--requiredMessage="#{lang['mn.stock.status.service.noselect']}"-->
+                                         <!--value="#{cc.attrs.value.searchStockNumberDTO.serviceType}">-->
+                            <!--<f:selectItems-->
+                                    <!--value="#{cc.attrs.value.optionSetValueDTOs}"-->
+                                    <!--var="item"-->
+                                    <!--itemDisabled="true"-->
+                                    <!--itemValue="#{item.value}"-->
+                                    <!--itemLabel="#{item.name}"-->
+                                    <!--itemLabelEscaped="true"-->
+                                    <!--/>-->
+                            <!--<p:ajax event="change" process="@this" update="@([id$=pnlProduct]), @([id$=pnlProductOld])"-->
+                                    <!--listener="#{cc.attrs.value.changeServiceType}"-->
+                                    <!--/>-->
+                        <!--</p:selectOneMenu>-->
+                        <!--<p:message for="assignModelServiceType#{cc.attrs.idComponent}"/>-->
+                    </div>
+                </div>
+
+                <div class="ContainerIndent mg-top-0">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['search.number.range.product.new']}"
+                                       for="productOfferTotalNew"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:outputPanel id="pnlProduct"
+                                       styleClass="#{cc.attrs.classDivInput} ui-fluid ui-relative">
+                            <p:autoComplete id="productOfferTotalNew"
+                                            value="#{cc.attrs.value.productOfferingTotalNewDTO}"
+                                            forceSelection="true"
+                                            completeMethod="#{cc.attrs.value.doChangeOfferingNew}"
+                                            placeholder="#{lang['export.order.stock.inputText.new']}"
+                                            onfocus="this.setSelectionRange(0, this.value.length)"
+                                            var="productOfferingTotalNewDTO"
+                                            maxResults="#{cc.attrs.value.limitAutoComplete}"
+                                            itemLabel="#{productOfferingTotalNewDTO.itemLabel}"
+                                            itemValue="#{productOfferingTotalNewDTO}"
+                                            styleClass=" autoCpl"
+                                            required="true"
+                                            requiredMessage="#{lang['search.number.range.validate.require.productNewId']}"
+                                            maxlength="100" scrollHeight="300">
+                                <f:attribute name="index" value="#{index}"/>
+                                <o:converter converterId="productOfferingConverter"
+                                             list="#{cc.attrs.value.lsProductOfferingTotalNewDTO}"/>
+                                <p:column headerText="#{lang['common.lb.code']}"><h:outputText escape="true"
+                                                                                               value="#{productOfferingTotalNewDTO.code}"/></p:column>
+                                <p:column headerText="#{lang['common.lb.name']}"><h:outputText escape="true"
+                                                                                               value="#{productOfferingTotalNewDTO.name}"/></p:column>
+                                <p:ajax event="query" global="false"/>
+                            </p:autoComplete>
+                            <p:commandLink id="btnClearNew"
+                                           rendered="true"
+                                           styleClass="ui-link-right"
+                                           update="productOfferTotalNew"
+                                           actionListener="#{cc.attrs.value.clearProductNew}"
+                                           process="@this">
+                                <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                            </p:commandLink>
+                            <p:message for="productOfferTotalNew"/>
+                        </p:outputPanel>
+                    </div>
+                </div>
+
+                <div class="Container100">
+                    <p:outputPanel rendered="true" id="pnLink"
+                                   styleClass="Container100 TexAlCenter">
+
+                        <!--<p:commandButton process="@this, @([id$=productOfferTotalNew])"
+                                         value="#{lang['mn.stock.status.update']}"
+                                         update="@this, @([id$=msgDlgAssignStatus])"
+                                         actionListener="#{assigningModelForIsdnController.doConfirmUpdateDlg}"
+                                         oncomplete="if(!args.validationFailed){PF('dlgConfirmUpdate').show();}
+                                      setTimeout(function () {$('.btnCloseStyle').focus();}, 350);"/>-->
+
+                        <cbs:confirmDialog
+                                idComponent="btnUpdateStatus"
+                                valueButton="#{lang['mn.stock.status.update']}"
+                                headerConfirm="#{lang['mn.stock.utilities.update.model']}"
+                                messageConfirm="#{assigningModelForIsdnController.confirmMessage}"
+                                actionOK="#{assigningModelForIsdnController.doUpdateModel}"
+                                resetValueButton="false"
+                                process="@this, @([id$=productOfferTotalNew])"
+                                updateArea="@([id$=msgDlgAssignStatus]),@([id$=pnLink])"
+                                updateOK="@form, @([id$=assignModelMsgs])"
+                                actionValidate="#{assigningModelForIsdnController.doConfirmUpdateDlg}"
+                                focusCancel="false"
+                                isButton="true"
+                                oncompleteOK="PF('dlgAssignModel').hide();"
+                                />
+
+                        <p:commandButton value="#{lang['mn.stock.status.update.close']}"
+                                         styleClass="mg-left-5"
+                                         oncomplete="if(!args.validationFailed) {PF('dlgAssignModel').hide();}"/>
+                    </p:outputPanel>
+
+                </div>
+            </div>
+        </p:outputPanel>
+
+        <!--<p:confirmDialog closeOnEscape="true" closable="true"-->
+                         <!--appendTo="@(body)"-->
+                         <!--widgetVar="dlgConfirmAddClose"-->
+                         <!--header="#{lang['mn.isdn.rule.header.add']}"-->
+                         <!--id="dlgConfirmAddClose"-->
+                         <!--width="550"-->
+                         <!--message="#{lang['mn.isdn.rule.msg.add.confirm']}">-->
+            <!--<p:commandLink value="#{lang['common.button.NO']}" styleClass="md-button" process="@none"-->
+                           <!--onstart="PF('dlgConfirmAddClose').hide();"-->
+                    <!--/>-->
+            <!--<p:commandLink process="@this,pnlAddRuleList"-->
+                           <!--update="pnlAddRuleList,frmExportNote:pnUnderExportNote,frmExportNote:pnInfoExportOrder,frmExportNote:pnLstExportOrder"-->
+                           <!--value="#{lang['common.button.YES']}" styleClass="md-button btnAddCloseOK "-->
+                           <!--oncomplete=" PF('dlgConfirmAddClose').hide(); if(!args.validationFailed) {PF('dlgAddRuleList').hide();}"-->
+                           <!--actionListener="#{createRuleListController.addRuleList()}"/>-->
+
+        <!--</p:confirmDialog>-->
+
+        <p:confirmDialog closeOnEscape="true" closable="true"
+                         appendTo="@(body)"
+                         widgetVar="dlgConfirmUpdate"
+                         header="#{lang['mn.stock.utilities.update.model']}"
+                         id="cfmBtn"
+                         width="550"
+                         message="#{assigningModelForIsdnController.confirmMessage}">
+            <p:commandLink value="#{lang['common.button.NO']}" styleClass="md-button" process="@none"
+                           onstart="PF('dlgConfirmUpdate').hide();"
+                    />
+            <p:commandLink process="@this, @([id$=productOfferTotalNew])"
+                           update="@([id$=assignModelMsgs]), @([id$=tblListRange])"
+                           value="#{lang['common.button.YES']}"
+                           styleClass="md-button btnCloseStyle"
+                           oncomplete="PF('dlgConfirmUpdate').hide(); PF('dlgAssignModel').hide();"
+                           actionListener="#{assigningModelForIsdnController.doUpdateModel}"/>
+        </p:confirmDialog>
+    </h:form>
+</ui:composition>

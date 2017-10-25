@@ -1,0 +1,92 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://java.sun.com/jsf/core">
+    <h:form id="frmEditQuota">
+        <p:outputPanel id="pnEditQuota" styleClass="Containe100">
+            <div class="ContainerIndent mg-top-0">
+                <p:messages id="msgEstabishQu" showSummary="false" showDetail="true" closable="true"/>
+            </div>
+            <div class="ContainerIndent ">
+                <div class="Container40 Responsive mg-left-15 pd-top-5">
+                    <p:outputLabel styleClass="lb-sentinel" for="quotalevel" value="#{lang['quota.establish.level']}"/>
+                </div>
+                <div class="Container60 Responsive ui-fluid">
+                    <p:selectOneMenu id="quotalevel"
+                                     value="#{establishQuotaController.forEditDTO.debitLevel}"
+                                     disabled="true"
+                                     required="true"
+                                     requiredMessage="#{lang['quota.establish.validate.quota']}">
+                        <f:selectItem itemValue=""
+                                      itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                        <f:selectItems value="#{establishQuotaController.optionSetValueDTOslevel}"
+                                       var="optionSetValueDTOslevel"
+                                       itemLabel="#{optionSetValueDTOslevel.name}"
+                                       itemValue="#{optionSetValueDTOslevel.value}"/>
+                        <p:message for="quotalevel"/>
+                    </p:selectOneMenu>
+                    <p:message for="quotalevel"/>
+                </div>
+            </div>
+            <div class="ContainerIndent ">
+                <div class="Container40 Responsive mg-left-15 pd-top-5">
+                    <p:outputLabel styleClass="lb-sentinel" for="quotatype" value="#{lang['quota.establish.type']}"/>
+                </div>
+                <div class="Container60 Responsive ui-fluid">
+                    <p:selectOneMenu id="quotatype"
+                                     value="#{establishQuotaController.forEditDTO.debitDayType}"
+                                     disabled="true"
+                                     required="true"
+                                     requiredMessage="#{lang['quota.establish.validate.type']}">
+                        <f:selectItem itemValue=""
+                                      itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                        <f:selectItems value="#{establishQuotaController.optionSetValueDTOstype}"
+                                       var="optionSetValueDTOstype"
+                                       itemLabel="#{optionSetValueDTOstype.name}"
+                                       itemValue="#{optionSetValueDTOstype.value}"/>
+                        <p:message for="quotatype"/>
+                    </p:selectOneMenu>
+                    <p:message for="quotatype"/>
+                </div>
+            </div>
+            <div class="ContainerIndent ">
+                <div class="Container40 Responsive mg-left-15 pd-top-7">
+                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['quota.establish.value']}"
+                                   for="quotavalueEdit"/>
+                </div>
+                <div class="Container60 Responsive ui-fluid">
+                    <p:inputText id="quotavalueEdit"
+                                 value="#{establishQuotaController.forEditDTO.debitAmount}"
+                                 placeholder="#{lang['quota.estabilsh.value.input']}"
+                                 disabled="false"
+                                 required="true"
+                                 maxlength="19"
+                                 requiredMessage="#{lang['quota.establish.validate.value']}"/>
+                    <pe:keyFilter for="quotavalueEdit" regEx="/[\d]/"/>
+                    <p:message for="quotavalueEdit"/>
+                </div>
+            </div>
+            <div class="Container100 TexAlCenter marT10">
+                <cbs:confirmDialog
+                        idComponent="btnsaveEdit"
+                        titleButton="#{lang['common.confirm']}"
+                        valueButton="#{lang['common.confirm']}"
+                        headerConfirm="#{lang['common.edit.record']}"
+                        messageConfirm="#{lang['common.msg.edit.confirm']}"
+                        actionOK="#{establishQuotaController.updateDebitLevel}"
+                        resetValueButton="true"
+                        updateArea="@([id$=frmEstablishQuota]),@([id$=pnEditQuota])"
+                        updateOK="@([id$=frmEstablishQuota]),@([id$=pnEditQuota])"
+                        oncompleteOK="if(!args.validationFailed) {PF('dlgEstablishQuotaEdit').hide();}"
+                        process="@form"
+                        focusCancel="false"
+                        isButton="true"
+                        />
+            </div>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

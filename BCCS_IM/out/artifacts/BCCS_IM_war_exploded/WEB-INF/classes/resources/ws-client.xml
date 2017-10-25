@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:cxf="http://cxf.apache.org/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
+        ">
+
+    <bean id="loggingOutInterceptor"
+          class="org.apache.cxf.interceptor.LoggingOutInterceptor">
+        <property name="prettyLogging" value="false"/>
+    </bean>
+    <bean id="loggingInInterceptor"
+          class="org.apache.cxf.interceptor.LoggingInInterceptor">
+        <property name="prettyLogging" value="false"/>
+    </bean>
+
+    <bean id="cxfWsClientFactory" class="com.viettel.ws.provider.CxfWsClientFactory">
+        <property name="wsEndpointMap">
+            <map>
+                <entry key="com.viettel.bccs.inventory.service" value-ref="inventoryWsInfo"/>
+                <entry key="com.viettel.bccs.sale.service" value-ref="inventoryWsInfo"/>
+
+            </map>
+        </property>
+    </bean>
+
+    <bean id="wsCallerFactory" class="com.viettel.ws.provider.WsCallerFactory">
+        <property name="wsEndpointMap">
+            <map>
+                <entry key="com.viettel.bccs.inventory.service" value-ref="inventoryWsInfo"/>
+                <entry key="com.viettel.bccs.sale.service" value-ref="inventoryWsInfo"/>
+                <entry key="externalSaleService" value-ref="externalSaleService"/>
+                <entry key="saleReasonService" value-ref="saleReasonService"/>
+                <entry key="saleAppParamsService" value-ref="saleAppParamsService"/>
+                <entry key="productWsInfo" value-ref="productWsInfo"/>
+                <entry key="productWsForIM" value-ref="productWsForIM"/>
+                <entry key="signOfficeWsInfo" value-ref="signOfficeWsInfo"/>
+                <entry key="salesProgram" value-ref="salesProgram"/>
+                <entry key="customerCareService" value-ref="customerCareService"/>
+                <entry key="ccService" value-ref="ccService"/>
+                <entry key="kttsService" value-ref="kttsService"/>
+                <entry key="externalSystemSaleService" value-ref="externalSystemSaleService"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="productWsInfo" class="com.viettel.ws.provider.WsEndpoint">
+        <property name="name" value="ProductWs"/>
+        <property name="address" value="${product.ws.address}"/>
+        <property name="targetNameSpace" value="${product.ws.targetnamespace}"/>
+        <property name="userName" value="${product.ws.username}"/>
+        <property name="password" value="${product.ws.password}"/>
+        <property name="connectionTimeout" value="10000"/>
+        <property name="receiveTimeout" value="300000"/>
+    </bean>
+    <bean id="signOfficeWsInfo" class="com.viettel.ws.provider.WsEndpoint">
+        <property name="name" value="signOfficeWs"/>
+        <property name="address" value="${voffice.ws.address}"/>
+        <property name="targetNameSpace" value="${voffice.ws.targetnamespace}"/>
+        <property name="connectionTimeout" value="10000"/>
+        <property name="receiveTimeout" value="300000"/>
+    </bean>
+
+    <bean id="productWsForIM" class="com.viettel.ws.provider.WsEndpoint">
+        <property name="name" value="ProductWsIM"/>
+        <property name="address" value="${productim.ws.address}"/>
+        <property name="targetNameSpace" value="${productim.ws.targetnamespace}"/>
+        <property name="userName" value="${productim.ws.username}"/>
+        <property name="password" value="${productim.ws.password}"/>
+        <property name="connectionTimeout" value="10000"/>
+        <property name="receiveTimeout" value="300000"/>
+    </bean>
+
+    <bean id="inventoryWsInfo" class="com.viettel.ws.provider.WsEndpoint">
+        <property name="name" value="InventoryWs"/>
+        <property name="address" value="${inventory.ws.address}"/>
+        <property name="targetNameSpace" value="${inventory.ws.targetnamespace}"/>
+        <!--<property name="prefix" value="${inventory.ws.prefix}"/>-->
+        <property name="userName" value="${inventory.ws.username}"/>
+        <property name="password" value="${inventory.ws.password}"/>
+        <property name="connectionTimeout" value="10000"/>
+        <property name="receiveTimeout" value="300000"/>
+    </bean>
+
+    <bean id="externalSaleService" class="com.viettel.ws.provider.WsEndpoint">
+        <property name="name" value="externalSaleService"/>
+        <property name="address" value="${sale.ws.externalSaleService.address}"/>
+        <property name="targetNameSpace" value="${sale.ws.externalSaleService.targetnamespace}"/>
+        <property name="userName" value="${sale.ws.externalSaleService.username}"/>
+        <property name="password" value="${sale.ws.externalSaleService.password}"/>
+        <property name="connectionTimeout" value="60000"/>
+        <property name="receiveTimeout" value="60000"/>
+    </bean>
+    <bean id="saleReasonService" class="com.viettel.ws.provider.WsEndpoint">
+        <property name="name" value="saleReasonService"/>
+        <property name="address" value="${sale.ws.saleReasonService.address}"/>
+        <property name="targetNameSpace" value="${sale.ws.saleReasonService.targetnamespace}"/>
+        <property name="userName" value="${sale.ws.saleReasonService.username}"/>
+        <property name="password" value="${sale.ws.saleReasonService.password}"/>
+        <property name="connectionTimeout" value="30000"/>
+        <property name="receiveTimeout" value="60000"/>
+    </bean>
+    <bean id="saleAppParamsService" class="com.viettel.ws.provider.WsEndpoint">
+        <property name="name" value="saleAppParamsService"/>
+        <property name="address" value="${sale.ws.saleAppParamsService.address}"/>
+        <property name="targetNameSpace" value="${sale.ws.saleAppParamsService.targetnamespace}"/>
+        <property name="userName" value="${sale.ws.saleAppParamsService.username}"/>
+        <property name="password" value="${sale.ws.saleAppParamsService.password}"/>
+        <property name="connectionTimeout" value="30000"/>
+        <property name="receiveTimeout" value="60000"/>
+    </bean>
+    <bean id="salesProgram" class="com.viettel.ws.provider.WsEndpoint">
+        <property name="name" value="salesProgram"/>
+        <property name="address" value="${sale.ws.salesProgram.address}"/>
+        <property name="targetNameSpace" value="${sale.ws.salesProgram.targetnamespace}"/>
+        <property name="userName" value="${sale.ws.salesProgram.username}"/>
+        <property name="password" value="${sale.ws.salesProgram.password}"/>
+        <property name="connectionTimeout" value="30000"/>
+        <property name="receiveTimeout" value="60000"/>
+    </bean>
+    <bean id="customerCareService" class="com.viettel.ws.provider.WsEndpoint">
+        <property name="name" value="customerCareService"/>
+        <property name="address" value="${customerCare.ws.address}"/>
+        <property name="targetNameSpace" value="${customerCare.ws.targetnamespace}"/>
+        <property name="userName" value="${customerCare.ws.username}"/>
+        <property name="password" value="${customerCare.ws.password}"/>
+        <property name="connectionTimeout" value="30000"/>
+        <property name="receiveTimeout" value="60000"/>
+    </bean>
+    <bean id="ccService" class="com.viettel.ws.provider.WsEndpoint">
+        <property name="name" value="ccService"/>
+        <property name="address" value="${customerCare.ccService.address}"/>
+        <property name="targetNameSpace" value="${customerCare.ccService.targetnamespace}"/>
+        <property name="userName" value="${customerCare.ccService.username}"/>
+        <property name="password" value="${customerCare.ccService.password}"/>
+        <property name="connectionTimeout" value="30000"/>
+        <property name="receiveTimeout" value="60000"/>
+    </bean>
+
+    <bean id="kttsService" class="com.viettel.ws.provider.WsEndpoint">
+        <property name="name" value="kttsService"/>
+        <property name="address" value="${ktts.ws.address}"/>
+        <property name="targetNameSpace" value="${ktts.ws.targetnamespace}"/>
+        <!--<property name="userName" value="${ktts.ws.username}"/>-->
+        <!--<property name="password" value="${ktts.ws.password}"/>-->
+        <property name="connectionTimeout" value="10000"/>
+        <property name="receiveTimeout" value="300000"/>
+    </bean>
+
+    <bean id="externalSystemSaleService" class="com.viettel.ws.provider.WsEndpoint">
+        <property name="name" value="externalSystemSaleService"/>
+        <property name="address" value="${sale.ws.externalSystemSaleService.address}"/>
+        <property name="targetNameSpace" value="${sale.ws.externalSystemSaleService.targetnamespace}"/>
+        <property name="userName" value="${sale.ws.externalSystemSaleService.username}"/>
+        <property name="password" value="${sale.ws.externalSystemSaleService.password}"/>
+        <property name="connectionTimeout" value="30000"/>
+        <property name="receiveTimeout" value="60000"/>
+    </bean>
+
+</beans>

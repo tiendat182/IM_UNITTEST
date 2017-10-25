@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+
+<h:head>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+    </f:facet>
+    <title><ui:insert name="title">Template</ui:insert></title>
+
+
+    <script type="text/javascript">
+        var t;
+
+        function startTimer() {
+            t = setTimeout("PF('statusDialog').show()", 1000);
+        }
+
+        function stopTimer() {
+            clearTimeout(t);
+
+        }
+
+        function refreshParent() {
+            window.opener.location.reload();
+        }
+
+    </script>
+    <link href="#{request.contextPath}/resources/primefaces-sentinel/framework.css" rel="stylesheet" type="text/css"/>
+    <h:outputStylesheet name="primefaces-sentinel/framework.css" />
+
+
+    <h:outputScript name="js/layout.js" library="sentinel-layout"/>
+    <h:outputScript name="js/framework.js" library="sentinel-layout"/>
+
+    <h:outputText value="&lt;!--[if gte IE 9]&gt;" escape="false"/>
+
+    <style type="text/css">
+        .ui-tabs-top .ui-tabs-nav li,
+        .ui-tabs .ui-tabs-nav li {
+            margin-bottom: 0px !important;
+        }
+    </style>
+    <h:outputText value="&lt;![endif]--&gt;" escape="false"/>
+
+    <ui:insert name="head"/>
+</h:head>
+
+<h:body>
+
+
+    <f:view locale="#{locateBean.selectedLocale}" contentType="text/html" id="viewLocale">
+
+       <div id="layout-portlets-cover" class="fontRegular" style="padding-top: 0px;">
+
+            <p:ajaxStatus onstart="startTimer();"
+                          onsuccess="PF('statusDialog').hide();stopTimer();"
+                          onerror="PF('errorDialog').show();stopTimer();PF('statusDialog').hide()"/>
+
+            <p:dialog modal="true" widgetVar="statusDialog" header="Processing"
+                      draggable="false" closable="false" resizable="false">
+                <img alt="" src="#{request.contextPath}/resources/themes/logo/ajaxloadingbar.gif"/>
+            </p:dialog>
+
+            <p:dialog modal="true" widgetVar="errorDialog"
+                      header="#{lang['common.error.happened']}" draggable="false" closable="false" resizable="false">
+                #{lang['common.error.pressF5']}
+            </p:dialog>
+
+
+            <p:commandButton style="display: none"
+                             widgetVar="globalCFM"
+                             actionListener="#{fwe.getAlertMsg}"
+                             update="globalConfirmDialog"
+                             global="false"
+                             oncomplete="PF('globalConfirmDialog').show()">
+            </p:commandButton>
+
+            <p:commandButton style="display: none"
+                             widgetVar="globalReportBtn"
+                             actionListener="#{fwe.report()}"
+                             global="false">
+            </p:commandButton>
+
+            <p:dialog id="globalConfirmDialog" appendTo="@(body)"
+                      header="#{fwe.header==null?Confirmation:fwe.header}"
+                      styleClass="sale"
+                      width="300"
+                      widgetVar="globalConfirmDialog" modal="true"
+                      closable="false"
+                      resizable="false">
+
+                <div align="center" style="margin-top:10px">
+
+                    <h:outputFormat value="#{fwe.alertMsg}" style="font-size: medium"
+                                    rendered="#{fwe.paramCfm!=null}">
+                        <f:param value="#{fwe.paramCfm}"/>
+                    </h:outputFormat>
+                    <h:outputText value="#{fwe.alertMsg}" rendered="#{fwe.paramCfm==null}"/>
+                </div>
+                <div align="center">
+
+                    <p:commandButton value="#{fwe.yesLabel}"
+                                     icon="ui-icon-check"
+                                     id="executeButton"
+                                     global="#{fwe.global}"
+                                     actionListener="#{fwe.execute}"
+                                     oncomplete="PF('globalConfirmDialog').hide()"
+                                     style="margin-right: 40px;margin-top: 30px"/>
+                    <p:commandButton value="#{fwe.noLabel}"
+                                     style="margin-top: 30px"
+                                     global="false"
+                                     icon="ui-icon-power"
+                                     actionListener="#{fwe.resetMsg}"
+                                     oncomplete="PF('globalConfirmDialog').hide()"/>
+                </div>
+
+            </p:dialog>
+
+            <p:confirmDialog global="true">
+                <div align="center">
+                    <p:commandButton value="#{lang['common.button.YES']}"
+                                     type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+                                     style="margin-right: 40px;margin-top: 10px"/>
+                    <p:commandButton value="#{lang['common.button.NO']}" style="margin-top: 10px"
+                                     type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                </div>
+            </p:confirmDialog>
+
+            <ui:insert name="content">
+                Template
+            </ui:insert>
+        </div>
+
+    </f:view>
+
+
+    <h:outputStylesheet name="css/font-icon-layout.css" library="sentinel-layout"/>
+    <h:outputStylesheet name="css/sentinel-layout.css" library="sentinel-layout"/>
+    <h:outputStylesheet name="css/core-layout.css" library="sentinel-layout"/>
+</h:body>
+
+</html>

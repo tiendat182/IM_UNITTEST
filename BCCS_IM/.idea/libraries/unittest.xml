@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="unittest">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../LibWeb_v5/unittest" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../LibWeb_v5/unittest" />
+      <root url="jar://$USER_HOME$/.ideaLibSources/powermock-core-1.6.5-sources.jar!/" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/../LibWeb_v5/unittest" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/../LibWeb_v5/unittest" recursive="false" type="SOURCES" />
+  </library>
+</component>

@@ -1,0 +1,38 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:form id="frmDlgDetailStock" styleClass="Container100">
+        <p:outputPanel id="pnlDlgDetailStock" styleClass="ContainerIndent">
+            <p:dataTable
+                    id="tblDetailStock"
+                    var="item"
+                    rowKey=""
+                    rowIndexVar="index"
+                    resizableColumns="true"
+                    paginator="#{lang['common.paging.paginator']}"
+                    rows="#{lang['common.paging.rows.default']}"
+                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                    emptyMessage="#{lang['common.empty.records']}"
+                    value="">
+                <p:column headerText="#{lang['export.order.name.product']}">
+                    <p:outputLabel value="Thẻ cào MG 100"/>
+                </p:column>
+                <p:column headerText="#{lang['mn.stock.fromSerial']}">
+                    <p:outputLabel value="111122222"/>
+                </p:column>
+                <p:column headerText="#{lang['mn.stock.ToSerial']}">
+                    <p:outputLabel value="111122225"/>
+                </p:column>
+                <p:column headerText="#{lang['common.number']}">
+                    <p:outputLabel value="4" styleClass="Fright"/>
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

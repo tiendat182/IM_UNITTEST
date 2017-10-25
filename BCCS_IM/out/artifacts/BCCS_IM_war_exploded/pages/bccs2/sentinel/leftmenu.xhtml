@@ -1,0 +1,75 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ps="http://primefaces.org/sentinel"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+        >
+
+    <div id="layout-menubar" class="Unselectable fontRegular">
+
+        <div class="layout-menubarinner-box" id="buttonArea">
+
+            <a href="#" id="layout-menubar-resize" class="BordRad3"
+               title="Menu Resize"> <!-- style="background: #ffffff;" -->
+                <i class="icon-th-list-2 white"></i>
+            </a>
+            <a href="#" id="layout-menubar-resize2" class="BordRad3"
+               title="Open Menu"><!-- style="background: #ffffff;" -->
+                <i class="icon-menu white"></i>
+            </a>
+        </div>
+        <div class="layout-menubarinner-box contextPlacehoder" id="searchArea">
+            <i class="icon-search white"></i> <!-- style="color: #5A5A5A;float:right;" -->
+            <input type="text" onkeyup="setTimeout(searchMenuItem(),50)" class="layout-menubar-search floatRight Animated05"
+                   style="color:white;" placeholder="#{lang['leftmenu.search']}"/> <!-- style="width:190px;border:none;" -->
+        </div>
+
+        <h:form id="form_menu">
+            <ps:menu id="menu" model="#{menuBean.model}"/>
+        </h:form>
+        <script type="text/javascript">
+            function searchMenuItem() {
+                var inputSearch = jQuery("#searchArea").find("input");
+                var menuContainer = jQuery("#layout-menubar .layout-menubar-container");
+                var strSearch = inputSearch.val();
+                //uu tien tim parent truoc
+                jQuery.each(jQuery(menuContainer).find(".cbs_menu_icon"), function () {
+                    //kiem tra ten cua parent co khop voi dieu kien tim kiem ko
+                    var tagA = jQuery(this).find("a");
+                    var parent = jQuery(this);
+                    //kiem tra tiep ten cua cac menu con, neu ko co thi an di
+                    var countItem = 0;
+                    jQuery.each(tagA, function (index) {
+                        //chi kiem tra cac menu con xem co trung voi tu khoa tim kiem ko
+                        if (index != 0) {
+                            var strSubItemName = jQuery(tagA[index]).text();
+                            if (!strSubItemName.toLowerCase().contains(strSearch.toLowerCase())) {
+                                jQuery(tagA[index]).css("display", "none");
+                            } else{
+                                countItem++;
+                                jQuery(tagA[index]).css("display", "block");
+                            }
+                        }
+                    });
+                    if(countItem != 0){
+                        jQuery(parent).css("display","block");
+                    }else{
+                        //kiem tra truong hop tu khoa tim kiem ko trung voi item con nao nhung lai trung voi parent menu
+                        var parentName = jQuery(tagA[0]).text();
+                        if (!parentName.toLowerCase().contains(strSearch.toLowerCase())) {
+                            jQuery(this).css("display", "none");
+                        } else {
+                            jQuery(this).css("display", "block");
+                            //neu tim thay cha thi hien het con len
+                            jQuery.each(tagA, function (entry) {
+                                jQuery(tagA[entry]).css("display", "block");
+                            });
+                        }
+                    }
+                });
+            }
+        </script>
+    </div>
+
+</ui:composition>

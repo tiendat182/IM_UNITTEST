@@ -1,0 +1,511 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['create.request.import']}</ui:define>
+    <ui:define name="featureName">#{lang['create.request.import']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmCreateRequestImport" enctype="multipart/form-data">
+            <p:focus for="frmCreateRequestImport:cbxProdOfferType"></p:focus>
+            <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                <p:messages id="msgCreateRequestImport" showDetail="true" showSummary="false" closable="true"/>
+            </div>
+            <!--Start vung thong tin yeu cau -->
+            <p:outputPanel id="pnlInfoRequest" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="panelInfoRequest" toggle="true"
+                           titleHeader="#{lang['information.request']}"/>
+
+                <div class="Container100 panelInfoRequest">
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive">
+                            <cbs:inputShop value="#{createRequestImportController.shopInfoReceiveTag}"
+                                           idComponent="ipReceiveShop"
+                                           methodName="doReceiveShop"
+                                           update="@this"
+                                           limit="#{createRequestImportController.limitAutoComplete}"
+                                           label="#{lang['export.order.stock.receive.product']}"
+                                           require="true"
+                                           classDivLabel="Container40 mg-left-15 Responsive50 pd-top-7"
+                                           classDivInput="Container60 Responsive50 ui-fluid"
+                                           requiredMessage="#{lang['store.import.stock.not.blank']}"
+                                           placeholder="#{lang['export.order.stock.receive.product.placehoder']}">
+                            </cbs:inputShop>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.limit.order.code']}"
+                                               for="txtRequestCode" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid ui-relative pd-top-4">
+                                <p:outputLabel id="txtRequestCode"
+                                               required="true"
+                                               requiredMessage="#{lang['create.request.import.request.code.require.msg']}"
+                                               value="#{createRequestImportController.importPartnerRequestDTO.requestCode}"
+                                               readonly="true"
+                                               maxlength="50"/>
+                                <p:commandLink id="btnResetRequestCode"
+                                               styleClass="ui-link-right"
+                                               update="@this, @([id$=txtRequestCode])"
+                                               actionListener="#{createRequestImportController.resetRequestCode}"
+                                               process="@this">
+                                    <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                </p:commandLink>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.limit.order.day']}"
+                                               for="requestDate" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                <!--<p:calendar id="requestDate"-->
+                                <!--mask="true"-->
+                                <!--pattern="#{lang['common.datetime.format']}"-->
+                                <!--converterMessage="#{lang['invalid.date.message']}"-->
+                                <!--validatorMessage="#{lang['request.date.validate.message']}"-->
+                                <!--value="#{createRequestImportController.importPartnerRequestDTO.createDate}"-->
+                                <!--placeholder="#{lang['create.note.from.date.placeholder']}"-->
+                                <!--required="true"-->
+                                <!--readonly="true"-->
+                                <!--requiredMessage="#{lang['request.date.require.msg']}">-->
+                                <!--<f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>-->
+                                <!--</p:calendar>-->
+                                <!--<p:message for="requestDate"/>-->
+                                <p:outputLabel id="requestDate"
+                                               value="#{createRequestImportController.importPartnerRequestDTO.createDate}"
+                                               title="#{createRequestImportController.importPartnerRequestDTO.createDate}"
+                                               readonly="true">
+                                    <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                </p:outputLabel>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['type.product']}"
+                                               for="cbxProdOfferType" styleClass="lb-sentinel"/>
+                            </div>
+                            <p:commandButton id="cmdProductOfferType" styleClass="cmdProductOfferType"
+                                             style="display: none;"
+                                             action="#{createRequestImportController.onChangeOfferType}"
+                                             process="@this, @([id$=inputProductOfferType])"
+                                             update="@this, @([id$=cplProductOffer])">
+                            </p:commandButton>
+                            <p:inputText id="inputProductOfferType"
+                                         value="#{createRequestImportController.productOfferTypeId}"
+                                         styleClass="txtProductOfferType" style="display: none;"/>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu id="cbxProdOfferType"
+                                                 required="true"
+                                                 styleClass="Wid100"
+                                                 filter="true" filterMatchMode="contains"
+                                                 onchange="$('.txtProductOfferType').val(this.value);clickLinkByClass('cmdProductOfferType');"
+                                                 value="#{createRequestImportController.productOfferTypeDTO.productOfferTypeId}"
+                                                 requiredMessage="#{lang['mn.stock.branch.type.product.msg.require']}">
+                                    <f:selectItems value="#{createRequestImportController.lstProductOfferTypeDTO}"
+                                                   var="item"
+                                                   itemValue="#{item.productOfferTypeId}"
+                                                   itemLabel="#{item.name}"/>
+                                </p:selectOneMenu>
+                                <p:message for="cbxProdOfferType"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.track.status.stock']}"
+                                               for="cbxProductStatus" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu id="cbxProductStatus"
+                                                 required="true"
+                                                 styleClass="Wid100"
+                                                 filter="true" filterMatchMode="contains"
+                                                 value="#{createRequestImportController.importPartnerDetailDTO.stateId}"
+                                                 requiredMessage="#{lang['mn.stock.branch.stock.status.msg.require']}">
+                                    <f:selectItem itemValue="1"
+                                                  itemLabel="#{lang['create.request.import.product.status1']}"/>
+                                    <f:selectItem itemValue="3"
+                                                  itemLabel="#{lang['create.request.import.product.status3']}"/>
+                                </p:selectOneMenu>
+                                <p:message for="cbxProductStatus"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.partner.text']}"
+                                               for="cbxPartner" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu id="cbxPartner"
+                                                 required="true"
+                                                 styleClass="Wid100"
+                                                 filter="true" filterMatchMode="contains"
+                                                 value="#{createRequestImportController.importPartnerRequestDTO.partnerId}"
+                                                 requiredMessage="#{lang['mn.stock.branch.partner.msg.require']}">
+                                    <f:selectItems value="#{createRequestImportController.lstPartnerDTO}"
+                                                   var="item"
+                                                   itemLabelEscaped="true"
+                                                   itemValue="#{item.partnerId}" itemLabel="#{item.partnerName}"/>
+                                </p:selectOneMenu>
+                                <p:message for="cbxPartner"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['model.stock']}"
+                                               for="cplProductOffer" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid ui-relative">
+                                <p:autoComplete id="cplProductOffer"
+                                                required="true"
+                                                requiredMessage="#{lang['create.request.import.model.stock.required']}"
+                                                value="#{createRequestImportController.productOfferingTotalDTO}"
+                                                disabled="#{!(createRequestImportController.productOfferingTotalDTO == null || createRequestImportController.productOfferingTotalDTO == '')}"
+                                                completeMethod="#{createRequestImportController.searchListProductOffering}"
+                                                placeholder="#{lang['model.stock.placeholder']}"
+                                                var="productOfferingTotalDTO"
+                                                itemValue="#{productOfferingTotalDTO}"
+                                                itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                autoHighlight="true"
+                                                maxResults="10"
+                                                forceSelection="true">
+                                    <o:converter converterId="productOfferingConverter"
+                                                 list="#{createRequestImportController.lstProductOfferingTotalDTO}"/>
+                                    <p:column style="width: 40%"
+                                              headerText="#{lang['common.lb.code']}"
+                                              filterable="true">
+                                        <p:outputLabel value="#{productOfferingTotalDTO.code}"/>
+                                    </p:column>
+                                    <p:column style="width: 60%"
+                                              headerText="#{lang['common.lb.name']}"
+                                              filterable="true">
+                                        <p:outputLabel value="#{productOfferingTotalDTO.name}"/>
+                                    </p:column>
+                                    <p:ajax event="query" global="false"/>
+                                </p:autoComplete>
+                                <p:commandLink id="btnResetLstProduct"
+                                               styleClass="ui-link-right"
+                                               update="@this, @([id$=cplProductOffer])"
+                                               actionListener="#{createRequestImportController.resetLstProductOfferingTotal}"
+                                               process="@this">
+                                    <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                </p:commandLink>
+                                <p:message for="cplProductOffer"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.branch.number.request']}"
+                                               for="txtNumberRequest" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="txtNumberRequest"
+                                             required="true"
+                                             maxlength="19"
+                                             onblur="this.value = this.value.trim();"
+                                             onkeypress="this.value=this.value.replace(new RegExp('[^0-9]|^0+','gm'),'').trim()"
+                                             requiredMessage="#{lang['mn.stock.branch.number.request.msg.require']}"
+                                             value="#{createRequestImportController.importPartnerDetailDTO.quantity}"
+                                             placeholder="#{lang['mn.stock.branch.number.request.placeholder']}"/>
+                                <pe:keyFilter for="txtNumberRequest" regEx="/^[0-9]+$/i" preventPaste="false"/>
+                                <p:message for="txtNumberRequest"/>
+                            </div>
+                            <!--<div class="Container60 Responsive50 ui-fluid">-->
+                            <!--<pe:inputNumber id="txtNumberRequest"-->
+                            <!--style="text-align:left!important"-->
+                            <!--placeholder="#{lang['mn.stock.branch.number.request.placeholder']}"-->
+                            <!--converter="javax.faces.Long"-->
+                            <!--decimalPlaces="0"-->
+                            <!--value="#{createRequestImportController.importPartnerDetailDTO.quantity}"-->
+                            <!--required="true"-->
+                            <!--maxlength="20"-->
+                            <!--requiredMessage="#{lang['mn.stock.branch.number.request.msg.require']}">-->
+                            <!--</pe:inputNumber>-->
+                            <!--<cbs:message forId="txtNumberRequest"/>-->
+                            <!--</div>-->
+                            <!--<pe:keyFilter mask="pint" for="txtNumberRequest"/>-->
+                        </div>
+                        <div class="Container33 Responsive"></div>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel id="pnlFileUpload" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="divUpload" toggle="true"
+                           titleHeader="#{lang['mn.stock.branch.info.file.contract']}"/>
+
+                <div class="ContainerIndent mg-top-0 divUpload">
+                    <div class="Container66 Responsive66">
+                        <div class="Container20 mg-left-15 Responsive25 pd-top-4">
+                            <p:outputLabel value="#{lang['mn.stock.branch.contract']}"
+                                           for="fileUpContract" styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container80 Responsive75 ui-fluid pd-top-7">
+                            <p:inputText id="outputAttach"
+                                         maxlength="100"
+                                         placeholder="#{lang['mn.stock.branch.file.contract.placeholder']}"
+                                         value="#{createRequestImportController.attachFileName}"
+                                         title="#{createRequestImportController.attachFileName}"
+                                         readonly="true"/>
+                        </div>
+                    </div>
+                    <div class="Container33 Responsive">
+                        <p:fileUpload id="fileUpContract"
+                                      validatorMessage="abc"
+                                      label="#{lang['mn.stock.branch.attachFile.choice']}"
+                                      invalidFileMessage="#{lang['mn.stock.branch.attachFile.msg.format']}"
+                                      requiredMessage="#{lang['mn.stock.branch.attachFile.msg.require']}"
+                                      invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                      update="@this, @([id$=messageAttach]), @([id$=outputAttach]), @([id$=msgCreateRequestImport])"
+                                      dragDropSupport="true" required="true" mode="advanced"
+                                      auto="true"
+                                      widgetVar="wgUploadFile"
+                                      allowTypes="/(\.|\/)(xls|xlsx|jpe?g|png|bmp|doc|docx|pdf)$/"
+                                      sizeLimit="5242880"
+                                      value="#{createRequestImportController.fileUpContract}"
+                                      fileUploadListener="#{createRequestImportController.handleFileUpContract}">
+                        </p:fileUpload>
+                        <p:message id="messageAttach" for="fileUpContract"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <!--End vung thong tin yeu cau -->
+
+            <!--Start vung thong tin hơp dong tu doi tac-->
+            <p:outputPanel id="pnlInfoContract" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="panelInfoContract" toggle="true"
+                           titleHeader="#{lang['information.contract.from.partner']}"/>
+
+                <div class="Container100 panelInfoContract">
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.branch.type.contract']}"
+                                               for="txtContractType" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="txtContractType"
+                                             readonly="true"
+                                             required="true"
+                                             value="#{lang['mn.stock.branch.have.information.contract']}"
+                                             placeholder="#{lang['mn.stock.branch.have.information.contract']}"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.branch.contract.code']}"
+                                               for="txtContractCode" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="txtContractCode"
+                                             required="true"
+                                             onblur="this.value = this.value.trim()"
+                                             requiredMessage="#{lang['mn.stock.branch.contract.code.msg.require']}"
+                                             placeholder="#{lang['mn.stock.branch.contract.code.placeholder']}"
+                                             maxlength="100"
+                                             value="#{createRequestImportController.importPartnerRequestDTO.contractCode}"/>
+                                <!--<pe:keyFilter for="txtContractCode" regEx="/^[0-9a-zA-Z_]+$/i" preventPaste="false"/>-->
+                                <p:message for="txtContractCode"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.branch.PO.code']}"
+                                               for="txtPoCode" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="txtPoCode"
+                                             onblur="this.value = this.value.trim()"
+                                             placeholder="#{lang['mn.stock.branch.PO.code.placeholder']}"
+                                             maxlength="100"
+                                             value="#{createRequestImportController.importPartnerRequestDTO.poCode}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.branch.sign.po.date']}"
+                                               for="txtSignPoDate" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar id="txtSignPoDate"
+                                            mask="true"
+                                            pattern="#{lang['common.datetime.format']}"
+                                            converterMessage="#{lang['invalid.date.message']}"
+                                            validatorMessage="#{lang['request.date.validate.message']}"
+                                            placeholder="#{lang['common.datetime.format']}"
+                                            required="false"
+                                            requiredMessage="#{lang['mn.stock.branch.sign.po.date.msg.require']}"
+                                            value="#{createRequestImportController.importPartnerRequestDTO.poDate}">
+                                    <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                </p:calendar>
+                                <p:message for="txtSignPoDate"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.branch.place.tran.model']}"
+                                               for="txtTransModelPlace" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="txtTransModelPlace"
+                                             onblur="this.value = this.value.trim()"
+                                             maxlength="500"
+                                             value="#{createRequestImportController.importPartnerRequestDTO.deliveryLocation}"
+                                             placeholder="#{lang['mn.stock.branch.place.tran.model.placeholder']}"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.branch.sign.contract.date']}"
+                                               for="txtSignContractDate" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar id="txtSignContractDate"
+                                            mask="true"
+                                            pattern="#{lang['common.datetime.format']}"
+                                            converterMessage="#{lang['invalid.date.message']}"
+                                            validatorMessage="#{lang['request.date.validate.message']}"
+                                            placeholder="#{lang['common.datetime.format']}"
+                                            required="true"
+                                            requiredMessage="#{lang['mn.stock.branch.sign.contract.date.msg.require']}"
+                                            value="#{createRequestImportController.importPartnerRequestDTO.contractDate}">
+                                    <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                </p:calendar>
+                                <p:message for="txtSignContractDate"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.branch.import.request.date']}"
+                                               for="txtImportRequestDate" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar id="txtImportRequestDate"
+                                            mask="true"
+                                            pattern="#{lang['common.datetime.format']}"
+                                            converterMessage="#{lang['invalid.date.message']}"
+                                            validatorMessage="#{lang['request.date.validate.message']}"
+                                            placeholder="#{lang['common.datetime.format']}"
+                                            required="false"
+                                            requiredMessage="#{lang['mn.stock.branch.import.request.date.msg.require']}"
+                                            value="#{createRequestImportController.importPartnerRequestDTO.requestDate}">
+                                    <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                </p:calendar>
+                                <p:message for="txtImportRequestDate"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.branch.date.stock']}"
+                                               for="txtContractImportDate" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar id="txtContractImportDate"
+                                            mask="true"
+                                            pattern="#{lang['common.datetime.format']}"
+                                            converterMessage="#{lang['invalid.date.message']}"
+                                            validatorMessage="#{lang['request.date.validate.message']}"
+                                            placeholder="#{lang['common.datetime.format']}"
+                                            required="true"
+                                            requiredMessage="#{lang['mn.stock.branch.stock.date.msg.require']}"
+                                            value="#{createRequestImportController.importPartnerRequestDTO.contractImportDate}">
+                                    <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                </p:calendar>
+                                <p:message for="txtContractImportDate"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.branch.type.exchange']}"
+                                               for="cbxExchangeType" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu id="cbxExchangeType"
+                                                 required="true"
+                                                 filter="true"
+                                                 filterMatchMode="contains"
+                                                 itemLabelEscaped="true"
+                                                 requiredMessage="#{lang['mn.stock.branch.type.exchange.msg.require']}"
+                                                 value="#{createRequestImportController.importPartnerRequestDTO.currencyType}">
+                                    <!--<f:selectItem itemLabel="#{lang['mn.stock.branch.type.exchange.all']}"/>-->
+                                    <f:selectItems value="#{createRequestImportController.lstCurrencyType}"
+                                                   var="item" itemLabel="#{item.name}"
+                                                   itemValue="#{item.value}"/>
+                                </p:selectOneMenu>
+                                <p:message for="cbxExchangeType"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.branch.price.for.bill']}"
+                                               for="txtPriceUnit" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="txtPriceUnit"
+                                             required="true"
+                                             maxlength="19"
+                                             onblur="this.value = this.value.trim();"
+                                             onkeypress="this.value=this.value.replace(new RegExp('[^0-9]|^0+','gm'),'').trim()"
+                                             requiredMessage="#{lang['mn.stock.branch.contract.price.unit.msg.require']}"
+                                             value="#{createRequestImportController.importPartnerRequestDTO.unitPrice}"
+                                             placeholder="#{lang['mn.stock.branch.price.for.bill.placeholder']}"/>
+                                <pe:keyFilter for="txtPriceUnit" regEx="/^[0-9]+$/i" preventPaste="false"/>
+                                <p:message for="txtPriceUnit"/>
+                            </div>
+                            <!--<div class="Container60 Responsive50 ui-fluid">-->
+                            <!--<pe:inputNumber id="txtPriceUnit"-->
+                            <!--style="text-align:left!important"-->
+                            <!--placeholder="#{lang['mn.stock.branch.price.for.bill.placeholder']}"-->
+                            <!--converter="javax.faces.Long"-->
+                            <!--decimalPlaces="0"-->
+                            <!--value="#{createRequestImportController.importPartnerRequestDTO.unitPrice}"-->
+                            <!--required="true"-->
+                            <!--maxlength="22"-->
+                            <!--requiredMessage="#{lang['mn.stock.branch.contract.price.unit.msg.require']}">-->
+                            <!--</pe:inputNumber>-->
+                            <!--<cbs:message forId="txtPriceUnit"/>-->
+                            <!--</div>-->
+                            <!--<pe:keyFilter mask="pint" for="txtPriceUnit"/>-->
+                        </div>
+                        <div class="Container33 Responsive"></div>
+                        <div class="Container33 Responsive"></div>
+                        <p:remoteCommand name="updateControls" process="@this" update="@form"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <!--End vung thong tin hơp dong tu doi tac-->
+            <p:outputPanel id="pnlButton" styleClass="Container100">
+                <div class="ContainerIndent TexAlCenter">
+                    <cbs:confirmDialog
+                            idComponent="btnCreateImportRequest"
+                            titleButton="#{lang['mn.stock.branch.btn.create.request']}"
+                            valueButton="#{lang['mn.stock.branch.btn.create.request']}"
+                            headerConfirm="#{lang['mn.stock.branch.btn.create.request']}"
+                            messageConfirm="#{lang['mn.stock.branch.createOrder.msg.confirm']}"
+                            actionOK="#{createRequestImportController.onCreateImportRequest()}"
+                            resetValueButton="false"
+                            process="@this, @([id$=pnlInfoRequest]), @([id$=pnlInfoContract])"
+                            updateArea="@this, @([id$=pnlInfoRequest]), @([id$=pnlInfoContract]), @([id$=msgCreateRequestImport])"
+                            updateOK="@form"
+                            actionValidate="#{createRequestImportController.onValidateConfirm()}"
+                            isButton="true"
+                            focusCancel="false"/>
+                </div>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

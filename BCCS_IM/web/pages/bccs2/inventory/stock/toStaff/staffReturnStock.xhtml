@@ -1,0 +1,257 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.staff.action.return.stock']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.staff.action.return.stock']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmStaffReturn">
+            <p:outputPanel styleClass="container100">
+                <p:outputPanel id="pnReturnStock">
+                    <div class="ContainerIndent">
+                        <p:messages id="msgValidate" showSummary="false" showDetail="true"
+                                    closable="true"/>
+                    </div>
+                    <!--Start vung thong tin phieu xuat-->
+                    <p:outputPanel id="pnInfoExportNote" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInforExportNote"
+                                   toggle="true"
+                                   titleHeader="#{lang['export.order.view.export.field']}"/>
+
+                        <div class="Container100 panelInforExportNote" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.code.field']}"
+                                                       for="codeExportTxt"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="codeExportTxt"
+                                                     required="true"
+                                                     maxlength="50"
+                                                     requiredMessage="#{lang['export.order.transCode.require.msg']}"
+                                                     placeholder="#{lang['export.order.code.field.placehoder']}"
+                                                     value="#{staffReturnStockController.inputStockTransDTO.actionCode}">
+                                            <pe:keyFilter for="codeExportTxt" regEx="/[0-9A-Z_]/i"/>
+                                        </p:inputText>
+                                        <p:message for="codeExportTxt"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['export.order.by.whom']}"
+                                                       for="whomExportTxt"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <p:outputLabel id="whomExportTxt"
+                                                       readonly="true"
+                                                       title="#{staffReturnStockController.inputStockTransDTO.userCreate}"
+                                                       value="#{staffReturnStockController.inputStockTransDTO.userCreate}"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['export.order.day']}"
+                                                       for="dateExportTxt"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid  pd-top-7">
+                                        <p:outputLabel id="dateExportTxt" styleClass="lb-sentinel-bold break-word"
+                                                       readonly="true"
+                                                       value="#{staffReturnStockController.inputStockTransDTO.createDatetime}">
+                                            <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                        </p:outputLabel>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.stock']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel-bold break-word"
+                                                       title="#{staffReturnStockController.inputStockTransDTO.fromOwnerName}"
+                                                           value="#{staffReturnStockController.inputStockTransDTO.fromOwnerName}"
+                                                       readonly="true"/>
+                                    </div>
+
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.stock.receive.product']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel-bold break-word"
+                                                       title="#{staffReturnStockController.inputStockTransDTO.toOwnerName}"
+                                                       value="#{staffReturnStockController.inputStockTransDTO.toOwnerName}"
+                                                       readonly="true"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.by.reason']}"
+                                                       for="cbxReasonExport"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="cbxReasonExport"
+                                                         value="#{staffReturnStockController.inputStockTransDTO.reasonId}"
+                                                         required="true"
+                                                         requiredMessage="#{lang['stock.rescueInformation.require.stockTrans.reason']}">
+                                            <f:selectItem
+                                                    itemLabel="#{lang['common.reason.placeholder']}"
+                                                    noSelectionOption="true"/>
+                                            <f:selectItems value="#{staffReturnStockController.reasons}"
+                                                           var="item"
+                                                           itemValue="#{item.reasonId}"
+                                                           itemLabel="#{item.reasonName}"/>
+                                            <p:ajax event="change"
+                                                    process="@this"
+                                                    listener="#{staffReturnStockController.onChangeReason()}"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="cbxReasonExport"/>
+                                        <p:remoteCommand name="updateControls" process="@this" update="@form"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <p:outputPanel class="Container33 Responsive"
+                                               rendered="#{staffReturnStockController.hasTransport()}">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.tranfer']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <p:selectBooleanCheckbox styleClass="mg-left-5"
+
+                                                                 value="#{staffReturnStockController.transport}">
+                                            <p:ajax listener="#{staffReturnStockController.onChangeTransportType()}"
+                                                    update="@this"
+                                                    process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </div>
+                                </p:outputPanel>
+                                <p:outputPanel class="Container33 Responsive"
+                                               rendered="#{staffReturnStockController.hasLogsitics()}">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.logicstics']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50  ui-fluid pd-top-7">
+                                        <p:selectBooleanCheckbox styleClass="mg-left-5"
+                                                                 value="#{staffReturnStockController.logistics}">
+                                            <p:ajax listener="#{staffReturnStockController.onChangeLogistics()}"
+                                                    update="@this"
+                                                    process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </div>
+                                </p:outputPanel>
+
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['create.note.note']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText value="#{staffReturnStockController.inputStockTransDTO.note}"
+                                                     placeholder="#{lang['stock.rescueInformation.input.stockTrans.note']}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin phieu xuat-->
+
+                    <!--Start danh sach han muc-->
+                    <p:outputPanel id="pnStockDebit" styleClass="Container100">
+                        <p:outputPanel styleClass="Container100"  rendered="#{staffReturnStockController.showStockDebit}">
+                            <ui:include src="../toUnderlying/stockDebit.xhtml">
+                                <ui:param name="stockDebitDTO" value="#{staffReturnStockController.stockDebitDTO}"></ui:param>
+                            </ui:include>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <!--End danh sach han muc-->
+                    <!--Start vung ds hang hoa-->
+                    <p:outputPanel id="pnLstStockModel" styleClass="Container100"
+                                   rendered="#{!staffReturnStockController.infoOrderDetail}">
+                        <div class="Container100 panelListStockModel">
+                            <cbs:inputListProductFifo idComponent="listProduct"
+                                                  id="listProduct"
+                                                  value="#{staffReturnStockController.lstProductTag}"
+                                                  idMessage="msgValidate"
+                                                  updateCheckSerial="@([id$=dlgDetailSerial]), @([id$=msgValidate])"
+                                                  onCompleteCheckSerial="if(!args.validationFailed){PF('dlgDetailSerial').show()}"/>
+                        </div>
+                        <div class="Container100 TexAlCenter pd-top-10">
+                            <cbs:confirmDialog
+                                    idComponent="submitOrder"
+                                    id="createOrder"
+                                    valueButton="#{lang['mn.stock.underlying.export.stock']}"
+                                    headerConfirm="#{lang['mn.stock.confirm.export.stock.header']}"
+                                    messageConfirm="#{lang['mn.stock.confirm.export.stock.header.msgConfirm']}"
+                                    actionOK="#{staffReturnStockController.doCreate()}"
+                                    resetValueButton="true"
+                                    process="@form"
+                                    disableButton="#{staffReturnStockController.created}"
+                                    updateArea="@([id$=frmStaffReturn])"
+                                    updateOK="@form"
+                                    focusCancel="false"
+                                    actionValidate="#{staffReturnStockController.doValidate()}"
+                                    oncompleteOK=""
+                                    isButton="true"/>
+                            <p:commandButton value="#{lang['export.order.btn.print.field']}"
+                                             process="@this)"
+                                             update="@this"
+                                             ajax="false"
+                                             disabled="#{!staffReturnStockController.created}"
+                                             styleClass="mg-left-5">
+                                <p:fileDownload value="#{staffReturnStockController.printStockTransDetail()}"/>
+                            </p:commandButton>
+                            <p:commandButton value="#{lang['common.reset']}"
+                                             process="@this"
+                                             update="@form"
+                                             action="#{staffReturnStockController.init()}"
+                                             styleClass="mg-left-5">
+                            </p:commandButton>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+
+            <script type="text/javascript">
+                document.getElementById('frmStaffReturn').onkeypress = function (event) {
+                    if (event.keyCode == 120 &amp;&amp; document.getElementById('frmStaffReturn:listProduct:listProductAddNew') != null) {
+                        document.getElementById("frmStaffReturn:listProduct:listProductAddNew").click();
+                        return false;
+                    }
+                }
+            </script>
+
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailSerial"
+                  widgetVar="dlgDetailSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <ui:include src="../../../../../resources/tags/dlgDetailSerialFifo.xhtml">
+                <ui:param name="controller" value="#{staffReturnStockController.lstProductTag}"/>
+                <ui:param name="idComponent" value="listProduct"/>
+            </ui:include>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

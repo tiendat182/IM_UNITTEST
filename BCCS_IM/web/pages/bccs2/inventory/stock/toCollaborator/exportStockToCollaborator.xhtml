@@ -1,0 +1,117 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['stock.export.collaborator.title']}</ui:define>
+    <ui:define name="featureName">#{lang['stock.export.collaborator.title']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmExportStockToCollaborator">
+            <p:outputPanel id="pnlExportStockToCollaborator" styleClass="Container100 mg-top-0">
+                <p:focus for="pnlExportStockToCollaborator"/>
+
+                <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                    <p:messages id="pnlExportStockToCollaboratorMsgs" showDetail="true" showSummary="false"
+                                closable="true"/>
+                </div>
+                <!--Start vung thong tin xuat hang-->
+                <cbs:inputOrderStock id="inputExportStockToCollaborator"
+                                     title="#{lang['export.order.view.export.field']}" mode="1"
+                                     styleClassDiv="mg-top-0"
+                                     methodNameReceiveShop="doReceiveShop"
+                                     lblActionCode="#{lang['export.order.code.field']}"
+                                     updateReceiveShop="@this, @([id$=pnlListProductCollaborator]), @([id$=pnlExportStockToCollaboratorMsgs])"
+                                     collaborator="1"
+                                     value="#{exportStockToCollaboratorController.orderStockTag}"
+                                     showRegionStock="false"
+                                     requireMessageActionCode="#{lang['export.order.stock.code.require.msg']}"
+                                     lblExportCodePlaceHoder="#{lang['export.order.code.field.placehoder']}"
+                        >
+                </cbs:inputOrderStock>
+                <!--End vung thong tin xuat hang-->
+                <!--Start vung thong tin Danh sach hang hoa-->
+                <p:outputPanel id="pnlListProductCollaborator" styleClass="Container100 mg-top-0">
+                    <cbs:inputListProduct idComponent="exportToCollaboratorListProduct"
+                                          id="exportToCollaboratorListProduct"
+                                          value="#{exportStockToCollaboratorController.listProductTag}"
+                                          idMessage="pnlExportStockToCollaboratorMsgs"
+                                          lbTotalAmount="#{lang['agency.deposit.amount.total']}"
+                                          updateCheckSerial="@([id$=dlgDetailSerial]),@([id$=pnlExportStockToCollaboratorMsgs])"
+                                          onCompleteCheckSerial="if(!args.validationFailed){PF('dlgDetailSerial').show();}"
+                                          extraValue="false"/>
+                </p:outputPanel>
+                <!--Start Vung data button-->
+                <div class="Container100">
+                    <div class="ContainerIndent TexAlCenter mg-top-0">
+                        <cbs:confirmDialog
+                                idComponent="btnSubmitOrder"
+                                id="btnCreateOrder"
+                                disableButton="#{exportStockToCollaboratorController.canPrint}"
+                                valueButton="#{lang['mn.stock.underlying.export.stock']}(F8)"
+                                headerConfirm="#{lang['export.stock.btn.submit.header.confirm.field']}"
+                                messageConfirm="#{lang['export.stock.btn.submit.header.confirm.msg']}"
+                                actionOK="#{exportStockToCollaboratorController.doExportStockToCollaborator}"
+                                resetValueButton="false"
+                                process="@([id$=pnlExportStockToCollaborator])"
+                                updateArea="@([id$=pnlExportStockToCollaborator])"
+                                updateOK="@([id$=pnlExportStockToCollaborator])"
+                                actionValidate="#{exportStockToCollaboratorController.doValidateExportStockToCollaborator}"
+                                focusCancel="false"
+                                oncompleteOK=""
+                                isButton="true"
+                                />
+                        <p:commandButton value="#{lang['export.order.btn.print.field']}"
+                                         process="@this"
+                                         disabled="#{!exportStockToCollaboratorController.canPrint}"
+                                         update="@form"
+                                         ajax="false"
+                                         immediate="true"
+                                         styleClass="mg-left-5">
+                            <p:fileDownload
+                                    value="#{exportStockToCollaboratorController.exportStockToCollaboratorExcel()}"/>
+                        </p:commandButton>
+                        <p:commandButton value="#{lang['common.reset']}" process="@([id$=pnlExportStockToCollaborator])"
+                                         styleClass="mg-left-5"
+                                         action="#{exportStockToCollaboratorController.doResetExportCollaborator}"
+                                         immediate="true"
+                                         resetValues="true"
+                                         update="@([id$=pnlExportStockToCollaborator])"/>
+                    </div>
+                </div>
+                <!--End Vung data button-->
+            </p:outputPanel>
+            <script type="text/javascript">
+                document.getElementById('frmExportStockToCollaborator').onkeypress = function (event) {
+                    if (event.keyCode == 120 &amp;&amp; document.getElementById('frmExportStockToCollaborator:exportToCollaboratorListProduct:exportToCollaboratorListProductAddNew') != null) {
+                        document.getElementById('frmExportStockToCollaborator:exportToCollaboratorListProduct:exportToCollaboratorListProductAddNew').click();
+                        return false;
+                    }
+                    if (event.keyCode == 119 &amp;&amp; document.getElementById('frmExportStockToCollaborator') != null) {
+                        document.getElementById('frmExportStockToCollaborator:btnCreateOrder:btnSubmitOrderbtn').click();
+                        return false;
+                    }
+                }
+            </script>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailSerial"
+                  widgetVar="dlgDetailSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <ui:include src="../../../../../resources/tags/dlgDetailSerial.xhtml">
+                <ui:param name="controller" value="#{exportStockToCollaboratorController.listProductTag}"/>
+                <ui:param name="idComponent" value="exportToCollaboratorListProduct"/>
+            </ui:include>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,88 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:pe="http://primefaces.org/ui/extensions">
+    <h:form id="frmAddRoleVoffice" styleClass="Container100">
+        <p:outputPanel id="pnlAddRoleVoffice" styleClass="Container100">
+            <p:focus for="pnlAddRoleVoffice"/>
+
+            <div class="ContainerIndent mg-top-0">
+                <p:messages id="mesageAdd" showSummary="false" showDetail="true" closable="true"/>
+            </div>
+
+                <div class="ContainerIndent">
+                    <div class="Container33 Responsive ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="txtRoleCodeAdd"
+                                       value="#{lang['signRoleVoffice.voficeRole.roleCode']}"/>
+                    </div>
+                    <div class="Container66 Responsive ui-fluid">
+                        <p:inputText id="txtRoleCodeAdd"
+                                     required="true"
+                                     maxlength="20"
+                                     onblur="this.value = this.value.trim();"
+                                     placeholder="#{lang['signRoleVoffice.code.placeholder']}"
+                                     requiredMessage="#{lang['signRoleVoffice.require.roleCode']}"
+                                     value="#{vofficeRoleController.addVofficeRole.roleCode}"
+                                     title="#{vofficeRoleController.addVofficeRole.roleCode}"/>
+                        <pe:keyFilter for="txtRoleCodeAdd" regEx="/^[0-9a-zA-Z_]+$/i" preventPaste="false"/>
+                        <cbs:message forId="txtRoleCodeAdd"/>
+                    </div>
+                </div>
+                <div class="ContainerIndent">
+                    <div class="Container33 Responsive ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="txtRoleNameAdd"
+                                       value="#{lang['signRoleVoffice.voficeRole.roleName']}"/>
+                    </div>
+                    <div class="Container66 Responsive ui-fluid">
+                        <p:inputText id="txtRoleNameAdd"
+                                     required="true"
+                                     maxlength="100"
+                                     onblur="this.value = this.value.trim();"
+                                     placeholder="#{lang['signRoleVoffice.name.placeholder']}"
+                                     requiredMessage="#{lang['signRoleVoffice.require.roleName']}"
+                                     value="#{vofficeRoleController.addVofficeRole.roleName}"
+                                     title="#{vofficeRoleController.addVofficeRole.roleName}"/>
+                        <pe:keyFilter for="txtRoleNameAdd" preventPaste="false"
+                                      regEx="/[a-z0-9A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\._\-+]/i"/>
+                        <cbs:message forId="txtRoleNameAdd"/>
+                    </div>
+                </div>
+
+            <div class="Container100 TexAlCenter marT10">
+
+                <cbs:confirmDialog
+                        idComponent="btnAdd"
+                        valueButton="#{lang['mn.stock.limit.createNew']}"
+                        headerConfirm="#{lang['mn.stock.limit.financeType.header.add']}"
+                        messageConfirm="#{lang['common.msg.add.confirm']}"
+                        actionOK="#{vofficeRoleController.addVofficeRoleProcess(false)}"
+                        resetValueButton="true"
+                        process="@([id$=frmAddRoleVoffice])"
+                        updateArea="@form"
+                        updateOK="@form,@([id$=lstVofficeRole]),@([id$=pnlVofficeRoleInfor])"
+                        oncompleteOK=""
+                        focusCancel="false"
+                        isButton="true"
+                        />
+                <cbs:confirmDialog
+                        idComponent="btnAddAndClose"
+                        valueButton="#{lang['common.add.close']}"
+                        headerConfirm="#{lang['mn.stock.limit.financeType.header.add']}"
+                        messageConfirm="#{lang['common.msg.add.confirm']}"
+                        actionOK="#{vofficeRoleController.addVofficeRoleProcess(true)}"
+                        resetValueButton="true"
+                        process="@([id$=frmAddRoleVoffice])"
+                        updateArea="@form"
+                        updateOK="@form,@([id$=lstVofficeRole]),@([id$=pnlVofficeRoleInfor])"
+                        oncompleteOK="if(!args.validationFailed) {PF('dlgAddRoleVoffice').hide();}"
+                        focusCancel="false"
+                        isButton="true"
+                        />
+            </div>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

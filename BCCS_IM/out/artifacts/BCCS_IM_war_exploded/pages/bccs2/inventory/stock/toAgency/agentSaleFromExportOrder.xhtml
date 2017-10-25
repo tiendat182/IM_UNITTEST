@@ -1,0 +1,709 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.agency.export.sale']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.agency.export.sale']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmSaleAgentExport">
+            <p:outputPanel styleClass="Container" id="pnExportNote">
+                <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                    <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel styleClass="Container100"
+                               rendered="#{!agentSaleFromExportOrderController.inforOrderDetail}">
+                    <p:focus for="frmSaleAgentExport"/>
+                    <!--Start vung tim kiem lenh xuat ban dut-->
+                    <p:outputPanel id="pnInfoSaleAgentExportOrderSearch" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInforSaleAgent" toggle="true"
+                                   titleHeader="#{lang['create.note.export.info.search']}"/>
+
+                        <div class="Container100 panelInforSaleAgent" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['import.order.code']}" for="codeExportTxt"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="codeExportTxt"
+                                                     placeholder="#{lang['import.order.code.placehoder']}"
+                                                     value="#{agentSaleFromExportOrderController.forSearch.actionCode}"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive50">
+                                    <cbs:inputShop value="#{agentSaleFromExportOrderController.shopInfoTagReceive}"
+                                                   idComponent="ipReceiveShop"
+                                                   methodName="doReceiveShop"
+                                                   update="@this"
+                                                   limit="#{agentSaleFromExportOrderController.limitAutoComplete}"
+                                                   label="#{lang['agent.sale.label.shopCode']}"
+                                                   require="true"
+                                                   forceSelection="false"
+                                                   clearMethodName="clearCurrentShop"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-7"
+                                                   classDivInput="Container60 Responsive50 ui-fluid"
+                                                   requiredMessage="#{lang['agent.sale.shopCode.require.msg']}"
+                                                   placeholder="#{lang['agent.sale.label.shopCode.placeholder']}"
+                                            >
+                                    </cbs:inputShop>
+                                </div>
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['create.note.warehouse.export']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText
+                                                value="#{agentSaleFromExportOrderController.forSearch.fromOwnerName}"
+                                                readonly="true"/>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['create.note.from.date']}" for="fromDate"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:calendar id="fromDate"
+                                                    value="#{agentSaleFromExportOrderController.forSearch.startDate}"
+                                                    placeholder="#{lang['create.note.from.date.placeholder']}"
+                                                    converterMessage="#{lang['mn.stock.from.date.validate']}"
+                                                    required="true"
+                                                    requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['create.note.to.date']}" for="toDate"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:calendar id="toDate"
+                                                    value="#{agentSaleFromExportOrderController.forSearch.endDate}"
+                                                    required="true"
+                                                    converterMessage="#{lang['mn.stock.from.date.validate']}"
+                                                    placeholder="#{lang['create.note.to.date.placeholder']}"
+                                                    requiredMessage="#{lang['mn.stock.to.date.not.blank']}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="Container100 TexAlCenter mg-top-0">
+                                <p:commandButton value="#{lang['create.note.search']}"
+                                                 process="@([id$=pnInfoSaleAgentExportOrderSearch])"
+                                                 action="#{agentSaleFromExportOrderController.doSearchStockTrans}"
+                                                 update="@form"/>
+                                <p:commandButton value="#{lang['common.reset']}" process="@this" styleClass="mg-left-5"
+                                                 action="#{agentSaleFromExportOrderController.doResetStockTrans}"
+                                                 resetValues="true"
+                                                 update="@form"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung tim kiem lenh xuat ban dut-->
+                    <!--Start vung danh sach lenh xuat ban dut-->
+                    <p:outputPanel id="pnLstExportOrder" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelListOrderExport" toggle="true"
+                                   titleHeader="#{lang['create.note.list.order.export']}"/>
+
+                        <div class="Container100 panelListOrderExport" style="margin-bottom: 10px;margin-top: 10px;">
+                            <p:dataTable
+                                    id="lstOrderExport"
+                                    var="stockTrans"
+                                    rowKey="#{stockTrans.stockTransID}"
+                                    resizableColumns="true"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.empty.records']}"
+                                    value="#{agentSaleFromExportOrderController.vStockTransDTOList}">
+                                <p:column headerText="#{lang['create.note.code']}" styleClass="col-left"
+                                          sortBy="#{stockTrans.actionCode}">
+                                    <p:outputLabel value="#{stockTrans.actionCode}" title="#{stockTrans.actionCode}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.create.date']}"
+                                          sortBy="#{stockTrans.createDateTrans}">
+                                    <h:outputText escape="true" value="#{stockTrans.createDateTrans}"
+                                                  styleClass="lb-sentinel-bold" title="#{stockTrans.createDateTrans}">
+                                        <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.stock.utilities.person.create']}"
+                                          sortBy="#{stockTrans.userCreate}">
+                                    <p:outputLabel value="#{stockTrans.userCreate}" title="#{stockTrans.userCreate}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.warehouse.export']}"
+                                          sortBy="#{stockTrans.fromOwnerName}">
+                                    <p:outputLabel value="#{stockTrans.fromOwnerName}"
+                                                   title="#{stockTrans.fromOwnerName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.warehouse.import']}"
+                                          sortBy="#{stockTrans.toOwnerName}">
+                                    <p:outputLabel value="#{stockTrans.toOwnerName}"
+                                                   title="#{stockTrans.toOwnerName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.reason.export']}"
+                                          sortBy="#{stockTrans.reasonName}">
+                                    <p:outputLabel value="#{stockTrans.reasonName}" title="#{stockTrans.reasonName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.status']}" sortBy="#{stockTrans.statusName}">
+                                    <p:outputLabel value="#{lang['agent.sale.payStatus.0']}"
+                                                   title="#{lang['agent.sale.payStatus.0']}"
+                                                   rendered="#{stockTrans.payStatus eq '0'}"/>
+                                    <p:outputLabel value="#{lang['agent.sale.payStatus.unknow']}"
+                                                   title="#{lang['agent.sale.payStatus.unknow']}"
+                                                   rendered="#{stockTrans.payStatus ne '0'}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.effect']}" style="text-align: center">
+                                    <p:commandLink styleClass="fa icon-zoom-in Fs16 blue"
+                                                   style="text-decoration: none!important;" resetValues="true"
+                                                   update="@form" process="@this" title="#{lang['common.view.detail']}"
+                                                   disabled="#{stockTrans.payStatus != '0'}"
+                                                   actionListener="#{agentSaleFromExportOrderController.doShowInfoOrderDetail(stockTrans)}"/>
+                                </p:column>
+
+                            </p:dataTable>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung danh sach lenh xuat ban dut-->
+                </p:outputPanel>
+                <p:outputPanel styleClass="Container100" id="pnlCustomerPay"
+                               rendered="#{agentSaleFromExportOrderController.inforOrderDetail}">
+
+                    <!--thong tin ban hang dai ly-->
+                    <p:outputPanel id="pnlCustomer"
+                                   styleClass="#{agentSaleFromExportOrderController.hideCustomer ? 'Container5' : 'Container33 Responsive ui-fluid'}">
+                        <p:outputPanel rendered="#{!agentSaleFromExportOrderController.hideCustomer}">
+                            <div class=" ContainerIndent bg-panel mg-top-0">
+                                <div class="Container100">
+                                    <fieldset style="" class="mg-top-8">
+                                        <legend style="font-weight: bold;">
+                                            <h:outputText value="#{lang['export.order.view.export']}"
+                                                          styleClass="ui-panel-title FontBold"
+                                                          style="font-size: small;"/>
+                                        </legend>
+                                        <div class="Container100">
+                                            <div class="Container40 Responsive50 pd-top-5">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['create.note.create.date']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50">
+                                                <p:inputText disabled="true"
+                                                             value="#{agentSaleFromExportOrderController.stockTransDTO.createDateTrans}">
+                                                    <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                                </p:inputText>
+                                            </div>
+                                            <div class="Container40 Responsive50 pd-top-5">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['create.note.code']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50">
+                                                <p:inputText disabled="true"
+                                                             value="#{agentSaleFromExportOrderController.stockTransDTO.actionCode}"/>
+                                            </div>
+                                            <div class="Container40 Responsive50 pd-top-5">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['mn.stock.utilities.person.create']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50">
+                                                <p:inputText disabled="true"
+                                                             value="#{agentSaleFromExportOrderController.stockTransDTO.userCreate}"/>
+                                            </div>
+                                            <div class="Container40 Responsive50 pd-top-5">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['create.note.warehouse.export']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50">
+                                                <p:inputText disabled="true"
+                                                             value="#{agentSaleFromExportOrderController.stockTransDTO.fromOwnerName}"/>
+                                            </div>
+                                            <div class="Container40 Responsive50 pd-top-5">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['create.note.reason.export']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50">
+                                                <p:inputText disabled="true"
+                                                             value="#{agentSaleFromExportOrderController.stockTransDTO.reasonName}"/>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class=" ContainerIndent bg-panel mg-top-0">
+                                <div class="Container100">
+                                    <fieldset style="" class="mg-top-8">
+                                        <legend style="font-weight: bold;">
+                                            <h:outputText value="#{lang['information.transaction']}"
+                                                          styleClass="ui-panel-title FontBold"
+                                                          style="font-size: small;"/>
+                                        </legend>
+                                        <p:outputLabel style="display:none;"
+                                                       value="#{agentSaleFromExportOrderController.saleTransInfoDTO.stockTransId}"/>
+
+                                        <div class="Container100">
+                                            <p:selectBooleanCheckbox
+                                                    value="#{agentSaleFromExportOrderController.receiveInvoice}"
+                                                    itemLabel="#{lang['agent.sale.btn.receiveInvoice']}">
+                                                <p:ajax event="change" process="@this" update="pnlTelNumberAndEmail"/>
+                                            </p:selectBooleanCheckbox>
+                                        </div>
+
+                                        <div class="Container100">
+                                            <div class="Container40 Responsive50 pd-top-5">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['agent.sale.label.saleDate']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50">
+                                                <p:inputText disabled="true"
+                                                             value="#{agentSaleFromExportOrderController.saleTransInfoDTO.saleDate}">
+                                                    <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                                </p:inputText>
+                                            </div>
+                                            <p:outputPanel id="pnlTelNumberAndEmail">
+                                                <!--so dien thoai-->
+                                                <p:outputPanel styleClass="Container100"
+                                                               rendered="#{agentSaleFromExportOrderController.receiveInvoice}">
+                                                    <div class="Container40 Responsive50 pd-top-5">
+                                                        <p:outputLabel styleClass="lb-sentinel"
+                                                                       value="#{lang['agent.sale.label.telNumber']}"/>
+                                                    </div>
+                                                    <div class="Container60 Responsive50">
+                                                        <p:inputText id="txtTelNumber" required="false"
+                                                                     placeholder="#{lang['agent.sale.label.telNumber.placeholder']}"
+                                                                     value="#{agentSaleFromExportOrderController.saleTransInfoDTO.telNumber}">
+                                                            <f:validator validatorId="validator.telnum"/>
+                                                        </p:inputText>
+                                                    </div>
+                                                </p:outputPanel>
+                                                <!--end so dien thoai-->
+                                                <!--Email-->
+                                                <p:outputPanel styleClass="Container100"
+                                                               rendered="#{agentSaleFromExportOrderController.receiveInvoice}">
+                                                    <div class="Container40 Responsive50 pd-top-5">
+                                                        <p:outputLabel styleClass="lb-sentinel"
+                                                                       value="#{lang['agent.sale.label.email']}"/>
+                                                    </div>
+                                                    <div class="Container60 Responsive50">
+                                                        <p:inputText id="txtEmail" required="false"
+                                                                     placeholder="#{lang['agent.sale.label.email.placeholder']}"
+                                                                     value="#{agentSaleFromExportOrderController.saleTransInfoDTO.email}">
+                                                            <f:validator validatorId="validator.email"/>
+                                                        </p:inputText>
+                                                    </div>
+                                                </p:outputPanel>
+                                            </p:outputPanel>
+                                            <!--end Email-->
+                                            <div class="Container40 Responsive50 pd-top-5">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['agent.sale.label.custName']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50">
+                                                <p:inputText id="txtCustName" required="false" maxlength="100"
+                                                             value="#{agentSaleFromExportOrderController.saleTransInfoDTO.custName}"/>
+                                            </div>
+                                            <div class="Container40 Responsive50 pd-top-5">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['agent.sale.label.tin']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50">
+                                                <p:inputText id="txtCustTin" required="false" maxlength="15"
+                                                             value="#{agentSaleFromExportOrderController.saleTransInfoDTO.tin}"/>
+                                            </div>
+                                            <div class="Container40 Responsive50 pd-top-5">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['agent.sale.label.address']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50">
+                                                <p:inputText id="txtCustAddress" required="false" maxlength="100"
+                                                             value="#{agentSaleFromExportOrderController.saleTransInfoDTO.address}"/>
+                                            </div>
+
+                                            <div class="Container40 Responsive50 pd-top-5">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['agent.sale.label.reason']}"
+                                                               for="cobReasonId"/>
+                                            </div>
+                                            <div class="Container60 Responsive50">
+                                                <p:selectOneMenu styleClass="cobReason"
+                                                                 filter="true"
+                                                                 required="true"
+                                                                 filterMatchMode="contains"
+                                                                 id="cobReasonId"
+                                                                 value="#{agentSaleFromExportOrderController.saleTransInfoDTO.reasonId}">
+                                                    <f:selectItems itemLabelEscaped="true"
+                                                                   value="#{agentSaleFromExportOrderController.listReasonSaleTransDTO}"
+                                                                   var="reason" itemValue="#{reason.reasonId}"
+                                                                   itemLabel="#{reason.reasonCode} - #{reason.reasonName}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                            <div class="Container40 Responsive50 pd-top-5">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['agent.sale.label.payMethod']}"
+                                                               for="cbxPaymethod"/>
+                                            </div>
+                                            <div class="Container60 Responsive50">
+                                                <p:selectOneMenu id="cbxPaymethod"
+                                                                 filter="true"
+                                                                 styleClass="cobPaymethod"
+                                                                 required="true"
+                                                                 filterMatchMode="contains"
+                                                                 value="#{agentSaleFromExportOrderController.saleTransInfoDTO.payMethodId}">
+                                                    <f:selectItems itemLabelEscaped="true"
+                                                                   value="#{agentSaleFromExportOrderController.listTypePayment}"
+                                                                   var="typePayment"
+                                                                   itemValue="#{typePayment.id}"
+                                                                   itemLabel="#{typePayment.name}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                            <p:outputPanel styleClass="Container100"
+                                                           rendered="#{!agentSaleFromExportOrderController.stockOrderAgent}">
+                                                <div class="Container40 Responsive50 pd-top-5">
+                                                    <p:outputLabel styleClass="lb-sentinel"
+                                                                   value="#{lang['agent.sale.label.bank']}"/>
+                                                </div>
+                                                <div class="Container60 Responsive50">
+                                                    <p:inputText id="txtBankCode" required="false" readonly="true"
+                                                                 value="#{agentSaleFromExportOrderController.saleTransInfoDTO.bankCode}"/>
+                                                </div>
+                                            </p:outputPanel>
+
+                                            <div class="Container40 Responsive50 pd-top-5">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['agent.sale.label.programSale']}"/>
+                                            </div>
+                                            <p:commandButton id="cmdProgram" styleClass="cmdProgram"
+                                                             style="display: none;"
+                                                             action="#{agentSaleFromExportOrderController.onChangePayMethod}"
+                                                             process="@this,@([id$=inputProgram])"
+                                                             update="@this,@([id$=msgSearch]),@([id$=discountAndProduct])">
+                                            </p:commandButton>
+                                            <p:inputText
+                                                    value="#{agentSaleFromExportOrderController.saleProgramId}"
+                                                    styleClass="txtProgram" style="display: none;"
+                                                    id="inputProgram"/>
+
+                                            <div class="Container60 Responsive50">
+                                                <p:selectOneMenu filter="true" filterMatchMode="contains"
+                                                                 id="cobProgramId"
+                                                                 onchange="$('.txtProgram').val(this.value);clickLinkByClass('cmdProgram');"
+                                                                 value="#{agentSaleFromExportOrderController.saleTransInfoDTO.recordWorkId}">
+                                                    <f:selectItem itemEscaped="true"
+                                                                  itemLabel="#{lang['agent.sale.label.selectProgramSale']}"/>
+                                                    <f:selectItems
+                                                            value="#{agentSaleFromExportOrderController.listSaleProgramInventoryDTO}"
+                                                            itemLabelEscaped="true"
+                                                            var="saleProgram" itemValue="#{saleProgram.saleProgramId}"
+                                                            itemLabel="#{saleProgram.code} - #{saleProgram.name}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                            <p:outputPanel styleClass="Container100"
+                                                           rendered="#{agentSaleFromExportOrderController.stockOrderAgent and agentSaleFromExportOrderController.checkBranchBankplus}">
+                                                <p:selectBooleanCheckbox id="chkApprover"
+                                                                         itemLabel="#{lang['transactions.Required.Approval']}"
+                                                                         value="#{agentSaleFromExportOrderController.saleTransInfoDTO.stockOrderAgent}"/>
+                                            </p:outputPanel>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                        <p:outputPanel rendered="#{agentSaleFromExportOrderController.hideCustomer}">
+                            <div class="ContainerIndent TexAlCenter">
+                                <p:commandLink process="@this" update="@([id$=frmSaleAgentExport])"
+                                               action="#{agentSaleFromExportOrderController.showCustomer}">
+                                    <span class="fa fa-plus Fs16"/>
+                                </p:commandLink>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <!--end thong tin ban hang dai ly-->
+                    <!--thong tin chiet khau va danh sach hang hoa-->
+                    <p:outputPanel id="discountAndProduct"
+                                   styleClass="#{agentSaleFromExpCommandController.hideCustomer ? 'Container95' : 'Container66 Responsive66'}">
+                        <div class="ContainerIndent bg-panel mg-top-0" style="margin-left: 0;">
+                            <cbs:panel iconHeader="/resources/images/newUI/iconSubInfo.png"
+                                       classForToggle="pnlSingleSell"
+                                       toggle="true"
+                                       defaultToggle="false"
+                                       shadow="true"
+                                       titleHeader="#{lang['agent.sale.panel.discount']}"/>
+
+                            <div class="Container100 ui-fluid pnlSingleSell">
+                                <div class="Container100 mg-top-10">
+                                    <p:dataTable
+                                            id="tblDiscount"
+                                            sortMode="single"
+                                            paginator="false"
+                                            rows="10"
+                                            emptyMessage="#{lang['common.empty.records']}"
+                                            styleClass="Width100"
+                                            value="#{agentSaleFromExportOrderController.listDiscountDTO}"
+                                            rowIndexVar="index" var="discountDTO">
+                                        <p:column headerText="#{lang['agent.sale.table.discount.name']}"
+                                                  style="width: 18%"
+                                                  styleClass="col-left" sortBy="#{discountDTO.discountGroupName}">
+                                            <p:outputLabel value="#{discountDTO.discountGroupName}"
+                                                           title="#{discountDTO.discountGroupName}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['agent.sale.table.discount.discountRate']}"
+                                                  style="width: 18%"
+                                                  styleClass="col-left" sortBy="#{discountDTO.discountRateString}">
+                                            <p:outputLabel value="#{discountDTO.discountRateString}"
+                                                           title="#{discountDTO.discountRateString}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['agent.sale.table.discount.discountAmount']}"
+                                                  style="width: 18%"
+                                                  styleClass="col-left" sortBy="#{discountDTO.discountAmount}">
+                                            <p:outputLabel value="#{discountDTO.discountAmount}"
+                                                           title="#{discountDTO.discountAmount}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                            </div>
+                            <div class="Container100  mg-top-10">
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <div class="ContainerIndent bg-panel mg-top-0" style="margin-left: 0">
+                                        <p:outputPanel id="pnlDiscountInfo" class="Container100">
+                                            <div class="Container100">
+                                                <div class="Container50 Responsive50 pdt5">
+                                                    <p:outputLabel styleClass="lb-sentinel"
+                                                                   value="#{lang['agent.sale.table.discount.discountTotal']}"/>
+                                                </div>
+                                                <div class="Container50 Responsive50 TexAlRight">
+                                                    <pe:inputNumber styleClass="txtAmount currency"
+                                                                    minValue="0" maxValue="9999999999999"
+                                                                    decimalSeparator="#{lang['common.currency.decimalSeparator']}"
+                                                                    thousandSeparator="#{lang['common.currency.thousandSeparator']}"
+                                                                    converterMessage="#{lang['common.sale.payment.amount']}"
+                                                                    value="#{agentSaleFromExportOrderController.saleTransInfoDTO.totalDiscountAfterTax}"
+                                                                    maxlength="15" disabled="true">
+                                                    </pe:inputNumber>
+                                                </div>
+                                            </div>
+                                        </p:outputPanel>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <cbs:panel iconHeader="/resources/images/newUI/iconSubInfo.png"
+                                       classForToggle="productOffering"
+                                       toggle="true"
+                                       defaultToggle="false"
+                                       shadow="true"
+                                       titleHeader="#{lang['export.order.view.list.product']}"/>
+
+                            <!--Danh sach hang hoa-->
+                            <div class="Container100 ui-fluid productOffering">
+                                <div class="Container100 mg-top-10">
+                                    <p:dataTable
+                                            id="lstProductOffering"
+                                            sortMode="single"
+                                            paginator="false"
+                                            rows="10"
+                                            emptyMessage="#{lang['common.empty.records']}"
+                                            styleClass="Width100"
+                                            value="#{agentSaleFromExportOrderController.productOfferingDTOs}"
+                                            rowIndexVar="index" var="productOffering">
+                                        <p:column headerText="#{lang['agent.sale.table.productOffering.code']}"
+                                                  style="width: 15%"
+                                                  sortBy="#{productOffering.code}">
+                                            <p:outputLabel value="#{productOffering.code}"
+                                                           title="#{productOffering.code}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['agent.sale.table.productOffering.name']}"
+                                                  sortBy="#{productOffering.name}">
+                                            <p:outputLabel value="#{productOffering.name}"
+                                                           title="#{productOffering.name}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['agent.sale.table.productOffering.amount']}"
+                                                  style="width: 12%;text-align: right"
+                                                  sortBy="#{productOffering.quantity}">
+                                            <p:outputLabel value="#{productOffering.quantity}"
+                                                           title="#{productOffering.quantity}"
+                                                           converter="currencyFormat"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['agent.sale.table.productOffering.price']}"
+                                                  style="width: 15%;text-align: right">
+                                            <p:selectOneMenu filter="true" filterMatchMode="contains"
+                                                             value="#{productOffering.price}">
+                                                <f:selectItems
+                                                        value="#{productOffering.productOfferPriceDTOList}"
+                                                        itemLabelEscaped="true"
+                                                        var="productOfferPrice"
+                                                        itemValue="#{productOfferPrice.productOfferPriceId}"
+                                                        itemLabel="#{productOfferPrice.price}"/>
+                                            </p:selectOneMenu>
+                                        </p:column>
+                                        <p:column headerText="#{lang['agent.sale.table.productOffering.money']}"
+                                                  style="width: 12%;text-align: right"
+                                                  sortBy="#{productOffering.amount}" converter="currencyFormat">
+                                            <p:outputLabel value="#{productOffering.amount}"
+                                                           title="#{productOffering.amount}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                            </div>
+                            <!--end danh sach hang hoa-->
+                            <div class="Container100  mg-top-10">
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <div class="ContainerIndent bg-panel mg-top-0" style="margin-left: 0">
+                                        <div class="Container100">
+                                            <h:outputText value="#{lang['agent.sale.table.payment']}"
+                                                          styleClass="ui-panel-title FontBold"
+                                                          style="font-size: small;"/>
+                                        </div>
+                                        <p:outputPanel id="pnlPaymentInfo" class="Container100">
+                                            <div class="Container100">
+                                                <div class="Container50 Responsive50 pdt5">
+                                                    <p:outputLabel styleClass="lb-sentinel"
+                                                                   value="#{lang['agent.sale.table.amountNotTax']}"/>
+                                                </div>
+                                                <div class="Container50 Responsive50 TexAlRight">
+                                                    <pe:inputNumber styleClass="txtAmount currency"
+                                                                    minValue="0" maxValue="9999999999999"
+                                                                    decimalSeparator="#{lang['common.currency.decimalSeparator']}"
+                                                                    thousandSeparator="#{lang['common.currency.thousandSeparator']}"
+                                                                    converterMessage="#{lang['common.sale.payment.amount']}"
+                                                                    value="#{agentSaleFromExportOrderController.saleTransInfoDTO.amountNotTax}"
+                                                                    maxlength="15" disabled="true">
+                                                    </pe:inputNumber>
+                                                </div>
+                                            </div>
+
+                                            <div class="Container100">
+                                                <div class="Container50 Responsive50 pdt5">
+                                                    <p:outputLabel styleClass="lb-sentinel"
+                                                                   value="#{lang['agent.sale.table.tax']}"/>
+                                                </div>
+                                                <div class="Container50 Responsive50 TexAlRight">
+                                                    <pe:inputNumber styleClass="txtAmount currency"
+                                                                    minValue="0" maxValue="9999999999999"
+                                                                    decimalSeparator="#{lang['common.currency.decimalSeparator']}"
+                                                                    thousandSeparator="#{lang['common.currency.thousandSeparator']}"
+                                                                    converterMessage="#{lang['common.sale.payment.amount']}"
+                                                                    value="#{agentSaleFromExportOrderController.saleTransInfoDTO.tax}"
+                                                                    maxlength="15" disabled="true">
+                                                    </pe:inputNumber>
+                                                </div>
+                                            </div>
+                                            <div class="Container100">
+                                                <div class="Container50 Responsive50 pdt5">
+                                                    <p:outputLabel styleClass="lb-sentinel"
+                                                                   value="#{lang['agent.sale.table.discountBeforeTax']}"/>
+                                                </div>
+                                                <div class="Container50 Responsive50 TexAlRight">
+                                                    <pe:inputNumber styleClass="txtAmount currency"
+                                                                    minValue="0" maxValue="9999999999999"
+                                                                    decimalSeparator="#{lang['common.currency.decimalSeparator']}"
+                                                                    thousandSeparator="#{lang['common.currency.thousandSeparator']}"
+                                                                    converterMessage="#{lang['common.sale.payment.amount']}"
+                                                                    value="#{agentSaleFromExportOrderController.saleTransInfoDTO.totalDiscount}"
+                                                                    maxlength="15" disabled="true">
+                                                    </pe:inputNumber>
+                                                </div>
+                                            </div>
+
+                                            <div class="Container100">
+                                                <div class="Container50 Responsive50 pdt5">
+                                                    <p:outputLabel styleClass="FontBold"
+                                                                   value="#{lang['agent.sale.table.totalAmount']}"
+                                                                   style="font-weight: bold"/>
+                                                </div>
+                                                <div class="Container50 Responsive50 TexAlRight">
+                                                    <pe:inputNumber styleClass="txtAmount currency"
+                                                                    minValue="0" maxValue="9999999999999"
+                                                                    decimalSeparator="#{lang['common.currency.decimalSeparator']}"
+                                                                    thousandSeparator="#{lang['common.currency.thousandSeparator']}"
+                                                                    converterMessage="#{lang['common.sale.payment.amount']}"
+                                                                    value="#{agentSaleFromExportOrderController.saleTransInfoDTO.amountTax}"
+                                                                    maxlength="15" disabled="true">
+                                                    </pe:inputNumber>
+                                                </div>
+                                            </div>
+
+                                            <div class="Container50">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['agent.sale.table.custPay']}"/>
+                                            </div>
+                                            <div class="Container50 TexAlRight">
+                                                <pe:inputNumber styleClass="txtAmount currency"
+                                                                minValue="0" maxValue="9999999999999"
+                                                                decimalSeparator="#{lang['common.currency.decimalSeparator']}"
+                                                                thousandSeparator="#{lang['common.currency.thousandSeparator']}"
+                                                                converterMessage="#{lang['common.sale.payment.amount']}"
+                                                                value="#{agentSaleFromExportOrderController.saleTransInfoDTO.paidAmount}"
+                                                                maxlength="15">
+                                                    <p:ajax event="blur" listener="#{agentSaleFromExportOrderController.doChangePayment}" process="@this"
+                                                            update="@([id$=txtChangeMoney])"/>
+                                                </pe:inputNumber>
+                                            </div>
+                                            <div class="Container50">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['agent.sale.table.remainAmount']}"/>
+                                            </div>
+                                            <div class="Container50 TexAlRight">
+                                                <pe:inputNumber id="txtChangeMoney"
+                                                                styleClass="txtAmount currency"
+                                                                minValue="0" maxValue="9999999999999"
+                                                                decimalSeparator="#{lang['common.currency.decimalSeparator']}"
+                                                                thousandSeparator="#{lang['common.currency.thousandSeparator']}"
+                                                                converterMessage="#{lang['common.sale.payment.amount']}"
+                                                                value="#{agentSaleFromExportOrderController.saleTransInfoDTO.remainAmount}"
+                                                                maxlength="15" disabled="true">
+                                                </pe:inputNumber>
+                                            </div>
+                                        </p:outputPanel>
+                                    </div>
+                                </div>
+                                <p:outputPanel id="pnlDataButton" styleClass="Container100">
+                                    <div class="ContainerIndent TexAlCenter">
+                                        <p:selectBooleanCheckbox id="chkPrintInvoice"
+                                                                 itemLabel="#{lang['agent.sale.btn.printInvoice']}"
+                                                                 value="#{agentSaleFromExportOrderController.printInvoice}"/>
+                                        <cbs:confirmDialog
+                                                idComponent="btnCreateSaleTrans"
+                                                id="btnCreateSaleTransID"
+                                                disableButton="#{agentSaleFromExportOrderController.createTrans}"
+                                                valueButton="#{lang['agent.sale.btn.submit.create.trans']}"
+                                                headerConfirm="#{lang['agent.sale.btn.submit.create.trans.header.confirm']}"
+                                                messageConfirm="#{lang['agent.sale.btn.submit.create.trans.header.confirm.msg']}"
+                                                actionOK="#{agentSaleFromExportOrderController.doCreateSaleTrans}"
+                                                resetValueButton="false"
+                                                process="@([id$=pnlCustomerPay])"
+                                                updateArea="@([id$=msgSearch]),@([id$=discountAndProduct])"
+                                                updateOK="@([id$=msgSearch]),@([id$=pnlCustomerPay])"
+                                                actionValidate="#{agentSaleFromExportOrderController.doValidateCreateTrans}"
+                                                focusCancel="false"
+                                                oncompleteOK=""
+                                                isButton="true"
+                                                />
+                                        <p:commandButton value="#{lang['common.back.page']}" process="@this"
+                                                         styleClass="mg-left-5"
+                                                         action="#{agentSaleFromExportOrderController.doBackPage}"
+                                                         immediate="true"
+                                                         resetValues="true"
+                                                         update="@form"/>
+                                    </div>
+                                </p:outputPanel>
+                            </div>
+
+                        </div>
+                    </p:outputPanel>
+                    <!--end thong tin chiet khau va danh sach hang hoa-->
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

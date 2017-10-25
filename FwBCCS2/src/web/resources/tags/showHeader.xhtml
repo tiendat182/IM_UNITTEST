@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <composite:interface >
+        <composite:attribute name="urlImage" default="" shortDescription="url image"/>
+        <composite:attribute name="titleDialog"  shortDescription="title dialog"/>
+        <composite:attribute name="titleName" shortDescription="title name object"/>
+    </composite:interface>
+    <composite:implementation>
+        <p:panelGrid styleClass="w100 filterPanel" id="panel_header_icon">
+            <p:row>
+                <p:column style="text-align: center;width:5%">
+                    <p:graphicImage style="width:40px;" value="#{cc.attrs.urlImage}" id="iconTitle"/>
+                </p:column>
+                <p:column style="text-align: left;width:95%;">
+                    <span style="display:block;float:left;width:100%">
+                        <p:outputLabel value="#{cc.attrs.titleDialog}"></p:outputLabel>
+                    </span>
+                    <span style="display:block;float:left;width:100%;font-size: 16px;font-weight: bold;line-height: 24px;vertical-align: bottom;">
+                        <p:outputLabel value="#{cc.attrs.titleName}"></p:outputLabel>
+                    </span>
+                </p:column>
+            </p:row>
+        </p:panelGrid>
+     </composite:implementation>
+</html>
+

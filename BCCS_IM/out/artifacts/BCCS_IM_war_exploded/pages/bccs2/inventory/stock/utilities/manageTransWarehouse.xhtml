@@ -1,0 +1,642 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.utilities.manage.trans.warehouse']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.utilities.manage.trans.warehouse']}</ui:define>
+    <ui:define name="content">
+        <style type="text/css">
+            .tblListTrans .ui-datatable {
+                white-space: normal;
+            }
+        </style>
+        <h:form id="frmManageTransWarehouse" styleClass="Container100">
+            <p:outputPanel id="pnlSearchInfo" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="pnlSearchTrans" titleHeader="#{lang['import.order.search.transaction']}"/>
+
+                <div class="ContainerIndent">
+                    <p:messages id="msgComp" showSummary="false" showDetail="true"
+                                closable="true"/>
+                </div>
+                <div class="pnlSearchTrans Container100">
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 pd-top-7 mg-left-15 ui-fluid">
+                                <p:outputLabel styleClass="lb-sentinel"
+                                               value="#{lang['mn.stock.utilities.manage.trans.warehouse.code.note']}"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText value="#{manageTransWarehouseController.handleControlsBean.actionCode}"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7 ui-fluid">
+                                <p:outputLabel styleClass="lb-sentinel"
+                                               value="#{lang['mn.stock.utilities.manage.trans.warehouse.type.trans']}"
+                                               for="cobTransType"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu
+                                        value="#{manageTransWarehouseController.handleControlsBean.transType}"
+                                        id="cobTransType">
+                                    <f:selectItem itemValue=""
+                                                  itemLabel="#{lang['mn.stock.utilities.manage.trans.warehouse.type.trans.select']}"
+                                                  escape="true"/>
+                                    <f:selectItem itemLabel="#{lang['stock.trans.ui.transtype.export']}"
+                                                  itemValue="1"
+                                                  escape="true"/>
+                                    <f:selectItem itemLabel="#{lang['stock.trans.ui.transtype.import']}"
+                                                  itemValue="2"
+                                                  escape="true"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7 ui-fluid">
+                                <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.utilities.type.note']}"
+                                               for="cobTypeNote"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu value="#{manageTransWarehouseController.handleControlsBean.actionType}"
+                                                 id="cobTypeNote">
+                                    <f:selectItem itemValue="" noSelectionOption="true"
+                                                  itemLabel="#{lang['mn.stock.utilities.type.note.select']}"/>
+                                    <f:selectItem itemLabel="#{lang['stock.trans.ui.type.command']}"
+                                                  itemValue="1"
+                                                  escape="true"/>
+                                    <f:selectItem itemLabel="#{lang['stock.trans.ui.type.note']}"
+                                                  itemValue="2"
+                                                  escape="true"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel" value="#{lang['common.status']}"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:outputPanel styleClass="Container100" id="pnlStatus">
+                                    <p:selectOneMenu id="ctStatus"
+                                                     value="#{manageTransWarehouseController.handleControlsBean.status}">
+                                        <f:selectItem itemLabel="#{lang['mn.stock.status.select']}" escape="true"/>
+                                        <f:selectItems value="#{manageTransWarehouseController.stockTransStatus}"
+                                                       var="status"
+                                                       itemValue="#{status.value}"
+                                                       itemLabel="#{status.name}"/>
+                                    </p:selectOneMenu>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel" value="#{lang['create.note.from.date']}"
+                                               for="fromDate"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar
+                                        mask="true"
+                                        pattern="#{lang['common.datetime.format']}"
+                                        converterMessage="#{lang['invalid.date.message']}"
+                                        validatorMessage="#{lang['start.date.validate.message']}"
+                                        value="#{manageTransWarehouseController.handleControlsBean.fromDate}"
+                                        placeholder="#{lang['common.datetime.format']}"
+                                        required="true"
+                                        requiredMessage="#{lang['mn.stock.from.date.not.blank']}"
+                                        id="fromDate">
+                                    <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                </p:calendar>
+                            </div>
+                            <p:message for="fromDate"/>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel" value="#{lang['create.note.to.date']}"
+                                               for="toDate"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar
+                                        mask="true"
+                                        pattern="#{lang['common.datetime.format']}"
+                                        converterMessage="#{lang['invalid.date.message']}"
+                                        validatorMessage="#{lang['start.date.validate.message']}"
+                                        value="#{manageTransWarehouseController.handleControlsBean.toDate}"
+                                        placeholder="#{lang['common.datetime.format']}"
+                                        required="true"
+                                        requiredMessage="#{lang['mn.stock.from.date.not.blank']}"
+                                        id="toDate">
+                                    <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                </p:calendar>
+                            </div>
+                            <p:message for="toDate"/>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel"
+                                               value="#{lang['mn.stock.utilities.type.ware.house']}"
+                                               for="cobTypeWarehouse"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu id="cobTypeWarehouse"
+                                                 value="#{manageTransWarehouseController.handleControlsBean.ownerType}">
+                                    <f:selectItem itemLabel="#{lang['mn.stock.utilities.type.ware.house.select']}"
+                                                  itemValue=""/>
+                                    <f:selectItem itemLabel="#{lang['stock.trans.ui.stocktype.unit']}"
+                                                  itemValue="1"/>
+                                    <f:selectItem itemLabel="#{lang['stock.trans.ui.stocktype.staff']}"
+                                                  itemValue="2"/>
+                                    <p:ajax event="change"
+                                            listener="#{manageTransWarehouseController.changeOwnerType()}"
+                                            process="@this"
+                                            update="@([id$=pnlOwner])"/>
+                                </p:selectOneMenu>
+                                <p:remoteCommand process="@this"
+                                                 update="@form"
+                                                 name="updateControls"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <p:outputPanel styleClass="Container100 " id="pnlOwner">
+                                <p:outputPanel styleClass="Container100"
+                                               rendered="#{manageTransWarehouseController.handleControlsBean.ownerType==1}">
+                                    <cbs:inputShop value="#{manageTransWarehouseController.shopInfoTag}"
+                                                   idComponent="auCplWarehouse"
+                                                   id="auCplWarehouse"
+                                                   forceSelection="false"
+                                                   clearMethodName="clearOwner"
+                                                   methodName="receiveShop"
+                                                   update="@this"
+                                                   require="false"
+                                                   label="#{lang['lookup.limit.stock.label.shop']}"
+                                                   classDivLabel="Container40 Responsive50 pd-top-4 mg-left-15"
+                                                   placeholder="#{lang['mn.stock.limit.store.code.placeholder']}"
+                                                   classDivInput="Container60 Responsive50 ui-fluid"
+                                                   requiredMessage="#{lang['mn.stock.limit.store.code.require.msg']}"
+                                                   oncomplete="">
+                                    </cbs:inputShop>
+                                    <p:message for="auCplWarehouse"/>
+                                </p:outputPanel>
+                                <p:outputPanel styleClass="Container100"
+                                               rendered="#{manageTransWarehouseController.handleControlsBean.ownerType==2}">
+                                    <cbs:inputStaff value="#{manageTransWarehouseController.staffInfoTag}"
+                                                    id="auCplStaff"
+                                                    methodName="receiveStaff"
+                                                    update="@this"
+                                                    require="false"
+                                                    label="#{lang['lookup.limit.stock.label.staff']}"
+                                                    placeholder="#{lang['mn.stock.limit.staff.code.placeholder']}"
+                                                    classDivLabel="Container40 pd-top-4 Responsive50 mg-left-15 AlignLb sProduct_col"
+                                                    classDivInput="Container60 Responsive50 sProduct ui-fluid"
+                                                    requiredMessage="#{lang['mn.stock.limit.staff.code.require.msg']}"
+                                                    oncomplete=""
+                                                    forceSelection="false"
+                                                    clearMethodName="clearOwner">
+                                    </cbs:inputStaff>
+                                    <p:message for="auCplStaff"/>
+                                </p:outputPanel>
+                            </p:outputPanel>
+                        </div>
+                        <div class="Container33 Responsive">
+                        </div>
+                    </div>
+                </div>
+                <div class="Container100 TexAlCenter pd-top-10">
+                    <p:commandButton value="#{lang['common.button.search']}"
+                                     process="@this, pnlSearchInfo"
+                                     update="@form"
+                                     id="btnSearch"
+                                     oncomplete="PF('mainTable').getPaginator().setPage(0)"
+                                     actionListener="#{manageTransWarehouseController.doSearch()}"/>
+                    <p:commandButton value="#{lang['create.note.search.reset']}"
+                                     process="@this"
+                                     update="@form"
+                                     resetValues="true"
+                                     styleClass="mg-left-5"
+                                     actionListener="#{manageTransWarehouseController.doClear()}"/>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel id="pnlListTrans" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="pnlListTrans"
+                           titleHeader="#{lang['mn.stock.utilities.list.trans']}">
+                </cbs:panel>
+
+                <div class="pnlListTrans Container100 paddingTopBottom10">
+                    <div class="ContainerIndent mg-top-0 tblListTrans">
+                        <p:dataTable
+                                id="tblListTrans"
+                                rowIndexVar="index"
+                                widgetVar="mainTable"
+                                resizableColumns="true"
+                                sortMode="single"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.empty.records']}"
+                                selection="#{manageTransWarehouseController.selectedStockTransDTOs}"
+                                value="#{manageTransWarehouseController.stockTransDTOs}"
+                                var="stockTrans"
+                                rowKey="#{stockTrans.actionID}">
+
+                            <p:column selectionMode="multiple" styleClass="TexAlCenter mg-top-0" style="width:4%;">
+                            </p:column>
+                            <p:column headerText="#{lang['common.stt']}" style="width: 8%">
+                                <p:outputLabel value="#{index + 1}"/>
+                            </p:column>
+                            <p:column style="width: 13%;" sortBy="#{stockTrans.actionCode}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['code.transaction']}"
+                                            title="#{lang['code.transaction']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTrans.actionCode}" title="#{stockTrans.actionCode}"/>
+                            </p:column>
+                            <p:column style="width: 12%;"
+                                      sortBy="#{stockTrans.stockTransTypeName}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.utilities.manage.trans.warehouse.type.trans']}"
+                                            title="#{lang['mn.stock.utilities.manage.trans.warehouse.type.trans']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTrans.stockTransTypeName}"
+                                               title="#{stockTrans.stockTransTypeName}"/>
+                            </p:column>
+                            <p:column style="width:12%"
+                                      sortBy="#{stockTrans.createDateTime}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['create.note.create.date']}"
+                                            title="#{lang['create.note.create.date']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        title="#{manageTransWarehouseController.formatDateTime(stockTrans.createDateTime)}"
+                                        value="#{stockTrans.createDateTime}">
+                                    <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column style="width:12%"
+                                      sortBy="#{stockTrans.fromOwnerName}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['create.note.warehouse.export']}"
+                                            title="#{lang['create.note.warehouse.export']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTrans.fromOwnerName}"
+                                               title="#{stockTrans.fromOwnerName}"/>
+                            </p:column>
+                            <p:column style="width:12%"
+                                      sortBy="#{stockTrans.toOwnerName}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['create.note.warehouse.import']}"
+                                            title="#{lang['create.note.warehouse.import']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTrans.toOwnerName}" title="#{stockTrans.toOwnerName}"/>
+                            </p:column>
+                            <p:column style="width:12%"
+                                      sortBy="" visible="false">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.utilities.person.create']}"
+                                            title="#{lang['mn.stock.utilities.person.create']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTrans.userCreate}"
+                                               title="#{stockTrans.userCreate}"/>
+                            </p:column>
+                            <p:column style="width:12%"
+                                      sortBy="#{stockTrans.statusName}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['common.status']}"
+                                            title="#{lang['common.status']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTrans.statusName}" title="#{stockTrans.statusName}"/>
+                            </p:column>
+                            <p:column style="width:12%" sortBy=""
+                                      visible="false">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.utilities.logistic']}"
+                                            title="#{lang['mn.stock.utilities.logistic']}"/>
+                                </f:facet>
+                                <p:outputLabel value=""
+                                               title=""/>
+                            </p:column>
+                            <p:column
+                                    style="width:12%"
+                                    sortBy="#{stockTrans.signVoffice}">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mn.stock.utilities.status.write.voffice']}"
+                                            title="#{lang['mn.stock.utilities.status.write.voffice']}"/>
+                                </f:facet>
+                                <p:outputLabel
+                                        value="#{manageTransWarehouseController.getDisplayName('sign.voffice',stockTrans.signVoffice)}"
+                                        title="#{manageTransWarehouseController.getDisplayName('sign.voffice',stockTrans.signVoffice)}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.stock.utilities.type.process']}" style="width:12%"
+                                      sortBy="#{stockTrans.processOfflineName}" visible="false">
+                                <p:outputLabel value="#{stockTrans.processOfflineName}"
+                                               title="#{stockTrans.processOfflineName}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.stock.utilities.time.start']}" style="width:12%" sortBy=""
+                                      visible="false">
+                                <p:outputLabel value="#{stockTrans.startDate}"
+                                               title="#{stockTrans.startDate}">
+                                    <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.stock.utilities.time.end']}" style="width:12%" sortBy=""
+                                      visible="false">
+                                <p:outputLabel value="#{stockTrans.endDate}"
+                                               title="#{stockTrans.endDate}">
+                                    <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column style="width:12%" sortBy="">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['common.reason']}"
+                                            title="#{lang['common.reason']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTrans.reasonName}" title="#{stockTrans.reasonName}"/>
+                            </p:column>
+                            <p:column style="width:12%" >
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['export.order.note']}"
+                                            title="#{lang['export.order.note']}"/>
+                                </f:facet>
+                                <p:outputLabel value="#{stockTrans.note}" title="#{stockTrans.note}"/>
+                            </p:column>
+                            <p:column styleClass="TexAlRight"
+                                      style="width:10%" sortBy="">
+                                <f:facet name="header">
+                                    <h:outputText
+                                            value="#{lang['mm.stock.utilities.action']}"
+                                            title="#{lang['mm.stock.utilities.action']}"/>
+                                </f:facet>
+                                <p:commandLink value=""
+                                               update="dlgStockDebit"
+                                               process="@this"
+                                               oncomplete="PF('dlgStockDebit').show()"
+                                               actionListener="#{manageTransWarehouseController.viewStockDebit(stockTrans)}"
+                                               styleClass="fa icon-beaker Fs13 "
+                                               title="#{lang['mn.stock.utilities.quatar']}"/>
+                                <p:commandLink value=""
+                                               rendered="#{!manageTransWarehouseController.detailTrans || manageTransWarehouseController.selectedStockTransDTO.actionID != stockTrans.actionID}"
+                                               update="@([id$=pnlInforDetailTrans]), @([id$=pnlListTrans]), @([id$=pnlSearchInfo])"
+                                               process="@this"
+                                               styleClass="fa icon-zoom-in Fs13 mg-left-5"
+                                               oncomplete="PF('thrTable').getPaginator().setPage(0)"
+                                               title="#{lang['create.note.detail']}"
+                                               actionListener="#{manageTransWarehouseController.viewDetailTrans(stockTrans, true)}"/>
+                                <p:commandLink value=""
+                                               rendered="#{!(!manageTransWarehouseController.detailTrans || manageTransWarehouseController.selectedStockTransDTO.actionID != stockTrans.actionID)}"
+                                               update="@([id$=pnlInforDetailTrans]),  @([id$=pnlListTrans]), @([id$=pnlSearchInfo])"
+                                               process="@this"
+                                               styleClass="fa icon-zoom-out Fs13 mg-left-5" style="color:red!important;"
+                                               title="#{lang['create.note.detail']}"
+                                               actionListener="#{manageTransWarehouseController.viewDetailTrans(stockTrans, false)}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                    <div class="Container100 TexAlCenter pd-top-10">
+                        <p:commandButton value="#{lang['mn.stock.utilities.export.vofice']}"
+                                         ajax="false">
+                            <p:fileDownload value="#{manageTransWarehouseController.exportVofficeFile()}"/>
+                        </p:commandButton>
+                        <p:commandButton value="#{lang['mn.stock.utilities.print.detail.trans']}"
+                                         styleClass="mg-left-5"
+                                         ajax="false"
+                                         update="@this"
+                                         oncomplete="PF('thrTable').getPaginator().setPage(0)"
+                                         process="@this,  @([id$=tblListTrans])"
+                                         action="#{manageTransWarehouseController.validateBeforeExportDetail()}">
+                            <p:fileDownload value="#{manageTransWarehouseController.exportStockTransDetail()}"/>
+                        </p:commandButton>
+                        <p:commandButton value="#{lang['create.note.detail.serial']}"
+                                         styleClass="mg-left-5"
+                                         ajax="false"
+                                         process="@this,  @([id$=tblListTrans])">
+                            <p:fileDownload value="#{manageTransWarehouseController.exportStockTransSerials()}"/>
+                        </p:commandButton>
+                    </div>
+                </div>
+            </p:outputPanel>
+
+            <p:outputPanel id="pnlInforDetailTrans">
+                <p:outputPanel id="pnlInforTrans" rendered="#{manageTransWarehouseController.detailTrans}"
+                               styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="pnlInforTrans"
+                               titleHeader="#{lang['mn.stock.utilities.infor.detail.trans']}"/>
+
+                    <div class="pnlInforTrans Container100">
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['code.transaction']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel-bold break-all"
+                                                   title="#{manageTransWarehouseController.selectedStockTransDTO.actionCode}"
+                                                   value="#{manageTransWarehouseController.selectedStockTransDTO.actionCode}"
+                                                   readonly="true"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['mn.stock.utilities.person.create']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel-bold  break-word"
+                                                   title="#{manageTransWarehouseController.selectedStockTransDTO.userCreate}"
+                                                   value="#{manageTransWarehouseController.selectedStockTransDTO.userCreate}"
+                                                   readonly="true"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['create.note.warehouse.export']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel-bold  break-word"
+                                                   title="#{manageTransWarehouseController.selectedStockTransDTO.fromOwnerName}"
+                                                   value="#{manageTransWarehouseController.selectedStockTransDTO.fromOwnerName}"
+                                                   readonly="true"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['create.note.warehouse.import']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel-bold  break-word"
+                                                   title="#{manageTransWarehouseController.selectedStockTransDTO.toOwnerName}"
+                                                   value="#{manageTransWarehouseController.selectedStockTransDTO.toOwnerName}"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['common.reason']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel-bold  break-word"
+                                                   title="#{manageTransWarehouseController.selectedStockTransDTO.reasonName}"
+                                                   value="#{manageTransWarehouseController.selectedStockTransDTO.reasonName}"
+                                                   readonly="true"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['create.note.create.date']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel-bold  break-word"
+                                                   value="#{manageTransWarehouseController.selectedStockTransDTO.createDateTime}"
+                                                   title="#{manageTransWarehouseController.formatDateTime(manageTransWarehouseController.selectedStockTransDTO.createDateTime)}"
+                                                   readonly="true">
+                                        <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                    </p:outputLabel>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <!--<div class="Container33 Responsive">-->
+                            <div class="Container66 Responsive66">
+                                <div class="Container20 Responsive25 mg-left-15 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['create.note.note']}"/>
+                                </div>
+                                <div class="Container80 Responsive75 ui-fluid pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel-bold  break-word"
+                                                   value="#{manageTransWarehouseController.selectedStockTransDTO.note}"
+                                                   title="#{manageTransWarehouseController.selectedStockTransDTO.note}"
+                                                   readonly="true"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive"/>
+
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel id="pnlDetailStock" rendered="#{manageTransWarehouseController.detailTrans}"
+                               styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="pnlDetailStock" titleHeader="#{lang['create.note.detail.stock']}"/>
+
+                    <div class="pnlDetailStock Container100 paddingTopBottom10">
+                        <div class="ContainerIndent mg-top-0">
+                            <p:dataTable
+                                    id="tblListStock"
+                                    var="transDetail"
+                                    rowIndexVar="index"
+                                    widgetVar="thrTable"
+                                    resizableColumns="true"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.empty.records']}"
+                                    value="#{manageTransWarehouseController.stockTransDetailDTOs}">
+                                <p:column headerText="#{lang['export.order.type.product']}"
+                                          sortBy="#{transDetail.productOfferTypeName}">
+                                    <p:outputLabel value="#{transDetail.productOfferTypeName}"
+                                                   title="#{transDetail.productOfferTypeName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['export.order.name.product.type']}"
+                                          sortBy="#{transDetail.prodOfferName}">
+                                    <p:outputLabel value="#{transDetail.prodOfferName}"
+                                                   title="#{transDetail.prodOfferName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.status']}" sortBy="#{transDetail.stateName}">
+                                    <p:outputLabel value="#{transDetail.stateName}" title="#{transDetail.stateName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.unit']}" sortBy="">
+                                    <p:outputLabel value="#{transDetail.unit}" title="#{transDetail.unit}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.number']}" styleClass="TexAlRight"
+                                          sortBy="#{transDetail.quantity}">
+                                    <h:outputLabel styleClass="lb-sentinel-bold" converter="currencyFormat"
+                                                   value="#{transDetail.quantity}"
+                                                   title="#{transDetail.quantity}">
+                                    </h:outputLabel>
+                                </p:column>
+                                <p:column headerText="#{lang['create.note.detail.serial']}"
+                                          styleClass="TexAlRight"
+                                          sortBy="">
+                                    <p:commandLink value="#{lang['create.note.detail']}"
+                                                   rendered="#{transDetail.checkSerial eq '1'}"
+                                                   update="dlgDetailSerial, @([id$=msgComp])"
+                                                   action="#{manageTransWarehouseController.viewDetailSerial(transDetail)}"
+                                                   oncomplete="if(!args.validationFailed){PF('dlgDetailSerial').show();}"
+                                                   process="@this"/>
+                                </p:column>
+                            </p:dataTable>
+
+                        </div>
+                        <div class="Container100 TexAlCenter pd-top-10">
+                            <p:commandButton value="#{lang['mn.stock.utilities.print.detail.trans']}"
+                                             ajax="false">
+                                <p:fileDownload value="#{manageTransWarehouseController.exportStockTransDetail()}"/>
+                            </p:commandButton>
+                            <p:commandButton value="#{lang['stock.trans.detail.export.handOverReport']}"
+                                             rendered="#{(manageTransWarehouseController.selectedStockTransDTO.stockTransStatus ge 3
+                                             and manageTransWarehouseController.selectedStockTransDTO.stockTransType eq 1)
+                                             or manageTransWarehouseController.selectedStockTransDTO.stockTransStatus eq 6}"
+                                             styleClass="mg-left-5"
+                                             ajax="false">
+                                <p:fileDownload value="#{manageTransWarehouseController.exportHandOverReport()}"/>
+                            </p:commandButton>
+                        </div>
+                    </div>
+
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailSerial"
+                  widgetVar="dlgDetailSerial"
+                  header="#{manageTransWarehouseController.getDlgTitle()}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="60%">
+            <ui:include src="dialog/mnDetailSerial.xhtml"/>
+        </p:dialog>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgStockDebit"
+                  widgetVar="dlgStockDebit"
+                  header="#{lang['mn.stock.limit']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="70%">
+            <ui:include src="dialog/dlgStockDebit.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

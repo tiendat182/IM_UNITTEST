@@ -1,0 +1,225 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.isdn.delete']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmDelete">
+            <p:focus for="deleteServiceType"/>
+            <p:outputPanel styleClass="container100">
+                <p:outputPanel id="pnUnderDelete">
+                    <!--Start vung xoa so khoi kho-->
+                    <p:outputPanel styleClass="ContainerIndent pd-bottom-0 mg-bottom-0" id="pnMsg">
+                        <p:messages id="deleteMsgs" showDetail="true" showSummary="false" closable="true"/>
+                    </p:outputPanel>
+                    <p:outputPanel id="pnDeleteOutStock" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelDeleteOutStock"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.isdn.delete']}"/>
+
+                        <div class="Container100 panelDeleteOutStock" style="margin-bottom: 10px;margin-top: 10px;">
+
+
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['type.digital']}" styleClass="lb-sentinel"
+                                                       for="deleteServiceType"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="deleteServiceType"
+                                                         required="true"
+                                                         requiredMessage="#{lang['mn.stock.status.service.noselect']}"
+                                                         value="#{deleteIsdnController.deleteStockNumberDTO.serviceType}">
+                                            <f:selectItems
+                                                    value="#{deleteIsdnController.optionSetValueDTOs}"
+                                                    var="item"
+                                                    itemValue="#{item.value}"
+                                                    itemLabel="#{item.name}"
+                                                    itemLabelEscaped="true"
+                                                    />
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="Container66 Responsive66">
+                                    <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['export.order.note']}"/>
+                                    </div>
+                                    <div class="Container80 Responsive75 ui-fluid">
+                                        <p:inputText value="#{deleteIsdnController.deleteStockNumberDTO.note}"
+                                                maxlength="200"
+                                                validatorMessage="mn.stock.status.isdn.delete.valid.not.maxlength"
+                                                placeholder="#{lang['mn.stock.status.isdn.note']}"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7" style="margin-top: 20px">
+                                        <p:outputLabel styleClass="lb-sentinel" for="fileAttach"
+                                                       value="#{lang['attach.file']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid" style="margin-top: 20px">
+                                        <p:inputText id="outputAttachFile"
+                                                     styleClass="outputAttachFile"
+                                                     maxlength="100"
+                                                     placeholder="#{lang['search.number.range.input.fileName']}"
+                                                     value="#{deleteIsdnController.attachFileName}"
+                                                     readonly="true"/>
+                                    </div>
+                                </div>
+                                <div class="Container66 Responsive66">
+                                    <div class="Container100 Responsive100 mg-left-15 pd-top-7">
+                                        <p:fileUpload id="fileAttach"
+                                                      requiredMessage="mn.stock.status.isdn.update.file.noselect"
+                                                      update="@this, @([id$=outputAttachFile]),@([id$=deleteMsgs])"
+                                                      dragDropSupport="true" required="true" mode="advanced"
+                                                      auto="true"
+                                                      process="@this"
+                                                      value="#{deleteIsdnController.uploadedFile}"
+                                                      fileUploadListener="#{deleteIsdnController.fileUploadAction}">
+                                        </p:fileUpload>
+                                    </div>
+                                </div>
+                            </div>
+                            <p:outputPanel styleClass="ContainerIndent mg-top-0" id="pnDownloadFile">
+                                <div id="divDownloadFile" class="Container80 Responsive75 ui-fluid" style="margin-top: 25px">
+                                    <p:commandLink
+                                            id="downloadTemplateBtn"
+                                            value="#{lang['mn.stock.status.isdn.update.status.file_template']}"
+                                            rendered="#{!deleteIsdnController.hasFileError}"
+                                            title="#{lang['create.note.download.file.title']}"
+                                            ajax="false"
+                                            immediate="true"
+                                            style="text-decoration: none!important;">
+                                        <p:fileDownload
+                                                value="#{deleteIsdnController.downloadFileTemplate()}"/>
+                                    </p:commandLink>
+                                    <p:commandLink
+                                            id="bthDownloadError"
+                                            value="#{lang['mn.stock.status.isdn.update.status.file_error']}"
+                                            rendered="#{deleteIsdnController.hasFileError}"
+                                            title="#{lang['create.note.download.file.title']}"
+                                            ajax="false"
+                                            immediate="true"
+                                            style="text-decoration: none!important;">
+                                        <p:fileDownload
+                                                value="#{deleteIsdnController.downloadFileError()}"/>
+                                    </p:commandLink>
+                                </div>
+                            </p:outputPanel>
+
+                            <div class="Container100 TexAlCenter mg-top-0">
+                                <p:commandButton
+                                        value="#{lang['see.previous']}"
+                                        process="@this,@([id$=pnUnderDelete])"
+                                        actionListener="#{deleteIsdnController.previewDelete}"
+                                        update="@this, @([id$=lstListNeedDelete]), @([id$=pnDownloadFile]), @([id$=pnMsg])"/>
+                                <p:commandButton styleClass="mg-left-5"
+                                                 value="#{lang['reset.selected']}"
+                                                 process="@this"
+                                                 actionListener="#{deleteIsdnController.doReset}"
+                                                 update="@this, @([id$=frmDelete]), @([id$=fDelete])"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung xoa so khoi kho-->
+
+                    <!--Start vung ds dải số cần xóa-->
+                    <p:outputPanel id="pnLstNeedDelete" styleClass="ContainerIndent"
+                                   rendered="true">
+                        <cbs:panel classForToggle="panelListNeedDelete"
+                                   toggle="true"
+                                   titleHeader="#{lang['list.digital.ranges.need.delete']}"/>
+
+                        <div class="Container100 panelListNeedDelete" style="margin-bottom: 10px;margin-top: 5px;">
+                        <div class="Container TexAlLeft">
+                            <cbs:confirmDialog
+                                    idComponent="btnDelete"
+                                    rendered="#{deleteIsdnController.enableDelete}"
+                                    valueButton="#{lang['button.delete.digital']}"
+                                    headerConfirm="#{lang['mn.stock.status.isdn.delete.confirm.header']}"
+                                    messageConfirm="#{lang['mn.stock.status.isdn.delete.confirm.msg']}"
+                                    actionOK="#{deleteIsdnController.deleteNumber}"
+                                    resetValueButton="false"
+                                    process="@this, @([id$=frmDelete])"
+                                    updateArea="@this, @([id$=lstListNeedDelete]), @([id$=deleteMsgs]), @([id$=pnMsg])"
+                                    updateOK="@this, @([id$=lstListNeedDelete]), @([id$=deleteMsgs]), @([id$=pnMsg])"
+                                    titleButton="#{lang['button.delete.digital']}"
+                                    actionValidate="#{deleteIsdnController.doConfirmDelete}"
+                                    styleClassButton="fa icon-trash Fs14 blue md-link mg-left-5"
+                                    focusCancel="false"
+                                    isButton="false"
+                                    />
+                            </div>
+
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        id="lstListNeedDelete"
+                                        var="item"
+                                        rowKey="#{item.rowKey}"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage=""
+                                        value="#{deleteIsdnController.lstProcess}">
+                                    <p:column headerText="#{lang['from.number']}"
+                                              style="width: 25%"
+                                              sortBy="#{item.fromISDN}">
+                                        <p:outputLabel value="#{item.fromISDN}"
+                                                       title="#{item.fromISDN}"
+                                                       style="text-align: left"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['to.number']}"
+                                              style="width: 25%"
+                                              sortBy="#{item.toISDN}">
+                                        <p:outputLabel value="#{item.toISDN}"
+                                                       title="#{item.toISDN}"
+                                                       style="text-align: left"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.number']}"
+                                              style="width: 20%"
+                                              styleClass="TexAlRight"
+                                              sortBy="#{(item.total)}">
+                                        <h:outputLabel value="#{(item.total)}" styleClass="lb-sentinel-bold"
+                                                       title="#{(item.total)}"
+                                                       converter="currencyFormat"></h:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.column.result']}"
+                                              style="width: 30%"
+                                              sortBy="#{deleteIsdnController.getResultDesc(item.result)}">
+                                        <p:outputLabel value="#{deleteIsdnController.getResultDesc(item.result)}"
+                                                       title="#{deleteIsdnController.getResultDesc(item.result)}"
+                                                       style="text-align: left"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                        <!--<div class="Container100 TexAlCenter mg-top-0" id="fDelete">-->
+                            <!--<p:commandButton-->
+                                    <!--id="btnDelete"-->
+                                    <!--rendered="#{deleteIsdnController.enableDelete}"-->
+                                    <!--value="#{lang['button.delete.digital']}"-->
+                                    <!--style="margin-bottom: 10px"-->
+                                    <!--update="@this, @([id$=frmDelete])"-->
+                                    <!--actionListener="#{deleteIsdnController.deleteNumber}"/>-->
+
+                        <!--</div>-->
+                    </p:outputPanel>
+                    <!--End vung ds dải số cần xóa-->
+                </p:outputPanel>
+            </p:outputPanel>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

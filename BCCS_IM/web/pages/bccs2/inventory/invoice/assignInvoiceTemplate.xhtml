@@ -1,0 +1,263 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../sentinel/template.xhtml"
+        xmlns:pe="http://primefaces.org/ui/extensions">>
+    <ui:define name="title">#{lang['mn.invoice.assignInvoiceTemplate']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.invoice.assignInvoiceTemplate']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmExportNote" styleClass="Container100">
+            <p:outputPanel id="pnUnderExportNote" styleClass="container100">
+                <div class="ContainerIndent mg-top-0">
+                    <p:messages id="msgInvoiceTemplate" showDetail="true" showSummary="false" closable="true"/>
+                </div>
+                <!--Start vung xac nhan-->
+                <p:outputPanel id="pnLstExportOrder" styleClass="ContainerIndent mg-top-0">
+                    <cbs:panel classForToggle="panelListOrderExport"
+                               toggle="true"
+                               titleHeader="#{lang['mn.invoice.info.form.invoice']}"/>
+
+                    <div class="Container100 panelListOrderExport paddingTopBottom10">
+
+
+                        <div class="ContainerIndent mg-top-0">
+                            <p:dataTable
+                                    id="tblParentInvoice"
+                                    value="#{assignInvoiceTemplateController.lstParentInvoiceTemplate}"
+                                    var="invoiceParent" rowKey="#{invoiceParent.invoiceTemplateId}"
+                                    resizableColumns="true"
+                                    selection="#{assignInvoiceTemplateController.parInTemplate}"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.empty.records']}">
+                                <p:ajax event="rowSelectRadio" process="@this,@([id$=tblParentInvoice])"
+                                        listener="#{assignInvoiceTemplateController.selectInvoiceParent}"
+                                        update="@form"/>
+                                <p:column headerText="#{lang['mn.invoice.type.form.invoice']}">
+                                    <p:outputLabel value="#{invoiceParent.invoiceTemplateTypeName}"/>
+                                </p:column>
+                                <p:column headerText="#{lang['mn.invoice.unit']}">
+                                    <p:outputLabel value="#{invoiceParent.fromShopName}"
+                                            />
+                                </p:column>
+                                <p:column headerText="#{lang['common.number']}" styleClass="col-right">
+                                    <h:outputLabel value="#{invoiceParent.amount}"
+                                                   title="#{invoiceParent.amount}"
+                                                   styleClass="lb-sentinel-bold"
+                                                   converter="currencyFormat">
+                                    </h:outputLabel>
+                                </p:column>
+                                <p:column headerText="#{lang['common.select']}"
+                                          style="text-align: center"
+                                          selectionMode="single">
+                                </p:column>
+
+                            </p:dataTable>
+                        </div>
+                        <p:outputPanel styleClass="Container100"
+                                       rendered="#{assignInvoiceTemplateController.viewProcess}">
+                            <div class="ContainerIndent mg-top-0">
+                                <p:outputLabel
+                                        value="#{lang['mn.invoice.type.list.owner']}"
+                                        style="margin-left: 20px; margin-top: 10px"/>
+                                <p:selectOneRadio style="margin-left: 7%"
+                                                  value="#{assignInvoiceTemplateController.workMode}">
+                                    <f:selectItem itemLabel="#{lang['mn.invoice.delivery']}"
+                                                  itemValue="0"/>
+                                    <f:selectItem itemLabel="#{lang['mn.invoice.retrieve']}"
+                                                  itemValue="1"/>
+                                    <p:ajax event="change"
+                                            listener="#{assignInvoiceTemplateController.selectWorkMode}"
+                                            process="@this"
+                                            update="@form"/>
+                                </p:selectOneRadio>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 pd-top-4 mg-left-15">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['invoice.type.owner']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu
+                                                value="#{assignInvoiceTemplateController.forInvoiceTemplate.ownerType}">
+                                            <f:selectItem itemValue="1" itemLabel="#{lang['invoice.type.shop']}"/>
+                                            <f:selectItem itemValue="2" itemLabel="#{lang['invoice.type.staff']}"/>
+                                            <p:ajax event="change" process="@this"
+                                                    listener="#{assignInvoiceTemplateController.changeOwnerType}"
+                                                    update="@form"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <p:outputPanel id="pnlShop" styleClass="Container100"
+                                                   rendered="#{assignInvoiceTemplateController.forInvoiceTemplate.ownerType eq '1'}">
+                                        <div class="Container90 Responsive75">
+                                            <cbs:inputShop value="#{assignInvoiceTemplateController.shopInfoTag}"
+                                                           idComponent="inputStore"
+                                                           methodName="receiveShop"
+                                                           update="@this"
+                                                           label="#{lang['mn.stock.limit.store']}"
+                                                           placeholder="#{lang['common.search.shop.placehoder']}"
+                                                           classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                           classDivInput="Container60 Responsive50 ui-fluid"
+                                                           require="true"
+                                                           requiredMessage="#{lang['mn.invoice.info.require.shop']}">
+
+                                            </cbs:inputShop>
+                                        </div>
+                                        <div class="Container5 Responsive25">
+                                            <p:commandLink styleClass="fa icon-plus pd-top-7 "
+                                                           process="@this,@([id$=lstDelivery]),@([id$=pnlShop])"
+                                                           update="@this,@([id$=pnlShop]),@([id$=lstDelivery]),@([id$=msgInvoiceTemplate])"
+                                                           actionListener="#{assignInvoiceTemplateController.addInvoiceTemp}"
+                                                           style="text-decoration: none"/>
+                                        </div>
+                                    </p:outputPanel>
+
+                                    <p:outputPanel id="pnlStaff" styleClass="Container100"
+                                                   rendered="#{assignInvoiceTemplateController.forInvoiceTemplate.ownerType eq '2'}">
+                                        <div class="Container90 Responsive75">
+                                            <cbs:inputStaff value="#{assignInvoiceTemplateController.staffInfoTag}"
+                                                            id="inputStaff"
+                                                            methodName="receiveStaff"
+                                                            update="@this"
+                                                            label="#{lang['mn.stock.limit.staff']}"
+                                                            placeholder="#{lang['common.search.staff.placehoder']}"
+                                                            classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                            classDivInput="Container60 Responsive50 ui-fluid"
+                                                            require="true"
+                                                            requiredMessage="#{lang['mn.invoice.info.require.staff']}">
+                                            </cbs:inputStaff>
+                                        </div>
+                                        <div class="Container5 Responsive25">
+                                            <p:commandLink styleClass="fa icon-plus pd-top-7 "
+                                                           process="@this,@([id$=lstDelivery]),@([id$=pnlStaff])"
+                                                           update="@this,@([id$=pnlStaff]), @([id$=lstDelivery]),@([id$=msgInvoiceTemplate])"
+                                                           actionListener="#{assignInvoiceTemplateController.addInvoiceTemp}"
+                                                           style="text-decoration: none"/>
+                                        </div>
+                                    </p:outputPanel>
+                                </div>
+                            </div>
+                            <p:outputPanel styleClass="Container100">
+                                <div class="ContainerIndent mg-top-0">
+                                    <p:dataTable
+                                            id="lstDelivery"
+                                            var="childInvoice"
+                                            value="#{assignInvoiceTemplateController.lstChildInvoiceTemplate}"
+                                            resizableColumns="true"
+                                            paginator="#{lang['common.paging.paginator']}"
+                                            rows="#{lang['common.paging.rows.default']}"
+                                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                            emptyMessage="#{lang['common.empty.records']}">
+                                        <p:column headerText="#{lang['nm.invoice.under.unit']}"
+                                                  rendered="#{assignInvoiceTemplateController.forInvoiceTemplate.ownerType eq '1'}">
+                                            <p:outputLabel value="#{childInvoice.ownerdName}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['invoice.type.staff.under']}"
+                                                  rendered="#{assignInvoiceTemplateController.forInvoiceTemplate.ownerType eq '2'}">
+                                            <p:outputLabel value="#{childInvoice.ownerdName}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.invoice.quantity.used']}"
+                                                  styleClass="col-right">
+                                            <h:outputLabel value="#{childInvoice.usedAmount}"
+                                                           title="#{childInvoice.usedAmount}"
+                                                           styleClass="lb-sentinel-bold"
+                                                           converter="currencyFormat">
+                                            </h:outputLabel>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.invoice.quantity.havenot.used']}"
+                                                  styleClass="col-right">
+                                            <h:outputLabel value="#{childInvoice.amount}"
+                                                           title="#{childInvoice.amount}"
+                                                           styleClass="lb-sentinel-bold"
+                                                           converter="currencyFormat">
+                                            </h:outputLabel>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.invoice.quantity.delivery']}"
+                                                  rendered="#{assignInvoiceTemplateController.workMode eq '0'}">
+                                            <p:inputText id="amount"
+                                                         maxlength="10"
+                                                         value="#{childInvoice.amountDelivery}"
+                                                         styleClass="Wid100 TexAlRight">
+                                                <pe:keyFilter for="amount" regEx="/[0-9]/i"/>
+                                            </p:inputText>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.invoice.quantity.retrieve']}"
+                                                  rendered="#{assignInvoiceTemplateController.workMode eq '1'}">
+                                            <p:inputText id="amountRetrieve"
+                                                         maxlength="10"
+                                                         value="#{childInvoice.amountRetrieve}"
+                                                         styleClass="Wid100 TexAlRight">
+                                                <pe:keyFilter for="amountRetrieve" regEx="/[0-9]/i"/>
+                                            </p:inputText>
+                                        </p:column>
+                                        <p:column headerText="#{lang['common.delete']}" styleClass="TexAlCenter"
+                                                  style="width: 10%">
+                                            <p:commandLink styleClass="fa icon-trash Fs14 blue"
+                                                           actionListener="#{assignInvoiceTemplateController.remove(childInvoice)}"
+                                                           process="@this" update="@([id$=lstDelivery])"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                                <div class="Container100">
+                                    <p:outputPanel styleClass="Container100 TexAlCenter"
+                                                   rendered="#{assignInvoiceTemplateController.workMode eq '0'}">
+                                        <cbs:confirmDialog
+                                                idComponent="btnConfirmDelivery"
+                                                headerConfirm="#{lang['mn.invoice.confirm.delivery.header']}"
+                                                messageConfirm="#{lang['mn.invoice.confirm.delivery']}"
+                                                actionOK="#{assignInvoiceTemplateController.deliveryInvoice}"
+                                                resetValueButton="true"
+                                                valueButton="#{lang['mn.invoice.delivery']}"
+                                                process="@this,@([id$=lstDelivery])"
+                                                updateArea="@form"
+                                                updateOK="@form"
+                                                actionValidate="#{assignInvoiceTemplateController.validatePreDeliveryInvoice}"
+                                                focusCancel="false"
+                                                isButton="true"
+                                                />
+                                    </p:outputPanel>
+
+                                    <p:outputPanel styleClass="Container100 TexAlCenter"
+                                                   rendered="#{assignInvoiceTemplateController.workMode eq '1'}">
+                                        <cbs:confirmDialog
+                                                idComponent="btnConfirmRetrieve"
+                                                headerConfirm="#{lang['mn.invoice.confirm.retrieve.header']}"
+                                                messageConfirm="#{lang['mn.invoice.confirm.retrieve']}"
+                                                actionOK="#{assignInvoiceTemplateController.retrieveInvoice}"
+                                                resetValueButton="true"
+                                                valueButton="#{lang['mn.invoice.retrieve']}"
+                                                process="@this,@([id$=lstDelivery])"
+                                                updateArea="@form"
+                                                updateOK="@form"
+                                                processOK="@this,@([id$=lstDelivery])"
+                                                actionValidate="#{assignInvoiceTemplateController.validatePreRetrieveInvoice}"
+                                                focusCancel="false"
+                                                isButton="true"
+                                                />
+                                    </p:outputPanel>
+                                </div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                    </div>
+                </p:outputPanel>
+                <!--End vung xac nhan-->
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

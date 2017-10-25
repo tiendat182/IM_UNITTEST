@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+        >
+
+<ui:composition template="bccs2/sentinel/template.xhtml">
+    <ui:define name="title">Home</ui:define>
+    <ui:define name="featureName">Home</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <style type="text/css">
+                .ui-datatable thead th, .ui-datatable tfoot td, .ui-treetable thead th, .ui-treetable tfoot td {
+                    text-align: center;
+                }
+                .ui-datatable {
+                    border: 1px solid rgba(0, 0, 0, .12);
+                    white-space: inherit;
+                    background-color: #FBFCFD
+                }
+            </style>
+            <div class="ContainerIndent margin4-10 shadow-bottom bg-panel">
+                <div class="ContainerIndent">
+                    <div class="Container100">
+                        <p:dataTable var="businessCode"
+                                     styleClass="fixed-size"
+                                     value="#{businessCodeController.lazyModel}"
+                                     paginator="true" rows="20"
+                                     emptyMessage="#{lang['common.search.not.record.found']}"
+                                     paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                     paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                     paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                     rowsPerPageTemplate="20,40,60"
+                                     id="businessCodeTable" lazy="true">
+                            <p:column headerText="#{lang['businessCode.id']}"
+                                      style="width:10%"
+                                      filterBy="#{businessCode.id}"
+                                      filterMatchMode="contains"
+                                    >
+                                <h:outputText value="#{businessCode.id}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['businessCode.description']}"
+                                      filterBy="#{businessCode.description}"
+                                      filterMatchMode="contains"
+                                      >
+                                <h:outputText value="#{businessCode.description}" title="#{businessCode.description}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['businessCode.action']}"
+                                      filterBy="#{businessCode.action}"
+                                      filterMatchMode="contains"
+                                    >
+                                <h:outputText value="#{businessCode.action}" title="#{businessCode.action}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+</ui:composition>
+
+</html>

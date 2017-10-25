@@ -1,0 +1,221 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core"
+
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.utilities.search.user.lock.info']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmSearchUserLockInfo">
+            <p:outputPanel styleClass="Container100">
+                <div class="ContainerIndent">
+                    <p:messages id="messages" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel id="pnUserLockInfoLookup" styleClass="Container100">
+                    <!--Start vung nhap thong tin tra cuu-->
+                    <!--<p:focus for="pnUserLockInfoLookup"/>-->
+                    <p:outputPanel id="pnUserLockInfo" styleClass="ContainerIndent mg-top-0">
+                        <cbs:panel classForToggle="panelUserLockInfo"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.stock.limit.information.search']}"/>
+
+                        <div class="Container100 panelUserLockInfo">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container50 Responsive50">
+                                    <p:outputPanel styleClass="Container100">
+                                        <cbs:inputShop value="#{userLockInfoController.shopInfoTag}"
+                                                       id="shop"
+                                                       idComponent="shop"
+                                                       forceSelection="false"
+                                                       clearMethodName="clearOwnerShop"
+                                                       methodName="receiveShop"
+                                                       update="@this,@([id$=staffSearch])"
+                                                       require="false"
+                                                       label="#{lang['lookup.limit.stock.label.shop']}"
+                                                       classDivLabel="Container40 Responsive50 pd-top-4 mg-left-15"
+                                                       placeholder="#{lang['mn.stock.limit.store.code.placeholder']}"
+                                                       classDivInput="Container60 Responsive50 ui-fluid"
+                                                       requiredMessage="#{lang['mn.stock.limit.store.code.require.msg']}"
+                                                       oncomplete="">
+                                        </cbs:inputShop>
+                                        <p:message for="shop"/>
+                                    </p:outputPanel>
+                                </div>
+                                <p:outputPanel class="Container50 Responsive50" id="staffSearch">
+                                    <p:outputPanel styleClass="Container100" >
+                                        <cbs:inputStaff value="#{userLockInfoController.staffInfoTag}"
+                                                        id="staff"
+                                                        methodName="receiveStaff"
+                                                        update="@this"
+                                                        require="true"
+                                                        label="#{lang['lookup.limit.stock.label.staff']}"
+                                                        placeholder="#{lang['mn.stock.limit.staff.code.placeholder']}"
+                                                        classDivLabel="Container40 pd-top-4 Responsive50 mg-left-15 AlignLb sProduct_col"
+                                                        classDivInput="Container60 Responsive50 sProduct ui-fluid"
+                                                        requiredMessage="#{lang['mn.stock.limit.staff.code.require.msg']}"
+                                                        oncomplete=""
+                                                        forceSelection="false"
+                                                        clearMethodName="clearOwnerStaff">
+                                        </cbs:inputStaff>
+                                        <p:message for="staff"/>
+                                    </p:outputPanel>
+                                </p:outputPanel>
+                            </div>
+
+                            <div class="ContainerIndent mg-top-0">
+
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['mn.stock.utilities.manage.trans.warehouse.type.trans']}"
+                                                       for="cbxLockType"/>
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:selectOneMenu id="cbxLockType"
+                                                         value="#{userLockInfoController.transType}"
+                                                         requiredMessage="">
+                                            <f:selectItem
+                                                    itemLabel="#{lang['mn.stock.utilities.manage.trans.warehouse.type.trans.select']}"
+                                                    itemValue=""/>
+                                            <f:selectItem itemLabel="#{lang['mn.stock.utilities.manage.trans.type.in']}"
+                                                          itemValue="2"/>
+                                            <f:selectItem
+                                                    itemLabel="#{lang['mn.stock.utilities.manage.trans.type.out']}"
+                                                    itemValue="1"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['mn.stock.utilities.manage.trans.lockType']}"
+                                                       for="cbxTransType"/>
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:selectOneMenu id="cbxTransType"
+                                                         value="#{userLockInfoController.lockType}"
+                                                         requiredMessage="">
+                                            <f:selectItem itemLabel="#{lang['common.selectOneMenu.select']}"
+                                                          itemValue=""/>
+                                            <f:selectItem
+                                                    itemLabel="#{lang['mn.stock.utilities.manage.trans.lockType1']}"
+                                                    itemValue="2"/>
+                                            <f:selectItem
+                                                    itemLabel="#{lang['mn.stock.utilities.manage.trans.lockType2']}"
+                                                    itemValue="3"/>
+                                            <f:selectItem
+                                                    itemLabel="#{lang['mn.stock.utilities.manage.trans.lockType3']}"
+                                                    itemValue="4"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container100 TexAlCenter mg-top-5">
+                                    <p:commandButton
+                                            value="#{lang['create.note.search']}"
+                                            process="pnUserLockInfo"
+                                            update="@form,pnLstTranSaction"
+                                            actionListener="#{userLockInfoController.searchLockUserInfo}"/>
+                                </div>
+                            </div>
+
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung nhap thong tin tra cuu-->
+
+                    <!--Start ket qua tim kiem tra ve-->
+                    <p:outputPanel id="pnLstTranSaction" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelListLimit"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.stock.utilities.userlockinfo.result']}"/>
+                        <div class="Container100 panelListLimit">
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        var="data"
+                                        value="#{userLockInfoController.lockUserInfoDTOList}"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}"
+                                        rowIndexVar="index"
+                                        tableStyle="width:100%">
+                                    <p:column headerText="#" styleClass="" style="width: 4%;">
+                                        #{index+1}
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.utilities.table.label.transCode']}"
+                                              style="width: 15%;" sortBy="#{data.transCode}">
+                                        <h:outputLink id="transCodeTrack" value="#">
+                                            <p:outputLabel>#{data.transCode}</p:outputLabel>
+                                        </h:outputLink>
+                                        <p:tooltip for="transCodeTrack" value="#{data.transCode}" trackMouse="true" />
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.utilities.table.label.staffName']}"
+                                              style="width: 11%;">
+                                        <h:outputLink id="staffNameTrack" value="#">
+                                            <p:outputLabel>#{data.staffName}</p:outputLabel>
+                                        </h:outputLink>
+                                        <p:tooltip for="staffNameTrack" value="#{data.staffName}" trackMouse="true" />
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.utilities.table.label.fromOwner']}"
+                                              style="width: 20%;" sortBy="#{data.fromOwner}">
+                                        <h:outputLink id="fromOwnerTrack" value="#">
+                                            <p:outputLabel>#{data.fromOwner}</p:outputLabel>
+                                        </h:outputLink>
+                                        <p:tooltip for="fromOwnerTrack" value="#{data.fromOwner}" trackMouse="true" />
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.utilities.table.label.toOwner']}"
+                                              style="width: 20%;" sortBy="#{data.toOwner}">
+                                        <h:outputLink id="toOwnerTrack" value="#">
+                                            <p:outputLabel>#{data.toOwner}</p:outputLabel>
+                                        </h:outputLink>
+                                        <p:tooltip for="toOwnerTrack" value="#{data.toOwner}" trackMouse="true" />
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.utilities.table.label.lockTypeName']}"
+                                              style="width: 15%;" sortBy="#{data.lockTypeName}">
+                                        <h:outputLink id="lockTypeNameTrack" value="#">
+                                            <p:outputLabel>#{data.lockTypeName}</p:outputLabel>
+                                        </h:outputLink>
+                                        <p:tooltip for="lockTypeNameTrack" value="#{data.lockTypeName}" trackMouse="true" />
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.utilities.table.label.reasonName']}"
+                                              style="width: 15%;" sortBy="#{data.reasonName}">
+                                        <h:outputLink id="reasonNameTrack" value="#">
+                                            <p:outputLabel>#{data.reasonName}</p:outputLabel>
+                                        </h:outputLink>
+                                        <p:tooltip for="reasonNameTrack" value="#{data.reasonName}" trackMouse="true" />
+                                    </p:column>
+                                </p:dataTable>
+                                <div class="Container100 TexAlCenter" style="margin-bottom: 10px !important;">
+                                    <cbs:confirmDialog
+                                            idComponent="deleteButton2"
+                                            id="deleteButton2"
+                                            renderedBtn="#{userLockInfoController.displayDeleteButton}"
+                                            valueButton="#{lang['mn.stock.utilities.button.delete']}"
+                                            headerConfirm="#{lang['mn.stock.utilities.button.confirm.header']}"
+                                            messageConfirm="#{lang['mn.stock.utilities.button.confirm.msg']}"
+                                            actionOK="#{userLockInfoController.deleteLockUserInfo()}"
+                                            resetValueButton="true"
+                                            process="@this,frmSearchUserLockInfo"
+                                            updateArea="@this,@([id$=frmSearchUserLockInfo])"
+                                            processOK="@this,@([id$=frmSearchUserLockInfo])"
+                                            updateOK="@([id$=frmSearchUserLockInfo])"
+                                            focusCancel="true"
+                                            isButton="true"/>
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

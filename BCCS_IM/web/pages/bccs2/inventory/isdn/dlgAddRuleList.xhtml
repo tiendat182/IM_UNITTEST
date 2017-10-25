@@ -1,0 +1,147 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:o="http://omnifaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+    <h:form id="frmAddRuleList" styleClass="Container100">
+        <p:outputPanel id="pnlAddRuleList" styleClass="Container100">
+            <div class="Container100 marginTopBottom10">
+                <p:messages id="msgAddRuleList" showDetail="true" showSummary="false" closable="true"/>
+                <div class="ContainerIndent mg-top-0">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel clRuleCode"  value="#{lang['mn.isdn.rule.code']}"
+                                           for="newRuleCode"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:inputText
+                                    id="newRuleCode"
+                                    class="clRuleCode"
+                                    title="#{lang['mn.isdn.rule.title.code']}"
+                                    maxlength="20"
+                                    onblur="this.value = this.value.trim();"
+                                    requiredMessage="#{lang['mn.isdn.rule.req.code']}"
+                                    required="true"
+                                    placeholder="#{lang['mn.isdn.rule.code.msg']}"
+                                    value="#{createRuleListController.editDto.groupFilterRuleCode}">
+                                <pe:keyFilter regEx="/[a-z0-9_]/i"  preventPaste="false"/>
+                            </p:inputText>
+                            <cbs:message forId="newRuleCode"/>
+                        </div>
+                    </div>
+
+                <div class="ContainerIndent">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel clRuleName"
+                                    value="#{lang['mn.isdn.rule.name']}"
+                                    for="newRuleName"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid ui-tooltip-fluid">
+                            <p:inputText
+                                    id="newRuleName"
+                                    class="clRuleName"
+                                    title="#{lang['mn.isdn.rule.title.name']}"
+                                    maxlength="100"
+                                    onblur="this.value = this.value.trim();"
+                                    required="true"
+                                    requiredMessage="#{lang['mn.isdn.rule.req.name']}"
+                                    placeholder="#{lang['mn.isdn.rule.name.msg']}"
+                                    value="#{createRuleListController.editDto.name}">
+                                <f:validateLength maximum="200"/>
+                            </p:inputText>
+                            <cbs:message forId="newRuleName"/>
+                        </div>
+                </div>
+                <div class="ContainerIndent">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel"  value="#{lang['mn.isdn.rule.resource']}"
+                                           for="newRuleResource"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:selectOneMenu id="newRuleResource"
+                                             required="true"
+                                             requiredMessage="#{lang['mn.isdn.rule.req.source']}"
+                                             value="#{createRuleListController.editDto.telecomServiceId}">
+                                <f:selectItem itemLabel="#{lang['mn.isdn.rule.resource.msg']}"/>
+                                <f:selectItems value="#{createRuleListController.optionSetValueDTOs}"
+                                               var="item" itemValue="#{item.value}"
+                                               itemLabel="#{item.name}"
+                                               itemLabelEscaped="true"/>
+                            </p:selectOneMenu>
+                            <cbs:message forId="newRuleResource"/>
+                        </div>
+                </div>
+
+                <div class="ContainerIndent">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel" 
+                                    value="#{lang['mn.isdn.rule.desc']}"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:inputText
+                                    id="newRuleNote"
+                                    title="#{lang['mn.isdn.rule.title.note']}"
+                                    maxlength="500"
+                                    onblur="this.value = this.value.trim();"
+                                    placeholder="#{lang['mn.isdn.rule.desc.msg']}"
+                                    value="#{createRuleListController.editDto.notes}"/>
+                            <cbs:message forId="newRuleNote"/>
+                        </div>
+                </div>
+                <div class="Container100 TexAlCenter">
+                    <p:commandButton process="pnlAddRuleList"
+                                     value="#{lang['common.add']}"
+                                     update="pnlAddRuleList"
+                                     actionListener="#{createRuleListController.validateAdd(createRuleListController.editDto, 0)}"
+                                     oncomplete="if(!args.validationFailed){PF('dlgConfirmAdd').show();}
+                                      setTimeout(function () {$('.btnAddOnePackageGoods0OK').focus();}, 350);"/>
+                    <p:commandButton process="pnlAddRuleList"
+                                     styleClass="mrg-left-5"
+                                     update="pnlAddRuleList,frmExportNote:pnInfoExportOrder,frmExportNote:pnLstExportOrder"
+                                     value="#{lang['common.add.close']}"
+                                     oncomplete="if(!args.validationFailed) {PF('dlgConfirmAddClose').show()}
+                                     setTimeout(function () {$('.btnAddCloseOK').focus();}, 350);"
+                                     actionListener="#{createRuleListController.validateAdd(createRuleListController.editDto, 1)}"/>
+                </div>
+            </div>
+        </p:outputPanel>
+        <p:confirmDialog closeOnEscape="true" closable="true"
+                         appendTo="@(body)"
+                         widgetVar="dlgConfirmAdd"
+                         header="#{lang['mn.isdn.rule.header.add']}"
+                         id="cfmBtn"
+                         width="550"
+                         message="#{lang['mn.isdn.rule.msg.add.confirm']}">
+            <p:commandLink value="#{lang['common.button.NO']}" styleClass="md-button" process="@none"
+                           onstart="PF('dlgConfirmAdd').hide();"
+                    />
+            <p:commandLink process="@this,pnlAddRuleList"
+
+                           update="pnlAddRuleList"
+                           value="#{lang['common.button.YES']}"
+                           styleClass="md-button btnAddOnePackageGoods0OK"
+                           oncomplete="PF('dlgConfirmAdd').hide();"
+                           actionListener="#{createRuleListController.addRuleList()}"/>
+        </p:confirmDialog>
+
+        <p:confirmDialog closeOnEscape="true" closable="true"
+                         appendTo="@(body)"
+                         widgetVar="dlgConfirmAddClose"
+                         header="#{lang['mn.isdn.rule.header.add']}"
+                         id="dlgConfirmAddClose"
+                         width="550"
+                         message="#{lang['mn.isdn.rule.msg.add.confirm']}">
+            <p:commandLink value="#{lang['common.button.NO']}" styleClass="md-button" process="@none"
+                           onstart="PF('dlgConfirmAddClose').hide();"
+                    />
+            <p:commandLink process="@this,pnlAddRuleList"
+                           update="pnlAddRuleList,frmExportNote:pnUnderExportNote,frmExportNote:pnInfoExportOrder,frmExportNote:pnLstExportOrder"
+                           value="#{lang['common.button.YES']}" styleClass="md-button btnAddCloseOK "
+                           oncomplete=" PF('dlgConfirmAddClose').hide(); if(!args.validationFailed) {PF('dlgAddRuleList').hide();}"
+                           actionListener="#{createRuleListController.addRuleList()}"/>
+
+        </p:confirmDialog>
+    </h:form>
+</ui:composition>

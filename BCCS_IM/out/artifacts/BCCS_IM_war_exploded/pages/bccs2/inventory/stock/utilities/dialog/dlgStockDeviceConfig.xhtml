@@ -1,0 +1,42 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:form id="frmViewDetailSerial" styleClass="Container100">
+        <p:outputPanel id="pnlViewDetailSerial" styleClass="Container100">
+            <div class="ContainerIndent">
+                <p:dataTable
+                        id="tblListDeviceConfig"
+                        var="item" value="#{lstDeviceConfig}"
+                        rowIndexVar="index"
+                        resizableColumns="true"
+                        paginator="#{lang['common.paging.paginator']}"
+                        rows="#{lang['common.paging.rows.default']}"
+                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                        emptyMessage="#{lang['common.empty.records']}">
+                    <p:column headerText="#{lang['common.stt']}" style="width: 10%" styleClass="TexAlCenter">
+                        <p:outputLabel value="#{index + 1}"/>
+                    </p:column>
+                    <p:column headerText="#{lang['deviceConfig.product']}"
+                              styleClass="ui-fluid" sortBy="">
+                        <p:outputLabel value="#{item.productOfferingTotalDTO.code.concat(' - ').concat(item.productOfferingTotalDTO.code)}" title=""/>
+                    </p:column>
+                    <p:column headerText="#{lang['common.status']}" styleClass="ui-fluid" sortBy="">
+                        <p:selectOneMenu value="#{productOffer.strStateId}" styleClass="Wid100"
+                                         disabled="#{isStateNew}">
+                            <p:ajax event="change" process="@this"/>
+                            <f:selectItems value="#{lsProductStatus}" var="status"
+                                           itemValue="#{status.value}" itemLabel="#{status.name}"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

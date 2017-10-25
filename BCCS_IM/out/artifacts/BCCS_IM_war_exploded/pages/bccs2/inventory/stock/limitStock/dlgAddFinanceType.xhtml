@@ -1,0 +1,96 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://java.sun.com/jsf/core">
+    <h:form id="frmInsertFinance">
+        <p:outputPanel id="pnInsertFinance" styleClass="Containe100">
+            <div class="ContainerIndent mg-top-0">
+                <p:messages showSummary="false" showDetail="true" closable="true"/>
+            </div>
+            <div class="ContainerIndent ">
+                <div class="Container40 Responsive mg-left-15 pd-top-5">
+                    <p:outputLabel for="cbxTypeLimit" styleClass="lb-sentinel" value="#{lang['mn.stock.limit.financeType.typelimit']}"/>
+                </div>
+                <div class="Container60 Responsive ui-fluid">
+                    <p:selectOneMenu id="cbxTypeLimit" value="#{limitFinanceTypeController.financeTypeDTO.financeType}" required="true"
+                                     requiredMessage="#{lang['mn.stock.limit.men.order.require.msg']}"
+                                     disabled="#{limitFinanceTypeController.financeTypeDTO.id != null}">
+                        <f:selectItem itemValue="" itemLabel="#{lang['mn.stock.limit.financeType.limitType']}" />
+                        <f:selectItems value="#{limitFinanceTypeController.lsLimitOptionType}" var="productOffer" itemLabel="#{productOffer.name}" itemValue="#{productOffer.value}" />
+                    </p:selectOneMenu>
+                    <p:message for="cbxTypeLimit" />
+                </div>
+            </div>
+            <div class="ContainerIndent">
+                <div class="Container40 Responsive mg-left-15 pd-top-5">
+                    <p:outputLabel styleClass="lb-sentinel" for="inputDayNum" value="#{lang['mn.stock.limit.financeType.day.offer']}"/>
+                </div>
+                <div class="Container60 Responsive ui-fluid">
+                    <p:inputText id="inputDayNum" value="#{limitFinanceTypeController.financeTypeDTO.strDayNum}" maxlength="10" required="true"
+                                 placeholder="#{lang['mn.stock.limit.financeType.day.offer.placehoder']}" requiredMessage="#{lang['mn.stock.limit.financeType.day.offer.require.msg']}" />
+                    <pe:keyFilter for="inputDayNum" regEx="/[0-9]/i" preventPaste="false" />
+                    <p:message for="inputDayNum" />
+                </div>
+            </div>
+            <div class="Container100 TexAlCenter marT10">
+                <!--<p:commandButton process="@this,@([id$=pnInsertFinance])"  update="@([id$=pnInsertFinance])" value="#{lang['common.edit.record']}"
+                               oncomplete="if(!args.validationFailed) {PF('dlgAddFinanceType').hide();}" rendered="#{limitFinanceTypeController.financeTypeDTO.id != null}"
+                               actionListener="#{limitFinanceTypeController.doUpdateFinaceType}"/>-->
+                <p:outputPanel rendered="#{limitFinanceTypeController.financeTypeDTO.id != null}" styleClass="Container100 TexAlCenter">
+                    <cbs:confirmDialog
+                            idComponent="btnEdit"
+                            valueButton="#{lang['common.edit.record']}"
+                            headerConfirm="#{lang['mn.stock.limit.financeType.header.edit']}"
+                            messageConfirm="#{lang['common.msg.edit.confirm']}"
+                            actionOK="#{limitFinanceTypeController.doUpdateFinaceType(true)}"
+                            resetValueButton="true"
+                            process="@([id$=frmInsertFinance])"
+                            updateArea="@form"
+                            updateOK="@form"
+                            oncompleteOK="if(!args.validationFailed) {PF('dlgAddFinanceType').hide();}"
+                            actionValidate="#{limitFinanceTypeController.doConfirmAdd}"
+                            focusCancel="false"
+                            isButton="true"
+                            />
+                </p:outputPanel>
+                <p:outputPanel rendered="#{limitFinanceTypeController.financeTypeDTO.id == null}" styleClass="Container100 TexAlCenter">
+                    <cbs:confirmDialog
+                            idComponent="btnAdd"
+                            valueButton="#{lang['mn.stock.limit.createNew']}"
+                            headerConfirm="#{lang['mn.stock.limit.financeType.header.add']}"
+                            messageConfirm="#{lang['common.msg.add.confirm']}"
+                            actionOK="#{limitFinanceTypeController.doUpdateFinaceType(false)}"
+                            resetValueButton="true"
+                            process="@([id$=frmInsertFinance])"
+                            updateArea="@form"
+                            updateOK="@form"
+                            oncompleteOK=""
+                            actionValidate="#{limitFinanceTypeController.doConfirmAdd}"
+                            focusCancel="false"
+                            isButton="true"
+                            />
+                    <cbs:confirmDialog
+                            idComponent="btnAddAndClose"
+                            valueButton="#{lang['common.add.close']}"
+                            headerConfirm="#{lang['mn.stock.limit.financeType.header.add']}"
+                            messageConfirm="#{lang['common.msg.add.confirm']}"
+                            actionOK="#{limitFinanceTypeController.doUpdateFinaceType(true)}"
+                            resetValueButton="true"
+                            process="@([id$=frmInsertFinance])"
+                            updateArea="@form"
+                            updateOK="@form"
+                            oncompleteOK="if(!args.validationFailed) {PF('dlgAddFinanceType').hide();}"
+                            actionValidate="#{limitFinanceTypeController.doConfirmAdd}"
+                            focusCancel="false"
+                            isButton="true"
+                            />
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+    </h:form>
+
+</ui:composition>

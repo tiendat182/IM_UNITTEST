@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:fw="http://viettel.cbs.com/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+    </f:facet>
+    <title><ui:insert name="title">Template</ui:insert></title>
+
+
+    <link href="#{request.contextPath}/resources/primefaces-sentinel/framework.css" rel="stylesheet" type="text/css"/>
+    <ui:insert name="bccsCommonCSS">
+        <h:outputStylesheet name="primefaces-sentinel/framework.css"/>
+        <h:outputStylesheet name="primefaces-sentinel/framework.css"/>
+    </ui:insert>
+    <ui:insert name="bccsCommonJS">
+        <h:outputScript name="js/framework.js" library="sentinel-layout"/>
+    </ui:insert>
+    <!--<h:outputScript name="js/materialize.js"/>-->
+
+    <h:outputText value="&lt;!--[if gte IE 9]&gt;" escape="false"/>
+
+    <style type="text/css">
+        .ui-tabs-top .ui-tabs-nav li,
+        .ui-tabs .ui-tabs-nav li {
+            margin-bottom: 0px !important;
+        }
+    </style>
+    <h:outputText value="&lt;![endif]--&gt;" escape="false"/>
+
+    <ui:insert name="head"/>
+
+</h:head>
+
+<h:body>
+
+    <pe:blockUI></pe:blockUI>
+    <f:view locale="#{locateBean.selectedLocale}" contentType="text/html" id="viewLocale">
+
+        <ui:insert name="bccsMenuCommon">
+            <ui:include src="topbar.xhtml"/>
+
+            <ui:include src="leftmenu.xhtml"/>
+        </ui:insert>
+        <c:if test="#{notifyResource.runNotify}">
+            <p:growl id="pushGrowl" widgetVar="pushGrowlVar"
+                     globalOnly="true" life="#{notifyResource.growlLife}"
+                     showDetail="true" showSummary="true"/>
+
+            <c:forEach var="socket" items="#{notifyResource.pushs}">
+                <fw:vs2Socket onMessage="handleMessage" pushServer="#{socket}" channel="/notification"/>
+            </c:forEach>
+
+            <script type="text/javascript">
+                function handleMessage(data) {
+                    notify([
+                        {name: 'contentData', value: data}
+                    ]);
+                }
+            </script>
+            <h:form>
+                <p:remoteCommand name="notify" process="@this" actionListener="#{notifyController.handleMessage}"
+                                 update=":topBarForm:notificationBar,:topBarForm:countNotify"></p:remoteCommand>
+                <p:remoteCommand name="reloadNotification" actionListener="#{notifyController.loadAllUnreadNotify}"
+                                 process="@this"
+                                 update="@([id$=userPanel]),:topBarForm:notificationBar,:topBarForm:countNotify"/>
+                <p:remoteCommand name="selectNotify" actionListener="#{notifyController.loadNotify}"
+                                 update=":contentDlgForm"
+                                 process="@this" oncomplete="if(!args.validaionFailed){PF('contentDlgVar').show();}"/>
+                <p:remoteCommand name="removeNotify" actionListener="#{notifyController.removeNotify}"
+                                 process="@this"
+                                 update="@([id$=messageCountNotify]),@([id$=mailPanel]),:topBarForm:notificationBar,:topBarForm:countNotify"/>
+
+            </h:form>
+            <ui:include src="../../notification-dlg.xhtml"></ui:include>
+        </c:if>
+
+
+        <div class="fontRegular">
+
+            <p:ajaxStatus onstart="startTimer();"
+                          onsuccess="PF('statusDialog').hide();stopTimer();bindEventForButton();"
+                          onerror="PF('errorDialog').show();stopTimer();PF('statusDialog').hide()"/>
+
+
+            <p:dialog modal="true" widgetVar="statusDialog" header="#{lang['common.processing']}"
+                      draggable="false" closable="false" resizable="false">
+                <img alt="" src="#{request.contextPath}/resources/themes/logo/ajaxloadingbar.gif"/>
+            </p:dialog>
+
+            <p:dialog modal="true" widgetVar="errorDialog"
+                      header="#{lang['common.error.happened']}" draggable="false" closable="false" resizable="false">
+                #{lang['common.error.pressF5']}
+            </p:dialog>
+
+
+            <p:confirmDialog global="true">
+                <div align="center">
+                    <p:commandButton value="#{lang['common.button.YES']}"
+                                     type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+                                     style="margin-right: 40px;margin-top: 10px"/>
+                    <p:commandButton value="#{lang['common.button.NO']}" style="margin-top: 10px"
+                                     type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                </div>
+            </p:confirmDialog>
+
+            <h:form id="breadRemoteForm" prependId="false">
+                <p:inputText type="hidden" id="txtMenuItemUrl" value="#{menuBean.url}"/>
+                <p:remoteCommand name="loadBreadCrum" process="@form" action="#{menuBean.loadBreadCrumb}"
+                                 update=":globalBreadCrumbForm"/>
+            </h:form>
+            <h:form id="globalBreadCrumbForm">
+                <ui:insert name="bccsGlobalBreadCrumbForm">
+                    <div class="Container100 white-back shadow-bottom"
+                         style="margin-bottom:5px;">
+                        <p:breadCrumb model="#{menuBean.subModel}" id="breadCrum" style="font-size: large"
+                                      styleClass="cbs-breadcrum">
+                        </p:breadCrumb>
+                    </div>
+                </ui:insert>
+            </h:form>
+
+            <div class="bodyContent Container100">
+                <ui:insert name="content">
+                    Template
+                </ui:insert>
+            </div>
+        </div>
+    </f:view>
+
+    <h:inputHidden value="#{activityListener.trigger}"></h:inputHidden>
+
+    <h:outputStylesheet name="css/font-icon-layout.css" library="sentinel-layout"/>
+    <h:outputStylesheet name="css/sentinel-layout.css" library="sentinel-layout"/>
+    <h:outputStylesheet name="css/core-layout.css" library="sentinel-layout"/>
+
+
+    <script type="text/javascript">
+        PrimeFaces.widget.AutoComplete.prototype.setupForceSelection = function () {
+            this.currentItems = [this.input.val()];
+            var a = this;
+            this.input.blur(function () {
+                var d = $(this).val(), c = false;
+                if (PrimeFaces.isIE(8)) {
+                    a.itemClick = true
+                }
+
+                for (var b = 0; b &lt; a.currentItems.length; b++) {
+                    if (a.currentItems[b] === d) {
+                        c = true;
+                        break
+                    }
+                }
+                var lastestSubmitValue = '';
+                var hiddenFieldId = a.id + "_hidden";
+                var hiddenField = document.getElementById(hiddenFieldId);
+                if (hiddenField != null) {
+                    lastestSubmitValue = hiddenField.textContent;
+                }
+                if (!c) {
+                    if (a.cfg.multiple) {
+                        a.input.val(lastestSubmitValue)
+                    } else {
+                        a.input.val(lastestSubmitValue)
+                        a.hinput.val(lastestSubmitValue)
+                    }
+                }
+            });
+        }
+
+        /**
+         * thiendn1: sua SPACE khong an even cua SelectOneRadio
+         */
+        PrimeFaces.widget.SelectOneRadio.prototype.bindEvents = function () {
+            var a = this;
+            this.outputs.filter(":not(.ui-state-disabled)").on("mouseover.selectOneRadio", function () {
+                $(this).addClass("ui-state-hover")
+            }).on("mouseout.selectOneRadio", function () {
+                $(this).removeClass("ui-state-hover")
+            }).on("click.selectOneRadio", function () {
+                var c = $(this), b = c.prev().children(":radio");
+                if (!c.hasClass("ui-state-active")) {
+                    a.unselect(a.checkedRadio);
+                    a.select(c);
+                    b.trigger("click");
+                    b.trigger("change")
+                } else {
+                    b.trigger("click")
+                }
+            });
+            this.labels.filter(":not(.ui-state-disabled)").on("click.selectOneRadio", function (d) {
+                var c = $(PrimeFaces.escapeClientId($(this).attr("for"))), b = null;
+                if (c.is(":input")) {
+                    b = c.parent().next()
+                } else {
+                    b = c.children(".ui-radiobutton-box")
+                }
+                b.trigger("click.selectOneRadio");
+                d.preventDefault()
+            });
+            this.inputs.on("focus.selectOneRadio", function () {
+                var b = $(this), c = b.parent().next();
+                if (b.prop("checked")) {
+                    c.removeClass("ui-state-active")
+                }
+                c.addClass("ui-state-focus")
+            }).on("blur.selectOneRadio", function () {
+                var b = $(this), c = b.parent().next();
+                if (b.prop("checked")) {
+                    c.addClass("ui-state-active")
+                }
+                c.removeClass("ui-state-focus")
+            }).on("keydown.selectOneRadio", function (h) {
+                var i = $(this), f = i.parent().next(), g = a.inputs.index(i), m = a.inputs.length, l = $.ui.keyCode, j = h.which;
+                switch (j) {
+                    case l.UP:
+                    case l.LEFT:
+                        var c = (g === 0) ? a.inputs.eq((m - 1)) : a.inputs.eq(--g), k = c.parent().next();
+                        i.blur();
+                        a.unselect(f);
+                        a.select(k);
+                        c.trigger("focus").trigger("change");
+                        h.preventDefault();
+                        break;
+                    case l.DOWN:
+                    case l.RIGHT:
+                        var d = (g === (m - 1)) ? a.inputs.eq(0) : a.inputs.eq(++g), b = d.parent().next();
+                        i.blur();
+                        a.unselect(f);
+                        a.select(b);
+                        d.trigger("focus").trigger("change");
+                        h.preventDefault();
+                        break;
+                    case l.SPACE:
+                        var d = a.inputs.eq(0);
+                        i.blur();
+                        a.unselect(a.checkedRadio);
+                        if (!i.prop("checked")) {
+                            a.select(f);
+                            d.trigger("focus").trigger("change");
+                        }
+                        h.preventDefault();
+                        break
+                }
+            })
+        }
+
+    </script>
+    <script type="text/javascript">
+        var t;
+
+        function startTimer() {
+            t = setTimeout("PF('statusDialog').show()", 1000);
+        }
+
+        function stopTimer() {
+            clearTimeout(t);
+
+        }
+        function refreshParent() {
+            window.opener.location.reload();
+        }
+
+        jQuery(document).ready(function () {
+            var href = window.location.href;
+            if (href != "" || href != null) {
+                if (!(href.lastIndexOf("#") > 0)) {
+                    jQuery("#txtMenuItemUrl").val(href);
+                    loadBreadCrum();
+                }
+            }
+            //quangkm test before unload
+            anyChange = false;
+            jQuery.each(jQuery(".bodyContent input"), function () {
+                //neu class input chua ignore-confirm thi ko ghi nhan thay doi
+                if (jQuery(this).attr("class") != undefined) {
+                    var classVal = jQuery(this).attr("class");
+                    try {
+                        if (!classVal.contains("ignore-confirm")) {
+                            jQuery(this).change(function () {
+                                anyChange = true;
+                            });
+                        }
+                    } catch (e) {//chrome ko ho tro ham contains
+                        if (classVal.indexOf("ignore-confirm") != -1) {
+                            jQuery(this).change(function () {
+                                anyChange = true;
+                            });
+                        }
+                    }
+                }
+            });
+            jQuery.each(jQuery("a"), function () {
+                //neu class input chua ignore-confirm thi ko ghi nhan thay doi
+                if (jQuery(this).attr("class") != undefined) {
+                    var classVal = jQuery(this).attr("class");
+                    try {
+                        if (classVal.contains("ignore-confirm")) {
+                            jQuery(this).click(function () {
+                                anyChange = false;
+                            });
+                        }
+                    } catch (e) {//chrome ko ho tro ham contains
+                        if (classVal.indexOf("ignore-confirm") != -1) {
+                            jQuery(this).click(function () {
+                                anyChange = false;
+                            });
+                        }
+                    }
+                }
+            });
+            //bind su kien cho cac button
+            bindEventForButton();
+            window.onbeforeunload = function () {
+                if (anyChange) {
+                    return "message";
+                }
+            }
+            //end quangkm
+        });
+        //quangkm test before unload
+        function bindEventForButton() {
+            try {
+                jQuery.each(jQuery(".ui-button"), function () {
+                    jQuery(this).click(function () {
+                        setTimeout('resetAnyChange()', 50);
+                    });
+                });
+                jQuery.each(jQuery("html button"), function () {
+                    jQuery(this).click(function () {
+                        setTimeout('resetAnyChange()', 50);
+                    });
+                });
+            } catch (e) {
+                console.log("loi bind event")
+            }
+        }
+        function resetAnyChange() {
+            try {
+                anyChange = false;
+//                if(jQuery(".ui-messages") != null){
+//                    anyChange = true;
+//                    var messageDetail = jQuery(".ui-messages").find("div").attr("class");
+//                    if(messageDetail != null){
+//                        if(messageDetail != undefined){
+//                            if(messageDetail.contains("ui-messages-info")){
+//                                anyChange = false;
+//                            }
+//                        }
+//                    }
+//                }
+            } catch (e) {
+                console.log('error reset anychange');
+            }
+        }
+        //end quangkm
+
+    </script>
+</h:body>
+
+</html>

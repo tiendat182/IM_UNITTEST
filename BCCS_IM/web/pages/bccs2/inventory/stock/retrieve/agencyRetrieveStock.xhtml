@@ -1,0 +1,221 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.agency.retrieve.stock']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.agency.retrieve.stock']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmAgentRetrieve">
+            <p:outputPanel id="pnlTabAgentRetrieve" styleClass="Container100">
+                <div class="ContainerIndent  mg-bottom-0">
+                    <p:messages id="retrieveMsgs" showDetail="true" showSummary="false" closable="true"/>
+                </div>
+                <p:outputPanel id="pnlInfoAgentRetrieve">
+                    <p:focus for="pnlInfoAgentRetrieve"/>
+                    <p:outputPanel styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInfoRetrieve"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.stock.agency.retrieve.info']}"/>
+
+                        <div class="Container100 panelInfoListInvoice marginTopBottom10">
+                            <!--Start vung thong tin view lenh xuat-->
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4 lb-sentinel">
+                                        <p:outputLabel styleClass="lb-sentinel" for="retrieveCode"
+                                                       value="#{lang['mn.stock.agency.retrieve.code']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 pd-top-4 ui-fluid">
+                                        <p:inputText placeholder="#{lang['mn.stock.agency.retrieve.code.placeholder']}"
+                                                     required="true"
+                                                     id="retrieveCode"
+                                                     maxlength="50"
+                                                     requiredMessage="#{lang['mn.stock.agency.retrieve.code.require']}"
+                                                     value="#{agencyRetrieveStockController.transInputDTO.actionCode}"
+                                                     validatorMessage="#{lang['mn.stock.agency.retrieve.code.format.msg']}"/>
+                                        <p:message for="retrieveCode" style="font-size: 11px!important;"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['mn.stock.agency.by.whom']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                        <p:outputLabel escape="true"
+                                                       value="#{agencyRetrieveStockController.transInputDTO.createUser}"
+                                                       styleClass="lb-sentinel-bold"></p:outputLabel>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['mn.stock.agency.retrieve.day']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                        <h:outputText
+                                                value="#{agencyRetrieveStockController.transInputDTO.createDatetime}"
+                                                escape="true"
+                                                styleClass="lb-sentinel-bold">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive">
+                                    <cbs:inputShop value="#{agencyRetrieveStockController.shopInfoExportTag}"
+                                                   idComponent="ipExportShop"
+                                                   methodName="exportShop"
+                                                   update="@this"
+                                                   limit="#{agencyRetrieveStockController.limitAutoComplete}"
+                                                   label="#{lang['mn.stock.agency.retrieve.shop']}"
+                                                   require="false"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                   classDivInput="Container60 Responsive50 ui-fluid pd-top-4"
+                                                   requiredMessage="#{lang['export.order.stock.require.msg']}"
+                                                   placeholder="#{lang['export.order.stock.placehoder']}"
+                                            >
+                                    </cbs:inputShop>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <cbs:inputShop value="#{agencyRetrieveStockController.shopInfoReceiveTag}"
+                                                   idComponent="ipReceiveShop"
+                                                   methodName="receiveShop"
+                                                   update="@this,@([id$=pnlProductXXX]),@([id$=retrieveMsgs])"
+                                                   label="#{lang['mn.stock.agency.retrieve.from.agency']}"
+                                                   require="true"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                   classDivInput="Container60 Responsive50 ui-fluid"
+                                                   requiredMessage="#{lang['mn.stock.agency.retrieve.from.agency.blank']}"
+                                                   placeholder="#{lang['mn.stock.agency.retrieve.from.agency.placeholder']}"
+                                                   forceSelection="false"
+                                                   clearMethodName="clearCurrentShop"
+                                            >
+                                    </cbs:inputShop>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 ui-fluid pd-top-4 mg-left-15">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['mn.stock.agency.retrieve.reason']}"
+                                                       for="cobReason"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="cobReason" filter="true" required="true"
+                                                         requiredMessage="#{lang['mn.stock.agency.retrieve.reason.require']}"
+                                                         value="#{agencyRetrieveStockController.transInputDTO.reasonId}">
+                                            <f:selectItem
+                                                    itemLabel="#{lang['mn.stock.agency.retrieve.select.reason']}"/>
+                                            <f:selectItems value="#{agencyRetrieveStockController.lstReason}"
+                                                           var="reason"
+                                                           itemLabel="#{reason.reasonName}"
+                                                           itemLabelEscaped="true"
+                                                           itemValue="#{reason.reasonId}"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="cobReason"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="retrieveNote"
+                                                       value="#{lang['export.order.note']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid}">
+                                        <p:inputText value="#{agencyRetrieveStockController.transInputDTO.note}"
+                                                     maxlength="500"
+                                                     validatorMessage="#{lang['export.order.note.validate.maxlength']}"
+                                                     placeholder="#{lang['export.order.note.placehoder']}"
+                                                     id="retrieveNote"/>
+                                        <p:message for="retrieveNote"/>
+                                    </div>
+                                </div>
+                                <c:if test="#{agencyRetrieveStockController.showTransfer}">
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 mg-left-15 pd-top-4 Responsive50">
+                                            <p:outputLabel styleClass="lb-sentinel" for="tranferRetrieve"
+                                                           value="#{lang['export.order.tranfer']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:selectBooleanCheckbox styleClass="mg-left-5" id="tranferRetrieve"
+                                                                     value="#{agencyRetrieveStockController.tranfer}"
+                                                    />
+                                        </div>
+                                    </div>
+                                </c:if>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin view lenh xuat-->
+                    <!--Start vung thong tin Danh sach hang hoa-->
+                    <p:outputPanel id="pnlProductXXX" styleClass="Container100">
+                        <div class="Container100">
+                            <cbs:inputListProduct idComponent="retrievelistProduct" id="retrievelistProduct"
+                                                  value="#{agencyRetrieveStockController.listProductTag}"
+                                                  idMessage="msgExport"
+                                                  rendered="#{agencyRetrieveStockController.tagProductList}"/>
+                        </div>
+                    </p:outputPanel>
+
+                    <!--End vung thong tin danh sach hang hoa-->
+                    <!--Start Vung data button-->
+                    <div class="Container100">
+                        <div class="ContainerIndent TexAlCenter mg-top-0">
+                            <cbs:confirmDialog
+                                    idComponent="retrievesubmitOrder"
+                                    id="retrievecreateOrder"
+                                    valueButton="#{lang['mn.stock.agency.retrieve.export']}(F8)"
+                                    headerConfirm="#{lang['mn.stock.agency.retrieve.submit.header.confirm']}"
+                                    messageConfirm="#{lang['mn.stock.agency.retrieve.submit.header.confirm.msg']}"
+                                    actionOK="#{agencyRetrieveStockController.doCreateAgentRetrieve}"
+                                    resetValueButton="false"
+                                    process="@([id$=frmAgentRetrieve])"
+                                    updateArea="@([id$=frmAgentRetrieve])"
+                                    updateOK="@([id$=frmAgentRetrieve])"
+                                    focusCancel="false"
+                                    oncompleteOK=""
+                                    disableButton="#{agencyRetrieveStockController.canPrint}"
+                                    isButton="true"
+                                    />
+                            <p:commandButton value="#{lang['mn.stock.agency.retrieve.print']}"
+                                             process="@this"
+                                             disabled="#{!agencyRetrieveStockController.canPrint}"
+                                             update="@form"
+                                             ajax="false"
+                                             immediate="true"
+                                             styleClass="mg-left-5">
+                                <p:fileDownload value="#{agencyRetrieveStockController.exportStockTransDetail()}"/>
+                            </p:commandButton>
+                            <p:commandButton value="#{lang['reset.selected']}"
+                                             process="@this"
+                                             update="@form"
+                                             styleClass="mg-left-5"
+                                             actionListener="#{agencyRetrieveStockController.doReset}">
+                            </p:commandButton>
+                        </div>
+                    </div>
+                    <!--End Vung data button-->
+                </p:outputPanel>
+            </p:outputPanel>
+            <script type="text/javascript">
+                document.getElementById('frmAgentRetrieve').onkeypress = function (event) {
+                    if (event.keyCode == 119 &amp;&amp; document.getElementById('frmAgentRetrieve:retrievecreateOrder:retrievesubmitOrderbtn') != null) {
+                        document.getElementById('frmAgentRetrieve:retrievecreateOrder:retrievesubmitOrderbtn').click();
+                        return false;
+                    }
+                    if (event.keyCode == 120 &amp;&amp; document.getElementById('frmAgentRetrieve:retrievelistProduct:retrievelistProductAddNew') != null) {
+                        document.getElementById('frmAgentRetrieve:retrievelistProduct:retrievelistProductAddNew').click();
+                        return false;
+                    }
+                }
+            </script>
+        </h:form>
+    </ui:define>
+</ui:composition>

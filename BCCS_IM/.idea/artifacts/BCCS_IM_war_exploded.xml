@@ -1,0 +1,18 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="BCCS_IM:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/BCCS_IM_war_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="BCCS_IM" />
+          <element id="module-output" name="FwjBCCS2_v5" />
+          <element id="module-output" name="InventoryBusiness" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="application" name="LibWeb_v5" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="BCCS_IM/web/Web" />
+    </root>
+  </artifact>
+</component>

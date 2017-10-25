@@ -1,0 +1,311 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.underlying.createNoteExport']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.underlying.createNoteExport']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmExportNote">
+            <p:focus for="codeExportTxt"/>
+            <p:outputPanel styleClass="container100">
+                <p:outputPanel id="pnUnderExportNote">
+                    <div class="ContainerIndent">
+                        <p:messages id="msgValidate"
+                                    showSummary="false"
+                                    showDetail="true"
+                                    closable="true"/>
+                    </div>
+                    <!--Start vung thong tin phieu xuat-->
+                    <p:outputPanel id="pnInfoExportNote" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInforExportNote"
+                                   toggle="true"
+                                   titleHeader="#{lang['export.order.view.export.field']}"/>
+
+                        <div class="Container100 panelInforExportNote" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.code.field']}"
+                                                       for="codeExportTxt"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="codeExportTxt"
+                                                     required="true"
+                                                     readonly="false"
+                                                     maxlength="50"
+                                                     value="#{aboveExportNoteController.inputStockTransDTO.actionCode}"
+                                                     requiredMessage="#{lang['export.order.transCode.require.msg']}"
+                                                     placeholder="#{lang['export.order.code.field.placehoder']}">
+                                            <pe:keyFilter for="codeExportTxt" regEx="/[0-9A-Z_]/i"/>
+                                        </p:inputText>
+                                        <p:message for="codeExportTxt"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['export.order.by.whom']}"
+                                                       for="whomExportTxt"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <p:outputLabel id="whomExportTxt" styleClass="lb-sentinel-bold break-word"
+                                                       readonly="true"
+                                                       value="#{aboveExportNoteController.inputStockTransDTO.userCreate}"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['export.order.day']}"
+                                                       for="dateExportTxt"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="dateExportTxt"
+                                                     readonly="true"
+                                                     value="#{aboveExportNoteController.inputStockTransDTO.createDatetime}">
+                                            <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                        </p:inputText>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.stock']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <p:outputLabel readonly="true" styleClass="lb-sentinel-bold break-word"
+                                                       title="#{aboveExportNoteController.inputStockTransDTO.fromOwnerName}"
+                                                       value="#{aboveExportNoteController.inputStockTransDTO.fromOwnerName}"/>
+                                    </div>
+
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.stock.receive.product']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <p:outputLabel readonly="true" styleClass="lb-sentinel-bold break-word"
+                                                       title="#{aboveExportNoteController.inputStockTransDTO.toOwnerName}"
+                                                       value="#{aboveExportNoteController.inputStockTransDTO.toOwnerName}"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.by.reason']}"
+                                                       for="cbxReasonExport"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="cbxReasonExport"
+                                                         value="#{aboveExportNoteController.inputStockTransDTO.reasonId}"
+                                                         required="true"
+                                                         requiredMessage="#{lang['stock.rescueInformation.require.stockTrans.reason']}">
+                                            <f:selectItem
+                                                    itemLabel="#{lang['common.reason.placeholder']}"
+                                                    noSelectionOption="true"/>
+                                            <f:selectItems value="#{aboveExportNoteController.reasons}"
+                                                           var="item"
+                                                           itemValue="#{item.reasonId}"
+                                                           itemLabel="#{item.reasonName}"/>
+                                            <p:ajax event="change"
+                                                    listener="#{aboveExportNoteController.onChangeReason()}"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="cbxReasonExport"/>
+                                        <p:remoteCommand name="updateControls" process="@this" update="@form"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.write.office']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                        <p:selectBooleanCheckbox styleClass="mg-left-5"
+                                                                 value="#{aboveExportNoteController.writeVoffice}">
+                                            <p:ajax event="change"
+                                                    process="@this"
+                                                    resetValues="true"
+                                                    listener="#{aboveExportNoteController.changeWriteVoffice}"
+                                                    update="@([id$=pnlWriteVoffice])"/>
+                                        </p:selectBooleanCheckbox>
+                                    </div>
+                                </div>
+                                <div class="Container66 Responsive66">
+                                    <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['create.note.note']}"/>
+                                    </div>
+                                    <div class="Container80 Responsive75 ui-fluid">
+                                        <p:inputText value="#{aboveExportNoteController.inputStockTransDTO.note}"
+                                                     maxlength="500"
+                                                     placeholder="#{lang['create.note.note.placeholder']}"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--outsource - nhap thong tin van chuyen-->
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50">
+                                        <p:outputLabel styleClass="lb-sentinel" for="tranfer"
+                                                       value="#{lang['export.order.tranfer']}"/>
+                                    </div>
+                                    <div class="Container10 Responsive10 ui-fluid">
+                                        <p:selectBooleanCheckbox styleClass="mg-left-5" id="tranfer"
+                                                                 value="#{aboveExportNoteController.tranfer}"
+                                        >
+                                            <p:ajax event="change" process="@this" update="@([id$=tranferType]), @([id$=showsourceTransport])"/>
+                                        </p:selectBooleanCheckbox>
+                                    </div>
+                                    <!--Hinh thuc van chuyen-->
+                                    <p:outputPanel id="tranferType">
+                                        <p:outputPanel rendered="#{aboveExportNoteController.tranfer}">
+                                            <div class="Container50 Responsive40 ui-fluid">
+                                                <p:selectOneMenu value="#{aboveExportNoteController.inputStockTransDTO.transport}">
+                                                    <f:selectItems
+                                                            value="#{aboveExportNoteController.optionSetValueDTOTransports}"
+                                                            var="optionSetValueDTO"
+                                                            itemValue="#{optionSetValueDTO.value}"
+                                                            itemLabel="#{optionSetValueDTO.name}"/>
+                                                    <p:ajax event="change" process="@this"></p:ajax>
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </p:outputPanel>
+                                    </p:outputPanel>
+                                </div>
+                                <p:outputPanel id="showsourceTransport">
+                                <div class="Container33 Responsive">
+                                    <p:outputPanel rendered="#{aboveExportNoteController.tranfer}">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['above.export.note.transport']}"
+                                                       for="sourceTransport"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="sourceTransport"
+                                                         value="#{aboveExportNoteController.inputStockTransDTO.transportSource}">
+                                            <f:selectItem
+                                                    itemValue="1"
+                                                    itemLabel="#{lang['above.export.note.transport.source1']}"/>
+                                            <f:selectItem
+                                                    itemValue="2"
+                                                    itemLabel="#{lang['above.export.note.transport.source2']}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                    </p:outputPanel>
+                                </div>
+                                </p:outputPanel>
+                            </div>
+
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin phieu xuat-->
+                    <!--Start vung ky voffice-->
+                    <p:outputPanel id="pnlWriteVoffice" styleClass="Container">
+                        <p:outputPanel styleClass="Container100" rendered="#{aboveExportNoteController.writeVoffice}">
+                            <cbs:inputSignOffice idComponent="vOffice"
+                                                 value="#{aboveExportNoteController.writeOfficeTag}"
+                                                 title="#{lang['export.order.view.office']}"
+                                                 id="writeOfficeExport"/>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <!--End vung ky voffice-->
+                    <!--Start danh sach han muc-->
+                    <p:outputPanel id="pnStockDebit" styleClass="Container100">
+                        <p:outputPanel styleClass="Container100" rendered="#{aboveExportNoteController.showStockDebit}">
+                            <ui:include src="../toUnderlying/stockDebit.xhtml">
+                                <ui:param name="stockDebitDTO"
+                                          value="#{aboveExportNoteController.stockDebitDTO}"></ui:param>
+                            </ui:include>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <!--End danh sach han muc-->
+                    <!--Start vung ds hang hoa-->
+                    <p:outputPanel id="pnLstStockModel" styleClass="Container100"
+                                   rendered="#{!aboveExportNoteController.infoOrderDetail}">
+                        <div class="Container100 panelListStockModel">
+                            <cbs:inputListProduct idComponent="listProduct"
+                                                  id="listProduct"
+                                                  value="#{aboveExportNoteController.lstProductTag}"
+                                                  idMessage="msgValidate"
+                                                  updateCheckSerial="@([id$=dlgDetailSerial]), @([id$=msgValidate])"
+                                                  onCompleteCheckSerial="if(!args.validationFailed){PF('dlgDetailSerial').show()}"/>
+
+                            <p:outputPanel id="pnlDataButton" styleClass="TexAlCenter">
+
+                                <cbs:confirmDialog
+                                        idComponent="cfmCreate"
+                                        valueButton="#{lang['export.order.btn.submit.field']}"
+                                        headerConfirm="#{lang['export.note.btn.submit.deposit.header.confirm']}"
+                                        messageConfirm="#{lang['export.note.btn.submit.deposit.header.confirm.msg']}"
+                                        actionOK="#{aboveExportNoteController.doCreateNote()}"
+                                        actionValidate="#{aboveExportNoteController.doValidate()}"
+                                        resetValueButton="false"
+                                        process="@this, @form"
+                                        updateArea="@form"
+                                        updateOK="@form"
+                                        disableButton="#{aboveExportNoteController.created}"
+                                        styleButton="text-decoration: none;font-size: 16px!important"
+                                        focusCancel="false"
+                                        oncompleteOK=""
+                                        isButton="true"/>
+                                <p:commandButton value="#{lang['export.order.btn.print.field']}"
+                                                 styleClass="mg-left-5"
+                                                 process="@this"
+                                                 immediate="true"
+                                                 update="@form"
+                                                 disabled="#{!aboveExportNoteController.created}"
+                                                 resetValues="true"
+                                                 ajax="false">
+                                    <p:fileDownload value="#{aboveExportNoteController.printStockTransDetail()}"/>
+                                </p:commandButton>
+                                <p:commandButton value="#{lang['common.reset']}" process="@this" styleClass="mg-left-5"
+                                                 oncomplete="location.reload(true)"
+                                                 action="#{aboveExportNoteController.doReset}"
+                                                 immediate="true"
+                                                 resetValues="true"
+                                                 update="@form"/>
+
+                            </p:outputPanel>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung ds hang hoa-->
+                </p:outputPanel>
+            </p:outputPanel>
+            <script type="text/javascript">
+                document.getElementById('frmExportNote').onkeypress = function (event) {
+                    if (event.keyCode == 120 &amp;&amp; document.getElementById('frmExportNote:listProduct:listProductAddNew') != null) {
+                        document.getElementById("frmExportNote:listProduct:listProductAddNew").click();
+                        return false;
+                    }
+                }
+            </script>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailSerial"
+                  widgetVar="dlgDetailSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <ui:include src="../../../../../resources/tags/dlgDetailSerial.xhtml">
+                <ui:param name="controller" value="#{aboveExportNoteController.lstProductTag}"/>
+                <ui:param name="idComponent" value="listProduct"/>
+            </ui:include>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

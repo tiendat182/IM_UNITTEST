@@ -1,0 +1,410 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:o="http://omnifaces.org/ui"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['process.stock']}</ui:define>
+    <ui:define name="featureName">#{lang['process.stock']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmProcessStock" styleClass="Container100">
+            <p:outputPanel styleClass="Container100" id="pnlStockInspectInfo">
+                <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                    <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel styleClass="Container100" rendered="#{!processStockController.showDetail}">
+                    <p:focus for="frmProcessStock"/>
+                    <!--Start vung thong tin kho-->
+                    <p:outputPanel id="pnInfoCheckStockInspect" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInforStockInspect" toggle="true"
+                                   titleHeader="#{lang['process.stock.search']}"/>
+
+                        <div class="Container100 panelInforStockInspect" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container50 Responsive50">
+                                    <cbs:inputShop value="#{processStockController.shopInfoTag}"
+                                                   idComponent="inputStore"
+                                                   methodName="receiveShop"
+                                                   clearMethodName="clearShop"
+                                                   update="@this,@([id$=staffId]),@([id$=cobProductOfferType])"
+                                                   label="#{lang['process.stock.shop']}"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                   classDivInput="Container60 Responsive50 ui-fluid"
+                                                   require="true"
+                                                   requiredMessage="#{lang['process.stock.shop.mgs.require']}"
+                                                   forceSelection="false"
+                                                   limit="#{processStockController.limitAutoComplete}">
+
+                                    </cbs:inputShop>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <cbs:inputStaff value="#{processStockController.staffInfoTag}"
+                                                    id="staffId"
+                                                    methodName="receiveStaff"
+                                                    clearMethodName="clearStaff"
+                                                    update="@this,,@([id$=cobProductOfferType])"
+                                                    limit="#{processStockController.limitAutoComplete}"
+                                                    label="#{lang['mn.stock.limit.staff.code']}"
+                                                    require="false"
+                                                    forceSelection="false"
+                                                    classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                    classDivInput="Container60 Responsive50 ui-fluid"
+                                                    placeholder="#{lang['mn.invoice.staff.placeholder']}">
+                                    </cbs:inputStaff>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container50 Responsive50">
+                                    <p:outputPanel styleClass="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel value="#{lang['export.order.name']}" for="productOffer"
+                                                       styleClass="lb-sentinel"/>
+                                    </p:outputPanel>
+
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:outputPanel styleClass="ui-fluid ui-relative" id="pnlProductOffer">
+                                            <p:outputLabel id="productOffer_hidden" style="display:none;"
+                                                           value="#{processStockController.productOfferingTotalDTO.itemLabel}"/>
+                                            <pe:keyFilter for="productOffer" preventPaste="false"
+                                                          regEx="/[a-z0-9A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\._\-+]/i"/>
+                                            <p:autoComplete id="productOffer"
+                                                            value="#{processStockController.productOfferingTotalDTO}"
+                                                            forceSelection="false"
+                                                            completeMethod="#{processStockController.doChangeOffering}"
+                                                            placeholder="#{lang['export.stock.product.inputText.search']}"
+                                                            onfocus="this.setSelectionRange(0, this.value.length)"
+                                                            var="productOfferingTotalDTO"
+                                                            maxResults="#{processStockController.limitAutoComplete}"
+                                                            itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                            itemValue="#{productOfferingTotalDTO}"
+                                                            inputStyleClass="txtProductName#{index}"
+                                                            required="false"
+                                                            requiredMessage="#{lang['export.order.stock.inputText.require.msg']}"
+                                                            maxlength="100" scrollHeight="300"
+                                                            disabled="#{processStockController.disabledState()}">
+                                                <f:attribute name="index" value="#{index}"/>
+                                                <o:converter converterId="productOfferingConverter"
+                                                             list="#{processStockController.lsProductOfferingTotalDTO}"/>
+                                                <p:ajax event="itemSelect" listener="#{processStockController.doSelect}"
+                                                        update="@this,@([id$=pnlProductOffer])"
+                                                        process="@([id$=pnlProductOffer])"/>
+                                                <p:column headerText="#{lang['common.lb.code']}"><h:outputText
+                                                        escape="true"
+                                                        value="#{productOfferingTotalDTO.code}"/></p:column>
+                                                <p:column headerText="#{lang['common.lb.name']}"><h:outputText
+                                                        escape="true"
+                                                        value="#{productOfferingTotalDTO.name}"/></p:column>
+                                                <p:ajax event="query" global="false"/>
+                                            </p:autoComplete>
+                                            <p:commandLink id="btnProductOfferClear"
+                                                           styleClass="ui-link-right"
+                                                           update="productOffer_hidden, pnlProductOffer"
+                                                           actionListener="#{processStockController.clearProduct}"
+                                                           process="@this">
+                                                <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                            </p:commandLink>
+                                        </p:outputPanel>
+                                    </div>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['common.status']}" for="cobState"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu filter="true" filterMatchMode="contains"
+                                                         id="cobState"
+                                                         value="#{processStockController.stateId}">
+                                            <f:selectItem itemEscaped="true"
+                                                          itemValue=""
+                                                          itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                            <f:selectItems
+                                                    value="#{processStockController.listState}"
+                                                    itemLabelEscaped="true"
+                                                    var="state" itemValue="#{state.value}"
+                                                    itemLabel="#{state.name}"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="cobState"/>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="Container100 TexAlCenter mg-top-0">
+                                <p:commandButton value="#{lang['process.stock.view.stock']}"
+                                                 process="@([id$=pnInfoCheckStockInspect])"
+                                                 action="#{processStockController.doViewStock}"
+                                                 update="@form"/>
+                                <p:commandButton value="#{lang['common.reset']}" process="@this"
+                                                 styleClass="mg-left-5"
+                                                 action="#{processStockController.doResetProcessStock}"
+                                                 resetValues="true"
+                                                 update="@([id$=pnInfoCheckStockInspect])"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin kho-->
+                    <!--Start vung xem kho-->
+                    <p:outputPanel styleClass="ContainerIndent" id="pnlListStock">
+                        <cbs:panel classForToggle="pnlListStock"
+                                   titleHeader="#{lang['export.order.view.list.product']}"/>
+
+                        <div class="pnlListStock Container100" style="margin-bottom: 10px;margin-top: 10px;">
+                            <p:outputPanel styleClass="ContainerIndent mg-top-0">
+                                <p:treeTable id="treeTblListStock"
+                                             selectionMode="single"
+                                             emptyMessage="#{lang['common.empty.records']}"
+                                             var="item"
+                                             value="#{processStockController.rootStock}">
+                                    <p:column styleClass="col-left" sortBy="#{item.name}" style="width: 32%;">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['export.order.name.product']}"
+                                                          title="#{lang['export.order.name.product']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{item.name}" title="#{item.name}"/>
+                                    </p:column>
+                                    <p:column styleClass="col-left" sortBy="#{item.stateName}" style="width: 11%;">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['common.status']}"
+                                                          title="#{lang['common.status']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{item.stateName}"/>
+                                    </p:column>
+                                    <p:column styleClass="col-left" sortBy="#{item.unit}" style="width: 9%;">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.utilities.unit']}"
+                                                          title="#{lang['mn.stock.utilities.unit']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{item.unit}" title="#{item.unit}"/>
+                                    </p:column>
+                                    <p:column style="width: 12%; text-align:right" sortBy="#{item.requirementQuanlity}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.utilities.quality.request']}"
+                                                          title="#{lang['mn.stock.utilities.quality.request']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.requirementQuanlity}"
+                                                      title="#{item.requirementQuanlity}" converter="currencyFormat"
+                                                />
+                                    </p:column>
+                                    <p:column style="width: 15%;text-align:right" sortBy="#{item.availableQuanlity}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.utilities.quality.responsive']}"
+                                                          title="#{lang['mn.stock.utilities.quality.responsive']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.availableQuanlity}"
+                                                      title="#{item.availableQuanlity}" converter="currencyFormat"
+                                                />
+                                    </p:column>
+                                    <p:column style="width: 11%;text-align:right" sortBy="#{item.currentQuanlity}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.utilities.quality.real']}"
+                                                          title="#{lang['mn.stock.utilities.quality.real']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.currentQuanlity}" title="#{item.currentQuanlity}"
+                                                      converter="currencyFormat"/>
+                                    </p:column>
+                                    <p:column style="text-align: center">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.utilities.detail.serial.imei']}"
+                                                          title="#{lang['mn.stock.utilities.detail.serial.imei']}"/>
+                                        </f:facet>
+                                        <p:commandLink styleClass="fa icon-zoom-in Fs16 blue"
+                                                       process="@this" update="@([id$=frmProcessStock])"
+                                                       title="#{lang['common.view.detail']}"
+                                                       rendered="#{item.checkSerial == '1'}"
+                                                       actionListener="#{processStockController.showDialogSerial(item)}"/>
+                                        <p:outputPanel rendered="#{item.checkSerial == '0'}">
+                                            <cbs:confirmDialog
+                                                    idComponent="btnBalanceNoSerrial"
+                                                    valueButton=""
+                                                    headerConfirm="#{lang['mn.stock.balance.confirm']}"
+                                                    messageConfirm="#{lang['mn.stock.balance.confirm.mgs']}"
+                                                    actionOK="#{processStockController.balanceStockProduct}"
+                                                    resetValueButton="false"
+                                                    styleClassButton="fa icon-anchor-2 Fs16 blue"
+                                                    process="@this"
+                                                    updateArea="@this,@([id$=frmProcessStock])"
+                                                    actionValidate="#{processStockController.validateBalanceStockNoSerial(item)}"
+                                                    focusCancel="false"
+                                                    titleButton="#{lang['mn.stock.balance']}"
+                                                    isButton="false"
+                                                    />
+                                        </p:outputPanel>
+                                    </p:column>
+                                </p:treeTable>
+                            </p:outputPanel>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung xem kho-->
+                </p:outputPanel>
+                <!--Start chi tiet serial-->
+                <p:outputPanel styleClass="Container100" rendered="#{processStockController.showDetail}">
+                    <!--Start vung thong tin kho-->
+                    <p:outputPanel id="pnInfoDetail" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="pnInfoDetail" toggle="true"
+                                   titleHeader="#{lang['process.stock.detail.serial']}"/>
+
+                        <div class="Container100 panelInforDetail" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['process.stock.shop']}"
+                                                       for="shopCode"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <h:outputText value="#{processStockController.wareHouseInfoDTO.shopCode}"
+                                                      escape="true"
+                                                      id="shopCode"
+                                                      styleClass="lb-sentinel-bold break-all">
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['process.stock.shop.name']}"
+                                                       for="shopName"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <h:outputText value="#{processStockController.wareHouseInfoDTO.shopName}"
+                                                      escape="true"
+                                                      id="shopName"
+                                                      styleClass="lb-sentinel-bold break-all">
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['process.stock.product.name']}"
+                                                       for="productCode"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <h:outputText value="#{processStockController.wareHouseInfoDTO.name}"
+                                                      escape="true"
+                                                      id="productCode"
+                                                      styleClass="lb-sentinel-bold break-all">
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['process.stock.status']}"
+                                                       for="status"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <h:outputText value="#{processStockController.wareHouseInfoDTO.stateName}"
+                                                      escape="true"
+                                                      id="status"
+                                                      styleClass="lb-sentinel-bold break-all">
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['process.stock.total.current']}"
+                                                       for="currQuantity"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <h:outputText value="#{processStockController.wareHouseInfoDTO.currentQuanlity}"
+                                                      escape="true"
+                                                      id="currQuantity"
+                                                      styleClass="lb-sentinel-bold break-all">
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['process.stock.total.available']}"
+                                                       for="availQuantity"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                                        <h:outputText
+                                                value="#{processStockController.wareHouseInfoDTO.availableQuanlity}"
+                                                escape="true"
+                                                id="availQuantity"
+                                                styleClass="lb-sentinel-bold break-all">
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="Container100 TexAlCenter marT10">
+                                <p:outputPanel styleClass="Container100">
+                                    <cbs:confirmDialog
+                                            idComponent="btnBalanceSerrial"
+                                            valueButton="#{lang['mn.stock.balance']}"
+                                            headerConfirm="#{lang['mn.stock.balance.confirm']}"
+                                            messageConfirm="#{lang['mn.stock.balance.confirm.mgs']}"
+                                            actionOK="#{processStockController.balanceStockProduct}"
+                                            resetValueButton="false"
+                                            process="@([id$=pnInfoDetail])"
+                                            updateArea="@([id$=pnInfoDetail])"
+                                            actionValidate="#{processStockController.validateBalanceStockSerial}"
+                                            disableButton="#{processStockController.balance}"
+                                            focusCancel="false"
+                                            isButton="true"
+                                            />
+                                    <p:commandButton value="#{lang['common.back.page']}" process="@this"
+                                                     styleClass="mg-left-5"
+                                                     actionListener="#{processStockController.doComeBack}"
+                                                     update="@form"/>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+                        <p:outputPanel id="pnlViewDetailSerial" styleClass="Container100">
+                            <div class="ContainerIndent">
+                                <p:dataTable
+                                        id="tblListSerial"
+                                        var="item" value="#{processStockController.lsSerial}"
+                                        rowIndexVar="index"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}">
+                                    <p:column headerText="#{lang['common.stt']}" styleClass="TexAlCenter"
+                                              style="width: 10%">
+                                        <p:outputLabel value="#{index + 1}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.fromSerial']}"
+                                              sortBy="#{item.fromSerial}">
+                                        <p:outputLabel value="#{item.fromSerial}"
+                                                       title="#{item.fromSerial}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.ToSerial']}"
+                                              sortBy="#{item.toSerial}">
+                                        <p:outputLabel value="#{item.toSerial}"
+                                                       title="#{item.toSerial}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.number']}" style="text-align:right"
+                                              sortBy="#{item.quantity}">
+                                        <h:outputLabel value="#{item.quantity}"
+                                                       title="#{item.quantity}"
+                                                       styleClass="lb-sentinel-bold"
+                                                       converter="currencyFormat">
+                                        </h:outputLabel>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

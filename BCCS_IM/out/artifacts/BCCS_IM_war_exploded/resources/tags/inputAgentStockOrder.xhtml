@@ -1,0 +1,132 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+      xmlns:composite="http://java.sun.com/jsf/composite" xmlns:h="http://java.sun.com/jsf/html">
+<composite:interface>
+    <composite:attribute name="id" shortDescription="id component cua doi tuong " required="true"/>
+    <composite:attribute name="title" shortDescription="title " required="true"/>
+    <composite:attribute name="mode" required="true"
+                         shortDescription="1 la lap lenh xuat dat coc, 2 la lap phieu xuat ban dut"
+                         default="1"/>
+    <composite:attribute name="styleClassDiv" shortDescription="ten mehtod" default="ContainerIndent"/>
+    <composite:attribute name="showRegionStock" shortDescription="hien thi kho 3 mien" required="false" default="true"/>
+</composite:interface>
+<composite:implementation>
+    <p:outputPanel id="#{cc.attrs.id}" styleClass="Container100 mg-top-0">
+        <p:focus for="#{cc.attrs.id}"/>
+        <!--Start vung thong tin view lenh xuat-->
+        <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+            <p:messages id="#{cc.attrs.id}Msgs" showDetail="true" showSummary="false" closable="true"/>
+        </div>
+        <cbs:inputOrderStock id="#{cc.attrs.id}exportStockabc" title="#{cc.attrs.title}" mode="1"
+                             styleClassDiv="mg-top-0"
+                             methodNameOffice="receiveWriteOffice" methodNameReceiveShop="doReceiveShop"
+                             updateReceiveShop="@([id$=#{cc.attrs.id}pnListProduct]), @([id$=#{cc.attrs.id}Msgs]), @([id$=idReceiveShop])"
+                             methodThreeStock="doReceiveThreeStock"
+                             value="#{agentExportOrderController.orderStockTag}"
+                             regionExchangeLabel="#{lang['export.order.three.region']}"
+                             showRegionStock="#{cc.attrs.showRegionStock}">
+        </cbs:inputOrderStock>
+        <!--End vung thong tin view lenh xuat-->
+        <!--Start vung thong tin ky view office-->
+        <p:outputPanel id="#{cc.attrs.id}pnExportOffice" styleClass="Container100">
+            <p:outputPanel styleClass="Container100" rendered="#{agentExportOrderController.writeOffice}">
+                <cbs:inputSignOffice value="#{agentExportOrderController.writeOfficeTag}"
+                                     title="#{lang['export.order.view.office']}"
+                                     idComponent="writeOfficeExport"/>
+            </p:outputPanel>
+        </p:outputPanel>
+        <!--End vung thong tin view lenh xuat-->
+        <!--Start vung thong tin Danh sach hang hoa-->
+        <p:outputPanel id="#{cc.attrs.id}pnListProduct" styleClass="Container100">
+            <cbs:inputListProduct idComponent="#{cc.attrs.id}listProduct" id="#{cc.attrs.id}listProduct"
+                                  value="#{agentExportOrderController.listProductTag}" idMessage="msgExport"/>
+        </p:outputPanel>
+        <!--End vung thong tin danh sach hang hoa-->
+        <!--Start Vung data button-->
+        <div class="Container100">
+            <div class="ContainerIndent TexAlCenter mg-top-0">
+                <c:if test="#{cc.attrs.mode == '1'}">
+                    <cbs:confirmDialog
+                            idComponent="#{cc.attrs.id}submitOrder"
+                            id="#{cc.attrs.id}createOrder"
+                            disableButton="#{agentExportOrderController.canPrint}"
+                            valueButton="#{lang['agent.cmd.export.deposit']}(F8)"
+                            headerConfirm="#{lang['export.order.btn.submit.header.confirm']}"
+                            messageConfirm="#{lang['export.order.btn.submit.header.confirm.msg']}"
+                            actionOK="#{agentExportOrderController.doCreateAgentExportCmdDeposit}"
+                            resetValueButton="false"
+                            process="@([id$=#{cc.attrs.id}])"
+                            updateArea="@([id$=#{cc.attrs.id}])"
+                            updateOK="@([id$=#{cc.attrs.id}])"
+                            actionValidate="#{agentExportOrderController.doValidateAgentExportCmd}"
+                            focusCancel="false"
+                            oncompleteOK=""
+                            isButton="true"
+                            />
+                </c:if>
+                <c:if test="#{cc.attrs.mode == '2'}">
+                    <cbs:confirmDialog
+                            idComponent="#{cc.attrs.id}submitOrder"
+                            id="#{cc.attrs.id}createOrder"
+                            disableButton="#{agentExportOrderController.canPrint}"
+                            valueButton="#{lang['agent.cmd.export.sale']}(F8)"
+                            headerConfirm="#{lang['export.order.btn.submit.header.confirm']}"
+                            messageConfirm="#{lang['export.order.btn.submit.header.confirm.msg']}"
+                            actionOK="#{agentExportOrderController.doCreateAgentExportCmdSale}"
+                            resetValueButton="false"
+                            process="@([id$=#{cc.attrs.id}])"
+                            updateArea="@([id$=#{cc.attrs.id}])"
+                            updateOK="@([id$=#{cc.attrs.id}])"
+                            actionValidate="#{agentExportOrderController.doValidateAgentExportCmd}"
+                            focusCancel="false"
+                            oncompleteOK=""
+                            isButton="true"
+                            />
+                </c:if>
+                <p:commandButton value="#{lang['export.order.btn.print']}"
+                                 process="@this"
+                                 disabled="#{!agentExportOrderController.canPrint}"
+                                 update="@form"
+                                 ajax="false"
+                                 immediate="true"
+                                 styleClass="mg-left-5">
+                    <p:fileDownload value="#{agentExportOrderController.exportStockTransDetail()}"/>
+                </p:commandButton>
+                <c:if test="#{cc.attrs.mode == '1'}">
+                    <p:commandButton value="#{lang['common.reset']}" process="@([id$=#{cc.attrs.id}])" styleClass="mg-left-5"
+                                     action="#{agentExportOrderController.doResetDeposit}"
+                                     immediate="true"
+                                     resetValues="true"
+                                     update="@([id$=#{cc.attrs.id}])"/>
+                </c:if>
+                <c:if test="#{cc.attrs.mode == '2'}">
+                    <p:commandButton value="#{lang['common.reset']}" process="@([id$=#{cc.attrs.id}])" styleClass="mg-left-5"
+                                     action="#{agentExportOrderController.doResetPay}"
+                                     immediate="true"
+                                     resetValues="true"
+                                     update="@([id$=#{cc.attrs.id}])"/>
+                </c:if>
+                <cbs:inputGuide idComponent="#{cc.attrs.id}guide" renderGuide="true" styleClass="mg-left-5" immediate="true"
+                                datalist="#{agentExportOrderController.lsStringGuide}"/>
+            </div>
+        </div>
+        <!--End Vung data button-->
+    </p:outputPanel>
+    <script type="text/javascript">
+        document.getElementById('frmAgentExportOrder').onkeypress = function (event) {
+            if (event.keyCode == 119 &amp;&amp; document.getElementById('frmAgentExportOrder:numberTabView:#{cc.attrs.id}:#{cc.attrs.id}createOrder:#{cc.attrs.id}submitOrderbtn') != null) {
+                document.getElementById('frmAgentExportOrder:numberTabView:#{cc.attrs.id}:#{cc.attrs.id}createOrder:submitOrderbtn').click();
+                return false;
+            }
+            if (event.keyCode == 120 &amp;&amp; document.getElementById('frmAgentExportOrder:numberTabView:#{cc.attrs.id}:#{cc.attrs.id}listProduct:#{cc.attrs.id}listProductAddNew') != null) {
+                document.getElementById('frmAgentExportOrder:numberTabView:#{cc.attrs.id}:#{cc.attrs.id}listProduct:#{cc.attrs.id}listProductAddNew').click();
+                return false;
+            }
+        }
+    </script>
+</composite:implementation>
+</html>

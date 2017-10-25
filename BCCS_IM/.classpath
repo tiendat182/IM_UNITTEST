@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src/resources"/>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/FwjBCCS2_v5"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/InventoryBusiness"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/LibWeb_v5"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/log4j2"/>
+	<classpathentry kind="output" path="out/production/BCCS_IM"/>
+</classpath>

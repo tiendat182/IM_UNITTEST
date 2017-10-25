@@ -1,0 +1,682 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+            <h:form id="frmSearchIsdn">
+                <p:outputPanel styleClass="container100">
+                    <p:outputPanel id="pnInfoSearchIsdn">
+                        <div class="ContainerIndent">
+                            <p:messages id="messages" showSummary="false" showDetail="true" closable="true"/>
+                        </div>
+                        <p:outputPanel id="pnInfoSearch" styleClass="ContainerIndent">
+                            <cbs:panel classForToggle="panelInforExport"
+                                       toggle="true"
+                                       titleHeader="#{lang['info.search.isdn']}"/>
+
+                            <div class="Container100 panelInforExport" style="margin-bottom: 10px;margin-top: 10px;">
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container33 Responsive" style="margin-top: 10px!important;">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           value="#{lang['mn.stock.type.service']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:selectOneMenu id="typeServiceTxt"
+                                                             styleClass="typeServiceTxt"
+                                                             value="#{searchIsdnController.infoSearch.telecomServiceId}">
+                                                <f:selectItems value="#{searchIsdnController.listTelecomService}"
+                                                               var="service" itemLabel="#{service.name}"
+                                                               itemValue="#{service.value}"/>
+                                                <p:ajax event="change" process="@this"
+                                                        update="@([id$=inputProduct]),@([id$=cbxRule])"
+                                                        listener="#{searchIsdnController.onChangeTelecomService()}"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive" style="margin-top: 10px!important;">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <div class="Container80">
+                                                <p:outputLabel styleClass="lb-sentinel mg-top-0"
+                                                               value="#{lang['search.isdn.select.file']}"/>
+                                            </div>
+                                            <div class="Container20">
+                                                <p:selectBooleanCheckbox
+                                                        value="#{searchIsdnController.infoSearch.inputFile}"
+                                                        styleClass="lb-sentinel">
+                                                    <p:ajax event="change" process="@this" update="@([id$=pnInfoSearch])"
+                                                            listener="#{searchIsdnController.onCheckInputFile()}"/>
+                                                </p:selectBooleanCheckbox>
+                                            </div>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:inputText id="outputAttachFile"
+                                                         styleClass="outputAttachFile"
+                                                         maxlength="100"
+                                                         placeholder="#{lang['search.number.range.input.fileName']}"
+                                                         value="#{searchIsdnController.infoSearch.attachFileName}"
+                                                         readonly="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container100">
+                                            <p:fileUpload id="fileAttach"
+                                                          process="@this"
+                                                          disabled="#{not searchIsdnController.infoSearch.inputFile}"
+                                                          label="#{lang['mn.stock.limit.createFile']}"
+                                                          update="@this, @([id$=outputAttachFile]),@([id$=messages])"
+                                                          dragDropSupport="true" required="true" mode="advanced"
+                                                          auto="true"
+                                                          allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                                          invalidFileMessage="#{lang['mn.isdn.rule.invalid.file.type']}"
+                                                          value="#{searchIsdnController.uploadedFile}"
+                                                          fileUploadListener="#{searchIsdnController.fileUploadAction}">
+                                            </p:fileUpload>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p:outputPanel rendered="#{not searchIsdnController.infoSearch.inputFile}"
+                                               styleClass="Container100">
+                                    <div class="ContainerIndent mg-top-0">
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['search.isdn.stock.type']}"
+                                                               for="cbxTypeStock"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:selectOneMenu id="cbxTypeStock"
+                                                                 value="#{searchIsdnController.infoSearch.ownerType}">
+                                                    <p:ajax event="change" process="@this" update="cellGetStock"
+                                                            listener="#{searchIsdnController.onChangeTypeStock()}"/>
+                                                    <f:selectItem itemLabel="#{lang['shop.stock']}" itemValue="1"/>
+                                                    <f:selectItem itemLabel="#{lang['staff.stock']}" itemValue="2"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        <div class="Container33 Responsive">
+                                            <p:outputPanel id="cellGetStock" class="Container100">
+                                                <cbs:inputShop value="#{searchIsdnController.shopInfoTag}"
+                                                               idComponent="inputShop"
+                                                               id="inputShop"
+                                                               clearMethodName="doClearStock"
+                                                               rendered="#{empty searchIsdnController.infoSearch.ownerType or searchIsdnController.infoSearch.ownerType eq '1'}"
+                                                               methodName="doSelectedStock"
+                                                               update="@this"
+                                                               forceSelection="false"
+                                                               label="#{lang['search.isdn.stock']}"
+                                                               require="false"
+                                                               placeholder="#{lang['common.search.shop.placehoder']}"
+                                                               classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                               classDivInput="Container60 Responsive50 ui-fluid">
+                                                </cbs:inputShop>
+                                                <cbs:inputStaff value="#{searchIsdnController.staffInfoTag}"
+                                                                id="inputStaff"
+                                                                clearMethodName="doClearStock"
+                                                                forceSelection="false"
+                                                                methodName="doSelectedStock"
+                                                                rendered="#{not empty searchIsdnController.infoSearch.ownerType and searchIsdnController.infoSearch.ownerType eq '2'}"
+                                                                update="@this"
+                                                                label="#{lang['search.isdn.stock']}"
+                                                                require="false"
+                                                                placeholder="#{lang['common.search.staff.placehoder']}"
+                                                                classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                                classDivInput="Container60 Responsive50 ui-fluid">
+                                                </cbs:inputStaff>
+                                            </p:outputPanel>
+                                        </div>
+                                        <p:outputPanel rendered="#{searchIsdnController.lookUpStockExt}"
+                                                       class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <div class="Container80">
+                                                    <p:outputLabel styleClass="lb-sentinel mg-top-0"
+                                                                   value="#{lang['search.isdn.isdn.like']}"/>
+                                                </div>
+                                                <div class="Container20">
+                                                    <p:selectBooleanCheckbox
+                                                            value="#{searchIsdnController.infoSearch.checkIsdnLike}"
+                                                            styleClass="lb-sentinel">
+                                                        <p:ajax event="change" process="@this"
+                                                                update="@([id$=txtIsdnLike])"/>
+                                                    </p:selectBooleanCheckbox>
+                                                </div>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:inputText id="txtIsdnLike"
+                                                             onchange="this.value=this.value.replace(new RegExp('[^0-9%]','gm'),'').trim()"
+                                                             maxlength="11"
+                                                             disabled="#{not searchIsdnController.infoSearch.checkIsdnLike}"
+                                                             placeholder="#{lang['search.isdn.isdn.like.holder']}"
+                                                             value="#{searchIsdnController.infoSearch.isdnLike}">
+                                                    <pe:keyFilter regEx="/[0-9%]/i" preventPaste="false" for="txtIsdnLike"/>
+                                                </p:inputText>
+                                            </div>
+                                        </p:outputPanel>
+                                    </div>
+                                    <div class="ContainerIndent mg-top-0">
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <p:outputLabel styleClass="lb-sentinel fromNumberTxt"
+                                                               value="#{lang['from.number']}"/>
+                                            </div>
+                                            <pe:keyFilter mask="num" preventPaste="false"
+                                                          for="fromNumberTxt,toNumberTxt"/>
+
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:inputText id="fromNumberTxt"
+                                                             styleClass="fromNumberTxt"
+                                                             placeholder="#{lang['digital.start.ranges.placeholder']}"
+                                                             onchange="this.value=this.value.replace(new RegExp('[^0-9]|^0+','gm'),'').trim()"
+                                                             maxlength="11"
+                                                             value="#{searchIsdnController.infoSearch.startRange}">
+                                                </p:inputText>
+                                            </div>
+                                        </div>
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <p:outputLabel styleClass="lb-sentinel toNumberTxt"
+                                                               value="#{lang['to.number']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:inputText id="toNumberTxt"
+                                                             styleClass="toNumberTxt"
+                                                             placeholder="#{lang['digital.end.ranges.placeholder']}"
+                                                             onchange="this.value=this.value.replace(new RegExp('[^0-9]|^0+','gm'),'').trim()"
+                                                             value="#{searchIsdnController.infoSearch.endRange}"
+                                                             maxlength="11">
+                                                </p:inputText>
+                                            </div>
+                                        </div>
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['range.time.promotion.status']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:selectOneMenu id="cbxStatus"
+                                                                 value="#{searchIsdnController.infoSearch.status}">
+                                                    <f:selectItem itemLabel="#{lang['mn.stock.status.select']}"
+                                                                  noSelectionOption="true"/>
+                                                    <f:selectItems value="#{searchIsdnController.listStatus}" var="status"
+                                                                   itemLabel="#{status.name}" itemValue="#{status.value}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ContainerIndent mg-top-0">
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <p:outputLabel styleClass="lb-sentinel fromPriceTxt"
+                                                               value="#{lang['from.price']}"/>
+                                            </div>
+                                            <pe:keyFilter mask="num" preventPaste="false" for="fromPriceTxt,toPriceTxt"/>
+
+                                            <div class="Container60 Responsive50 ui-fluid fromPriceTxt">
+                                                <p:inputText id="fromPriceTxt"
+                                                             styleClass="fromPriceTxt"
+                                                             placeholder="#{lang['from.price.holder']}"
+                                                             onchange="this.value=this.value.replace(new RegExp('[^0-9]|^0+','gm'),'').trim()"
+                                                             maxlength="12"
+                                                             value="#{searchIsdnController.infoSearch.fromPrice}">
+                                                </p:inputText>
+                                            </div>
+                                        </div>
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <p:outputLabel styleClass="lb-sentinel toPriceTxt"
+                                                               value="#{lang['to.price']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:inputText id="toPriceTxt"
+                                                             styleClass="toPriceTxt"
+                                                             placeholder="#{lang['to.price.holder']}"
+                                                             onchange="this.value=this.value.replace(new RegExp('[^0-9]|^0+','gm'),'').trim()"
+                                                             value="#{searchIsdnController.infoSearch.toPrice}"
+                                                             maxlength="12">
+                                                </p:inputText>
+                                            </div>
+                                        </div>
+                                        <div class="Container33 Responsive">
+                                            <cbs:inputProduct value="#{searchIsdnController.productInfoTag}"
+                                                              idComponent="inputProduct"
+                                                              id="inputProduct"
+                                                              clearMethodName="doClearProduct"
+                                                              rendered="#{empty searchIsdnController.infoSearch.ownerType or searchIsdnController.infoSearch.ownerType eq '1'}"
+                                                              methodName="doSelectedProduct"
+                                                              update="@this"
+                                                              forceSelection="false"
+                                                              label="#{lang['export.order.name']}"
+                                                              require="false"
+                                                              placeholder="#{lang['search.isdn.input.product.holder']}"
+                                                              classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                              classDivInput="Container60 Responsive50 ui-fluid">
+                                            </cbs:inputProduct>
+                                        </div>
+                                    </div>
+                                    <div class="ContainerIndent mg-top-10">
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <p:outputLabel styleClass="lb-sentinel" value="#{lang['rule.group.rule']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:selectOneMenu
+                                                        id="cbxRule"
+                                                        styleClass="cbxRule"
+                                                        filter="true"
+                                                        value="#{searchIsdnController.infoSearch.filterrRuleId}">
+                                                    <f:selectItem itemLabel="#{lang['rule.group.select.rule']}"
+                                                                  noSelectionOption="true"/>
+                                                    <f:selectItems value="#{searchIsdnController.listFilterRule}" var="rule"
+                                                                   itemLabel="#{rule.name}"
+                                                                   itemValue="#{rule.groupFilterRuleId}"/>
+                                                    <p:ajax event="change" process="@this"
+                                                            update="@([id$=cbxRuleGroup]),@([id$=cbxRuleNiceDigit])"
+                                                            listener="#{searchIsdnController.onChangeFilterRule()}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['mn.isdn.rule.nice.digit.group']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:selectOneMenu id="cbxRuleGroup"
+                                                                 value="#{searchIsdnController.infoSearch.groupFilterRuleId}"
+                                                                 filter="true">
+                                                    <f:selectItem itemLabel="#{lang['mn.isdn.rule.nice.digit.group.msg']}"
+                                                                  noSelectionOption="true"/>
+                                                    <f:selectItems value="#{searchIsdnController.listGroupFilterRule}"
+                                                                   var="itemGroup"
+                                                                   itemValue="#{itemGroup.groupFilterRuleId}"
+                                                                   itemLabel="#{itemGroup.name}"/>
+                                                    <p:ajax event="change" process="@this"
+                                                            update="@([id$=cbxRuleNiceDigit])"
+                                                            listener="#{searchIsdnController.onChangeGroupFilterRule()}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['rule.nice.digit']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:selectOneMenu id="cbxRuleNiceDigit"
+                                                                 value="#{searchIsdnController.infoSearch.ruleNiceIsdnId}"
+                                                                 filter="true">
+                                                    <f:selectItem itemLabel="#{lang['search.isdn.rule.nice.digit.holder']}"
+                                                                  noSelectionOption="true"/>
+                                                    <f:selectItems value="#{searchIsdnController.listRuleNiceDigit}"
+                                                                   var="niceRule"
+                                                                   itemLabel="#{niceRule.name}"
+                                                                   itemValue="#{niceRule.filterRuleId}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+
+                                <div class="Container100 mg-top-8">
+                                    <div class="ContainerIndent">
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                                <p:outputLabel styleClass="lb-sentinel txtFromDateSearch"
+                                                               value="#{lang['create.note.from.date']}"
+                                                               for="txtFromDateSearch"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid txtFromDateSearch">
+                                                <p:calendar id="txtFromDateSearch" rendered="true" required="false"
+                                                            readonlyInput="false"
+                                                            converterMessage="#{lang['from.date.invalid']}"
+                                                            pattern="dd/MM/yyyy"
+                                                            placeholder="dd/MM/yyyy"
+                                                            mask="true"
+                                                            value="#{searchIsdnController.infoSearch.fromDate}"
+                                                            requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                                                <p:message for="txtFromDateSearch"/>
+                                            </div>
+                                        </div>
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 ui-fluid  mg-left-15 pd-top-7">
+                                                <p:outputLabel styleClass="lb-sentinel txtToDateSearch"
+                                                               value="#{lang['create.note.to.date']}"
+                                                               for="txtToDateSearch"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid txtToDateSearch">
+                                                <p:calendar id="txtToDateSearch" rendered="true"
+                                                            required="false"
+                                                            mask="true"
+                                                            placeholder="dd/MM/yyyy"
+                                                            pattern="dd/MM/yyyy"
+                                                            converterMessage="#{lang['to.date.invalid']}"
+                                                            value="#{searchIsdnController.infoSearch.toDate}"
+                                                            requiredMessage="#{lang['mn.stock.to.date.not.blank']}">
+                                                </p:calendar>
+                                                <p:message for="txtToDateSearch"/>
+                                            </div>
+                                        </div>
+                                        <p:outputPanel class="Container33 Responsive"
+                                                       rendered="#{searchIsdnController.enableCheckBoxViewSpecialIsdn}">
+                                            <div style="float: left">
+                                                <p:selectBooleanCheckbox
+                                                        style="margin-left: 20px; margin-top: 7px;"
+                                                        value="#{searchIsdnController.infoSearch.viewSpecialIsdn}"
+                                                        styleClass="lb-sentinel"/>
+                                            </div>
+                                            <div style="float: left">
+                                                <p:outputLabel styleClass="lb-sentinel mg-top-8"
+                                                               value="#{lang['seasrch.isdn.view.special.isdn']}"/>
+                                            </div>
+                                        </p:outputPanel>
+                                    </div>
+                                </div>
+                                <div class="Container100 ">
+                                    <div class="ContainerIndent mg-top-0">
+                                        <div class="Container33 Responsive">
+                                            <cbs:inputStaff value="#{searchIsdnController.staffInfoTagLock}"
+                                                            id="inputStaffLock"
+                                                            clearMethodName="doClearStockLock"
+                                                            forceSelection="false"
+                                                            methodName="doSelectedStockLock"
+                                                            update="@this"
+                                                            label="#{lang['mn.sale.change.terminal.staff.keep.isdn']}"
+                                                            require="false"
+                                                            placeholder="#{lang['mn.sale.change.terminal.staff.keep.isdn.placehoder']}"
+                                                            classDivLabel="Container40 Responsive50 mg-left-15 pd-top-7"
+                                                            classDivInput="Container60 Responsive50 ui-fluid">
+                                            </cbs:inputStaff>
+                                        </div>
+                                        <div class="Container66 Responsive66">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <p:outputPanel id="pnCapcha" rendered="#{searchIsdnController.checkCapcha}" styleClass="Container100 mg-top-8">
+                                    <cbs:captcha id="capCha" capChaValue="#{searchIsdnController.capcha}"></cbs:captcha>
+                                </p:outputPanel>
+
+                                <div class="Container100 TexAlCenter">
+                                    <p:commandButton styleClass="mg-left-5"
+                                                     value="#{lang['mn.stock.look.up']}" process="@form"
+                                                     update="@form"
+                                                     oncomplete="if(document.getElementById('frmSearchIsdn:pnCapcha')!=null){resetCapcha();}"
+                                                     actionListener="#{searchIsdnController.searchIsdn()}">
+                                    </p:commandButton>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <p:outputPanel id="pnListIsdn" styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelListExport"
+                                   toggle="true"
+                                   titleHeader="#{lang['search.isdn.grid.label']}"/>
+                        <p:commandLink
+                                value="#{lang['search.isdn.export.excel']}"
+                                disabled="#{empty searchIsdnController.listIsdn}"
+                                ajax="false"
+                                immediate="true"
+                                style="" styleClass="fa icon-plus Fs14 blue md-link"
+                        >
+                            <p:fileDownload
+                                    value="#{searchIsdnController.exportIsdn()}"/>
+                        </p:commandLink>
+                        <p:commandLink
+                                value="#{lang['search.isdn.export.text']}"
+                                disabled="#{empty searchIsdnController.listIsdn}"
+                                ajax="false"
+                                immediate="true"
+                                style="" styleClass="fa icon-plus Fs14 blue md-link"
+                        >
+                            <p:fileDownload
+                                    value="#{searchIsdnController.exportIsdnText()}"/>
+                        </p:commandLink>
+
+                        <div class="Container100 panelListExport" style="margin-bottom: 10px;margin-top: 10px;">
+                            <p:dataTable
+                                    id="lstIsdn"
+                                    rowKey="#{item.isdn}"
+                                    resizableColumns="true"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.empty.records']}"
+                                    value="#{searchIsdnController.listIsdn}"
+                                    var="item"
+                                    rowIndexVar="rowIndex"
+                            >
+                                <p:column headerText="#{lang['mn.stock.limit.template.stt']}"
+                                          style="width: 8%">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['mn.stock.limit.template.stt']}"
+                                                      title="#{lang['mn.stock.limit.template.stt']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{rowIndex+1}" style="text-align: left"/>
+                                </p:column>
+                                <p:column headerText="#{lang['subscriber.number']}"
+                                          sortBy="#{item.isdn}"
+                                          style="width: 12%">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['subscriber.number']}"
+                                                      title="#{lang['subscriber.number']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{item.isdn}" title="#{item.isdn}" style="text-align: left"/>
+                                </p:column>
+                                <p:column headerText="#{lang['name.unit']}"
+                                          sortBy="#{item.codeShopStaff}"
+                                          style="width: 18%">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['search.isdn.stock']}"
+                                                      title="#{lang['search.isdn.stock']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{item.codeShopStaff}" title="#{item.codeShopStaff}"
+                                                   style="text-align: left"/>
+                                </p:column>
+                                <p:column headerText="#{lang['common.status']}"
+                                          sortBy="#{item.statusName}"
+                                          style="width: 15%">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['common.status']}"
+                                                      title="#{lang['common.status']}"/>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{item.statusName}"
+                                            title="#{item.statusName}"
+                                            style="text-align: left"/>
+                                </p:column>
+                                <p:column headerText="#{lang['export.order.name']}"
+                                          sortBy="#{item.proName}"
+                                          style="width: 20%">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['export.order.name']}"
+                                                      title="#{lang['export.order.name']}"/>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{item.proName}"
+                                            title="#{item.proName}"
+                                            style="text-align: left"/>
+                                </p:column>
+                                <p:column headerText="#{lang['rule.nice.digit']}"
+                                          sortBy="#{item.ruleName}"
+                                          style="width: 14%">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['rule.nice.digit']}"
+                                                      title="#{lang['rule.nice.digit']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{item.ruleName}"
+                                                   title="#{item.ruleName}"
+                                                   style="text-align: left"/>
+                                </p:column>
+                                <p:column headerText="#{lang['search.isdn.exchange.name']}"
+                                          sortBy="#{item.exchangeName}"
+                                          style="width: 15%">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['search.isdn.exchange.name']}"
+                                                      title="#{lang['search.isdn.exchange.name']}"/>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{item.exchangeName}"
+                                            title="#{item.exchangeName}"
+                                            style="text-align: left"/>
+                                </p:column>
+                                <p:column headerText="#{lang['search.isdn.view.info']}"
+                                          style="width: 13%; text-align: left;">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['search.isdn.view.info']}"
+                                                      title="#{lang['search.isdn.view.info']}"/>
+                                    </f:facet>
+                                    <p:commandLink styleClass="fa  icon-comment Fs14 blue "
+                                                   title="#{lang['search.isdn.view.commitment']}"
+                                                   process="@this"
+                                                   update="@([id$=dlgViewIsdnCommitment])"
+                                                   disabled="#{not item.hasPermissionView}"
+                                                   actionListener="#{searchIsdnController.onViewIsdnCommitment(item)}"
+                                                   oncomplete="PF('dlgViewIsdnCommitment').show();"/>
+                                    <p:commandLink styleClass="fa  icon-history Fs14 blue "
+                                                   process="@this"
+                                                   update="@([id$=dlgViewIsdnHistory])"
+                                                   disabled="#{not item.hasPermissionView}"
+                                                   title="#{lang['search.isdn.view.history']}"
+                                                   actionListener="#{searchIsdnController.onViewIsdnHistory(item)}"
+                                                   oncomplete="PF('dlgViewIsdnHistory').show();">
+                                    </p:commandLink>
+                                    <p:commandLink styleClass="fa  icon-info-circled Fs14 blue "
+                                                   process="@this"
+                                                   update="@([id$=dlgViewInfoLockStaff])"
+                                                   rendered="#{item.status eq '5'}"
+                                                   title="#{lang['view.info.staff.lock.header']}"
+                                                   actionListener="#{searchIsdnController.onViewInfoLockStaff(item.lockByStaff)}"
+                                                   oncomplete="PF('dlgViewInfoLockStaff').show();">
+                                    </p:commandLink>
+                                </p:column>
+                                <c:if test="#{niceIsdn eq '0' and searchIsdnController.hasRoleKeepIsdn}">
+                                    <p:column
+                                              style="width: 14%">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['common.keep.unlock.isdn']}" title="#{lang['common.keep.unlock.isdn']}"/>
+                                        </f:facet>
+                                        <cbs:confirmDialog
+                                                disableButton="#{item.disableLockIsdn}"
+                                                idComponent="#{rowIndex}lockIsdn"
+                                                styleClassButton="fa icon-lock Fs14"
+                                                id="#{rowIndex}lockIsdn"
+                                                valueButton=""
+                                                titleButton="#{lang['common.keep.isdn']}"
+                                                headerConfirm="#{lang['common.keep.isdn.header']}"
+                                                messageConfirm="#{lang['common.keep.isdn.header.confirm']}"
+                                                actionOK="#{searchIsdnController.doLockIsdn('0')}"
+                                                resetValueButton="false"
+                                                process="@this"
+                                                updateArea="@this,@([id$=messages])"
+                                                updateOK="@form"
+                                                actionValidate="#{searchIsdnController.doValidateLockIsdn(item.isdn, rowIndex)}"
+                                                focusCancel="false"
+                                                oncompleteOK=""
+                                                isButton="false"
+                                        />
+                                        <cbs:confirmDialog
+                                                disableButton="#{!item.hasPerimisionUnlockIsdn}"
+                                                idComponent="#{rowIndex}unLockIsdn"
+                                                styleClassButton="fa icon-lock-open Fs14"
+                                                id="#{rowIndex}unLockIsdn"
+                                                valueButton=""
+                                                titleButton="#{lang['common.unlock.isdn.header']}"
+                                                headerConfirm="#{lang['common.unlock.isdn.header']}"
+                                                messageConfirm="#{lang['common.unlock.isdn.header.confirm']}"
+                                                actionOK="#{searchIsdnController.doUnLockIsdn()}"
+                                                resetValueButton="false"
+                                                process="@this"
+                                                updateArea="@this,@([id$=messages])"
+                                                updateOK="@form"
+                                                actionValidate="#{searchIsdnController.doValidateLockIsdn(item.isdn, rowIndex)}"
+                                                focusCancel="false"
+                                                oncompleteOK=""
+                                                isButton="false"
+                                        />
+                                    </p:column>
+                                </c:if>
+                                <c:if test="#{niceIsdn eq '1'}">
+                                    <p:column
+                                            style="width: 12%">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['common.keep.nice.isdn']}" title="#{lang['common.keep.nice.isdn']}"/>
+                                        </f:facet>
+                                        <cbs:confirmDialog
+                                                disableButton="#{item.disableLockIsdn}"
+                                                idComponent="#{rowIndex}lockIsdn"
+                                                styleClassButton="fa icon-retweet Fs14"
+                                                id="#{rowIndex}lockIsdn"
+                                                valueButton=""
+                                                titleButton="#{lang['common.keep.nice.isdn']}"
+                                                headerConfirm="#{lang['common.keep.nice.isdn']}"
+                                                messageConfirm="#{lang['common.keep.nice.isdn.header.confirm']}"
+                                                actionOK="#{searchIsdnController.doLockIsdn('1')}"
+                                                resetValueButton="false"
+                                                process="@this"
+                                                updateArea="@this,@([id$=messages])"
+                                                updateOK="@form"
+                                                actionValidate="#{searchIsdnController.doValidateLockIsdn(item.isdn, rowIndex)}"
+                                                focusCancel="false"
+                                                oncompleteOK=""
+                                                isButton="false"
+                                        />
+                                    </p:column>
+                                </c:if>
+                            </p:dataTable>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </h:form>
+            <p:dialog appendTo="@(body)"
+                      closable="true"
+                      closeOnEscape="true"
+                      maximizable="true"
+                      position="center"
+                      id="dlgViewIsdnCommitment"
+                      widgetVar="dlgViewIsdnCommitment"
+                      header="#{lang['search.isdn.view.commitment']}"
+                      modal="true" resizable="false"
+                      dynamic="true"
+                      styleClass="sale"
+                      width="70%">
+                <ui:include src="viewIsdnCommitment.xhtml"/>
+            </p:dialog>
+            <p:dialog appendTo="@(body)"
+                      closable="true"
+                      closeOnEscape="true"
+                      maximizable="true"
+                      position="center"
+                      id="dlgViewIsdnHistory"
+                      widgetVar="dlgViewIsdnHistory"
+                      header="#{lang['search.isdn.history.title']}"
+                      modal="true" resizable="false"
+                      dynamic="true"
+                      styleClass="sale"
+                      width="70%">
+                <ui:include src="viewIsdnHistory.xhtml"/>
+            </p:dialog>
+            <p:dialog appendTo="@(body)"
+                      closable="true"
+                      closeOnEscape="true"
+                      maximizable="true"
+                      position="center"
+                      id="dlgViewInfoLockStaff"
+                      widgetVar="dlgViewInfoLockStaff"
+                      header="#{lang['view.info.staff.lock.header']}"
+                      modal="true" resizable="false"
+                      dynamic="true"
+                      styleClass="sale"
+                      width="70%">
+                <ui:include src="viewLockIsdnByStaff.xhtml"/>
+            </p:dialog>
+</ui:composition>

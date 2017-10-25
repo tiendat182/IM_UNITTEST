@@ -1,0 +1,84 @@
+.border-tax-config{
+    border: 1px solid #ccc;
+    float: left;
+    padding: 5px;
+}
+.input-tax-config{
+    width: 98%;
+    margin-top: 5px;
+}
+.ui-datatable th{
+    text-align: left !important;
+}
+.ui-align-right{
+    text-align:right;
+}
+.ui-align-center{
+    text-align: center;
+}
+
+
+.w5{
+    width: 5%;
+}
+.w10{
+    width: 10%;
+}
+.w15{
+    width: 15%;
+}
+.w20{
+    width: 20%;
+}
+.w25{
+    width: 25%;
+}
+.w30{
+    width: 30%;
+}
+.w40{
+    width: 40%;
+}
+.w50{
+    width: 50%;
+}
+.w60{
+    width: 60%;
+}
+.w70{
+    width: 70%;
+}
+.w80{
+    width: 80%;
+}
+.w90{
+    width: 90%;
+}
+
+#editForm .w100 td,#editForm .w100 tr {
+    border: 0 none !important;
+}
+
+.margin-button{
+    margin-right: 10px;
+}
+.vertical-top{
+    vertical-align: top;
+}
+#listForm .ui-datatable table{
+    table-layout: auto;
+}
+
+.sale .ui-widget-header {
+    background: none !important;
+    border: none !important;
+}
+
+/*.sale .ui-widget-content {
+    background: none !important;
+    border: 0 none !important;
+}*/
+
+.sale .ui-corner-top {
+    font-size: 1.8em;
+}

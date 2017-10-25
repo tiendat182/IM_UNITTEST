@@ -1,0 +1,206 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:o="http://omnifaces.org/ui">
+    <h:form id="frmAddInvoiceSerial">
+        <p:outputPanel id="pnlAddInvoiceSerial" styleClass="Container100">
+            <div class="ContainerIndent mg-top-0">
+                <p:messages id="msgAddSerial" showDetail="true" showSummary="false" closable="true"/>
+            </div>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                    <p:outputLabel styleClass="lb-sentinel" for="selOnRaTypeInvoice"
+                                   value="#{lang['mn.invoice.select.invoiceType']}"/>
+                </div>
+                <div class="Container80 Responsive75 ui-fluid">
+                    <p:selectOneRadio id="selOnRaTypeInvoice"
+                                      value="#{invoiceSerialController.invoiceSerialDTO.invoiceType}">
+                        <f:selectItems value="#{invoiceSerialController.listInvoiceType}"
+                                       itemLabel="#{item.name}" var="item" itemValue="#{item.value}"/>
+                        <p:ajax event="change" process="@this"
+                                listener="#{invoiceSerialController.changeInvoiceType}"
+                                update="@this,@([id$=pnlAddInvoiceSerial])"/>
+                    </p:selectOneRadio>
+                </div>
+            </div>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="cobInvoiceType"
+                                       value="#{lang['mn.invoice.invoiceType.typeInv']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:selectOneMenu id="cobInvoiceType" filter="true"
+                                         required="true" requiredMessage="#{lang['mn.invoice.serial.not.invoice.text']}"
+                                         value="#{invoiceSerialController.invoiceSerialDTO.invoiceTypeId}">
+                            <f:selectItem itemValue="" itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                            <f:selectItems value="#{invoiceSerialController.invoiceTypeList}"
+                                           var="item" itemValue="#{item.invoiceTypeId}"
+                                           itemLabel="#{item.typeInv} - #{item.invoiceName}"
+                                           itemLabelEscaped="true"/>
+                        </p:selectOneMenu>
+                        <p:message for="cobInvoiceType"/>
+                    </div>
+                </div>
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="txtAddSerialNo" value="#{lang['sign.serial']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:inputText id="txtAddSerialNo" placeholder="#{lang['mn.invoice.invoiceSerial.input.code']}"
+                                     maxlength="10" required="true"
+                                     requiredMessage="#{lang['mn.invoice.serial.not.invoice.no']}"
+                                     title="#{invoiceSerialController.invoiceSerialDTO.serialNo}"
+                                     value="#{invoiceSerialController.invoiceSerialDTO.serialNo}">
+                        </p:inputText>
+                        <p:message for="txtAddSerialNo"/>
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.invoice.invoiceSerial.description']}"/>
+                </div>
+                <div class="Container80 Responsive75 ui-fluid">
+                    <p:inputText value="#{invoiceSerialController.invoiceSerialDTO.description}"
+                                 maxlength="500"
+                                 placeholder="#{lang['mn.invoice.invoiceSerial.description.input']}"
+                                 title="#{invoiceSerialController.invoiceSerialDTO.description}">
+                    </p:inputText>
+                </div>
+            </div>
+            <p:outputPanel styleClass="ContainerIndent" id="divChooseBranch">
+                <div class="Container100">
+                    <div class="Container50 Responsive50">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel" for="selManyBranch"
+                                           value="#{lang['mn.invoice.unit']}"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:selectCheckboxMenu
+                                    filter="true" filterMatchMode="contains"
+                                    label="#{lang['unit.uses']}"
+                                    styleClass="selManyBranch"
+                                    value="#{invoiceSerialController.listBranchSelect}"
+                                    showCheckbox="true"
+                                    required="true"
+                                    requiredMessage="#{lang['invoice.invoiceSerial.choose.branch']}"
+                                    id="selManyBranch">
+                                <f:selectItems
+                                        value="#{invoiceSerialController.listBranch}"
+                                        var="branch"
+                                        itemLabel="#{branch.ownerCode} - #{branch.ownerName}"
+                                        itemValue="#{branch.ownerId}"
+                                />
+                            </p:selectCheckboxMenu>
+                            <p:message for="selManyBranch"/>
+                        </div>
+                    </div>
+                    <div class="Container50 Responsive50">
+                        <p:commandLink title="#{lang['invoice.invoiceSerial.showDetailBranch']}"
+                                       process="@this,@([id$=divChooseBranch])"
+                                       action="#{invoiceSerialController.showDetailBranch}"
+                                       resetValues="true"
+                                       update="@([id$=pnlBranchDetail]),@([id$=divChooseBranch])">
+                            <h:outputText value="#{lang['invoice.invoiceSerial.showDetailBranch']}"/>
+                        </p:commandLink>
+
+                        <p:commandLink title="#{lang['invoice.invoiceSerial.hideDetailBranch']}"
+                                       process="@this"
+                                       action="#{invoiceSerialController.hideDetailBranch}"
+                                       resetValues="true"
+                                       update="@([id$=pnlBranchDetail])">
+                            <h:outputText value="#{lang['invoice.invoiceSerial.hideDetailBranch']}"/>
+                        </p:commandLink>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel styleClass="ContainerIndent">
+                <div class="Container100">
+                    <div class="Container20 Responsive25 ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="invoiceTrans"
+                                       rendered="#{invoiceSerialController.showInvoiceTransType}"
+                                       value="#{lang['mn.invoice.invoiceType.invoceTrans']}"/>
+                    </div>
+                    <div class="Container80 Responsive75 ui-fluid">
+                        <p:selectBooleanCheckbox id="invoiceTrans"
+                                                 rendered="#{invoiceSerialController.showInvoiceTransType}"
+                                                 styleClass="mg-left-5"
+                                                 value="#{invoiceSerialController.noStock}">
+                        </p:selectBooleanCheckbox>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel styleClass="ContainerIndent ui-fluid" id="pnlBranchDetail"
+                           style="margin-left: 30px !important;">
+                <p:dataTable id="tblBranch"
+                             rowIndexVar="index"
+                             scrollable="#{invoiceSerialController.listBranchTable.size() > 4}"
+                             scrollHeight="100"
+                             rendered="#{invoiceSerialController.showBranch}"
+                             var="shop" value="#{invoiceSerialController.listBranchTable}"
+                             emptyMessage="#{lang['common.empty.records']}">
+                    <p:column headerText="#{lang['range.time.promotion.stt']}" style="width: 10%;"
+                              styleClass="col-right">
+                        <h:outputLabel value="#{index + 1}"
+                                       title="#{index + 1}"/>
+                    </p:column>
+                    <p:column headerText="#{lang['mn.stock.utilities.unit.code']}" style="width: 20%"
+                              sortBy="#{shop.ownerCode}">
+                        <p:outputLabel value="#{shop.ownerCode}"
+                                       title="#{shop.ownerCode}"/>
+                    </p:column>
+                    <p:column headerText="#{lang['name.unit']}" sortBy="#{shop.ownerName}">
+                        <p:outputLabel value="#{shop.ownerName}"
+                                       title="#{shop.ownerName}"/>
+                    </p:column>
+                    <p:column headerText="#{lang['common.delete']}" style="width: 10%"
+                              styleClass="TexAlCenter">
+                        <p:commandLink actionListener="#{invoiceSerialController.removeBranch(shop)}"
+                                       process="@this"
+                                       update="@this,@([id$=pnlBranchDetail]),@([id$=selManyBranch]), @([id$=msgAddSerial])"
+                                       styleClass="fa icon-trash blue"/>
+                    </p:column>
+                </p:dataTable>
+            </p:outputPanel>
+
+            <div class="Container100 TexAlCenter marT10">
+                <cbs:confirmDialog
+                        idComponent="btnConfirmNoClose"
+                        valueButton="#{lang['common.add']}"
+                        headerConfirm="#{lang['mn.invoice.serial.header.add']}"
+                        messageConfirm="#{lang['common.msg.add.confirm']}"
+                        actionOK="#{invoiceSerialController.addInvoiceSerialNoClose}"
+                        resetValueButton="true"
+                        process="@([id$=frmAddInvoiceSerial])"
+                        updateArea="@([id$=frmAddInvoiceSerial])"
+                        processOK="@([id$=frmAddInvoiceSerial])"
+                        updateOK="@([id$=frmAddInvoiceSerial]), @([id$=frmInvoiceSerial])"
+                        actionValidate="#{invoiceSerialController.validateAdd}"
+                        focusCancel="false"
+                        isButton="true"
+                />
+                <cbs:confirmDialog
+                        idComponent="btnConfirm"
+                        valueButton="#{lang['common.add.close']}"
+                        headerConfirm="#{lang['mn.invoice.serial.header.add']}"
+                        messageConfirm="#{lang['common.msg.add.confirm']}"
+                        actionOK="#{invoiceSerialController.addInvoiceSerial}"
+                        resetValueButton="false"
+                        process="@([id$=frmAddInvoiceSerial])"
+                        updateArea="@([id$=frmAddInvoiceSerial])"
+                        processOK="@([id$=frmAddInvoiceSerial])"
+                        updateOK="@([id$=frmAddInvoiceSerial]), @([id$=frmInvoiceSerial])"
+                        oncompleteOK="if(!args.validationFailed) {PF('dlgAddNewSerial').hide();}"
+                        actionValidate="#{invoiceSerialController.validateAdd}"
+                        focusCancel="false"
+                        isButton="true"
+                />
+            </div>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

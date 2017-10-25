@@ -1,0 +1,375 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.utilities.view.stock.offer']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.utilities.view.stock.offer']}</ui:define>
+    <ui:define name="content">
+    <h:form id="frmViewStockOffer">
+        <style type="text/css">
+            .jqplot-title {
+                font-size: 16px;
+            }
+            .jqplot-title, .jqplot-xaxis-tick, .jqplot-yaxis-tick, .jqplot-xaxis-label, .jqplot-axis, .jqplot-point-label,.jqplot-yaxis-label {
+                font-family: Roboto !important;
+                color: #404040 !important;
+            }
+        </style>
+
+        <!--start vung thong tin tim kiem-->
+        <p:outputPanel styleClass="ContainerIndent">
+
+            <div class="Container pd-bottom-0 mg-bottom-0">
+                <p:messages id="msgExport" showDetail="true" showSummary="false" closable="true" />
+            </div>
+            <p:outputPanel styleClass="Container" id="pnInputSearch">
+                <p:focus for="@form" ></p:focus>
+                <cbs:panel classForToggle="pnInputSearchPn" titleHeader="#{lang['create.note.export.info.search']}"/>
+                <div class="Container pnInputSearchPn">
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 ui-fluid pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel"
+                                               value="#{lang['type.stock']}"
+                                               for="cbChangeTypeSearch"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu id="cbChangeTypeSearch" required="true" value="#{viewStockOfferController.ownerType}">
+                                    <f:selectItem itemLabel="#{lang['stock.trans.ui.stocktype.unit']}" itemValue="1"/>
+                                    <f:selectItem itemLabel="#{lang['stock.trans.ui.stocktype.staff']}" itemValue="2"/>
+                                    <p:ajax event="change" listener="#{viewStockOfferController.changeOwnerTypeSearch}"
+                                            process="@this" update="@([id$=pnlOwnerSearch])"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <p:outputPanel styleClass="Container" id="pnlOwnerSearch">
+                                <p:outputPanel styleClass="Container" rendered="#{viewStockOfferController.ownerType eq 1}">
+                                    <cbs:inputShop value="#{viewStockOfferController.shopInfoTag}"
+                                                   idComponent="auCplWarehouse"
+                                                   id="auCplWarehouse"
+                                                   methodName="receiveShop"
+                                                   clearMethodName="clearShop"
+                                                   update="@this"
+                                                   label="#{lang['mn.stock.view.stock']}"
+                                                   placeholder="#{lang['create.note.warehouse.import.placeholder']}"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                   classDivInput="Container60 Responsive50 ui-fluid"
+                                                   require="true"
+                                                   requiredMessage="#{lang['mn.stock.partner.warehouse.not.emty']}"
+                                                   forceSelection="false"
+                                                   limit="#{viewStockOfferController.limitAutoComplete}">
+
+                                    </cbs:inputShop>
+                                    <p:message for="auCplWarehouse"/>
+                                </p:outputPanel>
+                                <p:outputPanel styleClass="Container" rendered="#{viewStockOfferController.ownerType eq 2}">
+                                    <cbs:inputStaff value="#{viewStockOfferController.staffInforTag}"
+                                                    id="auCplStaff"
+                                                    clearMethodName="clearStaff"
+                                                    methodName="receiveStaff"
+                                                    update="@([id$=pnlOwnerSearch])"
+                                                    require="true"
+                                                    label="#{lang['lookup.limit.stock.label.staff']}"
+                                                    placeholder="#{lang['mn.stock.limit.staff.code.placeholder']}"
+                                                    classDivLabel="Container40 pd-top-4 Responsive50 mg-left-15 AlignLb sProduct_col"
+                                                    classDivInput="Container60 Responsive50 sProduct ui-fluid"
+                                                    requiredMessage="#{lang['mn.stock.limit.staff.code.require.msg']}"
+                                                    oncomplete=""
+                                                    forceSelection="false"
+                                    >
+                                    </cbs:inputStaff>
+                                    <p:message for="auCplStaff"/>
+                                </p:outputPanel>
+                            </p:outputPanel>
+
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.track.status.stock']}"
+                                               for="cbxProductStatus" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu id="cbxProductStatus"
+                                                 styleClass="Wid100"
+                                                 filter="true" filterMatchMode="contains"
+                                                 value="#{viewStockOfferController.stateId}"
+                                                 requiredMessage="#{lang['mn.stock.branch.stock.status.msg.require']}">
+                                    <f:selectItem itemValue=""
+                                                  itemLabel="#{lang['common.select.all']}"/>
+                                    <f:selectItems itemValue="#{item.value}" value="#{viewStockOfferController.lsProductStatus}" var="item"
+                                                  itemLabel="#{item.name}"/>
+                                </p:selectOneMenu>
+                                <p:message for="cbxProductStatus"/>
+                            </div>
+                        </div>
+
+                     </div>
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.from.date']}" for="fromDate" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar id="fromDate"
+                                            value="#{viewStockOfferController.fromDate}"
+                                            placeholder="#{lang['create.note.from.date.placeholder']}"
+                                            required="true"
+                                            converterMessage="#{lang['mn.stock.from.date.not.format']}"
+                                            requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['create.note.to.date']}" for="toDate"
+                                               styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:calendar id="toDate"
+                                            value="#{viewStockOfferController.endDate}"
+                                            required="true"
+                                            converterMessage="#{lang['mn.stock.to.date.not.format']}"
+                                            placeholder="#{lang['create.note.to.date.placeholder']}"
+                                            requiredMessage="#{lang['mn.stock.to.date.not.blank']}"/>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="ContainerIndent">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['type.product']}"
+                                               for="cbxProdOfferType" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu id="cbxProdOfferType"
+                                                 required="false"
+                                                 styleClass="Wid100"
+                                                 filter="true" filterMatchMode="contains"
+                                                 value="#{viewStockOfferController.productOfferTypeDTO.productOfferTypeId}"
+                                                 requiredMessage="#{lang['mn.stock.branch.type.product.msg.require']}">
+                                    <f:selectItem itemValue="-1"
+                                                  itemLabel="#{lang['common.selectOneMenu.select']}"
+                                                  noSelectionOption="true"/>
+                                    <f:selectItems
+                                            value="#{viewStockOfferController.lstProductOfferTypeDTO}"
+                                            var="item"
+                                            itemValue="#{item.productOfferTypeId}"
+                                            itemLabelEscaped="true"
+                                            itemLabel="#{item.name}"/>
+                                    <p:ajax process="@this" event="change"
+                                            listener="#{viewStockOfferController.onChangeOfferType}"
+                                            update="@([id$=pnlImport]),@([id$=pnlInfoDetailImport]),@([id$=pnlCallAction]),@([id$=pnlSerialDetail])"/>
+                                </p:selectOneMenu>
+                                <p:message for="cbxProdOfferType"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                <p:outputLabel value="#{lang['mn.stock.liquidate.model']}"
+                                               for="cplProductOffer" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid ui-relative">
+                                <p:autoComplete id="cplProductOffer"
+                                                requiredMessage="#{lang['mn.stock.liquidate.model.required']}"
+                                                value="#{viewStockOfferController.productOfferingTotalDTO}"
+                                                completeMethod="#{viewStockOfferController.searchListProductOffering}"
+                                                placeholder="#{lang['mn.stock.liquidate.model.placeholder']}"
+                                                var="productOfferingTotalDTO"
+                                                itemValue="#{productOfferingTotalDTO}"
+                                                itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                autoHighlight="true"
+                                                maxResults="10"
+                                                forceSelection="true">
+                                    <o:converter converterId="productOfferingConverter"
+                                                 list="#{viewStockOfferController.lstProductOfferingTotalDTO}"/>
+                                    <p:ajax event="itemSelect"
+                                            listener="#{viewStockOfferController.doSelectProductOffering}"
+                                            process="@([id$=cplProductOffer])"
+                                            update="@([id$=cplProductOffer]),@([id$=pnlImport]),@([id$=msgSearch])"/>
+                                    <p:column style="width: 40%"
+                                              headerText="#{lang['common.lb.code']}"
+                                              filterable="true">
+                                        <p:outputLabel value="#{productOfferingTotalDTO.code}"/>
+                                    </p:column>
+                                    <p:column style="width: 60%"
+                                              headerText="#{lang['common.lb.name']}"
+                                              filterable="true">
+                                        <p:outputLabel value="#{productOfferingTotalDTO.name}"/>
+                                    </p:column>
+                                    <p:ajax event="query" global="false"/>
+                                </p:autoComplete>
+                                <p:commandLink id="btnResetLstProduct"
+                                               styleClass="ui-link-right"
+                                               update="@this, @([id$=cplProductOffer]), @([id$=pnlImport]),@([id$=pnlSerialDetail]),@([id$=pnlCallAction]),@([id$=pnlInfoDetailImport])"
+                                               actionListener="#{viewStockOfferController.resetLstProductOfferingTotal}"
+                                               process="@this">
+                                    <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                </p:commandLink>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent TexAlCenter">
+                        <script type="text/javascript">
+                            function hideChart() {
+                                $("#frmViewStockOffer\\:pnCycle").css("display","none");
+                            }
+                        </script>
+                        <p:commandButton value="#{lang['create.note.search']}"
+                                         process="@([id$=pnInputSearch])"
+                                         oncomplete="if(args.validationFailed){hideChart()}"
+                                         action="#{viewStockOfferController.doSearchCycle}" update="@form"
+                                         resetValues="false"/>
+
+                        <p:commandButton value="#{lang['common.reset']}" process="@this" styleClass="mg-left-5"
+                                         action="#{viewStockOfferController.doResetCycle}"
+                                         update="@form"
+                                         resetValues="true"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+        <!--end vung thong tin tim kiem-->
+        <!--start vung thong tin bieu do-->
+        <p:outputPanel styleClass="ContainerIndent" id="pnCycle">
+            <p:outputPanel styleClass="Container" rendered="#{not empty viewStockOfferController.lineModel2}">
+                <cbs:panel classForToggle="pnViewCycle" titleHeader="#{lang['view.stock.offer.cycel.lable']}"/>
+                <div class="Container pnViewCycle">
+                    <div class="Container">
+                        <p:chart id="pnChart" type="line" model="#{viewStockOfferController.lineModel2}" style="height:600px;"/>
+                    </div>
+                    <div class="Container">
+                        <table class="jqplot-table-legend">
+                            <tbody>
+                            <!--58BA27,FFCC33,F5A9F2,F74A4A,F52F2F,A30303,0040FF-->
+                            <tr class="jqplot-table-legend">
+                                <td class="jqplot-table-legend jqplot-table-legend-swatch jqplot-seriesToggle"
+                                    style="text-align: center; padding-top: 0px;">
+                                    <div class="jqplot-table-legend-swatch-outline">
+                                        <div class="jqplot-table-legend-swatch"
+                                             style="background-color: #58BA27; border-color: #58BA27;"></div>
+                                    </div>
+                                </td>
+                                <td class="jqplot-table-legend jqplot-table-legend-label jqplot-seriesToggle"
+                                    style="padding-top: 0px;">
+                                    <p:commandLink value="#{lang['view.stock.offer.cycel.number.offer.quantity.exist']}"
+                                                   style="font-size: 12px;text-decoration: underline;" oncomplete="PF('dlgViewStockOffer').show()"
+                                                   resetValues="true" process="@this" update="@([id$=dlgViewStockOffer])"
+                                                   actionListener="#{viewStockOfferController.exportSerialByTypeCycle(0)}"></p:commandLink>
+                                </td>
+                                <td class="jqplot-table-legend jqplot-table-legend-swatch jqplot-seriesToggle"
+                                    style="text-align: center; padding-top: 0px;">
+                                    <div class="jqplot-table-legend-swatch-outline">
+                                        <div class="jqplot-table-legend-swatch"
+                                             style="background-color: #FFCC33; border-color: #FFCC33;"></div>
+                                    </div>
+                                </td>
+                                <td class="jqplot-table-legend jqplot-table-legend-label jqplot-seriesToggle"
+                                    style="padding-top: 0px;">
+                                    <p:commandLink value="#{lang['view.stock.offer.cycel.number.offer.quantity1.exist']}"
+                                                   style="font-size: 12px;text-decoration: underline;" oncomplete="PF('dlgViewStockOffer').show()"
+                                                   resetValues="true" process="@this" update="@([id$=dlgViewStockOffer])"
+                                                   actionListener="#{viewStockOfferController.exportSerialByTypeCycle(1)}"></p:commandLink>
+                                </td>
+                                <td class="jqplot-table-legend jqplot-table-legend-swatch jqplot-seriesToggle"
+                                    style="text-align: center; padding-top: 0px;">
+                                    <div class="jqplot-table-legend-swatch-outline">
+                                        <div class="jqplot-table-legend-swatch"
+                                             style="background-color: #F5A9F2; border-color: #F5A9F2;"></div>
+                                    </div>
+                                </td>
+                                <td class="jqplot-table-legend jqplot-table-legend-label jqplot-seriesToggle"
+                                    style="padding-top: 0px;">
+                                    <p:commandLink value="#{lang['view.stock.offer.cycel.number.offer.quantity2.exist']}"
+                                                   style="font-size: 12px;text-decoration: underline;" oncomplete="PF('dlgViewStockOffer').show()"
+                                                   resetValues="true" process="@this" update="@([id$=dlgViewStockOffer])"
+                                                   actionListener="#{viewStockOfferController.exportSerialByTypeCycle(2)}"></p:commandLink>
+                                </td>
+                                <td class="jqplot-table-legend jqplot-table-legend-swatch jqplot-seriesToggle"
+                                    style="text-align: center; padding-top: 0px;">
+                                    <div class="jqplot-table-legend-swatch-outline">
+                                        <div class="jqplot-table-legend-swatch"
+                                             style="background-color: #F74A4A; border-color: #F74A4A;"></div>
+                                    </div>
+                                </td>
+                                <td class="jqplot-table-legend jqplot-table-legend-label jqplot-seriesToggle"
+                                    style="padding-top: 0px;">
+                                    <p:commandLink value="#{lang['view.stock.offer.cycel.number.offer.quantity3.exist']}"
+                                                   style="font-size: 12px;text-decoration: underline;" oncomplete="PF('dlgViewStockOffer').show()"
+                                                   resetValues="true" process="@this" update="@([id$=dlgViewStockOffer])"
+                                                   actionListener="#{viewStockOfferController.exportSerialByTypeCycle(3)}"></p:commandLink>
+                                </td>
+                                <td class="jqplot-table-legend jqplot-table-legend-swatch jqplot-seriesToggle"
+                                    style="text-align: center; padding-top: 0px;">
+                                    <div class="jqplot-table-legend-swatch-outline">
+                                        <div class="jqplot-table-legend-swatch"
+                                             style="background-color: #F52F2F; border-color: #F52F2F;"></div>
+                                    </div>
+                                </td>
+                                <td class="jqplot-table-legend jqplot-table-legend-label jqplot-seriesToggle"
+                                    style="padding-top: 0px;">
+                                    <p:commandLink value="#{lang['view.stock.offer.cycel.number.offer.quantity4.exist']}"
+                                                   style="font-size: 12px;text-decoration: underline;" oncomplete="PF('dlgViewStockOffer').show()"
+                                                   resetValues="true" process="@this" update="@([id$=dlgViewStockOffer])"
+                                                   actionListener="#{viewStockOfferController.exportSerialByTypeCycle(4)}"></p:commandLink>
+                                </td>
+                                <td class="jqplot-table-legend jqplot-table-legend-swatch jqplot-seriesToggle"
+                                    style="text-align: center; padding-top: 0px;">
+                                    <div class="jqplot-table-legend-swatch-outline">
+                                        <div class="jqplot-table-legend-swatch"
+                                             style="background-color: #A30303; border-color: #A30303;"></div>
+                                    </div>
+                                </td>
+                                <td class="jqplot-table-legend jqplot-table-legend-label jqplot-seriesToggle"
+                                    style="padding-top: 0px;">
+                                    <p:commandLink value="#{lang['view.stock.offer.cycel.number.offer.quantityOver.exist']}"
+                                                   style="font-size: 12px;text-decoration: underline;" oncomplete="PF('dlgViewStockOffer').show()"
+                                                   resetValues="true" process="@this" update="@([id$=dlgViewStockOffer])"
+                                                   actionListener="#{viewStockOfferController.exportSerialByTypeCycle(5)}"></p:commandLink>
+                                </td>
+                                <td class="jqplot-table-legend jqplot-table-legend-swatch jqplot-seriesToggle"
+                                    style="text-align: center; padding-top: 0px;">
+                                    <div class="jqplot-table-legend-swatch-outline">
+                                        <div class="jqplot-table-legend-swatch"
+                                             style="background-color: #0040FF; border-color: #0040FF;"></div>
+                                    </div>
+                                </td>
+                                <td class="jqplot-table-legend jqplot-table-legend-label jqplot-seriesToggle"
+                                    style="padding-top: 0px;">
+                                    <p:commandLink value="#{lang['view.stock.offer.cycel.number.offer.quantity.total.exist']}"
+                                                   style="font-size: 12px;text-decoration: underline;" oncomplete="PF('dlgViewStockOffer').show()"
+                                                   resetValues="true" process="@this" update="@([id$=dlgViewStockOffer])"
+                                                   actionListener="#{viewStockOfferController.exportSerialByTypeCycle(6)}"></p:commandLink>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </p:outputPanel>
+        </p:outputPanel>
+        <!--end vung thong tin bieu do-->
+    </h:form>
+    <p:dialog appendTo="@(body)"
+              closable="true"
+              closeOnEscape="true"
+              maximizable="true"
+              position="center"
+              id="dlgViewStockOffer"
+              widgetVar="dlgViewStockOffer"
+              header="#{lang['view.stock.offer.cycel.export.serial']}"
+              modal="true" resizable="false"
+              dynamic="true"
+              styleClass="sale"
+              width="1000">
+        <ui:include src="dlgViewStockOffer.xhtml"> </ui:include>
+    </p:dialog>
+    </ui:define>
+</ui:composition>

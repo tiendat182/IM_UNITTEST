@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="loggingOutInterceptor"
+          class="org.apache.cxf.interceptor.LoggingOutInterceptor">
+        <property name="prettyLogging" value="false"/>
+    </bean>
+    <bean id="loggingInInterceptor"
+          class="org.apache.cxf.interceptor.LoggingInInterceptor">
+        <property name="prettyLogging" value="false"/>
+    </bean>
+
+    <bean id="cxfWsClientFactory" class="com.viettel.ws.provider.CxfWsClientFactory">
+        <property name="wsEndpointMap">
+            <map>
+                <entry key="com.viettel.bccs.inventory.service" value-ref="inventoryWsInfo"/>
+                <entry key="com.viettel.bccs.partner.service" value-ref="inventoryWsInfo"/>
+                <entry key="com.viettel.bccs.product.service" value-ref="productWsInfo"/>
+                <entry key="com.viettel.bccs.sale.service" value-ref="inventoryWsInfo"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="wsCallerFactory" class="com.viettel.ws.provider.WsCallerFactory">
+        <property name="wsEndpointMap">
+            <map>
+                <entry key="com.viettel.bccs.inventory.service" value-ref="inventoryWsInfo"/>
+                <entry key="com.viettel.bccs.partner.service" value-ref="inventoryWsInfo"/>
+                <entry key="com.viettel.bccs.sale.service" value-ref="inventoryWsInfo"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="inventoryWsInfo" class="com.viettel.ws.provider.WsEndpoint">
+        <property name="name" value="InventoryWs"/>
+        <property name="address" value="${inventory.ws.address}"/>
+        <property name="targetNameSpace" value="${inventory.ws.targetnamespace}"/>
+        <!--<property name="prefix" value="${inventory.ws.prefix}"/>-->
+        <property name="userName" value="${inventory.ws.username}"/>
+        <property name="password" value="${inventory.ws.password}"/>
+        <property name="connectionTimeout" value="300000"/>
+        <property name="receiveTimeout" value="600000"/>
+    </bean>
+
+
+    <bean id="productWsInfo" class="com.viettel.ws.provider.WsEndpoint">
+        <property name="name" value="productWsInfo"/>
+        <property name="address" value="${product.wso2.ws.address}"/>
+        <property name="targetNameSpace" value="${product.wso2.ws.targetnamespace}"/>
+        <property name="userName" value="${product.wso2.ws.username}"/>
+        <property name="password" value="${product.wso2.ws.password}"/>
+        <property name="prefix" value="${product.wso2.ws.prefix}"/>
+        <property name="injectGenericWebInfo" value="${product.wso2.ws.injectGenericWebInfo}"/>
+        <property name="connectionTimeout" value="5000"/>
+        <property name="receiveTimeout" value="60000"/>
+    </bean>
+</beans>

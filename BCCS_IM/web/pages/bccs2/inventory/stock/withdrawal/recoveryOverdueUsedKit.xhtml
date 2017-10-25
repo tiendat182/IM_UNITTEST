@@ -1,0 +1,143 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['recovery.overdue.used.kit']}</ui:define>
+    <ui:define name="featureName">#{lang['recovery.overdue.used.kit']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmRecoveryKIT" styleClass="Container100">
+            <p:outputPanel id="pnlRecoveryKIT" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="pnlRecoveryKIT" titleHeader="#{lang['recovery.overdue.used.kit']}"/>
+                <div class="pnlRecoveryKIT Container100 paddingTopBottom10">
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive mg-left-15 ui-fluid pd-top-7">
+                                <p:outputLabel value="#{lang['code.import.note']}" for="txtCodeNote"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:inputText id="txtCodeNote" rendered="true"
+                                             requiredMessage="#{lang['code.import.note.not.blank']}"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive mg-left-15 ui-fluid pd-top-7">
+                                <p:outputLabel value="#{lang['mn.stock.agency.person.retrieve']}" for="txtUserRecovery"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:inputText id="txtUserRecovery" required="true"
+                                             disabled="true"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive mg-left-15 ui-fluid pd-top-7">
+                                <p:outputLabel value="#{lang['mn.stock.ware.house.recovery']}" for="auCplWarehouse"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:autoComplete styleClass="autoCpl"
+                                                id="auCplWarehouse"
+                                                rendered="true"
+                                                requiredMessage="#{lang['mn.stock.ware.house.recovery.not.blank']}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive mg-left-15 ui-fluid pd-top-7">
+                                <p:outputLabel value="#{lang['mn.stock.retrieve.agency']}" for="auCplRecoveryAgent"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:autoComplete styleClass="autoCpl"
+                                                id="auCplRecoveryAgent"
+                                                rendered="true"
+                                                requiredMessage="#{lang['mn.stock.retrieve.agency.not.blank']}"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive mg-left-15 ui-fluid pd-top-7">
+                                <p:outputLabel value="#{lang['mn.stock.agency.reason']}"
+                                               for="txtReasonRecover"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:inputText id="txtReasonRecover" value=""
+                                             required="true" requiredMessage="#{lang['mn.stock.agency.reason.not.bank']}"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive mg-left-15 ui-fluid pd-top-7">
+                                <p:outputLabel value="#{lang['mn.stock.agency.retrieve.date']}" for="txtDateRecover"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:calendar id="txtDateRecover" required="true" disabled="true"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container100">
+                            <div class="Container15 Responsive mg-left-15 ui-fluid pd-top-7" style="width: 13.4%">
+                                <p:outputLabel value="#{lang['export.order.note']}"/>
+                            </div>
+                            <div class="Container85 Responsive ui-fluid" style="width: 86.6%">
+                                <p:inputText value=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                            <div class="Container15 Responsive mg-left-15 ui-fluid pd-top-7" style="width: 13.6%">
+                                <p:outputLabel value="#{lang['mn.stock.input.serial.kit']}"/>
+                            </div>
+                            <div class="Container85 Responsive ui-fluid" style="width: 86.4%">
+                                <p:selectOneRadio value="#{recoveryOverdueUsedKITController.typeInputSerial}" >
+                                    <f:selectItem itemValue="0" itemLabel="#{lang['mn.stock.import.with.file']}"/>
+                                    <f:selectItem itemValue="1" itemLabel="#{lang['mn.stock.input.serial.imei']}"/>
+                                    <p:ajax event="change" process="@this" update="@([id$=pnlTypeInputSerial])"/>
+                                </p:selectOneRadio>
+                            </div>
+                    </div>
+                   <p:outputPanel id="pnlTypeInputSerial" styleClass="Container100">
+                       <p:outputPanel rendered="#{recoveryOverdueUsedKITController.typeInputSerial eq '0'}" styleClass="ContainerIndent mg-top-0">
+                           <div class="Container50 Responsive">
+                               <div class="Container20 Responsive mg-left-15 ui-fluid pd-top-7" style="width: 26.8%">
+                                   <p:outputLabel value="#{lang['mn.stock.utilities.from.serial.imei']}" for="txtFromSerial"/>
+                               </div>
+                               <div class="Container80 Responsive ui-fluid" style="width: 73.2%">
+                                   <p:inputText id="txtFromSerial" value="" required="true"
+                                                requiredMessage="#{lang['mn.stock.from.serial.not.blank']}"/>
+                               </div>
+                           </div>
+                           <div class="Container50 Responsive">
+                               <div class="Container40 Responsive mg-left-15 ui-fluid pd-top-7">
+                                   <p:outputLabel value="#{lang['mn.stock.utilities.to.serial.imei']}" for="txtToSerial"/>
+                               </div>
+                               <div class="Container60 Responsive ui-fluid">
+                                   <p:inputText id="txtToSerial" value="" required="true"
+                                                requiredMessage="#{lang['mn.stock.to.serial.not.blank']}"/>
+                               </div>
+                           </div>
+                       </p:outputPanel>
+                       <p:outputPanel rendered="#{recoveryOverdueUsedKITController.typeInputSerial eq '1'}"
+                                      styleClass="ContainerIndent">
+                           <div class="Container15 Responsive mg-left-15" style="width: 13.4%">
+                               <p:outputLabel value="#{lang['mn.stock.import.with.file']}" for="uploadedFile"/>
+                           </div>
+                           <div class="Container85 Responsive" style="width: 86.6%">
+                               <p:fileUpload value="#{staffExportStockController.uploadedFile}"
+                                             dragDropSupport="true" mode="simple" id="uploadedFile"/>
+                               <p:commandLink value="#{lang['create.note.download.file']}"/>
+                           </div>
+                       </p:outputPanel>
+                   </p:outputPanel>
+                    <div class="Container100 TexAlCenter">
+                        <p:commandButton value="#{lang['mn.stock.create.note.recovery']}"/>
+                        <p:commandButton styleClass="mg-left-5" value="#{lang['print.import.note']}"/>
+                        <p:commandButton styleClass="mg-left-5" value="#{lang['create.note.print.BBBG.detail']}"/>
+                        <p:commandButton styleClass="mg-left-5" value="#{lang['common.reset']}"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

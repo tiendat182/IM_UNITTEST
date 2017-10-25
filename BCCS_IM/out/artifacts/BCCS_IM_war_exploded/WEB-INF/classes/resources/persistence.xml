@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+             xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
+  http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+
+    <persistence-unit name="BCCS_IM" transaction-type="JTA">
+        <properties>
+            <property name="com.viettel.bccs.sale.service.customizer" value="com.viettel.bccs.sale.service.customizer.CbsSessionCustomizer"/>
+            <property name="eclipselink.query-results-cache" value="false"/>
+            <property name="eclipselink.cache.shared.default" value="false"/>
+            <property name="eclipselink.jdbc.timeout" value="60"/>
+            <property name="javax.persistence.query.timeout" value="60"/>
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="BCCS_IM_LIB" transaction-type="JTA">
+        <properties>
+            <property name="com.viettel.bccs.sale.service.customizer" value="com.viettel.bccs.sale.service.customizer.CbsSessionCustomizer"/>
+            <property name="eclipselink.query-results-cache" value="false"/>
+            <property name="eclipselink.cache.shared.default" value="false"/>
+            <property name="eclipselink.jdbc.timeout" value="60"/>
+            <property name="javax.persistence.query.timeout" value="60"/>
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="PUAnypayLib" transaction-type="JTA">
+        <properties>
+            <property name="com.viettel.bccs.sale.service.customizer" value="com.viettel.bccs.sale.service.customizer.CbsSessionCustomizer"/>
+            <property name="eclipselink.query-results-cache" value="false"/>
+            <property name="eclipselink.cache.shared.default" value="false"/>
+            <property name="eclipselink.jdbc.timeout" value="60"/>
+            <property name="javax.persistence.query.timeout" value="60"/>
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="BCCS_SALE" transaction-type="JTA">
+        <properties>
+            <property name="com.viettel.bccs.sale.service.customizer" value="com.viettel.bccs.sale.service.customizer.CbsSessionCustomizer"/>
+            <property name="eclipselink.query-results-cache" value="false"/>
+            <property name="eclipselink.cache.shared.default" value="false"/>
+            <property name="eclipselink.jdbc.timeout" value="60"/>
+            <property name="javax.persistence.query.timeout" value="60"/>
+        </properties>
+    </persistence-unit>
+</persistence>

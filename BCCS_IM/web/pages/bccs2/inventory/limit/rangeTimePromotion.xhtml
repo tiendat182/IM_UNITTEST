@@ -1,0 +1,270 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.limit.config.range.time.promotion']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmDebitDayType" enctype="multipart/form-data">
+            <p:outputPanel id="pnlRangeTimePro" styleClass="Container100">
+                <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                    <p:messages showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <!--Start vung thong tin cau hinh thoi gian KM-->
+                <p:outputPanel id="pnlrangeTimePromotionInput" styleClass="Container100">
+                    <div class="ContainerIndent mg-bottom-0 mg-bottom-0">
+                        <cbs:panel classForToggle="rangeTimePromotionInput"
+                                   titleHeader="#{lang['mn.stock.limit.info.range.time.promotion']}"/>
+
+                        <div class="Container100 rangeTimePromotionInput" style="margin-bottom: 0px;margin-top: 0px;">
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 mg-left-15 Responsive pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="limitType"
+                                                       value="#{lang['range.time.promotion.limit.type']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:selectOneMenu id="limitType"
+                                                         value="#{rangeTimePromotionController.forSearchDTO.debitDayType}">
+                                            <f:selectItem itemValue=""
+                                                          itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                            <f:selectItems value="#{rangeTimePromotionController.optionSetValueDTOs}"
+                                                           var="optionsetDTO"
+                                                           itemLabel="#{optionsetDTO.name}"
+                                                           itemValue="#{optionsetDTO.value}"/>
+                                        </p:selectOneMenu>
+                                        <p:remoteCommand name="updateScreen" process="@this" update="@form"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 mg-left-15 Responsive pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="limitStartDate"
+                                                       value="#{lang['range.time.promotion.fromdate']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:calendar value="#{rangeTimePromotionController.forSearchDTO.startDate}"
+                                                    id="limitStartDate"
+                                                    pattern="dd/MM/yyyy"
+                                                    mask="true"
+                                                    converterMessage="#{lang['invalid.date.message']}"
+                                                    validatorMessage="#{lang['start.date.validate.message']}"
+                                                    placeholder="#{lang['export.order.day.placehoder']}">
+                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                        </p:calendar>
+                                        <p:message for="limitStartDate"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive50">
+                                    <div class="Container40 mg-left-15 Responsive pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="limitEndDate"
+                                                       value="#{lang['range.time.promotion.todate']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive ui-fluid">
+                                        <p:calendar value="#{rangeTimePromotionController.forSearchDTO.endDate}"
+                                                    id="limitEndDate"
+                                                    pattern="dd/MM/yyyy"
+                                                    mask="true"
+                                                    converterMessage="#{lang['invalid.date.message']}"
+                                                    validatorMessage="#{lang['end.date.validate.message']}"
+                                                    placeholder="#{lang['export.order.day.placehoder']}">
+                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                        </p:calendar>
+                                        <p:message for="limitEndDate"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent TexAlCenter mg-top-0">
+                                <p:outputPanel styleClass="Container100">
+                                    <p:commandButton value="#{lang['range.time.promotion.btn.search']}"
+                                                     process="@this,@([id$=pnlrangeTimePromotionInput])"
+                                                     actionListener="#{rangeTimePromotionController.searchDebitDayType}"
+                                                     validateClient="true"
+                                                     navigator="true"
+                                                     showButtonPanel="true"
+                                                     update="@([id$=frmDebitDayType])"/>
+                                    <p:commandButton value="#{lang['common.reset']}" styleClass="mg-left-5"
+                                                     update="@form"
+                                                     actionListener="#{rangeTimePromotionController.resetData}"
+                                                     resetValues="true"
+                                                     process="@this"/>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <!--End vung thong tin view cau hinh thoi gian KM-->
+
+
+                <!--Start vung thong tin view khoang thoi gian KM-->
+                <p:outputPanel id="pnlrangeTimePromotionview" styleClass="Container100 mg-top-0">
+                    <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                        <cbs:panel classForToggle="rangeTimePromotionview"
+                                   titleHeader="#{lang['range.time.promotion.search.view']}"/>
+
+                        <div class="Container100 TexAlLeft">
+                            <p:commandLink title="#{lang['common.add']}"
+                                           process="@this"
+                                           resetValues="true"
+                                           oncomplete="PF('dlgAddDebitDayType').show();"
+                                           actionListener="#{rangeTimePromotionController.doOpenAddNew}"
+                                           update="@([id$=dlgAddDebitDayType])"
+                                           styleClass="fa icon-plus Fs14 blue md-link mg-left-5">
+                                <h:outputText value="#{lang['common.add']}"/>
+                            </p:commandLink>
+                            <cbs:confirmDialog
+                                    idComponent="btnDelete"
+                                    valueButton="#{lang['common.delete']}"
+                                    headerConfirm="#{lang['mn.stock.limit.financeType.header.delete']}"
+                                    messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                    actionOK="#{rangeTimePromotionController.doDeleteListFinance}"
+                                    resetValueButton="true"
+                                    process="@this,@([id$=tblLsProduct])"
+                                    updateArea="@form"
+                                    updateOK="@form"
+                                    actionValidate="#{rangeTimePromotionController.doConfirmListDelete}"
+                                    styleClassButton="fa icon-trash Fs14 blue md-link mg-left-5"
+                                    focusCancel="true"
+                                    isButton="false"
+                                    />
+                        </div>
+
+                        <div class="Container100 rangeTimePromotionview" style="margin-bottom: 10px;">
+                            <div class="ContainerIndent">
+                                <p:dataTable styleClass="Width100"
+                                             value="#{rangeTimePromotionController.lstDebitDayTypeDTOs}"
+                                             id="tblLsProduct"
+                                             var="item"
+                                             rowKey="#{item.id}"
+                                             rowIndexVar="index"
+                                             resizableColumns="true"
+                                             paginator="#{lang['common.paging.paginator']}"
+                                             rows="#{lang['common.paging.rows.default']}"
+                                             rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                             paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                             paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                             paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                             currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                             selection="#{rangeTimePromotionController.lsDebitDayTypeSelect}"
+                                             emptyMessage="#{lang['common.empty.records']}">
+                                    <p:column selectionMode="multiple" styleClass="width5 TexAlCenter"/>
+
+                                    <p:column headerText="#{lang['range.time.promotion.limit.type']}"
+                                              style="width: 18%;" sortBy="#{item.debitDayType}"
+                                              styleClass="col-left">
+                                        <p:outputLabel value="#{item.debitDayName}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['range.time.promotion.startdate']}" style="width: 14%;"
+                                              styleClass="col-left" sortBy="#{item.startDate}">
+                                        <p:outputLabel
+                                                value="#{rangeTimePromotionController.formatDate(item.startDate)}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['range.time.promotion.enddate']}" style="width: 14%;"
+                                              styleClass="col-left" sortBy="#{item.endDate}">
+                                        <p:outputLabel
+                                                value="#{rangeTimePromotionController.formatDate(item.endDate)}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['range.time.promotion.status']}" style="width: 12%;"
+                                              styleClass="col-left" sortBy="#{item.status}">
+                                        <p:outputLabel value="#{lang['range.time.promotion.status.enable']}"
+                                                       rendered="#{item.status==1}"/>
+                                        <p:outputLabel value="#{lang['range.time.promotion.status.disable']}"
+                                                       rendered="#{item.status!=1}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['range.time.promotion.createdate']}"
+                                              style="width: 13%;" sortBy="#{item.createDate}"
+                                              styleClass="col-left">
+                                        <p:outputLabel
+                                                value="#{rangeTimePromotionController.formatDate(item.createDate)}"/>
+                                    </p:column>
+
+                                    <p:column headerText="#{lang['range.time.promotion.uploadfile']}"
+                                              style="width: 7%;"
+                                              styleClass="TexAlCenter">
+                                        <p:commandLink styleClass="fa icon-download Fs12 black"
+                                                       title="#{lang['create.note.download.file.title']}"
+                                                       ajax="false"
+                                                       disabled="#{item.disableDowload}"
+                                                       style="text-decoration: none!important;">
+                                            <p:fileDownload
+                                                    value="#{rangeTimePromotionController.downloadFileAttach(item)}"/>
+                                        </p:commandLink>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.edit.delete']}" style="width: 10%;"
+                                              styleClass="col-left">
+                                        <p:commandLink styleClass="fa  icon-edit Fs14 blue  "
+                                                       style="text-decoration: none;font-size: 16px!important;padding-top: 4px;float: left;"
+                                                       title="#{lang['common.edit.record']}"
+                                                       disabled="#{item.status==0 || rangeTimePromotionController.disableLinkEdit(item)}"
+                                                       update="dlgAddDebitDayType"
+                                                       actionListener="#{rangeTimePromotionController.validateBeforeUpdate(item)}"
+                                                       oncomplete="PF('dlgAddDebitDayType').show();"
+                                                       resetValues="true"
+                                                       process="@this"/>
+
+                                        <cbs:confirmDialog
+                                                idComponent="btnConfirm2"
+                                                disableButton="#{item.status==0 || rangeTimePromotionController.disableLinkEdit(item)}"
+                                                valueButton=""
+                                                headerConfirm="#{lang['mn.stock.limit.financeType.header.delete']}"
+                                                messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                                actionOK="#{rangeTimePromotionController.delete()}"
+                                                resetValueButton="false"
+                                                process="@this"
+                                                updateArea="@([id$=frmDebitDayType])"
+                                                updateOK="@([id$=frmDebitDayType])"
+                                                actionValidate="#{rangeTimePromotionController.validateBeforeDelete(item)}"
+                                                styleClassButton="fa icon-trash Fs14 blue"
+                                                styleButton="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                                focusCancel="true"
+                                                isButton="false"
+                                                />
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <!--End vung thong tin view khoang thoi gian KM-->
+            </p:outputPanel>
+
+            <p:confirmDialog closeOnEscape="true" closable="true"
+                             appendTo="@(body)"
+                             widgetVar="dlgConfirmDelete"
+                             header="#{lang['range.time.promotion.day.header.confirm']}"
+                             id="cfmBtn"
+                             width="550"
+                             message="#{lang['range.time.promotion.day.message.confirm']}">
+                <p:commandButton value="#{lang['common.button.NO']}" styleClass="md-button" process="@none"
+                                 oncomplete="PF('dlgConfirmDelete').hide();"/>
+                <p:commandButton
+                        value="#{lang['common.button.YES']}" styleClass="mg-left-5"
+                        action="#{rangeTimePromotionController.delete}"
+                        process="@this,@([id$=pnlrangeTimePromotionview])"
+                        update="@this,@form"
+                        oncomplete="PF('dlgConfirmDelete').hide();"/>
+
+            </p:confirmDialog>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  onShow="setFocusByClass('rangeTimePromotionInput')"
+                  id="dlgAddDebitDayType"
+                  widgetVar="dlgAddDebitDayType"
+                  header="#{rangeTimePromotionController.getTitleDlgDebit()}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="575">
+            <ui:include src="dlgAddDebitDayType.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

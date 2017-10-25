@@ -1,0 +1,585 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.agency.export.stockOrderAgent']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.agency.export.stockOrderAgent']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmStockOrderAgent">
+            <p:outputPanel styleClass="container100">
+                <div class="ContainerIndent TexAlCenter">
+                    <p:outputLabel value="#{stockOrderAgentController.message}" style="color: red"
+                                   rendered="#{!stockOrderAgentController.showRole}"/>
+                </div>
+
+                <p:outputPanel id="pnStockOrderAgent" rendered="#{stockOrderAgentController.showRole}">
+                    <div class="ContainerIndent mg-top-0">
+                        <p:messages id="mesages" showSummary="false" showDetail="true" closable="true"/>
+                    </div>
+                    <p:remoteCommand name="updateControls" update="@form" process="@this"/>
+                    <!--Start tim kiem-->
+                    <p:outputPanel id="pnInfoStockOrderAgent" styleClass="ContainerIndent"
+                                   rendered="#{stockOrderAgentController.showSearch}">
+                        <p:focus for="pnInfoStockOrderAgent"/>
+                        <cbs:panel classForToggle="panelInforStockOrderAgent"
+                                   toggle="true"
+                                   titleHeader="#{lang['mn.stock.limit.info.range.time.promotion']}"/>
+
+                        <div class="Container100 panelInforStockOrderAgent"
+                             style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['stock.rescue.warranty.stock.rescue.request.code']}"
+                                                       for="requestCodeTxt"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="requestCodeTxt"
+                                                     maxlength="50"
+                                                     onblur="this.value = this.value.trim();"
+                                                     value="#{stockOrderAgentController.stockOrderAgentSearch.requestCode}"
+                                                     placeholder="#{lang['stock.rescue.warranty.stock.rescue.request.code.placeholder']}"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15  pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['common.status']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ">
+                                        <p:selectOneMenu id="status"
+                                                         value="#{stockOrderAgentController.stockOrderAgentSearch.status}">
+                                            <f:selectItem itemLabel="#{lang['common.selectOneMenu.select']}"
+                                                          escape="true"/>
+                                            <f:selectItem itemLabel="#{lang['stockOrderAgent.staus0']}"
+                                                          itemValue="0"/>
+                                            <f:selectItem itemLabel="#{lang['stockOrderAgent.staus1']}"
+                                                          itemValue="1"/>
+                                            <f:selectItem itemLabel="#{lang['stockOrderAgent.staus2']}"
+                                                          itemValue="2"/>
+                                            <f:selectItem itemLabel="#{lang['stock.trans.status7']}"
+                                                          itemValue="3"/>
+                                            <p:ajax event="change" process="@this"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['mn.stock.limit.staff.code']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ">
+                                        <p:outputLabel escape="true"
+                                                       value="#{stockOrderAgentController.codeAndName}"
+                                                       styleClass="lb-sentinel-bold"></p:outputLabel>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['stockOrderAgent.bankCode']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ">
+                                        <p:selectOneMenu id="bankCode"
+                                                         value="#{stockOrderAgentController.stockOrderAgentSearch.bankCode}">
+                                            <f:selectItem itemLabel="#{lang['common.selectOneMenu.select']}"
+                                                          escape="true"/>
+                                            <f:selectItems value="#{stockOrderAgentController.listBank}"
+                                                           itemLabel="#{item.name}" var="item"
+                                                           itemValue="#{item.value}"/>
+                                            <p:ajax event="change" process="@this"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50  mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['create.note.from.date']}" styleClass="lb-sentinel"
+                                                       for="fromDate"/>
+                                    </div>
+                                    <div class="Container60 Responsive50  ui-fluid">
+                                        <p:calendar
+                                                mask="true"
+                                                pattern="#{lang['common.datetime.format']}"
+                                                converterMessage="#{lang['invalid.date.message']}"
+                                                validatorMessage="#{lang['start.date.validate.message']}"
+                                                value="#{stockOrderAgentController.stockOrderAgentSearch.fromDate}"
+                                                placeholder="#{lang['common.datetime.format']}"
+                                                required="true"
+                                                requiredMessage="#{lang['mn.stock.from.date.not.blank']}"
+                                                styleClass="fromDate"
+                                                id="fromDate">
+                                            <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                        </p:calendar>
+                                        <p:message for="fromDate"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['create.note.to.date']}" for="toDate"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:calendar id="toDate"
+                                                    mask="true"
+                                                    pattern="#{lang['common.datetime.format']}"
+                                                    converterMessage="#{lang['invalid.date.message']}"
+                                                    validatorMessage="#{lang['start.date.validate.message']}"
+                                                    value="#{stockOrderAgentController.stockOrderAgentSearch.toDate}"
+                                                    required="true"
+                                                    styleClass="toDate"
+                                                    placeholder="#{lang['create.note.to.date.placeholder']}"
+                                                    requiredMessage="#{lang['mn.stock.to.date.not.blank']}">
+                                            <f:convertDateTime type="date" pattern="#{lang['common.datetime.format']}"/>
+                                        </p:calendar>
+                                        <p:message for="toDate"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container66 Responsive50">
+                                    <div class="Container20 Responsive25 mg-left-15 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['stockOrderAgent.note']}"/>
+                                    </div>
+                                    <div class="Container80 Responsive75 ui-fluid">
+                                        <p:inputText placeholder="#{lang['stockOrderAgent.note.placehoder']}"
+                                                     maxlength="500"
+                                                     onblur="this.value = this.value.trim();"
+                                                     value="#{stockOrderAgentController.stockOrderAgentSearch.note}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="Conatiner100 TexAlCenter">
+                                <p:commandButton value="#{lang['create.note.search']}"
+                                                 process="@this,@([id$=pnInfoStockOrderAgent])"
+                                                 actionListener="#{stockOrderAgentController.searchStockOrderAgent}"
+                                                 update="@([id$=frmStockOrderAgent])"/>
+                                <p:commandButton value="#{lang['mn.stock.branch.btn.create.request']}"
+                                                 actionListener="#{stockOrderAgentController.doPreRequest}"
+                                                 process="@this"
+                                                 resetValues="true"
+                                                 update="@form" validateClient="true" styleClass="mg-left-5"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin giao dich-->
+                    <!--Star vung danh sach yeu cau-->
+                    <p:outputPanel id="pnlListStockOrderAgent" styleClass="ContainerIndent"
+                                   rendered="#{stockOrderAgentController.showList}">
+                        <cbs:panel classForToggle="pnlListStockOrderAgent" toggle="true"
+                                   titleHeader="#{lang['stockOrderAgent.listStockOrderAgent']}"/>
+
+                        <div class="panelListStockOrderAgent Container100">
+                            <p:dataTable
+                                    id="lstStockOrderAgent"
+                                    var="stockOrderAgent"
+                                    rowKey="#{stockOrderAgent.stockOrderAgentId}"
+                                    resizableColumns="true"
+                                    reflow="false"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.empty.records']}"
+                                    selection="#{stockOrderAgentController.selectedStockOrderAgent}"
+                                    value="#{stockOrderAgentController.stockOrderAgentList}">
+                                <p:ajax update="@form" event="toggleSelect"/>
+                                <p:ajax update="@form" event="rowSelectCheckbox"/>
+                                <p:ajax update="@form" event="rowUnselectCheckbox"/>
+                                <p:column styleClass="col-left" sortBy="#{stockOrderAgent.requestCode}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['stock.rescue.warranty.stock.rescue.request.code']}"
+                                                      title="#{lang['stock.rescue.warranty.stock.rescue.request.code']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockOrderAgent.requestCode}"
+                                                   title="#{stockOrderAgent.requestCode}"/>
+                                </p:column>
+                                <p:column
+                                        sortBy="#{stockOrderAgentController.getStrBankName(stockOrderAgent.bankCode)}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['stockOrderAgent.bankCode']}"
+                                                      title="#{lang['stockOrderAgent.bankCode']}"/>
+                                    </f:facet>
+                                    <h:outputText escape="true"
+                                                  value="#{stockOrderAgentController.getStrBankName(stockOrderAgent.bankCode)}"
+                                                  styleClass="lb-sentinel-bold"
+                                                  title="#{stockOrderAgentController.getStrBankName(stockOrderAgent.bankCode)}">
+                                    </h:outputText>
+                                </p:column>
+                                <p:column sortBy="#{stockOrderAgentController.codeAndName}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['stock.rescue.warranty.create.request.staff']}"
+                                                      title="#{lang['stock.rescue.warranty.create.request.staff']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockOrderAgentController.codeAndName}"
+                                                   title="#{stockOrderAgentController.codeAndName}"/>
+                                </p:column>
+                                <p:column sortBy="#{stockOrderAgentController.getStrStatus(stockOrderAgent.status)}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['stock.rescue.warranty.create.status']}"
+                                                      title="#{lang['stock.rescue.warranty.create.status']}"/>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{stockOrderAgentController.getStrStatus(stockOrderAgent.status)}"
+                                            title="#{stockOrderAgentController.getStrStatus(stockOrderAgent.status)}"/>
+                                </p:column>
+                                <p:column sortBy="#{stockOrderAgent.createDate}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['stock.rescue.warranty.create.date']}"
+                                                      title="#{lang['stock.rescue.warranty.create.date']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockOrderAgent.createDate}"
+                                                   title="#{stockOrderAgent.createDate}">
+                                        <f:convertDateTime pattern="#{lang['common.datetime.format.detail']}"/>
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column sortBy="#{stockOrderAgent.lastModify}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['search.isdn.time.effect']}"
+                                                      title="#{lang['search.isdn.time.effect']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockOrderAgent.lastModify}"
+                                                   title="#{stockOrderAgent.lastModify}">
+                                        <f:convertDateTime pattern="#{lang['common.datetime.format.detail']}"/>
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column sortBy="#{stockOrderAgent.note}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['export.order.note']}"
+                                                      title="#{lang['export.order.note']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockOrderAgent.note}" title="#{stockOrderAgent.note}"/>
+                                </p:column>
+                                <p:column style="text-align: center">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['create.note.effect']}"
+                                                      title="#{lang['create.note.effect']}"/>
+                                    </f:facet>
+                                    <p:commandLink styleClass="fa icon-zoom-in Fs16 blue icon-link" resetValues="true"
+                                                   update="@form" process="@this"
+                                                   title="#{lang['common.view.detail.trans']}"
+                                                   onclick=""
+                                                   actionListener="#{stockOrderAgentController.doShowInfoOrderDetail(stockOrderAgent)}"/>
+                                    <p:commandLink value=""
+                                                   title="#{lang['export.order.stock.cancel']}"
+                                                   oncomplete="PF('dlgReason').show()"
+                                                   update="@([id$=dlgReason])"
+                                                   styleClass="fa icon-cancel-2 Fs14 blue icon-link"
+                                                   disabled="#{!(stockOrderAgent.status eq 0)}"
+                                                   process="@this"
+                                                   actionListener="#{stockOrderAgentController.doValidateDesTroy(stockOrderAgent.stockOrderAgentId)}"/>
+                                    <!--<cbs:confirmDialog-->
+                                    <!--idComponent="btnConfirm2"-->
+                                    <!--valueButton=""-->
+                                    <!--titleButton="#{lang['export.order.stock.cancel']}"-->
+                                    <!--headerConfirm="#{lang['export.order.stock.confirm.cancel']}"-->
+                                    <!--messageConfirm="#{lang['export.order.stock.confirm.cancel.msg']}"-->
+                                    <!--actionOK="#{stockOrderAgentController.doDestroyStock}"-->
+                                    <!--actionValidate="#{stockOrderAgentController.doValidateDesTroy(stockOrderAgent.stockOrderAgentId)}"-->
+                                    <!--resetValueButton="false"-->
+                                    <!--process="@form"-->
+                                    <!--updateArea="@form"-->
+                                    <!--updateOK="@form"-->
+                                    <!--styleClassButton="fa icon-cancel-2 Fs14 blue icon-link"-->
+                                    <!--styleButton="text-decoration: none;font-size: 16px!important;padding-top: 4px;"-->
+                                    <!--focusCancel="true"-->
+                                    <!--isButton="false"-->
+                                    <!--disableButton="#{!(stockOrderAgent.status eq 0)}">-->
+                                    <!--</cbs:confirmDialog>-->
+                                </p:column>
+
+                            </p:dataTable>
+
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung danh sach yeu cau-->
+                    <!--Star vung danh sach chi tiet yeu cau-->
+                    <p:outputPanel styleClass="ContainerIndent" id="listStockDetail"
+                                   rendered="#{stockOrderAgentController.showListDetail}">
+                        <cbs:panel classForToggle="pnlListStockOrderAgentDetail" toggle="true"
+                                   titleHeader="#{lang['stock.rescue.warranty.view.detail.lst.product']}"/>
+
+                        <div class="pnlListStockOrderAgentDetail Container100">
+                            <p:dataTable
+                                    id="lstStockOrderAgentDetail"
+                                    var="stockOrderAgentDetail"
+                                    rowKey="#{stockOrderAgentDetail.stockOrderAgentDetailId}"
+                                    resizableColumns="true"
+                                    reflow="false"
+                                    paginator="#{lang['common.paging.paginator']}"
+                                    rows="#{lang['common.paging.rows.default']}"
+                                    rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                    paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                    paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                    paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                    currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                    emptyMessage="#{lang['common.empty.records']}"
+                                    value="#{stockOrderAgentController.listStockOrderAgentDetail}">
+                                <p:column sortBy="#{stockOrderAgentDetail.requestCode}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['stock.rescue.warranty.stock.rescue.request.code']}"
+                                                      title="#{lang['stock.rescue.warranty.stock.rescue.request.code']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockOrderAgentDetail.requestCode}"
+                                                   title="#{stockOrderAgentDetail.requestCode}"/>
+                                </p:column>
+                                <p:column styleClass="col-left"
+                                          sortBy="#{stockOrderAgentController.getCodeAndNameProduct(stockOrderAgentDetail.prodOfferId)}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['import.partner.product.name']}"
+                                                      title="#{lang['import.partner.product.name']}"/>
+                                    </f:facet>
+                                    <p:outputLabel
+                                            value="#{stockOrderAgentController.getCodeAndNameProduct(stockOrderAgentDetail.prodOfferId)}"
+                                            title="#{stockOrderAgentController.getCodeAndNameProduct(stockOrderAgentDetail.prodOfferId)}"/>
+                                </p:column>
+                                <p:column
+                                        sortBy="#{stockOrderAgentController.getStrStateId(stockOrderAgentDetail.stateId)}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['common.status']}"
+                                                      title="#{lang['common.status']}"/>
+                                    </f:facet>
+                                    <h:outputText escape="true"
+                                                  value="#{stockOrderAgentController.getStrStateId(stockOrderAgentDetail.stateId)}"
+                                                  styleClass="lb-sentinel-bold"
+                                                  title="#{stockOrderAgentController.getStrStateId(stockOrderAgentDetail.stateId)}">
+                                    </h:outputText>
+                                </p:column>
+                                <p:column sortBy="#{stockOrderAgentDetail.quantity}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['MSG.exp.cmd.underlying.from.file.07']}"
+                                                      title="#{lang['MSG.exp.cmd.underlying.from.file.07']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockOrderAgentDetail.quantity}"
+                                                   title="#{stockOrderAgentDetail.quantity}"/>
+                                </p:column>
+                                <p:column sortBy="#{stockOrderAgentDetail.note}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['export.order.note']}"
+                                                      title="#{lang['export.order.note']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockOrderAgentDetail.note}"
+                                                   title="#{stockOrderAgentDetail.note}"/>
+                                </p:column>
+
+                            </p:dataTable>
+
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung danh sach chi tiet yeu cau-->
+
+                    <!--Start vung thong tin Danh sach hang hoa-->
+                    <div class="Container100">
+                        <p:outputPanel rendered="#{stockOrderAgentController.showRequest}" id="pnStockOrderAgentAdd">
+                            <!--<p:outputPanel styleClass="ContainerIndent">-->
+                            <p:outputPanel id="stockOrderAgentAddAdd" styleClass="ContainerIndent">
+                                <p:focus for="stockOrderAgentAddAdd"/>
+                                <cbs:panel classForToggle="stockOrderAgentAddAdd"
+                                           toggle="true"
+                                           titleHeader="#{lang['mn.stock.agency.export.stockOrderAgent']}"/>
+
+                                <div class="Container100 pnStockOrderAgentAdd"
+                                     style="margin-bottom: 10px;margin-top: 10px;">
+                                    <div class="ContainerIndent mg-top-0">
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['stock.rescue.warranty.stock.rescue.request.code']}"
+                                                        />
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid ui-relative pd-top-4">
+                                                <p:outputLabel escape="true"
+                                                               id="txtProposeCode"
+                                                               value="#{stockOrderAgentController.stockOrderAgentAdd.requestCode}"
+                                                               styleClass="lb-sentinel-bold"></p:outputLabel>
+                                                <p:commandLink id="btnResetProposeCode"
+                                                               styleClass="ui-link-right"
+                                                               update="@this, @([id$=txtProposeCode])"
+                                                               actionListener="#{stockOrderAgentController.resetProposeCode}"
+                                                               process="@this">
+                                                    <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                                </p:commandLink>
+                                            </div>
+                                        </div>
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['mn.stock.limit.staff.code']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid ">
+                                                <p:outputLabel escape="true"
+                                                               value="#{stockOrderAgentController.codeAndName}"
+                                                               styleClass="lb-sentinel-bold"></p:outputLabel>
+                                            </div>
+                                        </div>
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['stockOrderAgent.bankCode']}"
+                                                               for="bankCodeAdd"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid ">
+                                                <p:selectOneMenu id="bankCodeAdd" required="true"
+                                                                 requiredMessage="#{lang['stockOrderAgent.require.bankCode']}"
+                                                                 value="#{stockOrderAgentController.stockOrderAgentAdd.bankCode}">
+                                                    <f:selectItem itemLabel="#{lang['common.selectOneMenu.select']}"
+                                                                  escape="true"/>
+                                                    <f:selectItems value="#{stockOrderAgentController.listBank}"
+                                                                   itemLabel="#{item.name}" var="item"
+                                                                   itemValue="#{item.value}"/>
+                                                    <p:ajax event="change" process="@this"/>
+
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ContainerIndent mg-top-0">
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <p:outputLabel value="#{lang['notification.createDate']}"
+                                                               styleClass="lb-sentinel"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:outputLabel
+                                                        value="#{stockOrderAgentController.stockOrderAgentAdd.createDate}"
+                                                        escape="true"
+                                                        styleClass="lb-sentinel-bold">
+                                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                                </p:outputLabel>
+                                            </div>
+                                        </div>
+                                        <div class="Container66 Responsive50">
+                                            <div class="Container20 Responsive25 mg-left-15 pd-top-4">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['export.order.note']}"/>
+                                            </div>
+                                            <div class="Container80 Responsive75 ui-fluid">
+                                                <p:inputText placeholder="#{lang['export.order.note.placehoder']}"
+                                                             maxlength="500"
+                                                             onblur="this.value = this.value.trim();"
+                                                             value="#{stockOrderAgentController.stockOrderAgentAdd.note}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </p:outputPanel>
+                            <cbs:inputListProduct idMessage="messages" idComponent="inputListProduct"
+                                                  id="listProduct" extraValue="false" renderRetrieveStock="false"
+                                                  value="#{stockOrderAgentController.listProductTag}"/>
+
+                            <div class="Conatiner100 TexAlCenter">
+                                <cbs:confirmDialog
+                                        idComponent="btnEdit"
+                                        valueButton="#{lang['mn.stock.branch.btn.create.request']}"
+                                        headerConfirm="#{lang['stock.rescue.warranty.btn.create.request.confirm']}"
+                                        messageConfirm="#{lang['stock.rescue.warranty.btn.create.request.msg']}"
+                                        actionOK="#{stockOrderAgentController.doCreateRequest()}"
+                                        resetValueButton="true"
+                                        process="@([id$=pnStockOrderAgentAdd])"
+                                        updateArea="@form"
+                                        updateOK="@form"
+                                        actionValidate="#{stockOrderAgentController.doConfirmRequest}"
+                                        focusCancel="false"
+                                        isButton="true"
+                                        />
+                                <p:commandButton value="#{lang['common.reset']}"
+                                                 process="@this,@([id$=pnInfoStockOrderAgent])"
+                                                 actionListener="#{stockOrderAgentController.doPreRequest}"
+                                                 resetValues="false"
+                                                 update="@([id$=frmStockOrderAgent])"/>
+                                <p:commandButton value="#{lang['common.next']}"
+                                                 process="@this,@([id$=pnInfoStockOrderAgent])"
+                                                 styleClass="mg-left-5"
+                                                 actionListener="#{stockOrderAgentController.next}"
+                                                 update="@([id$=frmStockOrderAgent])"/>
+                            </div>
+                        </p:outputPanel>
+                    </div>
+                    <!--End vung thong tin danh sach hang hoa-->
+
+
+                </p:outputPanel>
+            </p:outputPanel>
+            <script type="text/javascript">
+                document.getElementById('frmStockOrderAgent').onkeypress = function (event) {
+//                    if (event.keyCode == 119 &amp;&amp; document.getElementById('frmExportOrder:createOrder:submitOrderbtn') != null) {
+//                        document.getElementById("frmExportOrder:createOrder:submitOrderbtn").click();
+//                        return false;
+//                    }
+                    if (event.keyCode == 120 &amp;&amp; document.getElementById('frmStockOrderAgent:listProduct:inputListProductAddNew') != null) {
+                        document.getElementById("frmStockOrderAgent:listProduct:inputListProductAddNew").click();
+                        return false;
+                    }
+                }
+            </script>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgReason"
+                  widgetVar="dlgReason"
+                  header="#{lang['stockOrderAgent.reason']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="400">
+            <h:form id="formUpload">
+                <p:outputPanel styleClass="Container100" id="pnPayNoteAndReport">
+                    <div class="ContainerIndent mg-top-0">
+                        <p:messages id="mesagesDetail" showSummary="false" showDetail="true" closable="true"/>
+                    </div>
+                    <div class="Container100 ">
+                        <div class="Container20 mg-left-15 Responsive25 pd-top-4">
+                            <p:outputLabel styleClass="lb-sentinel" for="reason"
+                                           value="#{lang['stockOrderAgent.reason']}"/>
+                        </div>
+                        <div class="Container80 Responsive75 ui-fluid reason">
+                            <p:inputText placeholder="#{lang['stockOrderAgent.reason.placehoder']}"
+                                         maxlength="500"
+                                         id="reason"
+                                         required="true"
+                                         requiredMessage="#{lang['stockOrderAgent.note.requite']}"
+                                         onblur="this.value = this.value.trim();"
+                                         value="#{stockOrderAgentController.reason}"/>
+                            <p:message for="reason"/>
+                        </div>
+                    </div>
+                    <div class="Container100 TexAlCenter">
+                        <p:commandButton value="#{lang['common.next']}" styleClass="md-button" process="@none"
+                                         onstart="PF('dlgReason').hide();"/>
+                        <cbs:confirmDialog
+                                idComponent="btnEdit"
+                                valueButton="#{lang['export.order.stock.cancel']}"
+                                headerConfirm="#{lang['export.order.stock.confirm.cancel']}"
+                                messageConfirm="#{lang['export.order.stock.confirm.cancel.msg']}"
+                                actionOK="#{stockOrderAgentController.doDestroyStock}"
+                                resetValueButton="true"
+                                process="@this,@([id$=dlgReason])"
+                                updateArea="@form"
+                                updateOK="@([id$=frmStockOrderAgent])"
+                                oncompleteOK="if(!args.validationFailed) {PF('dlgReason').hide();}"
+                                actionValidate="#{stockOrderAgentController.doValidateDesTroyTwo}"
+                                focusCancel="true"
+                                isButton="true"
+                                styleClassButton="mg-left-5"
+                                />
+
+                    </div>
+                </p:outputPanel>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

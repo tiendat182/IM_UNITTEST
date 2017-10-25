@@ -1,0 +1,154 @@
+<ui:composition
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+
+        <h:form id="frmViewSerialDlg">
+            <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"/>
+            </div>
+            <p:outputPanel styleClass="Container100" id="pnSearchSerialDlg">
+
+                <!--<cbs:panel classForToggle="pnSearchSerial" titleHeader="#{lang['mn.stock.utilities.look.serial.title']}"/>-->
+                <div class="ContainerIndent mg-top-0 pnSearchSerial">
+                    <div class="Container50 Responsive50 ">
+                        <div class="Container40 Responsive50 ">
+                            <p:outputLabel value="#{lang['mn.stock.liquidate.model']}" styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid ">
+                            <!--<p:outputLabel style="border: none;" value="#{lookUpSerialController.prodOfferingDTOSelect.code}" styleClass="lb-sentinel"/>-->
+                            <h:inputText style="border: none;width: 100%;" readonly="true" value="#{lookUpSerialController.prodOfferingDTOSelect.name}" styleClass="lb-sentinel-bold"/>
+                        </div>
+                    </div>
+                    <div class="Container50 Responsive50 ">
+                        <div class="Container40 Responsive50 ">
+                            <p:outputLabel value="#{lang['mn.stock.utilities.look.serial.lb']}" styleClass="lb-sentinel" />
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid ">
+                            <p:outputLabel value="#{lookUpSerialController.serial}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="ContainerIndent">
+                    <div class="Container50 Responsive50">
+                        <div class="Container40 Responsive50   fromDateDlg_col">
+                            <p:outputLabel value="#{lang['create.note.from.date']}" for="fromDateDlg" styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid fromDateDlg">
+                            <p:calendar id="fromDateDlg"
+                                        value="#{lookUpSerialController.fromDate}"
+                                        placeholder="#{lang['create.note.from.date.placeholder']}"
+                                        converterMessage="#{lang['mn.stock.from.date.validate.from']}"
+                                        required="true"
+                                        requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                        </div>
+                    </div>
+                    <div class="Container50 Responsive50">
+                        <div class="Container40 Responsive50   toDateDlg_col">
+                            <p:outputLabel value="#{lang['create.note.to.date']}" for="toDateDlg"
+                                           styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid toDateDlg">
+                            <p:calendar id="toDateDlg"
+                                        value="#{lookUpSerialController.toDate}"
+                                        required="true"
+                                        converterMessage="#{lang['mn.stock.from.date.validate.to']}"
+                                        placeholder="#{lang['create.note.to.date.placeholder']}"
+                                        requiredMessage="#{lang['mn.stock.to.date.not.blank']}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="ContainerIndent">
+                    <div class="Container50 Responsive50">
+                        <div class="Container40 Responsive50 pd-top-4 ">
+                            <p:outputLabel value="#{lang['mn.stock.utilities.look.serial.type.search.history']}" for="typeSearch" styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:selectOneRadio id="typeSearch" value="#{lookUpSerialController.typeSearchDlg}"
+                                              required="true" requiredMessage="#{lang['mn.stock.utilities.look.serial.type.search.history.require.msg']}">
+                                <f:selectItem itemLabel="#{lang['mn.stock.utilities.look.serial.history.new.lb']}" itemValue="1"/>
+                                <f:selectItem itemLabel="#{lang['mn.stock.utilities.look.serial.history.old.lb']}" itemValue="2"/>
+                            </p:selectOneRadio>
+                        </div>
+                    </div>
+                    <div class="Container50 Responsive50"></div>
+                </div>
+                <div class="ContainerIndent TexAlCenter mg-top-0 mg-bottom-0">
+                    <p:commandButton value="#{lang['mn.stock.utilities.look.serial.action.viewHis.btn']}" process="@form" id="btnSearchDlg"
+                                     resetValues="true" update="@form" actionListener="#{lookUpSerialController.doSearchSerialHistory}"/>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel styleClass="Container100" id="pnViewSeach">
+                <cbs:panel classForToggle="pnViewSeachDlg" titleHeader="#{lang['mn.stock.utilities.look.serial.history.table.head']}" toggle="false"/>
+                <div class="ContainerIndent pnViewSeachDlg">
+                    <p:dataTable
+                            id="tblViewSerialHist"
+                            var="serialDTO"
+                            rowIndexVar="index"
+                            resizableColumns="true"
+                            paginator="#{lang['common.paging.paginator']}"
+                            rows="#{lang['common.paging.rows.short']}"
+                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                            emptyMessage="#{lang['common.empty.records']}"
+                            value="#{lookUpSerialController.lsViewSerialHistoryDTO}">
+                        <p:column headerText="#{lang['range.time.promotion.stt']}" style="width: 5%;" styleClass="col-right">
+                            <p:outputLabel value="#{index + 1}" title="#{index + 1}"/>
+                        </p:column>
+                        <!--<p:column styleClass="col-left" sortBy="#{serialDTO.stockTransId}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['export.order.trans.code']}" title="#{lang['export.order.trans.code']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{serialDTO.stockTransId}" title="#{serialDTO.stockTransId}"/>
+                        </p:column>-->
+                        <p:column styleClass="col-left" sortBy="#{serialDTO.stockTransTypeName}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.utilities.manage.trans.warehouse.type.trans']}" title="#{lang['mn.stock.utilities.manage.trans.warehouse.type.trans']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{serialDTO.stockTransTypeName}" title="#{serialDTO.stockTransTypeName}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" sortBy="#{serialDTO.exportStore}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.liquidate.export.stock']}" title="#{lang['mn.stock.liquidate.export.stock']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{serialDTO.exportStore}" title="#{serialDTO.exportStore}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" sortBy="#{serialDTO.importStore}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['export.order.stock.receive.product']}" title="#{lang['export.order.stock.receive.product']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{serialDTO.importStore}" title="#{serialDTO.importStore}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" sortBy="#{serialDTO.statusName}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.utilities.status.trans']}" escape="false" title="#{lang['mn.stock.utilities.status.trans']}"/>
+                                <!--mn.stock.utilities.status.trans-->
+                            </f:facet>
+                            <p:outputLabel value="#{serialDTO.statusName}" title="#{serialDTO.statusName}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" sortBy="#{serialDTO.userSerial}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.utilities.look.serial.staff.action']}"
+                                              title="#{lang['mn.stock.utilities.look.serial.staff.action']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{serialDTO.userSerial}" title="#{serialDTO.userSerial}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" sortBy="#{serialDTO.createDate}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.utilities.look.date.trans']}" title="#{lang['mn.stock.utilities.look.date.trans']}"/>
+                            </f:facet>
+                            <h:outputText escape="true" value="#{serialDTO.createDate}" styleClass="lb-sentinel-bold" title="#{serialDTO.createDate}">
+                                <f:convertDateTime pattern="#{lang['common.datetime.format.detail']}"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </p:outputPanel>
+        </h:form>
+</ui:composition>

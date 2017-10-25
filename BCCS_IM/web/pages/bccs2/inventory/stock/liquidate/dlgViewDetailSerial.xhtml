@@ -1,0 +1,41 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:form id="frmViewDetailSerial" styleClass="Container100">
+        <p:outputPanel id="pnlViewDetailSerial" styleClass="Container100">
+            <div class="ContainerIndent">
+                <p:dataTable
+                        id="tblListSerial"
+                        var="item" value="#{liquidateApproveController.lstRequestLiquidateSerialDTO}"
+                        rowIndexVar="index"
+                        resizableColumns="true"
+                        paginator="#{lang['common.paging.paginator']}"
+                        rows="#{lang['common.paging.rows.default']}"
+                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                        emptyMessage="#{lang['common.empty.records']}">
+                    <p:column headerText="#{lang['common.stt']}" styleClass="TexAlCenter" style="width: 10%">
+                        <p:outputLabel value="#{index + 1}"/>
+                    </p:column>
+                    <p:column headerText="#{lang['common.detail.serial.from']}" styleClass="TexAlLeft"
+                              sortBy="#{item.fromSerial}" style="width: 35%">
+                        <p:outputLabel value="#{item.fromSerial}" title="#{item.fromSerial}"/>
+                    </p:column>
+                    <p:column headerText="#{lang['common.detail.serial.to']}" styleClass="TexAlLeft"
+                              sortBy="#{item.toSerial}" style="width: 35%">
+                        <p:outputLabel value="#{item.toSerial}" title="#{item.toSerial}"/>
+                    </p:column>
+                    <p:column headerText="#{lang['common.quantity']}" styleClass="TexAlRight"
+                              sortBy="#{item.quantity}" style="width: 20%">
+                        <p:outputLabel value="#{item.quantity}" title="#{item.quantity}"/>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

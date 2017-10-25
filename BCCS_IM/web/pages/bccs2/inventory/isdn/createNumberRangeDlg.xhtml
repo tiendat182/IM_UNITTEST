@@ -1,0 +1,207 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:form id="dlgRuleGroupPanel">
+        <p:outputPanel id="pnInsertFinanceDlg" styleClass="Containe100">
+            <p:messages id="messagesDlg" showSummary="false" showDetail="true" closable="true"/>
+
+            <p:outputPanel class="ContainerIndent mg-top-0">
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel typeServiceTxt" value="#{lang['mn.stock.type.service']}"
+                                       for="typeServiceTxt"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:selectOneMenu id="typeServiceTxt"
+                                         styleClass="typeServiceTxt"
+                                         placeholder="#{lang['export.order.code.placehoder']}"
+                                         required="true"
+                                         requiredMessage="#{lang['ws.service.type.not.null']}"
+                                         value="#{createNewNumberRangesController.searchDTO.serviceType}">
+                            <p:ajax event="change"
+                                    update="pnInsertFinanceDlg"
+                                    process="@this"
+                                    listener="#{createNewNumberRangesController.initObjectSearch(false)}"/>
+                            <f:selectItem itemLabel="#{lang['select.type.service']}"
+                                          noSelectionOption="true"/>
+                            <f:selectItems value="#{createNewNumberRangesController.listService}" var="service"
+                                           itemLabel="#{service.name}" itemValue="#{service.value}"/>
+                            <!--<f:selectItem itemLabel="#{lang['select.type.service.homePhone']}"-->
+                            <!--itemValue="2"/>-->
+                            <!--<f:selectItem itemLabel="#{lang['select.type.service.mobile']}"-->
+                            <!--itemValue="1"/>-->
+                            <!--<f:selectItem itemLabel="#{lang['select.type.service.pstn']}"-->
+                            <!--itemValue="3"/>-->
+                        </p:selectOneMenu>
+                        <cbs:message forId="typeServiceTxt"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel class="ContainerIndent mg-top-0" rendered="#{not( (empty createNewNumberRangesController.searchDTO.serviceType) or
+                                                              (createNewNumberRangesController.searchDTO.serviceType eq 1)) }">
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel cbxLocality" value="#{lang['common.locality']}"
+                                       for="cbxLocality"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:selectOneMenu
+                                itemLabelEscaped="true"
+                                required="true"
+                                styleClass="cbxLocality"
+                                requiredMessage="#{lang['common.locality']} #{lang['is.not.null']}"
+                                id="cbxLocality" filter="true" filterMatchMode="contains"
+                                value="#{createNewNumberRangesController.searchDTO.areaCode}"
+                                disabled="#{ (empty createNewNumberRangesController.searchDTO.serviceType) or
+                                                              (createNewNumberRangesController.searchDTO.serviceType eq 1) }">
+                            <p:ajax event="change"
+                                    listener="#{createNewNumberRangesController.onChangeArea}"
+                                    process="@this" update="cbxDigitalHpPstn"/>
+                            <f:selectItem itemLabel="#{lang['select.locality']}"/>
+                            <f:selectItems value="#{createNewNumberRangesController.listLocate}"
+                                           var="locate" itemLabel="#{locate.name}"
+                                           itemValue="#{locate.areaCode}"/>
+                        </p:selectOneMenu>
+                        <cbs:message forId="cbxLocality"/>
+                    </div>
+                </div>
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['start.digital.hp.pstn']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:inputText
+                                id="cbxDigitalHpPstn"
+                                requiredMessage=""
+                                maxlength="11"
+                                disabled="true"
+                                value="#{createNewNumberRangesController.searchDTO.pstnCode}">
+                        </p:inputText>
+                    </div>
+                </div>
+                <!--<div class="Container50 Responsive50">-->
+                <!--<div class="Container40 Responsive mg-left-15 pd-top-7">-->
+                <!--<p:outputLabel styleClass="lb-sentinel typeDigitalNeedQH"-->
+                <!--value="#{lang['type.digital.need.qh']}"-->
+                <!--for="typeDigitalNeedQH"/>-->
+                <!--</div>-->
+                <!--<div class="Container60 Responsive ui-fluid">-->
+                <!--<p:selectOneMenu id="typeDigitalNeedQH"-->
+                <!--styleClass="typeDigitalNeedQH"-->
+                <!--required="true"-->
+                <!--value="#{createNewNumberRangesController.searchDTO.planningType}"-->
+                <!--disabled="#{(empty createNewNumberRangesController.searchDTO.serviceType)or (createNewNumberRangesController.searchDTO.serviceType ne 3)}"-->
+                <!--requiredMessage="#{lang['typeDigitalNeedQH.require']}">-->
+                <!--<f:selectItem itemLabel="#{lang['type.digital.need.qh.holder']}"/>-->
+                <!--<f:selectItem itemLabel="#{lang['select.planning.type.ngn']}"-->
+                <!--itemValue="1"/>-->
+                <!--<f:selectItem itemLabel="#{lang['select.planning.type.trunk']}"-->
+                <!--itemValue="2"/>-->
+                <!--</p:selectOneMenu>-->
+                <!--<cbs:message forId="typeDigitalNeedQH"/>-->
+                <!--</div>-->
+                <!--</div>-->
+            </p:outputPanel>
+
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel digitalStartRanges"
+                                       value="#{lang['digital.start.ranges']}"
+                                       for="digitalStartRanges"/>
+                    </div>
+                    <pe:keyFilter mask="num" preventPaste="false" for="digitalStartRanges,digitalEndRanges"/>
+
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:inputText
+                                id="digitalStartRanges"
+                                requiredMessage="#{lang['start.range.require']}"
+                                required="true"
+                                styleClass="digitalStartRanges"
+                                maxlength="11"
+                                value="#{createNewNumberRangesController.searchDTO.startRange}"
+                                placeholder="#{lang['digital.start.ranges.placeholder']}">
+                            <p:ajax event="change" process="@this"
+                                    listener="#{createNewNumberRangesController.onChangeStartRange('frmExportNote:dlgRuleGroupPanel:digitalStartRanges')}"/>
+                        </p:inputText>
+                        <cbs:message forId="digitalStartRanges"/>
+                    </div>
+                </div>
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel digitalEndRanges" value="#{lang['digital.end.ranges']}"
+                                       for="digitalEndRanges"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:inputText id="digitalEndRanges"
+                                     placeholder="#{lang['digital.end.ranges.placeholder']}"
+                                     styleClass="digitalEndRanges"
+                                     required="true"
+                                     maxlength="11"
+                                     value="#{createNewNumberRangesController.searchDTO.endRange}"
+                                     requiredMessage="#{lang['end.range.require']}">
+                            <p:ajax event="change" process="@this"
+                                    listener="#{createNewNumberRangesController.onChangeEndRange('frmExportNote:dlgRuleGroupPanel:digitalEndRanges')}"/>
+                        </p:inputText>
+                        <cbs:message forId="digitalEndRanges"/>
+                    </div>
+                </div>
+
+                <div class="Container100 TexAlCenter marT10">
+                    <p:commandButton process="pnInsertFinanceDlg" update="pnInsertFinanceDlg,@([id$=lstOrderExport])"
+                                     value="#{lang['common.add']}"
+                                     actionListener="#{createNewNumberRangesController.validDataBeforeCreateRange()}"
+                                     oncomplete="if(!args.validationFailed) {PF('dlgConfirmAdd').show(); setTimeout(function () {$('.btnOKDlg').focus();}, 350);}">
+                    </p:commandButton>
+                    <p:commandButton process="pnInsertFinanceDlg" update="@form"
+                                     value="#{lang['common.add.close']}" styleClass="mg-left-5"
+                                     actionListener="#{createNewNumberRangesController.validDataBeforeCreateRange()}"
+                                     oncomplete="if(!args.validationFailed) {PF('dlgConfirmAddClose').show(); setTimeout(function () {$('.btnOKDlg').focus();}, 350);}">
+                    </p:commandButton>
+                </div>
+            </div>
+        </p:outputPanel>
+        <p:confirmDialog closeOnEscape="true" closable="true"
+                         appendTo="@(body)"
+                         widgetVar="dlgConfirmAdd"
+                         header="#{lang['mn.stock.limit.financeType.header.add']}"
+                         id="cfmBtn"
+                         width="550"
+                         message="#{lang['common.msg.add.confirm']}">
+            <p:commandLink value="#{lang['common.button.no']}" styleClass="md-button" process="@none"
+                           onstart="PF('dlgConfirmAdd').hide();"
+                    />
+            <p:commandLink process="@this,@form"
+                           update="pnInsertFinanceDlg,@([id$=lstOrderExport])"
+                           value="#{lang['common.button.yes']}" styleClass="md-button btnOKDlg"
+                           oncomplete=" PF('dlgConfirmAdd').hide();"
+                           actionListener="#{createNewNumberRangesController.createNewNumberRanges(false)}"
+                    />
+
+        </p:confirmDialog>
+        <p:confirmDialog closeOnEscape="true" closable="true"
+                         appendTo="@(body)"
+                         widgetVar="dlgConfirmAddClose"
+                         header="#{lang['mn.stock.limit.financeType.header.add']}"
+                         id="cfmBtnclose"
+                         width="550"
+                         message="#{lang['common.msg.add.confirm']}">
+            <p:commandLink value="#{lang['common.button.no']}" styleClass="md-button" process="@none"
+                           onstart="PF('dlgConfirmAddClose').hide();"
+                    />
+            <p:commandLink process="@this,@form"
+                           update="pnInsertFinanceDlg,@([id$=lstOrderExport]),@([id$=pnInfoExportOrder])"
+                           value="#{lang['common.button.yes']}" styleClass="md-button btnOKDlg mg-left-5"
+                           oncomplete=" PF('dlgConfirmAddClose').hide(); if(!args.validationFailed ){PF('dlgCreateNumberRangeDlg').hide();} "
+                           actionListener="#{createNewNumberRangesController.createNewNumberRanges(true)}"
+                    />
+
+        </p:confirmDialog>
+    </h:form>
+</ui:composition>

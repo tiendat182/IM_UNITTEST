@@ -1,0 +1,277 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.rescue.information.export']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.rescue.information.export']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmExportNote">
+            <p:outputPanel styleClass="container100">
+                <p:outputPanel id="pnUnderExportNote">
+                    <div class="ContainerIndent mg-top-0">
+                        <p:messages id="exportStock" showSummary="false" showDetail="true" closable="true"/>
+                    </div>
+                    <!--Start vung thong tin giao dich-->
+                    <p:outputPanel id="pnInfoExportNote" styleClass="ContainerIndent">
+                        <p:focus for="pnInfoExportNote"/>
+                        <cbs:panel classForToggle="panelInforExportNote"
+                                   toggle="true"
+                                   titleHeader="#{lang['information.transaction']}"/>
+
+                        <p:remoteCommand name="updateControls" process="@this" update="@form"/>
+
+                        <div class="Container100 panelInforExportNote" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.code.field']}"
+                                                       for="codeExportTxt"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="codeExportTxt"
+                                                     required="true"
+                                                     maxlength="50"
+                                                     onblur="this.value = this.value.trim();"
+                                                     requiredMessage="#{lang['export.order.transCode.require.msg']}"
+                                                     value="#{rescueInforExportStockController.transInputDTO.actionCode}"
+                                                     placeholder="#{lang['export.order.code.field.placehoder']}"/>
+                                        <pe:keyFilter for="codeExportTxt" regEx="/^[0-9a-zA-Z_]+$/i" preventPaste="false"/>
+                                        <p:message for="codeExportTxt"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.by.whom']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                        <p:outputLabel escape="true"
+                                                       value="#{rescueInforExportStockController.transInputDTO.createUser}"
+                                                       styleClass="lb-sentinel-bold"></p:outputLabel>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['export.order.day']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                        <h:outputText
+                                                value="#{rescueInforExportStockController.transInputDTO.createDatetime}"
+                                                escape="true"
+                                                styleClass="lb-sentinel-bold">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['export.order.stock']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                        <p:outputLabel escape="true"
+                                                       value="#{rescueInforExportStockController.codeAndName}"
+                                                       styleClass="lb-sentinel-bold"></p:outputLabel>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" for="cbxReason"
+                                                       value="#{lang['export.order.by.reason']}"/>
+                                    </div>
+                                    <p:commandButton id="btnReason" styleClass="btnReason"
+                                                     style="display: none;"
+                                                     action="#{rescueInforExportStockController.changeRenderExport}"
+                                                     process="@this,@([id$=inputReason])"
+                                                     update="@this,@([id$=pnlIpRender])">
+                                    </p:commandButton>
+                                    <p:inputText
+                                            value="#{rescueInforExportStockController.valueReasonId}"
+                                            styleClass="kaka" style="display: none;" id="inputReason"/>
+
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="cbxReason"
+                                                         onchange="$('.kaka').val(this.value);clickLinkByClass('btnReason');"
+                                                         required="true"
+                                                         requiredMessage="#{lang['stock.rescueInformation.require.stockTrans.reason']}"
+                                                         value="#{rescueInforExportStockController.transInputDTO.reasonId}">
+                                            <f:selectItem itemLabel="#{lang['common.reason.placeholder']}"/>
+                                            <f:selectItems value="#{rescueInforExportStockController.reasonList}"
+                                                           itemLabel="#{item.reasonName}" var="item"
+                                                           itemValue="#{item.reasonId}"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="cbxReason"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['export.order.note']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText placeholder="#{lang['export.order.note.placehoder']}"
+                                                     maxlength="500"
+                                                     onblur="this.value = this.value.trim();"
+                                                     value="#{rescueInforExportStockController.transInputDTO.note}"/>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!--phan render khi chon ly do-->
+
+                            <p:outputPanel id="pnlIpRender">
+                                <p:outputPanel rendered="#{rescueInforExportStockController.render}">
+                                    <div class="ContainerIndent mg-top-0">
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <p:outputLabel styleClass="lb-sentinel"
+                                                               value="#{lang['mn.stock.recover']}"/>
+                                                <p:outputLabel value="*" style="color: red"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid ui-relative">
+                                                <p:autoComplete id="stockRecoverCode"
+                                                                required="true"
+                                                                requiredMessage="#{lang['stock.rescueInformation.required.stockRecoverCode']}"
+                                                                value="#{rescueInforExportStockController.stockRecoverCode}"
+                                                                disabled="#{!(rescueInforExportStockController.stockRecoverCode == null || rescueInforExportStockController.stockRecoverCode =='')}"
+                                                                completeMethod="#{rescueInforExportStockController.searchListProductOffering}"
+                                                                placeholder="#{lang['stock.rescueInformation.input.stockRecoverCode']}"
+                                                                var="c" itemValue="#{c}" itemLabel="#{c.code}"
+                                                                autoHighlight="true"
+                                                                minQueryLength="0"
+                                                                maxResults="10"
+                                                                styleClass="autoCpl"
+                                                                forceSelection="true">
+                                                    <o:converter converterId="productOffConvert"
+                                                                 list="#{rescueInforExportStockController.listProductOffering}"/>
+                                                    <p:column style="width: 40%"
+                                                              headerText="#{lang['common.lb.code']}"
+                                                              filterable="true">
+                                                        <p:outputLabel  value="#{c.code}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 60%"
+                                                              headerText="#{lang['common.lb.name']}"
+                                                              filterable="true">
+                                                        <p:outputLabel value="#{c.name}"/>
+                                                    </p:column>
+                                                    <p:ajax event="query" global="false"/>
+                                                </p:autoComplete>
+                                                <p:commandLink id="btnClearDomain"
+                                                               styleClass="ui-link-right"
+                                                               update="@this,@([id$=stockRecoverCode])"
+                                                               actionListener="#{rescueInforExportStockController.resetListProductOffering}"
+                                                               process="@this">
+                                                    <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                                </p:commandLink>
+
+                                                <p:message for="stockRecoverCode"/>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <p:outputLabel styleClass="lb-sentinel" for="txtSerial"
+                                                               value="#{lang['stock.rescueInformation.serial']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:inputText id="txtSerial"
+                                                             maxlength="50"
+                                                             required="true"
+                                                             requiredMessage="#{lang['stock.rescueInformation.required.serial']}"
+                                                             onblur="this.value = this.value.trim();"
+                                                             placeholder="#{lang['stock.rescueInformation.input.serial']}"
+                                                             value="#{rescueInforExportStockController.serialRecover}"
+                                                             title=""/>
+                                                <p:message for="txtSerial"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+                            </p:outputPanel>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin giao dich-->
+
+                    <!--Start vung thong tin Danh sach hang hoa-->
+                    <div class="Container100">
+
+                        <cbs:inputListProduct idMessage="exportStock" idComponent="inputListProduct" id="listProduct"
+                                              value="#{rescueInforExportStockController.listProductTag}"
+                                              updateCheckSerial="@([id$=dlgDetailSerial]),@([id$=exportStock])" extraValue="false"
+                                              onCompleteCheckSerial="if(!args.validationFailed){PF('dlgDetailSerial').show()}" />
+                    </div>
+                    <!--End vung thong tin danh sach hang hoa-->
+                    <!--Start Vung data button-->
+                    <div class="Container100">
+                        <div class="ContainerIndent TexAlCenter mg-top-0">
+                            <!--<p:commandButton value="#{lang['mn.stock.export']}"/>-->
+                            <cbs:confirmDialog
+                                    idComponent="submitOrder"
+                                    id="createOrder"
+                                    valueButton="#{lang['mn.stock.underlying.export.stock']}"
+                                    headerConfirm="#{lang['export.order.btn.submit.header.confirm']}"
+                                    messageConfirm="#{lang['export.order.btn.submit.header.confirm.msg']}"
+                                    actionOK="#{rescueInforExportStockController.addExportStock}"
+                                    resetValueButton="true"
+                                    process="@form"
+                                    updateArea="@form"
+                                    processOK="@form"
+                                    updateOK="@form"
+                                    disableButton="#{rescueInforExportStockController.created}"
+                                    actionValidate="#{rescueInforExportStockController.validateExportStock}"
+                                    focusCancel="false"
+                                    isButton="true"
+                                    />
+                            <p:commandButton value="#{lang['common.reset']}" styleClass="mrg-left-5"
+                                             actionListener="#{rescueInforExportStockController.resetForm}"
+                                             update="@form"
+                                             resetValues="true"
+                                             process="@this"/>
+
+                        </div>
+                    </div>
+                    <!--End Vung data button-->
+                </p:outputPanel>
+            </p:outputPanel>
+
+            <script type="text/javascript">
+                document.getElementById('frmExportNote').onkeypress = function (event) {
+//                    if (event.keyCode == 119 &amp;&amp; document.getElementById('frmExportOrder:createOrder:submitOrderbtn') != null) {
+//                        document.getElementById("frmExportOrder:createOrder:submitOrderbtn").click();
+//                        return false;
+//                    }
+                    if (event.keyCode == 120 &amp;&amp; document.getElementById('frmExportNote:listProduct:inputListProductAddNew') != null) {
+                        document.getElementById("frmExportNote:listProduct:inputListProductAddNew").click();
+                        return false;
+                    }
+                }
+            </script>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailSerial"
+                  widgetVar="dlgDetailSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <ui:include src="../../../../../resources/tags/dlgDetailSerial.xhtml">
+                <ui:param name="controller" value="#{rescueInforExportStockController.listProductTag}" />
+                <ui:param name="idComponent" value="inputListProduct" />
+            </ui:include>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

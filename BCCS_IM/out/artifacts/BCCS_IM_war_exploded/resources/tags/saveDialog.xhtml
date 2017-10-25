@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+<composite:interface>
+    <composite:attribute name="ajax"/>
+    <composite:attribute name="disabled1"/>
+    <composite:attribute name="disabled2"/>
+    <composite:attribute name="global"/>
+    <composite:attribute name="validateClient"/>
+    <composite:attribute name="process"/>
+    <composite:attribute name="resetValues"/>
+    <composite:attribute name="action1" default="''" method-signature="java.lang.String action()"/>
+    <composite:attribute name="actionListener1" default="''" method-signature="java.lang.String action()"/>
+    <composite:attribute name="action2" default="''" method-signature="java.lang.String action()"/>
+    <composite:attribute name="actionListener2" default="''" method-signature="java.lang.String action()"/>
+    <composite:attribute name="update1" shortDescription="update for button Save"/>
+    <composite:attribute name="update2" shortDescription="update for button SaveAndClose"/>
+    <composite:attribute name="oncomplete1" shortDescription="oncomplete for button Save"/>
+    <composite:attribute name="oncomplete2" shortDescription="oncomplete for button SaveAndClose"/>
+    <composite:attribute name="style"/>
+    <composite:attribute name="styleClass"/>
+    <composite:attribute name="icon"/>
+    <composite:attribute name="renderedButton1" default="true"
+                         shortDescription="Render button 1 or not. Default is true"/>
+    <composite:attribute name="title"/>
+    <composite:attribute name="labelButton1" shortDescription="name of link button"/>
+    <composite:attribute name="labelButton2" shortDescription="name of link button"/>
+    <composite:attribute name="renderedButton2" default="true"
+                         shortDescription="Render button 2 or not. Default is true"/>
+    <composite:attribute name="useCssFloatLeft"
+                         shortDescription="set CSS save, save and close panel is float-left or not"/>
+</composite:interface>
+<composite:implementation>
+    <p:panelGrid styleClass="#{empty cc.attrs.useCssFloatLeft ? 'w100' : 'float-left'} filterPanel" id="panel_MenuBar" style="margin-top: 10px;">
+        <p:row>
+            <p:column style="text-align: left;" colspan="2">
+                            <span class="vt-button">
+                                    <p:commandLink id="btnSave1" ajax="#{cc.attrs.ajax}" disabled="#{cc.attrs.disabled1}"
+                                                   global="#{cc.attrs.global}"
+                                                   validateClient="#{cc.attrs.validateClient}"
+                                                   process="#{cc.attrs.process}" resetValues="#{cc.attrs.resetValues}"
+                                                   action="#{cc.attrs.action1}" title="#{cc.attrs.title}"
+                                                   actionListener="#{cc.attrs.actionListener1}"
+                                                   update="#{cc.attrs.update1}" oncomplete="#{cc.attrs.oncomplete1}"
+                                                   style="#{cc.attrs.style}" styleClass="#{cc.attrs.styleClass}"
+                                                   rendered="#{cc.attrs.renderedButton1}">
+                                        <p:graphicImage style="height:16px;"
+                                                        value="/resources/themes/images/icon-save.gif"/>
+                                        <span class="vt-button-text">
+                                            <h:outputText rendered="#{empty cc.attrs.labelButton1}"
+                                                          value="#{lang['common.save']}"/>
+                                            <h:outputText rendered="#{not empty cc.attrs.labelButton1}"
+                                                          value="#{cc.attrs.labelButton1}"/>
+                                        </span>
+                                    </p:commandLink>
+                                    <p:commandLink id="btnSave2" ajax="#{cc.attrs.ajax}" disabled="#{cc.attrs.disabled2}"
+                                                   global="#{cc.attrs.global}"
+                                                   validateClient="#{cc.attrs.validateClient}"
+                                                   process="#{cc.attrs.process}" resetValues="#{cc.attrs.resetValues}"
+                                                   action="#{cc.attrs.action2}" title="#{cc.attrs.title}"
+                                                   actionListener="#{cc.attrs.actionListener2}"
+                                                   update="#{cc.attrs.update2}" oncomplete="#{cc.attrs.oncomplete2}"
+                                                   style="#{cc.attrs.style}" styleClass="#{cc.attrs.styleClass}"
+                                                   rendered="#{cc.attrs.renderedButton2}">
+                                        <p:graphicImage style="height:16px;"
+                                                        value="/resources/themes/images/icon-saveClose.gif"/>
+                                        <span class="vt-button-text">
+                                            <h:outputText rendered="#{empty cc.attrs.labelButton2}"
+                                                          value="#{lang['common.saveAndClose']}"/>
+                                            <h:outputText rendered="#{not empty cc.attrs.labelButton2}"
+                                                          value="#{cc.attrs.labelButton2}"/>
+                                        </span>
+                                    </p:commandLink>
+                            </span>
+            </p:column>
+        </p:row>
+    </p:panelGrid>
+</composite:implementation>
+</html>
+

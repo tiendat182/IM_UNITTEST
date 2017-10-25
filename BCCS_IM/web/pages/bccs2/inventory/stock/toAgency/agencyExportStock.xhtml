@@ -1,0 +1,122 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.agency']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.agency']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmExportNote">
+            <p:outputPanel id="pnlAgencyExportStock" styleClass="Container100">
+                <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                    <p:messages id="msgExport" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel id="pnlInfoSearch" rendered="#{!agencyExportStockController.infoOrderDetail}">
+                    <!--Start vung thong tin tim kiem-->
+                    <ui:include src="../commonStock/inforSearchCommon.xhtml">
+                        <ui:param name="renderExport" value="#{false}"/>
+                    </ui:include>
+                    <!--End vung thong tin tim kiem-->
+                </p:outputPanel>
+                <p:outputPanel id="pnlViewDetailInfoExport" rendered="#{agencyExportStockController.infoOrderDetail}">
+                    <!--Start vung thong tin phieu xuat-->
+                    <cbs:inputOrderStock id="exportStockabc" title="#{lang['export.order.view.export.field']}"
+                                         value="#{agencyExportStockController.orderStockTag}" mode="3"
+                                         lblActionCode="#{lang['export.order.code.field']}"
+                                         regionExchangeLabel="#{lang['export.order.stock.region']}"/>
+                    <!--End vung thong tin phieu xuat-->
+                    <!--Start vung thong tin chi tiet hang hoa-->
+                    <cbs:inputListProductFifo idMessage="msgExport" idComponent="inputListProduct"
+                                          value="#{agencyExportStockController.listProductTag}"
+                                          extraValue="#{!agencyExportStockController.exportDepositAgent}"
+                                          updateCheckSerial="@([id$=dlgDetailSerial]), @([id$=msgExport])"
+                                          onCompleteCheckSerial="if(!args.validationFailed){PF('dlgDetailSerial').show()}"/>
+
+                    <!--End vung thong tin chi tiet hang hoa-->
+                    <p:outputPanel styleClass="ContainerIndent TexAlCenter"
+                                   rendered="#{agencyExportStockController.showPanelOffline}">
+                        <cbs:panel classForToggle="pnOffline"
+                                   titleHeader="#{lang['mn.stock.title.offline']}" toggle="true"/>
+
+                        <div class="Container100 pnOffline"
+                             style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="Container33 Responsive">
+                                <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['mn.stock.check.offline']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid}">
+                                    <p:selectBooleanCheckbox
+                                            value="#{agencyExportStockController.checkOffline}"/>
+                                </div>
+                            </div>
+                            <div class="Container66 Responsive66"/>
+                        </div>
+                    </p:outputPanel>
+                    <p:outputPanel styleClass="ContainerIndent TexAlCenter" id="pnExportStock">
+
+                        <cbs:confirmDialog
+                                idComponent="btnExportStock"
+                                disableButton="#{agencyExportStockController.canPrint or agencyExportStockController.haveDepositPrice}"
+                                valueButton="#{lang['mn.stock.underlying.export.stock']}"
+                                headerConfirm="#{lang['mn.stock.confirm.export.stock.header']}"
+                                messageConfirm="#{lang['mn.stock.confirm.export.stock.header.msgConfirm']}"
+                                actionOK="#{agencyExportStockController.doCreateUnderlyingStock}"
+                                resetValueButton="false"
+                                process="@form"
+                                updateArea="@form"
+                                focusCancel="false"
+                                isButton="true"
+                                />
+                        <p:commandButton value="#{lang['export.order.btn.print.field.btn']}" styleClass="mg-left-5"
+                                         update="@form"
+                                         ajax="false"
+                                         immediate="true"
+                                         disabled="#{!agencyExportStockController.canPrint}">
+                            <p:fileDownload value="#{agencyExportStockController.exportStockTransDetail()}"/>
+                        </p:commandButton>
+                        <p:commandButton value="#{lang['create.note.print.BBBG.detail']}" styleClass="mg-left-5"
+                                         disabled="#{!agencyExportStockController.canPrint}" ajax="false">
+                            <p:fileDownload value="#{agencyExportStockController.exportHandOverReport()}"/>
+                        </p:commandButton>
+                        <p:commandButton value="#{lang['common.back.page']}" process="@this"
+                                         actionListener="#{agencyExportStockController.doBackPage}" immediate="true"
+                                         styleClass="mg-left-5" update="@form"/>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailSerial"
+                  widgetVar="dlgDetailSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <ui:include src="../../../../../resources/tags/dlgDetailSerialFifo.xhtml">
+                <ui:param name="controller" value="#{agencyExportStockController.listProductTag}"/>
+                <ui:param name="idComponent" value="inputListProduct"/>
+            </ui:include>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
+
+
+
+
+
+
+
+
+
+
+
+
+

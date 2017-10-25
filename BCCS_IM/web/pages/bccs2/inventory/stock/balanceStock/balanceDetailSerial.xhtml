@@ -1,0 +1,73 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:form id="frmViewDetailSerial" styleClass="Container100">
+        <p:outputPanel id="pnlInfoDetail" styleClass="Container100">
+            <div class="ContainerIndent">
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 ">
+                        <p:outputLabel value="#{lang['mn.isdn.rule.nice.digit.item']}" styleClass="lb-sentinel"
+                                       title="#{lang['mn.isdn.rule.nice.digit.item']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ">
+                        <p:outputLabel styleClass="lb-sentinel-bold break-word"
+                                       value="#{approveBalanceRequestController.selectStockBalanceDetailDTO.prodOfferName}"
+                                       title="#{approveBalanceRequestController.selectStockBalanceDetailDTO.prodOfferName}"/>
+                    </div>
+                </div>
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 ">
+                        <p:outputLabel value="#{lang['mn.stock.liquidate.approve.quantity']}"
+                                       styleClass="lb-sentinel"
+                                       title="#{lang['mn.stock.liquidate.approve.quantity']}"/>
+                    </div>
+                    <div class="Container60 Responsive50 ">
+                        <h:outputLabel styleClass="lb-sentinel-bold"
+                                       value="#{approveBalanceRequestController.selectStockBalanceDetailDTO.quantity}"
+                                       title="#{approveBalanceRequestController.selectStockBalanceDetailDTO.quantity}"/>
+                    </div>
+                </div>
+            </div>
+        </p:outputPanel>
+        <p:outputPanel id="pnlViewDetailSerial" styleClass="Container100">
+            <cbs:panel classForToggle="pnlLitstDetailSerial" toggle="false"
+                       titleHeader="#{lang['mn.invoice.invoiceSerial.list.serial']}"/>
+            <p:outputPanel id="pnlLitstDetailSerial" styleClass="Container100 pnlLitstDetailSerial">
+                <div class="Container100">
+                    <p:dataTable
+                            id="tblListSerial"
+                            var="item" value="#{approveBalanceRequestController.listStockBalanceSerialDTO}"
+                            rowIndexVar="index"
+                            resizableColumns="true"
+                            pageLinks="3"
+                            paginator="#{lang['common.paging.paginator']}"
+                            rows="#{lang['common.paging.rows.short']}"
+                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                            emptyMessage="#{lang['common.empty.records']}">
+                        <p:column headerText="#{lang['mn.stock.utilities.from.serial.imei']}"
+                                  styleClass="ui-fluid" sortBy="">
+                            <p:outputLabel value="#{item.fromSerial}" title="#{item.fromSerial}"/>
+                        </p:column>
+                        <p:column headerText="#{lang['mn.stock.utilities.to.serial.imei']}" styleClass="ui-fluid"
+                                  sortBy="">
+                            <p:outputLabel value="#{item.toSerial}" title="#{item.toSerial}"/>
+                        </p:column>
+                        <p:column headerText="#{lang['common.number']}"
+                                  styleClass="TexAlRight" sortBy="">
+                            <p:outputLabel
+                                    value="#{approveBalanceRequestController.getQuantity(item.fromSerial, item.toSerial)}"
+                                    title="#{approveBalanceRequestController.getQuantity(item.fromSerial, item.toSerial)}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

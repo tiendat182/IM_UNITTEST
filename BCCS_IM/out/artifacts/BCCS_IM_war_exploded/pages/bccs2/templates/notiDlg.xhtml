@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+>
+    <h:form id="notiForm">
+        <p:outputPanel styleClass="title-noti w100">
+            Notification
+        </p:outputPanel>
+        <c:forEach var="item" items="#{notificationController.lstNotifi}" varStatus="stt">
+            <c:if test="#{item.status == 0}">
+                <div id="noti-#{stt.count}" class="noti-item w100">
+                    <div class="noti-title">
+                        <h:outputText value="#{item.title}"/>
+                    </div>
+                    <div class="noti-detail-container h0">
+                        <div class="noti-detail">
+                            <h:outputText value="#{item.content}"/>
+                        </div>
+                    </div>
+                    <div class="noti-date">
+                        <h:outputText value="#{item.createdDate}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                        </h:outputText>
+                    </div>
+                </div>
+            </c:if>
+            <c:if test="#{item.status == 1}">
+                <div id="noti-#{stt.count}" class="noti-item noti-old w100">
+                    <div class="noti-title">
+                        <h:outputText value="#{item.title}"/>
+                    </div>
+                    <div class="noti-detail-container h0">
+                        <div class="noti-detail">
+                            <h:outputText value="#{item.content}"/>
+                        </div>
+                    </div>
+                    <div class="noti-date">
+                        <h:outputText value="#{item.createdDate}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                        </h:outputText>
+                    </div>
+                </div>
+            </c:if>
+        </c:forEach>
+    </h:form>
+    <script type="text/javascript">
+        function showNotifi() {
+            var notiPosition = jQuery("#notify-area").offset().left;
+            jQuery("#noti-count").css("display","none");
+            if (jQuery("#noti-dlg").css("display") == "none") {
+                jQuery("#noti-dlg").css("display","block");
+                jQuery("#noti-dlg").css("left", notiPosition);
+            }
+            else{
+                jQuery("#noti-dlg").css("display","none");
+            }
+        }
+
+        var lastNoti;
+        jQuery(document).ready(function() {
+            jQuery(".noti-item").mouseup(function() {
+                var containDetailHeight = jQuery(this).find(".noti-detail-container").height();
+
+                if (lastNoti != null) {
+                    jQuery(document.getElementById(lastNoti)).find(".noti-detail-container").addClass("h0");
+                    if (containDetailHeight == 0) {
+                        jQuery(document.getElementById(lastNoti)).find(".noti-detail-container").height(0);
+                        var detailHeight = jQuery(this).find(".noti-detail").height();
+                        jQuery(this).find(".noti-detail-container").animate({height: detailHeight}, 200, function() {
+                            jQuery(this).removeClass("h0");
+                            lastNoti = jQuery(this).parent().attr("id");
+                        });
+                    }
+                    else {
+                        jQuery(this).find(".noti-detail-container").animate({height: 0}, 200);
+                    }
+                } else {
+                    var detailHeight = jQuery(this).find(".noti-detail").height();
+                    jQuery(this).find(".noti-detail-container").animate({height: detailHeight}, 200, function() {
+                        jQuery(this).removeClass("h0");
+                        lastNoti = jQuery(this).parent().attr("id");
+                    });
+                }
+            });
+            
+            //notification area out
+            jQuery("#notify-area").mouseout(function(){
+                jQuery(document).mouseup(function(){
+                    jQuery("#noti-dlg").addClass("display-none");
+                });
+            });
+            jQuery("#notify-area").hover(function(){
+                jQuery(this).attr("over",true);
+            });
+            jQuery("#notify-area").mouseleave(function(){
+                jQuery(this).attr("over",false);
+            });
+            
+            jQuery(document).mouseup(function(){
+                if(jQuery("#notify-area").attr("over")=="false"){
+                    jQuery("#noti-dlg").css("display","none");
+                }
+            });
+            
+            jQuery("#noti-dlg").hover(function(){
+                jQuery("#notify-area").attr("over","true");
+            });
+            jQuery("#noti-dlg").mouseleave(function(){
+                jQuery("#notify-area").attr("over","false");
+            });
+        });
+    </script>
+</html>
+

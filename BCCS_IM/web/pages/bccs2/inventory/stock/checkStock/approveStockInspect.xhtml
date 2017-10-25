@@ -1,0 +1,564 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:o="http://omnifaces.org/ui"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.track.browse.warehouse.inventory.']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.track.browse.warehouse.inventory.']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmApproveStock" styleClass="Container100">
+            <style type="text/css">
+                .quantityFinance input {
+                    width: 98%;
+                }
+            </style>
+            <p:outputPanel styleClass="Container100" id="pnlStockInspectInfo">
+                <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                    <p:messages id="msgSearchInit" showSummary="false" showDetail="true" closable="true"
+                                rendered="#{!approveStockInspectController.permission}"/>
+                    <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"
+                                rendered="#{approveStockInspectController.permission}"/>
+                </div>
+                <p:outputPanel styleClass="Container100">
+                    <p:focus for="frmApproveStock"/>
+                    <!--Start vung kiem kho hang thuc te-->
+                    <p:outputPanel id="pnInfoCheckStockInspect" rendered="#{approveStockInspectController.permission}"
+                                   styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="panelInforStockInspect" toggle="true"
+                                   titleHeader="#{lang['create.note.export.info.search']}"/>
+
+                        <div class="Container100 panelInforStockInspect" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <cbs:inputShop value="#{approveStockInspectController.shopInfoTag}"
+                                                   idComponent="inputStore"
+                                                   methodName="receiveShop"
+                                                   clearMethodName="clearShop"
+                                                   update="@this,@([id$=staffId]),@([id$=cobProductOfferType])"
+                                                   label="#{lang['mn.stock.utilities.unit.code']}"
+                                                   placeholder="#{lang['mn.stock.utilities.unit.code.placehoder']}"
+                                                   classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                   classDivInput="Container60 Responsive50 ui-fluid"
+                                                   require="false"
+                                                   forceSelection="false"
+                                                   limit="#{approveStockInspectController.limitAutoComplete}">
+
+                                    </cbs:inputShop>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <cbs:inputStaff value="#{approveStockInspectController.staffInfoTag}"
+                                                    id="staffId"
+                                                    methodName="receiveStaff"
+                                                    clearMethodName="clearStaff"
+                                                    update="@this,,@([id$=cobProductOfferType])"
+                                                    limit="#{approveStockInspectController.limitAutoComplete}"
+                                                    label="#{lang['mn.stock.limit.staff.code']}"
+                                                    require="false"
+                                                    forceSelection="false"
+                                                    classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                    classDivInput="Container60 Responsive50 ui-fluid"
+                                                    placeholder="#{lang['mn.stock.limit.staff.code.placeholder']}">
+                                    </cbs:inputStaff>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['common.status']}" for="cobState"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu filter="true" filterMatchMode="contains"
+                                                         id="cobState"
+                                                         value="#{approveStockInspectController.checkStockInspectDTO.stateId}">
+                                            <f:selectItem itemEscaped="true"
+                                                          itemValue=""
+                                                          itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                            <f:selectItems
+                                                    value="#{approveStockInspectController.listState}"
+                                                    itemLabelEscaped="true"
+                                                    var="state" itemValue="#{state.value}"
+                                                    itemLabel="#{state.name}"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="cobState"/>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="ContainerIndent">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['type.product']}" for="cobProductOfferType"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <p:commandButton id="cmdProductOfferType" styleClass="cmdProductOfferType"
+                                                     style="display: none;"
+                                                     action="#{approveStockInspectController.onChangeProductOfferType}"
+                                                     process="@this,@([id$=inputProductOfferType])"
+                                                     update="@this,@([id$=productOffer])">
+                                    </p:commandButton>
+                                    <p:inputText
+                                            value="#{approveStockInspectController.productOfferTypeId}"
+                                            styleClass="txtProductOfferType" style="display: none;"
+                                            id="inputProductOfferType"/>
+
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu filter="true" filterMatchMode="contains"
+                                                         id="cobProductOfferType"
+                                                         onchange="$('.txtProductOfferType').val(this.value);clickLinkByClass('cmdProductOfferType');"
+                                                         value="#{approveStockInspectController.checkStockInspectDTO.prodOfferTypeId}">
+                                            <f:selectItem itemEscaped="true"
+                                                          itemValue=""
+                                                          itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                            <f:selectItems
+                                                    value="#{approveStockInspectController.listProductOfferType}"
+                                                    itemLabelEscaped="true"
+                                                    var="productOfferType"
+                                                    itemValue="#{productOfferType.productOfferTypeId}"
+                                                    itemLabel="#{productOfferType.name}"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="cobProductOfferType"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <p:outputPanel styleClass="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel value="#{lang['export.order.name']}" for="productOffer"
+                                                       styleClass="lb-sentinel"/>
+                                    </p:outputPanel>
+
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:outputPanel styleClass="ui-fluid ui-relative" id="pnlProductOffer">
+                                            <p:outputLabel id="productOffer_hidden" style="display:none;"
+                                                           value="#{approveStockInspectController.productOfferingTotalDTO.itemLabel}"/>
+                                            <pe:keyFilter for="productOffer" preventPaste="false"/>
+                                            <p:autoComplete id="productOffer"
+                                                            value="#{approveStockInspectController.productOfferingTotalDTO}"
+                                                            forceSelection="true"
+                                                            completeMethod="#{approveStockInspectController.doChangeOffering}"
+                                                            placeholder="#{lang['export.stock.product.inputText.search']}"
+                                                            onfocus="this.setSelectionRange(0, this.value.length)"
+                                                            var="productOfferingTotalDTO"
+                                                            maxResults="#{approveStockInspectController.limitAutoComplete}"
+                                                            itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                            itemValue="#{productOfferingTotalDTO}"
+                                                            inputStyleClass="txtProductName#{index}"
+                                                            required="false"
+                                                            requiredMessage="#{lang['export.order.stock.inputText.require.msg']}"
+                                                            maxlength="100" scrollHeight="300"
+                                                            disabled="#{approveStockInspectController.disabledState()}">
+                                                <f:attribute name="index" value="#{index}"/>
+                                                <o:converter converterId="productOfferingConverter"
+                                                             list="#{approveStockInspectController.lsProductOfferingTotalDTO}"/>
+                                                <p:ajax event="itemSelect"
+                                                        listener="#{approveStockInspectController.doSelectProductOffering}"
+                                                        process="@([id$=pnlProductOffer])"
+                                                        update="@([id$=pnlProductOffer])"/>
+                                                <p:column headerText="#{lang['common.lb.code']}"><h:outputText
+                                                        escape="true"
+                                                        value="#{productOfferingTotalDTO.code}"/></p:column>
+                                                <p:column headerText="#{lang['common.lb.name']}"><h:outputText
+                                                        escape="true"
+                                                        value="#{productOfferingTotalDTO.name}"/></p:column>
+                                                <p:ajax event="query" global="false"/>
+                                            </p:autoComplete>
+                                            <p:commandLink id="btnProductOfferClear"
+                                                           styleClass="ui-link-right"
+                                                           update="productOffer_hidden, pnlProductOffer"
+                                                           actionListener="#{approveStockInspectController.clearProduct}"
+                                                           process="@this">
+                                                <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                            </p:commandLink>
+                                        </p:outputPanel>
+                                    </div>
+                                </div>
+
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 ui-fluid mg-left-15 pd-top-7">
+                                        <p:outputLabel value="#{lang['mn.stock.utilities.month.year']}"
+                                                       for="txtMonthYear"
+                                                       styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+
+                                        <script type="text/javascript ">
+                                            $(document).ready(function () {
+                                                $('.dateChecked').monthpicker({
+                                                    selectedYear: new Date().getFullYear(),
+                                                    startYear: 1900,
+                                                    finalYear: 2212
+                                                });
+                                            });
+                                        </script>
+                                        <p:inputText id="txtMonthYear"
+                                                     styleClass="dateChecked"
+                                                     maxlength="7"
+                                                     placeholder="#{lang['stock.report.date.placeholder']}"
+                                                     required="true"
+                                                     requiredMessage="#{lang['mn.stock.utilities.month.year.not.blank']}"
+                                                     value="#{approveStockInspectController.strDate}">
+
+                                        </p:inputText>
+                                        <p:message id="mgsMonth" for="txtMonthYear"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="Container100 TexAlCenter mg-top-0">
+                                <p:commandButton value="#{lang['common.button.search']}"
+                                                 process="@([id$=pnInfoCheckStockInspect])"
+                                                 action="#{approveStockInspectController.doSearchApproveStockInspect}"
+                                                 update="@form"/>
+                                <p:commandButton value="#{lang['common.reset']}" process="@this"
+                                                 styleClass="mg-left-5"
+                                                 action="#{approveStockInspectController.doResetApproveStock}"
+                                                 resetValues="true"
+                                                 update="@form"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung kiem kho hang thuc te-->
+                    <!--Start vung danh sach tim kiem-->
+                    <p:outputPanel id="pnlListStock" rendered="#{approveStockInspectController.permission}"
+                                   styleClass="ContainerIndent">
+                        <cbs:panel classForToggle="pnlListStock" toggle="true"
+                                   titleHeader="#{lang['mn.stock.track.browse.list']}"/>
+
+                        <div class="Container100 pnlListStock paddingTopBottom10">
+                            <div class="ContainerIndent mg-top-0">
+                                <p:dataTable
+                                        id="lstApproveStock"
+                                        var="approveStockInspect"
+                                        value="#{approveStockInspectController.lsApproveStockInspectDTOs}"
+                                        rowIndexVar="index"
+                                        rowKey="#{approveStockInspect.stockInspectId}"
+                                        selection="#{approveStockInspectController.lsApproveStockSelection}"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}">
+
+                                    <!--<p:column selectionMode="multiple" styleClass="width5 TexAlCenter">-->
+                                    <!--</p:column>-->
+                                    <p:column style="width:3%;text-align:center;#{approveStockInspect.diffColor}"
+                                              styleClass="testnao">
+                                        <f:facet name="header">
+                                            <p:selectBooleanCheckbox id="blockOpenAllLine"
+                                                                     value="#{approveStockInspectController.selectAll}"
+                                                                     disabled="#{approveStockInspectController.disableCheckAll()}">
+                                                <p:ajax event="change"
+                                                        listener="#{approveStockInspectController.selectAllRow}"
+                                                        process="@([id$=lstApproveStock])"
+                                                        update="@([id$=checkBoxId]),@([id$=lstApproveStock])"/>
+                                            </p:selectBooleanCheckbox>
+                                        </f:facet>
+                                        <p:selectBooleanCheckbox id="checkBoxId"
+                                                                 value="#{approveStockInspect.selected}"
+                                                                 disabled="#{approveStockInspect.approveStatus != 0}">
+                                            <p:ajax event="change"
+                                                    listener="#{approveStockInspectController.selectRow(approveStockInspect)}"
+                                                    process="@this"
+                                                    update="@([id$=blockOpenAllLine]),@([id$=lstApproveStock])"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+
+                                    <p:column sortBy="#{approveStockInspect.ownerName}"
+                                              style="#{approveStockInspect.diffColor}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.track.browse.unit']}"
+                                                          title="#{lang['mn.stock.track.browse.unit']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveStockInspect.ownerName}"
+                                                       styleClass="lb-sentinel-bold pd-top-4"
+                                                       title="#{approveStockInspect.ownerName}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveStockInspect.productCode}"
+                                              style="#{approveStockInspect.diffColor}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.utilities.code.stock']}"
+                                                          title="#{lang['mn.stock.utilities.code.stock']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveStockInspect.productCode}"
+                                                       styleClass=" lb-sentinel-bold pd-top-4"
+                                                       title="#{approveStockInspect.productCode}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveStockInspect.productName}"
+                                              style="#{approveStockInspect.diffColor}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['export.order.name']}"
+                                                          title="#{lang['export.order.name']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveStockInspect.productName}"
+                                                       styleClass="lb-sentinel-bold pd-top-4"
+                                                       title="#{approveStockInspect.productName}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveStockInspect.stateName}"
+                                              style="#{approveStockInspect.diffColor}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.track.status.stock']}"
+                                                          title="#{lang['mn.stock.track.status.stock']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveStockInspect.stateName}"
+                                                       styleClass="lb-sentinel-bold pd-top-4"
+                                                       title="#{approveStockInspect.stateName}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveStockInspect.quantitySystem}"
+                                              style="text-align:right;#{approveStockInspect.diffColor}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.track.number.sys']}"
+                                                          title="#{lang['mn.stock.track.number.sys']}"/>
+                                        </f:facet>
+                                        <h:outputLabel value="#{approveStockInspect.quantitySystem}"
+                                                       title="#{approveStockInspect.quantitySystem}"
+                                                       styleClass="lb-sentinel-bold pd-top-4"
+                                                       converter="currencyFormat">
+                                        </h:outputLabel>
+                                    </p:column>
+                                    <p:column sortBy="#{approveStockInspect.quantityReal}"
+                                              style="text-align:right;#{approveStockInspect.diffColor}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.track.number.browse']}"
+                                                          title="#{lang['mn.stock.track.number.browse']}"/>
+                                        </f:facet>
+                                        <h:outputLabel value="#{approveStockInspect.quantityReal}"
+                                                       title="#{approveStockInspect.quantityReal}"
+                                                       styleClass="lb-sentinel-bold pd-top-4"
+                                                       converter="currencyFormat">
+                                        </h:outputLabel>
+                                    </p:column>
+                                    <p:column sortBy="#{approveStockInspect.diff}"
+                                              style="text-align:right;#{approveStockInspect.diffColor}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.track.number.diff']}"
+                                                          title="#{lang['mn.stock.track.number.diff']}"/>
+                                        </f:facet>
+                                        <h:outputLabel value="#{approveStockInspect.diff}"
+                                                       title="#{approveStockInspect.diff}"
+                                                       styleClass="lb-sentinel-bold pd-top-4"
+                                                       converter="currencyFormat">
+                                        </h:outputLabel>
+                                    </p:column>
+                                    <p:column sortBy="#{approveStockInspect.quantityFinance}"
+                                              style="text-align:right;#{approveStockInspect.diffColor}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.balance.stock.request.amount.finance']}"
+                                                          title="#{lang['mn.balance.stock.request.amount.finance']}"/>
+                                        </f:facet>
+                                        <pe:inputNumber value="#{approveStockInspect.quantityFinance}"
+                                                        id="quantityFinance"
+                                                        decimalPlaces="0" maxValue="99999999999999999999"
+                                                        maxlength="20"
+                                                        disabled="#{approveStockInspect.approveStatus != 0}"
+                                                        styleClass="quantityFinance TexAlRight">
+                                            <p:ajax event="blur" process="@this"></p:ajax>
+                                        </pe:inputNumber>
+                                        <pe:keyFilter for="quantityFinance" regEx="/[0-9]+/i"
+                                                      preventPaste="true"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveStockInspect.issueDateTime}"
+                                              style="#{approveStockInspect.diffColor}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.track.number.browse.time']}"
+                                                          title="#{lang['mn.stock.track.number.browse.time']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveStockInspect.issueDateTime}"
+                                                       styleClass="lb-sentinel-bold pd-top-4"
+                                                       title="#{approveStockInspect.issueDateTime}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveStockInspect.requestUser}"
+                                              style="#{approveStockInspect.diffColor}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.track.number.browse.user']}"
+                                                          title="#{lang['mn.stock.track.number.browse.user']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveStockInspect.requestUser}"
+                                                       styleClass="lb-sentinel-bold pd-top-4"
+                                                       title="#{approveStockInspect.requestUser}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveStockInspect.approveUser}"
+                                              style="text-align:right;#{approveStockInspect.diffColor}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.track.number.browse.user2']}"
+                                                          title="#{lang['mn.stock.track.number.browse.user2']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveStockInspect.approveUser}"
+                                                       styleClass="lb-sentinel-bold pd-top-4"
+                                                       title="#{approveStockInspect.approveUser}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveStockInspect.approveStatusString}"
+                                              style="text-align:right;#{approveStockInspect.diffColor}"
+                                            >
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['common.status']}"
+                                                          title="#{lang['common.status']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveStockInspect.approveStatusString}"
+                                                       styleClass="lb-sentinel-bold pd-top-4"
+                                                       title="#{approveStockInspect.approveStatusString}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{approveStockInspect.approveNote}"
+                                              style="#{approveStockInspect.diffColor}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['common.reason']}"
+                                                          title="#{lang['common.reason']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{approveStockInspect.approveNote}"
+                                                       styleClass="lb-sentinel-bold pd-top-4"
+                                                       title="#{approveStockInspect.approveNote}"/>
+                                    </p:column>
+                                    <p:column styleClass="TexAlCenter"
+                                              style="text-align:right;#{approveStockInspect.diffColor}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['create.note.detail']}"
+                                                          title="#{lang['create.note.detail']}"/>
+                                        </f:facet>
+                                        <p:commandLink styleClass="fa icon-zoom-in Fs12 blue"
+                                                       rendered="#{!approveStockInspectController.detail || approveStockInspectController.selectedStockInspectId!= approveStockInspect.stockInspectId}"
+                                                       disabled="#{approveStockInspect.approveStatus == 2
+                                                       or approveStockInspect.quantityReal == 0}"
+                                                       process="@this"
+                                                       title="#{lang['common.view.detail']}"
+                                                       update="@form"
+                                                       actionListener="#{approveStockInspectController.doShowDetail(approveStockInspect.stockInspectId,approveStockInspect.productName,true)}"/>
+                                        <p:commandLink styleClass="fa icon-zoom-out Fs12"
+                                                       rendered="#{!(!approveStockInspectController.detail || approveStockInspectController.selectedStockInspectId != approveStockInspect.stockInspectId)}"
+                                                       style="color:red!important;"
+                                                       process="@this"
+                                                       title="#{lang['common.view.detail']}"
+                                                       update="@form"
+                                                       actionListener="#{approveStockInspectController.doShowDetail(approveStockInspect.stockInspectId,approveStockInspect.productName,false)}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung danh sach tim kiem-->
+                    <!--Start vung chi tiet mat hang-->
+                    <p:outputPanel id="pnlDetail" styleClass="ContainerIndent"
+                                   rendered="#{approveStockInspectController.detail}">
+                        <cbs:panel classForToggle="pnlDetail" toggle="true"
+                                   titleHeader="#{lang['mn.stock.track.browse.list.detail']}"/>
+
+                        <div class="Container100
+                         pnlDetail paddingTopBottom10">
+                            <div class="ContainerIndent mg-top-0">
+                                <p:dataTable
+                                        id="lstDetail"
+                                        var="stockInspectSys"
+                                        value="#{approveStockInspectController.lsStockInspectSysDTOs}"
+                                        rowIndexVar="index"
+                                        rowKey="#{stockInspectSys.stockInspectId}"
+                                        resizableColumns="true"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}">
+                                    <p:column headerText="#{lang['export.order.name.product']}"
+                                              sortBy="#{stockInspectSys.productOfferName}">
+                                        <p:outputLabel value="#{stockInspectSys.productOfferName}"
+                                                       title="#{stockInspectSys.productOfferName}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.fromSerial']}"
+                                              sortBy="#{stockInspectSys.fromSerial}">
+                                        <p:outputLabel value="#{stockInspectSys.fromSerial}"
+                                                       title="#{stockInspectSys.fromSerial}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['mn.stock.ToSerial']}"
+                                              sortBy="#{stockInspectSys.toSerial}">
+                                        <p:outputLabel value="#{stockInspectSys.toSerial}"
+                                                       title="#{stockInspectSys.toSerial}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.number']}" style="text-align:right"
+                                              sortBy="#{stockInspectSys.quantity}">
+                                        <h:outputLabel value="#{stockInspectSys.quantity}"
+                                                       title="#{stockInspectSys.quantity}"
+                                                       styleClass="lb-sentinel-bold"
+                                                       converter="currencyFormat">
+                                        </h:outputLabel>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung chi tiet mat hang-->
+                    <!--Start vung duyet chot kiem ke-->
+                    <p:outputPanel id="pnlInfoExportNote" styleClass="ContainerIndent"
+                                   rendered="#{approveStockInspectController.reasonRender}">
+                        <cbs:panel classForToggle="pnlInfoExportNote" toggle="true"
+                                   titleHeader="#{lang['export.order.view.approve.stock.inspect']}"/>
+
+                        <div class="Container100 pnlInfoExportNote">
+                            <div class="ContainerIndent mg-top-10">
+                                <div class="Container66 Responsive66">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                        <p:outputLabel for="reason"
+                                                       value="#{lang['common.reason']}" styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText
+                                                placeholder="#{lang['list.order.import.reason.import.placeholder']}"
+                                                value="#{approveStockInspectController.reason}"
+                                                id="reason"
+                                                maxlength="200">
+                                            <p:ajax event="change" process="@this"
+                                                    update="@this"
+                                                    listener="#{approveStockInspectController.reasonTrimChange}"/>
+                                        </p:inputText>
+
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                </div>
+                            </div>
+                            <div class="Container100 TexAlCenter">
+                                <cbs:confirmDialog
+                                        idComponent="btnApprove"
+                                        valueButton="#{lang['mn.stock.track.browse.warehouse.inventory.btn']}"
+                                        headerConfirm="#{lang['mn.stock.track.number.browse.hearder']}"
+                                        messageConfirm="#{lang['mn.stock.track.number.browse.hearder.confirm']}"
+                                        actionOK="#{approveStockInspectController.doApproveInspect}"
+                                        resetValueButton="false"
+                                        process="@form"
+                                        processOK="@this"
+                                        updateArea="@form"
+                                        focusCancel="false"
+                                        actionValidate="#{approveStockInspectController.doValidateApproveInspect}"
+                                        isButton="true"
+                                        />
+                                <cbs:confirmDialog
+                                        idComponent="btnCancel"
+                                        valueButton="#{lang['mn.stock.track.number.browse.not']}"
+                                        headerConfirm="#{lang['mn.stock.track.number.browse.not.header']}"
+                                        messageConfirm="#{lang['mn.stock.track.number.browse.not.header.confirm']}"
+                                        actionOK="#{approveStockInspectController.doCancelInspect}"
+                                        resetValueButton="false"
+                                        process="@form"
+                                        updateArea="@form"
+                                        focusCancel="false"
+                                        isButton="true"
+                                        actionValidate="#{approveStockInspectController.doValidateApproveInspect}"
+                                        styleClassButton="mg-left-5"
+                                        />
+
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung duyet chot kiem ke-->
+                </p:outputPanel>
+            </p:outputPanel>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

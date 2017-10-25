@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <composite:interface>
+        <composite:attribute name="toolbarId" required="true" shortDescription="id of toolbar, use for rerendering actions list"/>
+        <composite:attribute name="controller" required="true" shortDescription="controller java bean class which contains openDialog and returnAfterCloseDialog action"/>
+        <composite:attribute name="actionList" required="true" shortDescription="action list"/>
+        <composite:attribute name="updateArea" shortDescription="area selector to update after ajax is complete"/>
+        <composite:attribute name="style" shortDescription="css inline"/>
+        <composite:attribute name="styleClass" shortDescription="css class"/>
+
+    </composite:interface>
+    <composite:implementation>
+        <p:outputPanel id="actPanel" styleClass="cbs-toolbar #{cc.attrs.styleClass}" style="padding-top:13px;#{cc.attrs.style}">
+            <script type="text/javascript">
+                function reDoAction(className){
+                    className = "."+className;
+                    jQuery(className).click();
+                }
+            </script>
+            <style type="text/css">
+                .cbs-toolbar a{text-decoration: none;color:#16478e}
+                .cbs-toolbar a:hover{border-bottom:1px solid !important;}
+            </style>         
+            <ui:repeat value="#{cc.attrs.actionList}" var="act" varStatus="stt">
+                <p:commandLink actionListener="#{lookUpLazyController.doOpenDialogCommon(cc.attrs.controller,act.openDialogAction,act.dialogFileName)}"
+                               styleClass="float-left #{act.dialogFileName}" style="margin-right:10px;" process="@this"
+                               rendered="#{stt.index lt 9}">
+                    <p:ajax event="dialogReturn" listener="#{lookUpLazyController.doReturnOnCloseDialog}" update="#{cc.attrs.updateArea}"
+                            oncomplete="if(args.validationFailed){reDoAction('#{act.dialogFileName}');}">
+                    </p:ajax>
+                    <f:attribute name="targetController" value="#{cc.attrs.controller}"/>
+                    <f:attribute name="targetReturnAction" value="#{act.dialogReturnAction}"/>
+                    <f:param name="actionId" value="#{act.asActionId}"/>
+                    <span class="ui-icon cbs-icon float-left #{empty act.icon ? 'ui-icon-pencil' : act.icon}">
+                    </span>
+                    <span class="float-left" style="margin-top:4px;"><h:outputText value="#{act.name}" /></span>
+                </p:commandLink>
+                <p:commandLink id="moreActionLink" styleClass="float-left" style="margin-right:10px;padding:4px 4px 3px 4px;" process="@this" global="false"
+                               rendered="#{stt.index eq 9}">
+                    <div>
+                        <span class="float-left"><h:outputText value="#{lang['lb.more.action']}"/></span>
+                        <span class="ui-icon ui-icon-triangle-1-s float-left"></span>
+                        <div class="clear-both"></div>
+                    </div>
+                    <p:overlayPanel for="@parent">
+                        <ui:repeat value="#{cc.attrs.actionList}" var="act2" varStatus="stt2">
+                            <p:commandLink actionListener="#{lookUpLazyController.doOpenDialogCommon(cc.attrs.controller,act2.openDialogAction,act2.dialogFileName)}"
+                                           style="margin-right:10px;border-bottom:1px solid;margin-bottom:3px;" process="@this"
+                                           styleClass="float-left w100 #{act2.dialogFileName}" rendered="#{stt2.index gt 8}">
+                                <p:ajax event="dialogReturn" listener="#{lookUpLazyController.doReturnOnCloseDialog}" update="#{cc.attrs.updateArea}"
+                                        oncomplete="if(args.validationFailed){reDoAction('#{act2.dialogFileName}');}">
+                                </p:ajax>
+                                <f:attribute name="targetController" value="#{cc.attrs.controller}"/>
+                                <f:attribute name="targetReturnAction" value="#{act2.dialogReturnAction}"/>
+                                <f:param name="actionId" value="#{act2.asActionId}"/>
+                                <div>
+                                    <span class="ui-icon cbs-icon float-left #{empty act2.icon ? 'ui-icon-pencil' : act2.icon}">
+                                    </span>
+                                    <span class="float-left" style="margin-top:4px;"><h:outputText value="#{act2.name}" /></span>
+                                </div>
+                            </p:commandLink>
+                            <div class="clear-both"/>
+                        </ui:repeat>
+                    </p:overlayPanel>
+                </p:commandLink>
+            </ui:repeat>
+
+            <div class="clear-both"></div>
+        </p:outputPanel>
+    </composite:implementation>
+</html>
+

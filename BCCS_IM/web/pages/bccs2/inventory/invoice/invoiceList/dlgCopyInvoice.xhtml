@@ -1,0 +1,170 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:pe="http://primefaces.org/ui/extensions">
+    <h:form id="frmCopyInvoice" styleClass="Container100">
+        <p:outputPanel id="pnlCopyInvoice" styleClass="Container100">
+            <p:messages id="msgInvoiceAdd" closable="true" showDetail="true" showSummary="false"/>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container20 Responsive25 ui-fluid mg-left-15 pd-top-7">
+                    <p:outputLabel styleClass="lb-sentinel" for="selOnRaTypeInvoice"
+                                   value="#{lang['mn.invoice.select.invoiceType']}"/>
+                </div>
+                <div class="Container80 Responsive75 ui-fluid">
+                    <p:selectOneRadio id="selOnRaTypeInvoice"
+                                      value="#{invoiceListController.forEditInvoiceList.invoiceType}">
+                        <f:selectItems value="#{invoiceListController.listTypeInvoice}"
+                                       itemLabel="#{item.name}" var="item" itemValue="#{item.value}"/>
+                        <p:ajax event="change" process="@this"
+                                listener="#{invoiceListController.changeInvoiceType('1')}"
+                                update="@([id$=cobInvoiceIvnAdd]),@([id$=msgInvoiceList]),@([id$=pnlInvoiceTrans])"
+                                />
+                    </p:selectOneRadio>
+                </div>
+            </div>
+
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 ui-fluid pd-top-7 mg-left-15">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.invoice.invoiceType.typeInv']}"
+                                       for="cobInvoiceIvnAdd"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:selectOneMenu id="cobInvoiceIvnAdd" filter="true"
+                                         required="true"
+                                         requiredMessage="#{lang['invoce.invoiceList.input.invoice.not.input.inv']}"
+                                         value="#{invoiceListController.forEditInvoiceList.invoiceTypeId}">
+                            <f:selectItem itemLabel="#{lang['mn.invoice.invoiceSerial.select.temp']}"/>
+                            <f:selectItems value="#{invoiceListController.listInvoiceTypeDTOEdit}"
+                                           var="invoice" itemLabel="#{invoice.typeInv} - #{invoice.invoiceName}"
+                                           itemLabelEscaped="true"
+                                           itemValue="#{invoice.invoiceTypeId}"/>
+                            <p:ajax event="change" process="@this"
+                                    update="@([id$=txtSignSerialAdd]),@([id$=msgInvoiceAdd])"
+                                    listener="#{invoiceListController.changeTypeInv(invoiceListController.workMode)}"/>
+                        </p:selectOneMenu>
+                        <p:message for="cobInvoiceIvnAdd"/>
+                    </div>
+                </div>
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 pd-top-7 mg-left-15">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['sign.serial']}"
+                                       for="txtSignSerialAdd"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:selectOneMenu value="#{invoiceListController.forEditInvoiceList.invoiceSerialId}"
+                                         filter="true" required="true"
+                                         requiredMessage="#{lang['invoce.invoiceList.input.invoice.not.input.serial.no']}"
+                                         id="txtSignSerialAdd">
+                            <f:selectItem itemLabel="#{lang['mn.invoice.serial.not.select.serial.no']}"/>
+                            <f:selectItems value="#{invoiceListController.listInvoiceSerialEdit}"
+                                           itemLabelEscaped="true"
+                                           itemValue="#{invoiceSerial.invoiceSerialId}"
+                                           itemLabel="#{invoiceSerial.serialNo}"
+                                           var="invoiceSerial"/>
+                            <p:ajax event="change" process="@this"
+                                    listener="#{invoiceListController.changeInvoiceSerialNo(invoiceListController.workMode)}"
+                                    update="@this,@([id$=msgInvoiceAdd]),@([id$=pnlInvoiceTrans])"/>
+                            <p:message for="txtSignSerialAdd"/>
+                        </p:selectOneMenu>
+                        <p:message for="txtSignSerialAdd"/>
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 ui-fluid mg-left-15 mg-top-5">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['no.invoice.start']}"
+                                       for="txtInvoiceStartAdd"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:inputText id="txtInvoiceStartAdd" required="true"
+                                     requiredMessage="#{lang['invoce.invoiceList.not.enterfrom.serial']}"
+                                     converterMessage="#{lang['invoce.invoiceList.validateFrom']}"
+                                     maxlength="10"
+                                     placeholder="#{lang['invoce.invoiceList.input.from.invoice']}"
+                                     value="#{invoiceListController.forEditInvoiceList.fromInvoice}">
+                            <!--listener="#{invoiceListController.checkNoInvoice}"-->
+                            <p:ajax event="change" process="@this"
+                                    update="@([id$=msgInvoiceAdd]),@this"/>
+                            <pe:keyFilter for="txtInvoiceStartAdd"
+                                          regEx="/[0-9]/i" preventPaste="false"/>
+                        </p:inputText>
+                        <p:message for="txtInvoiceStartAdd"/>
+                    </div>
+                </div>
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 ui-fluid mg-top-5 mg-left-15">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['no.invoice.end']}"
+                                       for="txtInvoiceEndAdd"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:inputText id="txtInvoiceEndAdd" styleClass="invoiceEnd#{invoiceListController.workMode}"
+                                     required="true" requiredMessage="#{lang['invoce.invoiceList.not.enterend.serial']}"
+                                     converterMessage="#{lang['invoce.invoiceList.validateEnd']}"
+                                     maxlength="10"
+                                     placeholder="#{lang['invoce.invoiceList.input.to.invoice']}"
+                                     value="#{invoiceListController.forEditInvoiceList.toInvoice}">
+                            <pe:keyFilter for="txtInvoiceEndAdd" regEx="/[0-9]/i" preventPaste="false"/>
+                            <p:ajax event="change" process="@this"
+                                    update="@([id$=msgInvoiceAdd]),@this"/>
+                        </p:inputText>
+                        <p:message for="txtInvoiceEndAdd"/>
+                    </div>
+                </div>
+
+            </div>
+            <div class="ContainerIndent mg-top-0">
+                <div class="Container50 Responsive50">
+                    <div class="Container40 Responsive50 ui-fluid mg-top-5 mg-left-15">
+                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['unit.uses']}"/>
+                    </div>
+                    <div class="Container60 Responsive ui-fluid">
+                        <p:inputText value="#{invoiceListController.forEditInvoiceList.shopName}"
+                                     disabled="true"
+                                     title="#{invoiceListController.forEditInvoiceList.shopName}"/>
+                    </div>
+                </div>
+            </div>
+            <p:outputPanel styleClass="ContainerIndent" id="pnlInvoiceTrans">
+                <div class="Container100">
+                    <div class="Container20 Responsive25 ui-fluid mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="invoiceTrans"
+                                       rendered="#{invoiceListController.forEditInvoiceList.invoiceType == 1}"
+                                       value="#{lang['mn.invoice.invoiceType.invoceTrans.type']}"/>
+                    </div>
+                    <div class="Container80 Responsive75 ui-fluid">
+                        <p:selectBooleanCheckbox id="invoiceTrans"
+                                                 rendered="#{invoiceListController.forEditInvoiceList.invoiceType == 1}"
+                                                 disabled="true"
+                                                 styleClass="mg-left-5"
+                                                 value="#{invoiceListController.noStock}">
+                        </p:selectBooleanCheckbox>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <div class="Container100 TexAlCenter marT10">
+                <p:outputPanel styleClass="Container100">
+                    <cbs:confirmDialog
+                            idComponent="btnConfirmAddAndClose"
+                            valueButton="#{lang['common.add']}"
+                            headerConfirm="#{lang['mn.stock.limit.financeType.header.add']}"
+                            messageConfirm="#{lang['common.msg.add.confirm']}"
+                            actionOK="#{invoiceListController.addInvoiceList}"
+                            resetValueButton="false"
+                            process="@([id$=frmCopyInvoice])"
+                            updateArea="@([id$=frmCopyInvoice])"
+                            oncompleteOK="if(!args.validationFailed) {PF('dlgCopyInvoice').hide();}"
+                            actionValidate="#{invoiceListController.validatePreAdd}"
+                            focusCancel="false"
+                            isButton="true"
+                            />
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

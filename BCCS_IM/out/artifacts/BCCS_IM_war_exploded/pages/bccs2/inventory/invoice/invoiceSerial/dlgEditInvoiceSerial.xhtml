@@ -1,0 +1,134 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:form id="frmEditInvoiceSerial" styleClass="Container100">
+        <p:outputPanel id="pnlEditInvoiceSerial" styleClass="Container100">
+            <div class="Container100 marginTopBottom10">
+                <div class="ContainerIndent mg-top-0">
+                    <p:messages id="msgeditSerial" showDetail="true" showSummary="false" closable="true"/>
+                </div>
+                <div class="ContainerIndent mg-top-0">
+                    <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel" for="selOnRaTypeInvoice"
+                                       value="#{lang['mn.invoice.select.invoiceType']}"/>
+                    </div>
+                    <div class="Container80 Responsive75 ui-fluid">
+                        <p:selectOneRadio id="selOnRaTypeInvoice"
+                                          value="#{invoiceSerialController.invoiceSerialDTO.invoiceType}">
+                            <f:selectItems value="#{invoiceSerialController.listInvoiceType}"
+                                           itemLabel="#{item.name}" var="item" itemValue="#{item.value}"/>
+                            <p:ajax event="change" process="@this"
+                                    listener="#{invoiceSerialController.changeInvoiceType}"
+                                    update="@this,@([id$=pnlEditInvoiceSerial])"/>
+                        </p:selectOneRadio>
+                    </div>
+                </div>
+
+                <div class="ContainerIndent mg-top-0">
+                    <div class="Container50 Responsive50">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel" for="cobInvoiceType"
+                                           value="#{lang['mn.invoice.invoiceType.typeInv']}"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:selectOneMenu id="cobInvoiceType" filter="true"
+                                             required="true"
+                                             requiredMessage="#{lang['mn.invoice.serial.not.invoice.text']}"
+                                             value="#{invoiceSerialController.invoiceSerialDTO.invoiceTypeId}">
+                                <f:selectItem itemValue="" itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                <f:selectItems value="#{invoiceSerialController.invoiceTypeList}"
+                                               var="item" itemValue="#{item.invoiceTypeId}"
+                                               itemLabel="#{item.typeInv} - #{item.invoiceName}"
+                                               itemLabelEscaped="true"/>
+                            </p:selectOneMenu>
+                            <p:message for="cobInvoiceType"/>
+                        </div>
+                    </div>
+                    <div class="Container50 Responsive50">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel" for="txtAddSerialNo"
+                                           value="#{lang['sign.serial']}"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:inputText id="txtAddSerialNo"
+                                         placeholder="#{lang['mn.invoice.invoiceSerial.input.code']}"
+                                         maxlength="10" required="true"
+                                         requiredMessage="#{lang['mn.invoice.serial.not.invoice.no']}"
+                                         title="#{invoiceSerialController.invoiceSerialDTO.serialNo}"
+                                         value="#{invoiceSerialController.invoiceSerialDTO.serialNo}">
+                            </p:inputText>
+                            <p:message for="txtAddSerialNo"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ContainerIndent mg-top-0">
+                    <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['mn.invoice.invoiceSerial.description']}"/>
+                    </div>
+                    <div class="Container80 Responsive75 ui-fluid">
+                        <p:inputText placeholder="#{lang['mn.invoice.invoiceSerial.description.input']}"
+                                     maxlength="500"
+                                     value="#{invoiceSerialController.invoiceSerialDTO.description}"/>
+                    </div>
+                </div>
+                <div class="ContainerIndent mg-top-0">
+                    <div class="Container50 Responsive50">
+                        <cbs:inputShop value="#{invoiceSerialController.shopInfoTag}"
+                                       idComponent="branchId"
+                                       require="true"
+                                       methodName="receiveShop"
+                                       requiredMessage="#{lang['mn.invoice.serial.not.shop']}"
+                                       update="@this"
+                                       label="#{lang['mn.invoice.unit']}"
+                                       classDivLabel="Container40 pd-top-4 Responsive50 mg-left-15"
+                                       placeholder="#{lang['mn.invoice.unit.placeholder']}"
+                                       forceSelection="false"
+                                       clearMethodName="clearCurrentShop"
+                                       classDivInput="Container60 Responsive50 sProduct ui-fluid">
+                        </cbs:inputShop>
+                    </div>
+                </div>
+                <p:outputPanel styleClass="ContainerIndent">
+                    <div class="Container100">
+                        <div class="Container20 Responsive25 ui-fluid mg-left-15 pd-top-7">
+                            <p:outputLabel styleClass="lb-sentinel" for="invoiceTrans"
+                                           rendered="#{invoiceSerialController.showInvoiceTransType}"
+                                           value="#{lang['mn.invoice.invoiceType.invoceTrans']}"/>
+                        </div>
+                        <div class="Container80 Responsive75 ui-fluid">
+                            <p:selectBooleanCheckbox id="invoiceTrans"
+                                                     styleClass="mg-left-5"
+                                                     rendered="#{invoiceSerialController.showInvoiceTransType}"
+                                                     value="#{invoiceSerialController.noStock}">
+                            </p:selectBooleanCheckbox>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <div class="Container100 TexAlCenter ">
+                    <cbs:confirmDialog
+                            idComponent="btnConfirmAdd"
+                            valueButton="#{lang['common.edit']}"
+                            headerConfirm="#{lang['mn.invoice.serial.header.edit']}"
+                            messageConfirm="#{lang['common.msg.edit.serial.invoice.confirm']}"
+                            actionOK="#{invoiceSerialController.editInvoiceSerial}"
+                            resetValueButton="true"
+                            process="@([id$=frmEditInvoiceSerial])"
+                            updateArea="@([id$=frmEditInvoiceSerial])"
+                            processOK="@([id$=frmEditInvoiceSerial])"
+                            updateOK="@([id$=frmInvoiceSerial]),@([id$=frmEditInvoiceSerial])"
+                            oncompleteOK="if(!args.validationFailed) {PF('dlgEditInvoiceSerial').hide();}"
+                            actionValidate="#{invoiceSerialController.validateEdit}"
+                            focusCancel="false"
+                            isButton="true"
+                            />
+                </div>
+            </div>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

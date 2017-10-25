@@ -1,0 +1,427 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.staff.create.export.order']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.staff.create.export.order']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmStaffOrder">
+            <p:tabView id="numberTabView" dynamic="true" styleClass="abc"
+                       tabindex="#{staffExportOrderController.tabIndex}">
+                <p:ajax event="tabChange" listener="#{staffExportOrderController.onTabChange}" resetValues="false"
+                        update="@([id$=msgExport]), @([id$=tab1]), @([id$=tab2])"/>
+                <p:tab id="tabInput" title="#{lang['im.number.assign.status.by.normal']}">
+                    <p:outputPanel id="tab1" styleClass="Container100">
+                        <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                            <p:messages id="msgExport" showDetail="true" showSummary="false" closable="true"/>
+                        </div>
+                        <p:outputPanel id="pnStaffExportOrder" styleClass="Container100"
+                                       rendered="#{staffExportOrderController.tabIndex eq 0}">
+                            <p:focus for="pnStaffExportOrder"/>
+                            <!--Start vung thong tin view lenh xuat-->
+                            <cbs:inputOrderStaff id="exportForStaff"
+                                                 title="#{lang['export.order.view.export']}"
+                                                 mode="1"
+                                                 methodNameOffice="receiveWriteOffice"
+                                                 methodNameReceiveStaff="doReceiveShop"
+                                                 methodNameAutoOrderNote="receiveAutoOrderNote"
+                                                 param="receiveStaff"
+                                                 value="#{staffExportOrderController.orderStaffTag}">
+                            </cbs:inputOrderStaff>
+                            <!--<p:remoteCommand process="@this"
+                                             update="@form"
+                                             name="updateControls"/>-->
+                            <!--End vung thong tin view lenh xuat-->
+
+                            <!--Start vung thong tin phieu xuat-->
+                            <p:outputPanel id="pnlInfoExportNote" styleClass="Container">
+                                <p:outputPanel styleClass="ContainerIndent mg-top-0"
+                                               rendered="#{staffExportOrderController.showAutoOrderNote}">
+                                    <cbs:panel classForToggle="pnViewExportField" toggle="true"
+                                               titleHeader="#{lang['export.order.view.export.field']}"/>
+
+                                    <div class="ContainerIndent pnViewExportField">
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                                <p:outputLabel for="ipExportCodeField"
+                                                               value="#{lang['export.order.code.field']}"
+                                                               rendered="#{!staffExportOrderController.shopVTT}"/>
+                                                <p:outputLabel value="#{lang['export.order.code.field']}"
+                                                               rendered="#{staffExportOrderController.shopVTT}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 #{staffExportOrderController.shopVTT ? 'mg-left-15 pd-top-4' : 'ui-fluid'} ">
+                                                <p:outputLabel value="#{staffExportOrderController.actionCodeNote}"
+                                                               styleClass="lb-sentinel-bold break-all"
+                                                               rendered="#{staffExportOrderController.shopVTT}"/>
+                                                <p:inputText placeholder="#{lang['export.order.code.field.placehoder']}"
+                                                             value="#{staffExportOrderController.actionCodeNote}"
+                                                             id="ipExportCodeField" required="true" maxlength="50"
+                                                             requiredMessage="#{lang['export.order.transCode.require.msg']}"
+                                                             validatorMessage="#{lang['export.order.transCode.error.format.msg']}"
+                                                             rendered="#{!staffExportOrderController.shopVTT}"/>
+                                                <pe:keyFilter for="ipExportCodeField" regEx="/[0-9a-zA-Z_-]{1,50}/i"
+                                                              preventPaste="false"/>
+                                                <p:message for="ipExportCodeField"/>
+                                            </div>
+                                        </div>
+                                        <div class="Container66 Responsive"></div>
+                                    </div>
+                                </p:outputPanel>
+                            </p:outputPanel>
+                            <!--End vung thong tin phieu xuat-->
+
+                            <!--Start vung thong tin ky view office-->
+                            <p:outputPanel id="pnExportOffice" styleClass="Container100">
+                                <p:outputPanel styleClass="Container100"
+                                               rendered="#{staffExportOrderController.writeOffice}">
+                                    <cbs:inputSignOffice value="#{staffExportOrderController.writeOfficeTag}"
+                                                         title="#{lang['export.order.view.office']}"
+                                                         idComponent="writeOfficeExport"/>
+                                </p:outputPanel>
+                            </p:outputPanel>
+                            <!--End vung thong tin view lenh xuat-->
+                            <!--Start danh sach han muc-->
+                            <p:outputPanel id="pnStockDebit" styleClass="Container100">
+                                <p:outputPanel styleClass="Container100"
+                                               rendered="#{staffExportOrderController.showStockDebit}">
+                                    <ui:include src="../toUnderlying/stockDebit.xhtml">
+                                        <ui:param name="stockDebitDTO"
+                                                  value="#{staffExportOrderController.stockDebitDTO}"></ui:param>
+                                    </ui:include>
+                                </p:outputPanel>
+                            </p:outputPanel>
+                            <!--End danh sach han muc-->
+                            <!--Start vung thong tin Danh sach hang hoa-->
+                            <div class="Container100">
+                                <cbs:inputListProduct idComponent="listProduct" id="listProduct" idMessage="msgExport"
+                                                      value="#{staffExportOrderController.listProductTag}"/>
+                            </div>
+                            <!--End vung thong tin danh sach hang hoa-->
+                            <!--Start Vung data button-->
+                            <p:outputPanel styleClass="Container100" id="pnlDataButton">
+                                <div class="ContainerIndent TexAlCenter">
+                                    <cbs:confirmDialog
+                                            idComponent="submitOrder"
+                                            id="createOrder"
+                                            valueButton="#{!staffExportOrderController.showAutoOrderNote ? lang['export.order.btn.submit'] : lang['export.order.btn.submit.field']}(F8)"
+                                            headerConfirm="#{lang['export.order.btn.submit.header.confirm']}"
+                                            messageConfirm="#{lang['export.order.btn.submit.header.confirm.msg']}"
+                                            actionOK="#{staffExportOrderController.doCreateStaffExportOrder}"
+                                            resetValueButton="true"
+                                            process="@form"
+                                            updateArea="@([id$=frmStaffOrder])"
+                                            updateOK="@([id$=frmStaffOrder])"
+                                            actionValidate="#{staffExportOrderController.doValidateStaffExportOrder}"
+                                            focusCancel="false"
+                                            oncompleteOK=""
+                                            isButton="true"/>
+                                    <p:commandButton value="#{lang['export.order.btn.print']}" styleClass="mg-left-5"
+                                                     process="@this"
+                                                     update="@form"
+                                                     immediate="true"
+                                                     disabled="#{!staffExportOrderController.canPrint}"
+                                                     ajax="false">
+                                        <p:fileDownload value="#{staffExportOrderController.printStockTransDetail()}"/>
+                                    </p:commandButton>
+                                    <p:commandButton value="#{lang['export.order.btn.print.field']}"
+                                                     styleClass="mg-left-5"
+                                                     rendered="#{staffExportOrderController.showAutoOrderNote}"
+                                                     process="@this"
+                                                     update="@form"
+                                                     immediate="true"
+                                                     disabled="#{!staffExportOrderController.canPrint}"
+                                                     ajax="false">
+                                        <p:fileDownload
+                                                value="#{staffExportOrderController.printStockTransDetailNote()}"/>
+                                    </p:commandButton>
+                                    <p:commandButton value="#{lang['common.reset']}" process="@this"
+                                                     styleClass="mg-left-5"
+                                                     oncomplete="location.reload(true)"
+                                                     action="#{staffExportOrderController.doReset}"
+                                                     immediate="true"
+                                                     resetValues="true"
+                                                     update="@form"/>
+                                </div>
+                            </p:outputPanel>
+                            <!--End Vung data button-->
+                        </p:outputPanel>
+                        <script type="text/javascript">
+                            document.getElementById('frmStaffOrder').onkeypress = function (event) {
+                                if (event.keyCode == 119 &amp;&amp; document.getElementById('frmStaffOrder:numberTabView:createOrder:submitOrderbtn') != null) {
+                                    document.getElementById("frmStaffOrder:numberTabView:createOrder:submitOrderbtn").click();
+                                    return false;
+                                }
+                                if (event.keyCode == 120 &amp;&amp; document.getElementById('frmStaffOrder:numberTabView:listProduct:listProductAddNew') != null) {
+                                    document.getElementById("frmStaffOrder:numberTabView:listProduct:listProductAddNew").click();
+                                    return false;
+                                }
+                            }
+                        </script>
+                    </p:outputPanel>
+                </p:tab>
+                <p:tab id="tabFile" title="#{lang['im.number.assign.status.by.file']}">
+                    <p:outputPanel id="tab2" styleClass="Container100">
+                        <div class="ContainerIndent mg-top-10 mg-bottom-0 msgExportFile ">
+                            <p:messages id="msgExportFile" showSummary="false" showDetail="true" closable="true"/>
+                        </div>
+                        <p:outputPanel id="pnUnderExportOrderFile" styleClass="Container100"
+                                       rendered="#{staffExportOrderController.tabIndex eq 1}">
+                            <p:outputPanel id="pnCreateField" styleClass="ContainerIndent mg-top-0">
+                                <p:focus for="upLoadFile"/>
+                                <cbs:panel classForToggle="panelCreateField" toggle="true"
+                                           titleHeader="#{lang['mn.isdn.manage.create.field.export.stock.by.file']}"/>
+
+                                <div class="Container panelCreateField">
+                                    <div class="ContainerIndent">
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 mg-left-15 Responsive50">
+                                                <p:outputLabel styleClass="lb-sentinel" for="logicstic"
+                                                               value="#{lang['export.order.logicstics']}"
+                                                               rendered="#{staffExportOrderController.showLogistic}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:selectBooleanCheckbox styleClass="mg-left-5" id="logicstic"
+                                                                         value="#{staffExportOrderController.tranLogistics}"
+                                                                         disabled="#{staffExportOrderController.autoCreateNoteFile}"
+                                                                         rendered="#{staffExportOrderController.showLogistic}"/>
+                                            </div>
+                                        </div>
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 mg-left-15 Responsive50">
+                                                <p:outputLabel styleClass="lb-sentinel" for="tranfer"
+                                                               value="#{lang['export.order.tranfer']}"
+                                                               rendered="#{staffExportOrderController.showTransfer}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:selectBooleanCheckbox styleClass="mg-left-5" id="tranfer"
+                                                                         value="#{staffExportOrderController.tranfer}"
+                                                                         rendered="#{staffExportOrderController.showTransfer}"/>
+                                            </div>
+                                        </div>
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 mg-left-15 Responsive50">
+                                                <p:outputLabel styleClass="lb-sentinel" for="ipWriteOfficeFile"
+                                                               value="#{lang['export.order.write.office']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:selectBooleanCheckbox id="ipWriteOfficeFile" styleClass="mg-left-5"
+                                                                         value="#{staffExportOrderController.writeOfficeFile}">
+                                                    <p:ajax event="change" process="@this"
+                                                            update="@([id$=pnExportOfficeFile])"></p:ajax>
+                                                </p:selectBooleanCheckbox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ContainerIndent">
+                                        <p:outputPanel styleClass="Container33 Responsive" id="divFileName">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7"
+                                                 style="margin-top: 20px">
+                                                <p:outputLabel styleClass="lb-sentinel" for="outputAttachFile"
+                                                               value="#{lang['attach.file']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid" style="margin-top: 20px">
+                                                <p:inputText id="outputAttachFile" styleClass="outputAttachFile"
+                                                             maxlength="100"
+                                                             placeholder="#{lang['search.number.range.input.fileName']}"
+                                                             value="#{staffExportOrderController.attachFileName}"
+                                                             readonly="true"/>
+                                            </div>
+                                        </p:outputPanel>
+
+                                        <div class="Container33 Responsive">
+                                            <p:fileUpload id="upLoadFile"
+                                                          styleClass="Fleft"
+                                                          label="#{lang['select.file']}"
+                                                          invalidFileMessage="#{lang['mn.stock.limit.importFile.msg.format']}"
+                                                          requiredMessage="#{lang['mn.stock.limit.attachFile.msg.require']}"
+                                                          invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                          fileLimitMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                          update="@([id$=divFileName]),@([id$=pnViewFile]), @([id$=divDownloadFile]),@([id$=msgExportFile])"
+                                                          dragDropSupport="true" required="true" mode="advanced"
+                                                          auto="true"
+                                                          process="@this"
+                                                          allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                                          sizeLimit="5242880"
+                                                          value="#{staffExportOrderController.uploadedFile}"
+                                                          fileUploadListener="#{staffExportOrderController.doFileUploadAction}">
+                                            </p:fileUpload>
+                                        </div>
+                                        <p:outputPanel id="divDownloadFile" class="Container33">
+                                            <p:commandLink
+                                                    id="downloadTemplateBtn"
+                                                    value="#{lang['mn.stock.status.isdn.update.status.file_template']}"
+                                                    title="#{lang['create.note.download.file.title']}"
+                                                    ajax="false"
+                                                    immediate="true">
+                                                <p:fileDownload
+                                                        value="#{staffExportOrderController.downloadFileTemplate()}"/>
+                                            </p:commandLink>
+                                            <p:commandLink
+                                                    id="downloadErrBtn" styleClass="mg-left-5" process="@this"
+                                                    value="#{lang['mn.stock.status.isdn.update.status.file_error']}"
+                                                    rendered="#{staffExportOrderController.hasFileError}"
+                                                    title="#{lang['create.note.download.file.title']}"
+                                                    ajax="false"
+                                                    immediate="true" style="color: #e90c45!important;">
+                                                <p:fileDownload
+                                                        value="#{staffExportOrderController.downloadFileError()}"/>
+                                            </p:commandLink>
+                                            <p:commandLink
+                                                    styleClass="mg-left-5" style="color: #e90c45!important;"
+                                                    value="#{lang['mn.stock.status.isdn.downfile_result']}"
+                                                    rendered="#{staffExportOrderController.showDownResult}"
+                                                    title="#{lang['create.note.download.file.title']}"
+                                                    ajax="false"
+                                                    immediate="true">
+                                                <p:fileDownload
+                                                        value="#{staffExportOrderController.downloadFileCreateOrder()}"/>
+                                            </p:commandLink>
+                                        </p:outputPanel>
+                                    </div>
+
+                                    <div class="ContainerIndent">
+                                        <c:if test="#{staffExportOrderController.roleCheckShowAutoOrderNote}">
+                                            <div class="Container33 Responsive">
+                                                <div class="Container40 mg-left-15 Responsive50">
+                                                    <p:outputLabel styleClass="lb-sentinel" for="autoNote"
+                                                                   value="#{lang['export.order.and.note.auto']}"/>
+                                                </div>
+                                                <div class="Container60 Responsive50 ui-fluid">
+                                                    <p:selectBooleanCheckbox id="autoNote" styleClass="mg-left-5"
+                                                                             value="#{staffExportOrderController.autoCreateNoteFile}">
+                                                        <p:ajax event="change" process="@this"
+                                                                listener="#{staffExportOrderController.doChangeAutoOrderNotefile()}"/>
+                                                    </p:selectBooleanCheckbox>
+                                                </div>
+
+                                            </div>
+                                        </c:if>
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 mg-left-15 Responsive50">
+                                                <p:outputLabel styleClass="lb-sentinel" for="ipERP"
+                                                               value="#{lang['export.order.not.synchronize.ERP']}" rendered="#{staffExportOrderController.showCheckErp}" />
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:selectBooleanCheckbox id="ipERP" styleClass="mg-left-5" value="#{staffExportOrderController.checkErp}" rendered="#{staffExportOrderController.showCheckErp}" />
+                                            </div>
+                                        </div>
+                                        <c:if test="#{staffExportOrderController.roleCheckShowAutoOrderNote}">
+                                            <div class="Container33 Responsive"></div>
+                                        </c:if>
+                                        <c:if test="#{!staffExportOrderController.roleCheckShowAutoOrderNote}">
+                                            <div class="Container66 Responsive"></div>
+                                        </c:if>
+                                    </div>
+
+                                    <p:outputPanel styleClass="ContainerIndent TexAlCenter" id="pnViewFile">
+                                        <p:commandButton value="#{lang['see.previous']}"
+                                                         process="@this, @([id$=logicstic]),@([id$=tranfer]),@([id$=ipERP])"
+                                                         update="@this, @([id$=pnLstField]),@([id$=pnUnderExportOrderFile]),@([id$=msgExportFile])"
+                                                         disabled="#{!staffExportOrderController.selectedFile}"
+                                                         actionListener="#{staffExportOrderController.doPreviewField}"/>
+                                        <cbs:confirmDialog
+                                                idComponent="submitOrderFile"
+                                                id="submitOrderFile"
+                                                valueButton="#{!staffExportOrderController.showAutoOrderNote ? lang['export.order.btn.submit'] : lang['export.order.btn.submit.field']}(F8)"
+                                                headerConfirm="#{lang['export.order.btn.submit.header.confirm']}"
+                                                messageConfirm="#{lang['export.order.btn.submit.header.confirm.msg']}"
+                                                actionOK="#{staffExportOrderController.doCreateStaffExportOrderByFile}"
+                                                disableButton="#{!staffExportOrderController.showCreateOrder}"
+                                                resetValueButton="false"
+                                                styleClassButton="mg-left-5"
+                                                process="@this,@([id$=pnExportOfficeFile])"
+                                                updateArea="@this,@([id$=pnExportOfficeFile])"
+                                                updateOK="@form"
+                                                actionValidate="#{staffExportOrderController.doValdiateStaffExportOrderByFile}"
+                                                focusCancel="false"
+                                                oncompleteOK=""
+                                                isButton="true"
+                                                />
+                                    </p:outputPanel>
+                                </div>
+                            </p:outputPanel>
+                            <p:outputPanel id="pnExportOfficeFile" styleClass="Container">
+                                <p:outputPanel styleClass="Container"
+                                               rendered="#{staffExportOrderController.writeOfficeFile}">
+                                    <cbs:inputSignOffice value="#{staffExportOrderController.writeOfficeTagFile}"
+                                                         id="writeOfficeExportFile"
+                                                         title="#{lang['export.order.view.office']}"
+                                                         idComponent="writeOfficeExportFile"/>
+                                </p:outputPanel>
+                            </p:outputPanel>
+                            <p:outputPanel id="pnLstField" styleClass="ContainerIndent mg-top-0">
+                                <cbs:panel classForToggle="panelListField" toggle="true"
+                                           titleHeader="#{lang['create.note.list.order.export']}"/>
+
+                                <div class="Container panelListField" style="margin-bottom: 10px;margin-top: 5px;">
+
+                                    <div class="ContainerIndent">
+                                        <p:dataTable
+                                                id="lstListNeedDelete"
+                                                var="item"
+                                                rowKey="#{item.rowKey}"
+                                                rowIndexVar="index"
+                                                resizableColumns="true"
+                                                paginator="#{lang['common.paging.paginator']}"
+                                                rows="#{lang['common.paging.rows.default']}"
+                                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                                emptyMessage=""
+                                                value="#{staffExportOrderController.fieldExportFileDTOs}">
+                                            <p:column headerText="#{lang['common.stt']}" style="width: 8%">
+                                                <p:outputLabel value="#{index + 1}"/>
+                                            </p:column>
+                                            <p:column headerText="#{lang['export.order.code']}" style="width: 15%"
+                                                      sortBy="#{item.actionCode}">
+                                                <p:outputLabel value="#{item.actionCode}" title="#{item.actionCode}"
+                                                               style="text-align: left"/>
+                                            </p:column>
+                                            <p:column headerText="#{lang['create.order.file.code.export.warehouse']}"
+                                                      style="width: 15%" sortBy="#{item.fromOwnerCode}">
+                                                <p:outputLabel value="#{item.fromOwnerCode}"
+                                                               title="#{item.fromOwnerCode}" style="text-align: left"/>
+                                            </p:column>
+                                            <p:column headerText="#{lang['create.order.file.code.import.warehouse']}"
+                                                      style="width: 15%" sortBy="#{item.toOwnerCode}">
+                                                <p:outputLabel value="#{item.toOwnerCode}" title="#{item.toOwnerCode}"
+                                                               style="text-align: left"/>
+                                            </p:column>
+                                            <p:column headerText="#{lang['mn.stock.utilities.code.stock']}"
+                                                      style="width: 15%" sortBy="#{(item.productOfferCode)}">
+                                                <p:outputLabel value="#{(item.productOfferCode)}"
+                                                               title="#{(item.productOfferCode)}"
+                                                               style="text-align: left"/>
+                                            </p:column>
+                                            <p:column styleClass="col-left" style="width: 10%"
+                                                      headerText="#{lang['common.status']}">
+                                                <p:outputLabel value="#{item.stateName}" title="#{item.stateName}"/>
+                                            </p:column>
+                                            <p:column headerText="#{lang['common.number']}" style="width: 10%"
+                                                      styleClass="TexAlRight" sortBy="#{item.quantity}">
+                                                <p:outputLabel value="#{(item.quantity)}" title="#{(item.quantity)}"
+                                                               style="text-align: right"/>
+                                            </p:column>
+                                            <p:column headerText="#{lang['export.order.note']}" style="width: 15%">
+                                                <p:outputLabel value="#{(item.note)}" title="#{(item.note)}"
+                                                               style="text-align: left"></p:outputLabel>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </div>
+                                </div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                </p:tab>
+            </p:tabView>
+        </h:form>
+    </ui:define>
+</ui:composition>

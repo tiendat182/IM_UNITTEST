@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+			http://www.springframework.org/schema/tx 
+			http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+			http://www.springframework.org/schema/data/jpa
+   			http://www.springframework.org/schema/data/jpa/spring-jpa-1.1.xsd">
+
+    <jpa:repositories base-package="com.viettel.bccs.inventory"
+                      entity-manager-factory-ref="emInventory"/>
+
+    <jpa:repositories base-package="com.viettel.bccs.partner, com.viettel.bccs.im1"
+                      entity-manager-factory-ref="emIM1"/>
+
+    <jpa:repositories base-package="com.viettel.bccs.anypay" entity-manager-factory-ref="emAnypay"/>
+
+    <jpa:repositories base-package="com.viettel.bccs.sale" entity-manager-factory-ref="emSale"/>
+
+    <!--ket noi sale db 2.0-->
+
+    <bean id="dsSale" parent="xaDatasourceBase" depends-on="txService">
+        <property name="uniqueResourceName" value="NXA_SALE"/>
+
+        <property name="user" value="${sale.jdbc.username}"/>
+        <property name="password" value="${sale.jdbc.password}"/>
+        <property name="url" value="${sale.jdbc.url}"/>
+
+        <property name="minPoolSize" value="0"/>
+        <property name="maxPoolSize" value="300"/>
+    </bean>
+
+    <bean id="pdsSale" class="net.ttddyy.dsproxy.support.ProxyDataSource"
+          p:dataSource-ref="dsSale"
+          p:dataSourceName="BCCS_SALE"
+          p:listener-ref="listeners"
+            />
+
+    <bean id="emSale" parent="emfBase" depends-on="dsSale">
+        <property name="persistenceUnitName" value="BCCS_SALE"/>
+        <property name="jtaDataSource" ref="pdsSale"/>
+    </bean>
+    <!--ket thuc sale-->
+
+    <!--ket noi inventory 2.0-->
+    <bean id="dsInventory" parent="xaDatasourceBase" depends-on="txService">
+        <property name="uniqueResourceName" value="NXA_INVENTORY"/>
+
+        <property name="user" value="${inventory.jdbc.username}"/>
+        <property name="password" value="${inventory.jdbc.password}"/>
+        <property name="url" value="${inventory.jdbc.url}"/>
+
+        <property name="minPoolSize" value="0"/>
+        <property name="maxPoolSize" value="300"/>
+    </bean>
+
+    <bean id="pdsInventory" class="net.ttddyy.dsproxy.support.ProxyDataSource"
+          p:dataSource-ref="dsInventory"
+          p:dataSourceName="BCCS_IM"
+          p:listener-ref="listeners"
+            />
+
+    <bean id="emInventory" parent="emfBase" depends-on="dsInventory">
+        <property name="persistenceUnitName" value="BCCS_IM"/>
+        <property name="jtaDataSource" ref="pdsInventory"/>
+    </bean>
+    <!--ket thuc inventory-->
+
+
+    <!--ket noi im 1.0-->
+
+    <bean id="dsIM1" parent="xaDatasourceBase" depends-on="txService">
+        <property name="uniqueResourceName" value="NXA_IM1"/>
+
+        <property name="user" value="${imlib.jdbc.username}"/>
+        <property name="password" value="${imlib.jdbc.password}"/>
+        <property name="url" value="${imlib.jdbc.url}"/>
+
+        <property name="minPoolSize" value="0"/>
+        <property name="maxPoolSize" value="300"/>
+    </bean>
+
+    <bean id="pdsIM1" class="net.ttddyy.dsproxy.support.ProxyDataSource"
+          p:dataSource-ref="dsIM1"
+          p:dataSourceName="BCCS_IM_LIB"
+          p:listener-ref="listeners"
+            />
+
+    <bean id="emIM1" parent="emfBase" depends-on="dsIM1">
+        <property name="persistenceUnitName" value="BCCS_IM_LIB"/>
+        <property name="jtaDataSource" ref="pdsIM1"/>
+    </bean>
+    <!--ket thuc im 1.0-->
+
+    <!--ket noi anypay 1.0-->
+    <bean id="dsAnypay" parent="xaDatasourceBase" depends-on="txService">
+        <property name="uniqueResourceName" value="NXA_ANYPAY"/>
+
+        <property name="user" value="${anypaylib.jdbc.username}"/>
+        <property name="password" value="${anypaylib.jdbc.password}"/>
+        <property name="url" value="${anypaylib.jdbc.url}"/>
+
+        <property name="minPoolSize" value="0"/>
+        <property name="maxPoolSize" value="300"/>
+    </bean>
+
+    <bean id="pdsAnypay" class="net.ttddyy.dsproxy.support.ProxyDataSource"
+          p:dataSource-ref="dsAnypay"
+          p:dataSourceName="PUAnypayLib"
+          p:listener-ref="listeners"
+            />
+
+    <bean id="emAnypay" parent="emfBase" depends-on="dsAnypay">
+        <property name="persistenceUnitName" value="PUAnypayLib"/>
+        <property name="jtaDataSource" ref="pdsAnypay"/>
+    </bean>
+
+
+    <bean id="xaDatasourceBase" class="com.atomikos.jdbc.nonxa.AtomikosNonXADataSourceBean"
+          abstract="true"
+          init-method="init"
+          destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="minPoolSize" value="0"/>
+        <property name="maxPoolSize" value="300"/>
+        <property name="borrowConnectionTimeout" value="10"/>
+        <property name="maxLifetime" value="30"/>
+        <!--<property name="testQuery" value="select 1 from dual"/>-->
+    </bean>
+
+    <bean id="emfBase" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" abstract="true">
+        <property name="persistenceXmlLocation" value="classpath:persistence.xml"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
+                <property name="showSql" value="true"/>
+                <property name="databasePlatform" value="org.eclipse.persistence.platform.database.OraclePlatform"/>
+            </bean>
+        </property>
+
+        <property name="loadTimeWeaver">
+            <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
+        </property>
+
+        <property name="jpaProperties">
+            <props>
+                <prop key="javax.persistence.transactionType">JTA</prop>
+                <prop key="eclipselink.target-server">com.atomikos.eclipselink.platform.AtomikosPlatform</prop>
+                <prop key="eclipselink.target-database">org.eclipse.persistence.platform.database.OraclePlatform</prop>
+
+                <!--
+                <prop key="hibernate.transaction.jta.platform">com.atomikos.icatch.jta.hibernate4.AtomikosJ2eePlatform</prop>
+                <prop key="hibernate.search.autoregister_listeners">false</prop>
+                <prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.generate_statistics">true</prop>
+                -->
+                <prop key="javax.persistence.lock.timeout">0</prop>
+                <prop key="javax.persistence.query.timeout">15</prop>
+
+            </props>
+        </property>
+    </bean>
+
+    <bean id="txService" class="com.atomikos.icatch.config.UserTransactionServiceImp"
+          init-method="init" destroy-method="shutdownWait">
+    </bean>
+
+    <bean id="txManager" class="com.atomikos.icatch.jta.J2eeTransactionManager" depends-on="txService"/>
+
+    <bean id="userTx" class="com.atomikos.icatch.jta.J2eeUserTransaction" depends-on="txService"/>
+
+    <!--  Configure the Spring framework to use JTA transactions from Atomikos-->
+    <bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager"
+          depends-on="txManager, userTx">
+        <property name="transactionManager" ref="txManager"/>
+        <property name="userTransaction" ref="userTx"/>
+        <property name="allowCustomIsolationLevels" value="true"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <bean id="listeners" class="net.ttddyy.dsproxy.listener.ChainListener">
+        <property name="listeners">
+            <list>
+                <bean class="net.ttddyy.dsproxy.listener.CommonsQueryLoggingListener"
+                      p:logLevel="INFO"
+                      p:writeAsJson="true"
+                      p:writeDataSourceName="true"/>
+            </list>
+        </property>
+    </bean>
+</beans>

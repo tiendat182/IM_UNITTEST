@@ -1,0 +1,48 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:form id="frmViewStockDebit" styleClass="Container100">
+        <p:outputPanel id="pnlViewStockDebit" styleClass="Container100">
+            <div class="ContainerIndent">
+                <p:dataTable
+                        id="tblListStockDebit"
+                        var="item" value="#{manageTransWarehouseController.stockDebitDTOs}"
+                        rowIndexVar="index"
+                        resizableColumns="true"
+                        paginator="#{lang['common.paging.paginator']}"
+                        rows="#{lang['common.paging.rows.default']}"
+                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                        emptyMessage="#{lang['common.empty.records']}">
+                    <p:column headerText="#{lang['mn.stock.limit.code.staff.shop']}"
+                              styleClass="ui-fluid" sortBy="">
+                        <p:outputLabel value="#{item.ownerCode}" title="#{item.ownerCode}"/>
+                    </p:column>
+                    <p:column headerText="#{lang['mn.stock.limit']}" styleClass="TexAlRight" sortBy="">
+                        <h:outputLabel value="#{item.debitValue}" styleClass="lb-sentinel-bold"
+                                       converter="currencyFormat"
+                                       title="#{item.debitValue}"/>
+                    </p:column>
+                    <p:column headerText="#{lang['mn.stock.limit.type.day.apply']}" styleClass="TexAlLeft" sortBy="">
+                        <p:outputLabel styleClass="lb-sentinel-bold"
+                                       value="#{item.debitDayTypeName}" title="#{item.debitDayTypeName}"/>
+                    </p:column>
+                    <p:column headerText="#{lang['mn.stock.limit.template.group.money']}" styleClass="TexAlLeft"
+                              sortBy="">
+                        <p:outputLabel styleClass="lb-sentinel-bold"
+                                       value="#{item.financeTypeName}" title="#{item.financeTypeName}"/>
+                    </p:column>
+                    <p:column headerText="#{lang['mn.stock.limit.price.stock']}" styleClass="TexAlRight" sortBy="">
+                        <h:outputLabel styleClass="lb-sentinel-bold" converter="currencyFormat"
+                                       value="#{item.totalPrice}" title="#{item.totalPrice}"/>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

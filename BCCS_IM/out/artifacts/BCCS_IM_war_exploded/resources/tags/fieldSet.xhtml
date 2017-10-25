@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <composite:interface>
+        <composite:attribute name="key" required="true" shortDescription="key for multillanguage"/>
+        <composite:attribute name="collapseId" shortDescription="id of panel can be collapsed"/>
+        <composite:attribute name="formId" shortDescription="id of form containing panel"/>
+    </composite:interface>
+    <composite:implementation>
+        <div style="position:relative;width:100%;">
+<!--            <input id="collapseId" type="hidden" value="#{cc.attrs.collapseId}"/>
+            <input id="formId" type="hidden" value="#{cc.attrs.formId}"/>-->
+            <p:commandButton rendered="#{not empty cc.attrs.collapseId and cc.attrs.collapseId != ''}" icon="ui-icon-minus" type="button" styleClass="collapse-button"
+                             onclick="onCollapse#{cc.attrs.collapseId}();" widgetVar="#{cc.attrs.collapseId}Minus"/>
+            <p:commandButton rendered="#{not empty cc.attrs.collapseId and cc.attrs.collapseId != ''}" icon="ui-icon-plus" type="button" styleClass="collapse-button"
+                             onclick="onCollapse#{cc.attrs.collapseId}();" widgetVar="#{cc.attrs.collapseId}Plus" style="display:none"/>
+            <h:outputText id="#{cc.id}" value="#{cc.attrs.key}" styleClass="text-bold"/>
+        </div>
+        <p:separator styleClass="vt-separate"/>
+        <script type="text/javascript">
+                                 function onCollapse#{cc.attrs.collapseId}() {
+                                     var colId = '#{cc.attrs.collapseId}';//document.getElementById("collapseId").value;
+                                     var formId = '#{cc.attrs.formId}';//document.getElementById("formId").value;
+                                     var panelId = formId + ":" + colId;
+                                     var dpl = document.getElementById(panelId).style.display;
+                                     if (dpl == "none") {
+                                         jQuery(document.getElementById(panelId)).slideDown(300);
+                                         PF('#{cc.attrs.collapseId}Minus').getJQ().css("display", "block");
+                                         PF('#{cc.attrs.collapseId}Plus').getJQ().css("display", "none");
+                                     }
+                                     else {
+                                         jQuery(document.getElementById(panelId)).slideUp(300);
+                                         PF('#{cc.attrs.collapseId}Minus').getJQ().css("display", "none");
+                                         PF('#{cc.attrs.collapseId}Plus').getJQ().css("display", "block");
+
+                                     }
+                                     PF('#{cc.attrs.collapseId}Plus').getJQ().css("float", "left");
+                                     PF('#{cc.attrs.collapseId}Minus').getJQ().css("float", "left");
+                                     PF('#{cc.attrs.collapseId}Plus').getJQ().css("margin-top", "-3px");
+                                     PF('#{cc.attrs.collapseId}Minus').getJQ().css("margin-top", "-3px");
+                                 }
+        </script>
+    </composite:implementation>
+</html>
+

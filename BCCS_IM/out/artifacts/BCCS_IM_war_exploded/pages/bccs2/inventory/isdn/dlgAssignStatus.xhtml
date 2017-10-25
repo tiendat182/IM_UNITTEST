@@ -1,0 +1,87 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:pe="http://primefaces.org/ui/extensions">
+    <h:form id="frmdlgAssignStatus">
+        <p:outputPanel id="pnlUpdateRuleList" styleClass="Container100">
+            <div class="Container100 marginTopBottom10">
+                <p:messages id="msgDlgAssignStatus" showDetail="true" showSummary="false" closable="true"/>
+
+                <div class="ContainerIndent mg-top-0">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                        <p:outputLabel styleClass="lb-sentinel"
+                                       value="#{lang['new.status']}"
+                                       for="cbxNewStatus"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:selectOneMenu id="cbxNewStatus"
+
+                                         value="#{assignStatusController.searchStockNumberDTO.status}">
+                            <f:selectItem itemLabel="#{lang['new.digital']}"
+                                          itemValue="1"/>
+                            <f:selectItem itemLabel="#{lang['suspend.digital']}"
+                                          itemValue="3"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+
+                <div class="Container100">
+                    <p:outputPanel rendered="true" id="pnLink"
+                                   styleClass="Container100 TexAlCenter">
+
+                        <!--<p:commandButton process="@this"-->
+                                         <!--value="#{lang['mn.stock.status.update']}"-->
+                                         <!--update="@this"-->
+                                         <!--oncomplete="if(!args.validationFailed){PF('dlgConfirmUpdate').show();}-->
+                                      <!--setTimeout(setFocusByClass('.btnCloseStyle'), 350);"/>-->
+                        <!--messageConfirm="#{lang['mn.stock.status.update.confirm.msg']}"-->
+
+                        <cbs:confirmDialog
+                                idComponent="btnUpdateStatus"
+                                valueButton="#{lang['mn.stock.status.update']}"
+                                headerConfirm="#{lang['mn.stock.status.update.confirm']}"
+                                messageConfirm="#{assignStatusController.messageConfirm}"
+                                actionOK="#{assignStatusController.doUpdateStatusFromFile}"
+                                resetValueButton="false"
+                                process="@this, @([id$=cbxNewStatus])"
+                                updateArea="@([id$=assignTypeMsgs]), @([id$=tblListRange]), @([id$=pnLink])"
+                                updateOK="@form, @([id$=assignTypeMsgs])"
+                                focusCancel="false"
+                                oncompleteOK="PF('dlgAssignStatus').hide();"
+                                isButton="true"
+                                />
+
+                        <p:commandButton value="#{lang['mn.stock.status.update.close']}"
+                                         process="pnlUpdateRuleList"
+                                         update="@this"
+                                         oncomplete="if(!args.validationFailed) {PF('dlgAssignStatus').hide();}"/>
+                    </p:outputPanel>
+
+                </div>
+            </div>
+        </p:outputPanel>
+
+        <p:confirmDialog closeOnEscape="true" closable="true"
+                         appendTo="@(body)"
+                         widgetVar="dlgConfirmUpdate"
+                         header="#{lang['mn.stock.status.update.confirm']}"
+                         id="cfmBtn"
+                         width="550"
+                         message="#{lang['mn.stock.status.update.confirm.msg']}">
+            <p:commandLink value="#{lang['common.button.NO']}" styleClass="md-button" process="@none"
+                           onstart="PF('dlgConfirmUpdate').hide();"
+                    />
+            <p:commandLink process="@this, @([id$=cbxNewStatus])"
+                           update="@([id$=assignTypeMsgs]), @([id$=tblListRange])"
+                           value="#{lang['common.button.YES']}"
+                           styleClass="md-button btnCloseStyle"
+                           oncomplete="PF('dlgConfirmUpdate').hide(); PF('dlgAssignStatus').hide();"
+                           actionListener="#{assignStatusController.doUpdateStatus}"/>
+        </p:confirmDialog>
+    </h:form>
+</ui:composition>

@@ -1,0 +1,36 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <cbs:panel classForToggle="pnViewExportField" toggle="true"
+               titleHeader="#{lang['export.order.view.export.field']}"/>
+    <div class="Container100 pnViewExportField">
+        <div class="ContainerIndent mg-top-10">
+            <div class="Container33 Responsive50">
+                <div class="Container40 Responsive mg-left-15 pd-top-4">
+                    <p:outputLabel for="ipExportCodeField"
+                                   value="#{lang['export.order.code.field']}"/>
+                </div>
+                <div class="Container60 Responsive ui-fluid">
+                    <p:inputText placeholder="#{lang['export.order.code.field.placehoder']}"
+                                 style="width: 100%;" required="true" id="ipExportCodeField"/>
+                </div>
+            </div>
+            <div class="Container33 Responsive50">
+                <div class="Container40 Responsive pd-top-4 mg-left-15">
+                    <p:outputLabel for="checkboxVoffice" value="#{lang['export.order.write.office']}"/>
+                </div>
+                <div class="Container60 Responsive ui-fluid">
+                    <p:selectBooleanCheckbox id="checkboxVoffice"
+                                             value="#{controller.orderStockTag.writeOffice}">
+                        <p:ajax event="change"
+                                process="@this"
+                                listener="#{controller.orderStockTag.doChangeWriteOffice(controller.nameMethod)}"/>
+                    </p:selectBooleanCheckbox>
+                </div>
+            </div>
+            <div class="Container33 Responsive50"></div>
+        </div>
+    </div>
+</ui:composition>

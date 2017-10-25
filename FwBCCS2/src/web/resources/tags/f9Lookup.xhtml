@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+<composite:interface>
+    <composite:attribute name="value" shortDescription="Value of inputText"/>
+    <composite:attribute name="style" shortDescription="Style of inputText"/>
+    <composite:attribute name="idLookupDialog"  required="true" shortDescription="widgetVar of attached dialog"/>
+</composite:interface>
+<composite:implementation>
+    <script type="application/javascript">
+        function kute(event) {
+            if (event.keyCode === 120) {
+                PF('#{cc.attrs.idLookupDialog}').show();
+                return false;
+            }
+        }
+    </script>
+    <p:inputText id="commentInput"
+                 value="#{cc.attrs.value}"
+                 onkeypress="kute(event)" style="#{cc.attrs.style}"/>
+    <p:outputLabel style="margin-left: 2px" value="(F9)"/>
+</composite:implementation>
+</html>
+

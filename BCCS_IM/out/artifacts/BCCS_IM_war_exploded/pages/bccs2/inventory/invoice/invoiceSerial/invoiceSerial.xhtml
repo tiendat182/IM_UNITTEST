@@ -1,0 +1,294 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:o="http://java.sun.com/jsf/core"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.invoice.invoiceSerial']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.invoice.invoiceSerial']}</ui:define>
+    <ui:define name="content">
+        <style type="text/css">
+            td.selectionDisabled .ui-chkbox {
+                display: none;
+            }
+        </style>
+        <h:form id="frmInvoiceSerial" styleClass="Container100">
+            <p:outputPanel id="pnlInvoiceSerial" styleClass="Container100">
+                <div class="ContainerIndent mg-top-0">
+                    <p:messages id="msgInforSerial" showDetail="true" showSummary="false" closable="true"/>
+                </div>
+                <p:outputPanel id="pnlInforSerial" styleClass="ContainerIndent mg-top-0">
+                    <p:focus for="pnlInforSerial"/>
+                    <cbs:panel classForToggle="pnlInforSerial" toggle="true"
+                               titleHeader="#{lang['mn.invoice.invoiceSerial.infor']}"/>
+
+                    <div class="pnlInforSerial Container100 marginTopBottom10">
+
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel" for="selOnRaTypeInvoice"
+                                               value="#{lang['mn.invoice.select.invoiceType']}"/>
+                            </div>
+                            <div class="Container80 Responsive75 ui-fluid">
+                                <p:selectOneRadio id="selOnRaTypeInvoice"
+                                                  value="#{invoiceSerialController.forSearchInvoiceSerial.invoiceType}">
+                                    <f:selectItems value="#{invoiceSerialController.listInvoiceType}"
+                                                   itemLabel="#{item.name}" var="item" itemValue="#{item.value}"/>
+                                    <p:ajax event="change" process="@this"
+                                            listener="#{invoiceSerialController.changeInvoiceTypeSearch}"
+                                            update="@this,@([id$=cobInvoiceType]), @([id$=invoiceNoStock])"/>
+                                </p:selectOneRadio>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container50 Responsive50">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" for="cobInvoiceType"
+                                                   value="#{lang['mn.invoice.invoiceType.typeInv']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:selectOneMenu id="cobInvoiceType" filter="true"
+                                                     value="#{invoiceSerialController.forSearchInvoiceSerial.invoiceTypeId}">
+                                        <f:selectItem itemLabel="#{lang['mn.invoice.invoiceSerial.select.temp']}"/>
+                                        <f:selectItems value="#{invoiceSerialController.invoiceTypeListSearch}"
+                                                       var="item" itemValue="#{item.invoiceTypeId}"
+                                                       itemLabel="#{item.typeInv} - #{item.invoiceName}"
+                                                       itemLabelEscaped="true"/>
+                                        <p:ajax event="change" process="@this"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="Container50 Responsive50">
+                                <cbs:inputShop value="#{invoiceSerialController.shopInfoTag}"
+                                               idComponent="shop"
+                                               methodName="receiveShop"
+                                               update="@this"
+                                               require="false"
+                                               label="#{lang['unit.uses']}"
+                                               classDivLabel="Container40 mg-left-15 pd-top-4 Responsive50 AlignLb sProduct_col"
+                                               placeholder="#{lang['mn.invoice.invoiceSerial.input.shop']}"
+                                               classDivInput="Container60 Responsive50 sProduct ui-fluid"
+                                               requiredMessage="#{lang['mn.stock.limit.store.code.require.msg']}"
+                                               forceSelection="false"
+                                               clearMethodName="clearCurrentShop"
+                                               oncomplete="">
+                                </cbs:inputShop>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <div class="Container50 Responsive50">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" for="txtSerialCharacter"
+                                                   value="#{lang['sign.serial']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:inputText id="txtSerialCharacter"
+                                                 maxlength="10"
+                                                 placeholder="#{lang['mn.invoice.invoiceSerial.input.code']}"
+                                                 value="#{invoiceSerialController.forSearchInvoiceSerial.serialNo}"/>
+                                </div>
+                            </div>
+                            <div class="Container50 Responsive50">
+                                <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" for="txtDescription"
+                                                   value="#{lang['mn.invoice.invoiceSerial.description']}"/>
+                                </div>
+                                <div class="Container60 Responsive50 ui-fluid">
+                                    <p:inputText id="txtDescription"
+                                                 maxlength="500"
+                                                 onblur="this.value = this.value.trim();"
+                                                 placeholder="#{lang['mn.invoice.invoiceSerial.description.input']}"
+                                                 value="#{invoiceSerialController.forSearchInvoiceSerial.description}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContainerIndent mg-top-0">
+                            <p:outputPanel id="invoiceNoStock">
+                                <div class="Container50 Responsive50">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                        <p:outputLabel styleClass="lb-sentinel" for="invoiceTrans"
+                                                       rendered="#{invoiceSerialController.showInvoiceTransType}"
+                                                       value="#{lang['mn.invoice.invoiceType.invoceTrans']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectBooleanCheckbox id="invoiceTrans"
+                                                                 styleClass="mg-left-5"
+                                                                 rendered="#{invoiceSerialController.showInvoiceTransType}"
+                                                                 value="#{invoiceSerialController.noStock}">
+                                        </p:selectBooleanCheckbox>
+                                    </div>
+                                </div>
+                                <div class="Container50 Responsive50"/>
+                            </p:outputPanel>
+                        </div>
+                        <div class="Container100 TexAlCenter ">
+                            <p:commandButton value="#{lang['create.note.search']}"
+                                             actionListener="#{invoiceSerialController.searchInvoiceSerial}"
+                                             update="@([id$=pnlSerialList]),@([id$=msgInforSerial])"
+                                             process="@this,@([id$=pnlInvoiceSerial])"/>
+                            <p:commandButton value="#{lang['common.reset']}"
+                                             actionListener="#{invoiceSerialController.doResetSearchInvoiceType}"
+                                             process="@this, @([id$=pnlSerialList])"
+                                             resetValues="true"
+                                             update="@form" validateClient="true" styleClass="mg-left-5"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel id="pnlSerialList" styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="pnlSerialList" toggle="true"
+                               titleHeader="#{lang['mn.invoice.invoiceSerial.list.serial']}"/>
+
+                    <div class="Container100 TexAlLeft">
+                        <p:commandLink title="#{lang['common.add']}"
+                                       process="@this"
+                                       action="#{invoiceSerialController.prepareAdd}"
+                                       resetValues="true"
+                                       update="@([id$=dlgAddNewSerial])"
+                                       oncomplete="if(!args.validationFailed){PF('dlgAddNewSerial').show();}"
+                                       styleClass="fa icon-plus Fs14 blue md-link">
+                            <h:outputText value="#{lang['common.add']}"/>
+                        </p:commandLink>
+                        <cbs:confirmDialog
+                                id="btnDeleteSerial"
+                                idComponent="btnDeleteSerial"
+                                titleButton="#{lang['common.delete']}"
+                                valueButton="#{lang['common.delete']}"
+                                headerConfirm="#{lang['common.confirm']}"
+                                messageConfirm="#{lang['mn.invoice.serial.body.confirm.delete']}"
+                                actionOK="#{invoiceSerialController.deleteInvoiceSerial}"
+                                resetValueButton="true"
+                                process="@([id$=tblListSerial]), @this"
+                                actionValidate="#{invoiceSerialController.validateDelete}"
+                                updateArea="@([id$=tblListSerial]), @([id$=msgInforSerial])"
+                                updateOK="@([id$=tblListSerial]), @([id$=msgInforSerial])"
+                                styleClassButton="fa icon-trash Fs14 blue md-link mg-left-5"
+                                focusCancel="false"
+                                oncompleteOK=""
+                                isButton="false"
+                        />
+                    </div>
+
+                    <div class="pnlSerialList Container100 ui-fluid marginTopBottom10">
+                        <p:dataTable
+                                id="tblListSerial"
+                                var="invoiceSerial"
+                                value="#{invoiceSerialController.invoiceSerialList}"
+                                rowKey="#{invoiceSerial.invoiceSerialId}"
+                                selection="#{invoiceSerialController.invoiceListSerialSelect}"
+                                resizableColumns="true"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.empty.records']}">
+                            <p:column selectionMode="multiple" styleClass="width5 TexAlCenter"/>
+                            <p:column headerText="#{lang['mn.invoice.unit']}" sortBy="#{invoiceSerial.shopName}">
+                                <p:outputLabel value="#{invoiceSerial.shopName}"
+                                               title="#{invoiceSerial.shopName}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['sign.serial']}" sortBy="#{invoiceSerial.serialNo}">
+                                <p:outputLabel value="#{invoiceSerial.serialNo}"
+                                               title="#{invoiceSerial.serialNo}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.invoice.invoiceType.invoice']}"
+                                      sortBy="#{invoiceSerial.invoiceTypeName}">
+                                <p:outputLabel value="#{invoiceSerial.invoiceTypeName}"
+                                               title="#{invoiceSerial.invoiceTypeName}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.invoice.invoiceType.typeInv']}"
+                                      sortBy="#{invoiceSerial.invoiceTypeText}">
+                                <p:outputLabel value="#{invoiceSerial.invoiceTypeText}"
+                                               title="#{invoiceSerial.invoiceTypeText}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.invoice.invoiceSerial.description']}"
+                                      sortBy="#{invoiceSerial.description}">
+                                <p:outputLabel value="#{invoiceSerial.description}"
+                                               title="#{invoiceSerial.description}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.invoice.invoiceType.userCreate']}"
+                                      sortBy="#{invoiceSerial.createUser}">
+                                <p:outputLabel value="#{invoiceSerial.createUser}"
+                                               title="#{invoiceSerial.createUser}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.invoice.invoiceType.dateCreate']}"
+                                      sortBy="#{invoiceSerial.createDatetime}">
+                                <p:outputLabel value="#{invoiceSerial.createDatetime}">
+                                    <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.stock.branch.action']}" width="10%" styleClass="TexAlCenter">
+                                <p:commandLink title="#{lang['common.coppy']}"
+                                               styleClass="fa  icon-docs Fs14 blue"
+                                               disableButton="#{invoiceSerial.status == '0'}"
+                                               process="@this"
+                                               resetValues="true"
+                                               update="@([id$=dlgCopyInvoiceSerial])"
+                                               actionListener="#{invoiceSerialController.prepareCopy(invoiceSerial)}"
+                                               style="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                               oncomplete="if(!args.validationFailed){PF('dlgCopyInvoiceSerial').show()}"/>
+                                <p:commandLink title="#{lang['common.edit']}"
+                                               styleClass="fa  icon-edit Fs14 blue"
+                                               disableButton="#{invoiceSerial.status == '0'}"
+                                               process="@this"
+                                               resetValues="true"
+                                               update="@([id$=dlgEditInvoiceSerial])"
+                                               actionListener="#{invoiceSerialController.prepareEdit(invoiceSerial)}"
+                                               style="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                               oncomplete="if(!args.validationFailed){PF('dlgEditInvoiceSerial').show()}"/>
+                                <cbs:confirmDialog
+                                        idComponent="btnDeleteOneInvoiceSerial"
+                                        id="btnDeleteOneInvoiceSerial"
+                                        disableButton="#{invoiceSerial.status == '0'}"
+                                        valueButton=""
+                                        headerConfirm="#{lang['common.confirm']}"
+                                        messageConfirm="#{lang['mn.invoice.serial.body.confirm.delete']}"
+                                        actionOK="#{invoiceSerialController.deleteOneInvoiceSerial}"
+                                        resetValueButton="true"
+                                        process="@this"
+                                        actionValidate="#{invoiceSerialController.preDeleteOneInvoiceSerial(invoiceSerial)}"
+                                        updateArea="@([id$=msgInforSerial])"
+                                        updateOK="@([id$=tblListSerial]),@([id$=msgInforSerial])"
+                                        styleClassButton="fa icon-trash Fs14 blue"
+                                        styleButton="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                        focusCancel="false"
+                                        oncompleteOK=""
+                                        isButton="false"
+                                        titleButton="#{lang['common.delete']}"
+                                />
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog width="75%" appendTo="@(body)" closable="true" dynamic="true"
+                  minWidth="700"
+                  id="dlgAddNewSerial"
+                  widgetVar="dlgAddNewSerial" closeOnEscape="true"
+                  header="#{lang['mn.invoice.invoiceSerial.add.serial']}"
+                  resizable="false" maximizable="true" modal="true" position="center">
+            <ui:include src="dlgAddInvoiceSerial.xhtml"/>
+        </p:dialog>
+        <p:dialog width="75%" appendTo="@(body)" closable="true" dynamic="true"
+                  minWidth="700" widgetVar="dlgEditInvoiceSerial" closeOnEscape="true"
+                  id="dlgEditInvoiceSerial"
+                  header="#{lang['mn.invoice.invoiceSerial.edit.serial']}"
+                  resizable="false" maximizable="true" modal="true" position="center">
+            <ui:include src="dlgEditInvoiceSerial.xhtml"/>
+        </p:dialog>
+        <p:dialog width="75%" appendTo="@(body)" closable="true" dynamic="true"
+                  minWidth="700" widgetVar="dlgCopyInvoiceSerial" closeOnEscape="true"
+                  id="dlgCopyInvoiceSerial"
+                  header="#{lang['mn.invoice.invoiceSerial.copy.serial']}"
+                  resizable="false" maximizable="true" modal="true" position="center">
+            <ui:include src="dlgCopyInvoiceSerial.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

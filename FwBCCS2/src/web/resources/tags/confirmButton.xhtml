@@ -1,0 +1,228 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core">
+<composite:interface>
+    <composite:attribute name="dlgWidgetVar" required="true"
+                         shortDescription="gia tri thuoc tinh widgetVar cua confirmDialog"/>
+    <composite:attribute name="updateArea" default="@form"
+                         shortDescription="id vung update lai du lieu sau khi xac nhan OK"/>
+    <composite:attribute name="styleButton" shortDescription="style css inline cua button"/>
+    <composite:attribute name="styleClassButton" shortDescription="style class css cua button"/>
+    <composite:attribute name="valueButton" default="Button" shortDescription="ten hien thi cua button"/>
+    <composite:attribute name="resetValueButton" default="false" shortDescription="thuoc tinh resetValue cua button"/>
+    <composite:attribute name="headerConfirm" default="Confirm" shortDescription="tieu de dialog confirm"/>
+    <composite:attribute name="messageConfirm" default="Are you sure to do action ?"
+                         shortDescription="thong diep dialog confirm"/>
+    <composite:attribute name="action" default="''" method-signature="java.lang.String action()"
+                         shortDescription="method thuc hien khi xac nhan OK"/>
+    <composite:attribute name="actionListener" default="''" method-signature="java.lang.String action()"
+                         shortDescription="method listener thuc hien khi xac nhan OK"/>
+    <composite:attribute name="process" shortDescription="submit du lieu vung nao len server"/>
+    <composite:attribute name="oncompleteOK" shortDescription="method js callback sau khi an OK"
+                         default="emptyFunction"/>
+    <composite:attribute name="disableButton" default="false" shortDescription="disable button"/>
+    <composite:attribute name="icon" required="false" shortDescription="Them icon"/>
+    <composite:attribute name="actionValidate" default="''" method-signature="java.lang.String action()"
+                         shortDescription="method validate khi an nut chuc nang, truoc khi bat confirm"/>
+    <composite:attribute name="focusCancel" required="false" shortDescription="Them icon" default="true"/>
+    <composite:attribute name="showMoreContent" required="false" shortDescription="Them noi dung de confirm"
+                         default="false"/>
+    <composite:attribute name="labelMoreContent1" required="false" shortDescription="Tieu de phan noi dung 1 de confirm"
+                         default="Tieu de 1"/>
+    <composite:attribute name="labelMoreContent2" required="false" shortDescription="Tieu de phan noi dung 2 de confirm"
+                         default="Tieu de 2"/>
+    <composite:attribute name="listStringContent1" required="false"
+                         shortDescription="List String phan noi dung 1 can confirm"/>
+    <composite:attribute name="listStringContent2" required="false"
+                         shortDescription="List String phan noi dung 2 can confirm"/>
+    <composite:attribute name="reloadCapcha" shortDescription="ham load capcha" default="emptyFunction()"/>
+    <composite:attribute name="oncompleteNO" shortDescription="ham oncomple No" default="emptyFunction()"/>
+    <composite:attribute name="topPage" shortDescription="true mac dinh la co topage khi co loi xay ra" default="true"/>
+    <composite:attribute name="contentColumn" shortDescription="so luong cot o more contain" default="1"/>
+    <composite:attribute name="onErrorFunction" shortDescription="ham xu ly js khi validate form loi" default=""/>
+    <composite:attribute name="appendTo" shortDescription="append dialog confirm vao dau"/>
+    <composite:attribute name="isButton" default="true"
+                         shortDescription="hien thi thanh phan bam vao de confirm la nut hay link"/>
+    <composite:attribute name="title" shortDescription="tooltip cua link va button"/>
+    <composite:attribute name="validateClient" default="true" shortDescription="co dung validate client hay ko"/>
+    <composite:attribute name="onClick" shortDescription="Ham xu ly khi lick vao btn" required="false" default="noAction()"/>
+    <composite:attribute name="onSuccess" shortDescription="Ham xu ly khi thuc hien thanh cong btn" required="false" default="noAction()"/>
+</composite:interface>
+<composite:implementation>
+    <p:remoteCommand process="@this" update="@this" name="noAction"/>
+    <style type="text/css">
+        .overFlowPanel {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+    <script type="text/javascript">
+        function bindEventButton() {
+            jQuery(".ui-button-text-only").hover(function () {
+                jQuery(this).addClass("ui-state-hover");
+            });
+            jQuery(".ui-button-text-only").mouseout(function () {
+                jQuery(this).removeClass("ui-state-hover");
+            });
+            jQuery(".ui-button-text-only").focus(function () {
+                jQuery(this).addClass("ui-state-focus");
+            });
+            jQuery(".ui-button-text-only").blur(function () {
+                jQuery(this).removeClass("ui-state-focus");
+            });
+        }
+    </script>
+    <!-- hien thi button -->
+    <c:if test="#{cc.attrs.isButton eq 'true'}">
+        <c:if test="#{cc.attrs.focusCancel eq 'true'}">
+            <p:commandButton
+                    onclick="#{cc.attrs.onClick}"
+                    onsuccess="#{cc.attrs.onSuccess}"
+                    oncomplete="if(!args.validationFailed){jQuery('.ui-state-error').removeClass('ui-state-error');PF('#{cc.attrs.dlgWidgetVar}').show();
+                    bindEventButton();setTimeout('focusCancelButton#{cc.attrs.dlgWidgetVar}()',200);}else {#{cc.attrs.reloadCapcha};#{cc.attrs.onErrorFunction}}"
+                    update="#{cc.attrs.updateArea}, @(.cfmBtn#{cc.attrs.dlgWidgetVar})"
+                    process="#{cc.attrs.process}" resetValues="#{cc.attrs.resetValueButton}"
+                    style="#{cc.attrs.styleButton}" styleClass="#{cc.attrs.styleClassButton}"
+                    value="#{cc.attrs.valueButton}"
+                    disabled="#{cc.attrs.disableButton}"
+                    action="#{cc.attrs.actionValidate}"
+                    ajax="true"
+                    validateClient="false"/>
+        </c:if>
+        <c:if test="#{cc.attrs.focusCancel eq 'false'}">
+            <p:commandButton
+                    onclick="#{cc.attrs.onClick}"
+                    onsuccess="#{cc.attrs.onSuccess}"
+                    oncomplete="if(!args.validationFailed){jQuery('.ui-state-error').removeClass('ui-state-error');PF('#{cc.attrs.dlgWidgetVar}').show();
+                    bindEventButton();setTimeout('focusYesButton#{cc.attrs.dlgWidgetVar}()',200);}else {#{cc.attrs.reloadCapcha};#{cc.attrs.onErrorFunction}}"
+                    update="#{cc.attrs.updateArea}, @(.cfmBtn#{cc.attrs.dlgWidgetVar})"
+                    process="#{cc.attrs.process}" resetValues="#{cc.attrs.resetValueButton}"
+                    style="#{cc.attrs.styleButton}" styleClass="#{cc.attrs.styleClassButton}"
+                    value="#{cc.attrs.valueButton}"
+                    disabled="#{cc.attrs.disableButton}"
+                    action="#{cc.attrs.actionValidate}"
+                    ajax="true"
+                    validateClient="false"/>
+        </c:if>
+    </c:if>
+    <!-- hien thi link -->
+    <c:if test="#{cc.attrs.isButton eq 'false'}">
+        <c:if test="#{cc.attrs.focusCancel eq 'true'}">
+            <p:commandLink
+                    onclick="#{cc.attrs.onClick}"
+                    onsuccess="#{cc.attrs.onSuccess}"
+                    oncomplete="if(!args.validationFailed){jQuery('.ui-state-error').removeClass('ui-state-error');PF('#{cc.attrs.dlgWidgetVar}').show();
+                    bindEventButton();setTimeout('focusCancelButton#{cc.attrs.dlgWidgetVar}()',200);}else {#{cc.attrs.reloadCapcha};#{cc.attrs.onErrorFunction}}"
+                    update="#{cc.attrs.updateArea}, @(.cfmBtn#{cc.attrs.dlgWidgetVar})"
+                    process="#{cc.attrs.process}" resetValues="#{cc.attrs.resetValueButton}"
+                    style="#{cc.attrs.styleButton}" styleClass="#{cc.attrs.styleClassButton}"
+                    value="#{cc.attrs.valueButton}"
+                    disabled="#{cc.attrs.disableButton}"
+                    action="#{cc.attrs.actionValidate}"
+                    title="#{cc.attrs.title}"
+                    ajax="true"
+                    validateClient="false"/>
+        </c:if>
+        <c:if test="#{cc.attrs.focusCancel eq 'false'}">
+            <p:commandLink
+                    onclick="#{cc.attrs.onClick}"
+                    onsuccess="#{cc.attrs.onSuccess}"
+                    oncomplete="if(!args.validationFailed){jQuery('.ui-state-error').removeClass('ui-state-error');PF('#{cc.attrs.dlgWidgetVar}').show();
+                    bindEventButton();setTimeout('focusYesButton#{cc.attrs.dlgWidgetVar}()',200);}else {#{cc.attrs.reloadCapcha};#{cc.attrs.onErrorFunction}}"
+                    update="#{cc.attrs.updateArea}, @(.cfmBtn#{cc.attrs.dlgWidgetVar})"
+                    process="#{cc.attrs.process}" resetValues="#{cc.attrs.resetValueButton}"
+                    style="#{cc.attrs.styleButton}" styleClass="#{cc.attrs.styleClassButton}"
+                    value="#{cc.attrs.valueButton}"
+                    disabled="#{cc.attrs.disableButton}"
+                    action="#{cc.attrs.actionValidate}"
+                    title="#{cc.attrs.title}"
+                    ajax="true"
+                    validateClient="false"/>
+        </c:if>
+    </c:if>
+
+    <p:remoteCommand name="focusCancelButton#{cc.attrs.dlgWidgetVar}" process="@this"
+                     oncomplete="focusCancelButton1#{cc.attrs.dlgWidgetVar}()" global="false"
+                     rendered="#{cc.attrs.focusCancel eq 'true'}"/>
+    <p:remoteCommand name="focusYesButton#{cc.attrs.dlgWidgetVar}" process="@this"
+                     oncomplete="focusYesButton1#{cc.attrs.dlgWidgetVar}()" global="false"
+                     rendered="#{cc.attrs.focusCancel eq 'false'}"/>
+    <script type="text/javascript">
+        function focusCancelButton1#{cc.attrs.dlgWidgetVar}() {
+            try {
+                $('.cancelButton#{cc.attrs.dlgWidgetVar}').focus();
+            } catch (e) {
+            }
+        }
+        function focusYesButton1#{cc.attrs.dlgWidgetVar}() {
+            try {
+                $('.yesButton#{cc.attrs.dlgWidgetVar}').focus();
+            } catch (e) {
+            }
+        }
+    </script>
+    <p:confirmDialog closeOnEscape="true" closable="true"
+                     appendTo="#{cc.attrs.appendTo}"
+                     widgetVar="#{cc.attrs.dlgWidgetVar}"
+                     style="border: 1px solid #888888;border-radius: 3px!important;"
+                     header="#{cc.attrs.headerConfirm}"
+                     styleClass="cfmBtn#{cc.attrs.dlgWidgetVar}"
+                     width="#{(cc.attrs.showMoreContent ne '' and cc.attrs.showMoreContent eq 'true') ? '600' : ''}"
+                     message="#{cc.attrs.messageConfirm}">
+        <p:outputPanel styleClass="Container100 overFlowPanel" rendered="#{cc.attrs.showMoreContent eq 'true'}">
+            <ui:param name="column" value="#{cc.attrs.contentColumn == 1 ? 'Container100' : 'Container20'}"/>
+            <p:outputPanel styleClass="ContainerIndent" rendered="#{not empty cc.attrs.listStringContent1}"
+                           style="#{empty cc.attrs.listStringContent2 ? '' : 'border-bottom: 1px dotted gray'}">
+                <div class="Container100" style="text-align: left;">
+                    <p:outputLabel styleClass="text-bold red" value="#{cc.attrs.labelMoreContent1}"/>
+                </div>
+                <ui:repeat value="#{cc.attrs.listStringContent1}" var="content1" varStatus="status">
+                    <!--style="width: #{cc.attrs.contentColumn}%"-->
+                    <div class="#{column} Responsive ovf-hidden TexAlLeft">
+                        <h:outputText value="#{content1}" title="#{content1}"/>
+                    </div>
+                </ui:repeat>
+            </p:outputPanel>
+            <p:outputPanel styleClass="ContainerIndent" rendered="#{not empty cc.attrs.listStringContent2}">
+                <div class="Container100" style="text-align: left;">
+                    <p:outputLabel styleClass="text-bold red" value="#{cc.attrs.labelMoreContent2}"/>
+                </div>
+                <ui:repeat value="#{cc.attrs.listStringContent2}" var="content2" varStatus="status">
+                    <div class="#{column} Responsive ovf-hidden TexAlLeft">
+                        <h:outputText value="#{content2}" title="#{content2}"/>
+                    </div>
+                </ui:repeat>
+            </p:outputPanel>
+        </p:outputPanel>
+
+        <div class="Container100" align="right">
+            <p:commandButton
+                    widgetVar="cancelButton#{cc.attrs.dlgWidgetVar}"
+                    type="button" onclick="PF('#{cc.attrs.dlgWidgetVar}').hide();#{cc.attrs.oncompleteNO}"
+                    value="#{lang['common.button.NO']}"
+                    styleClass="FlatBlueButton cancelButton#{cc.attrs.dlgWidgetVar}"
+                    tabindex="1"/>
+            <p:commandButton
+                    widgetVar="yesButton#{cc.attrs.dlgWidgetVar}"
+                    action="#{cc.attrs.action}"
+                    actionListener="#{cc.attrs.actionListener}"
+                    update="#{cc.attrs.updateArea}"
+                    process="@this"
+                    resetValues="#{cc.attrs.resetValueButton}"
+                    onstart="PF('#{cc.attrs.dlgWidgetVar}').hide();"
+                    oncomplete="#{cc.attrs.oncompleteOK}"
+                    style="margin-left: 15px;"
+                    value="#{lang['common.button.YES']}"
+                    styleClass="FlatBlueButton yesButton#{cc.attrs.dlgWidgetVar}"
+                    ajax="true"
+                    tabindex="2"/>
+        </div>
+    </p:confirmDialog>
+</composite:implementation>
+</html>
+

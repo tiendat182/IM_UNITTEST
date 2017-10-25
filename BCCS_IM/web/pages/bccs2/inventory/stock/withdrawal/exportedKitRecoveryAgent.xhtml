@@ -1,0 +1,195 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['exported.kit.recovery.agent']}</ui:define>
+    <ui:define name="featureName">#{lang['exported.kit.recovery.agent']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmExportKITRecoveryAgent" styleClass="Container100">
+            <p:outputPanel id="pnlInforExportNote" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="pnlInforExportNote" titleHeader="#{lang['export.order.view.export.field']}"/>
+
+                <div class="Container100 pnlInforExportNote paddingTopBottom10">
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['export.order.code.field']}" for="txtNoteCode"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:inputText id="txtNoteCode" required="true"
+                                             requiredMessage="#{lang['mn.stock.code.field.not.blank']}"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['export.order.by.whom']}" for="txtUserExport"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:inputText id="txtUserExport" value=""/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['export.order.stock']}"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:autoComplete styleClass="autoCpl"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['store.import.stock']}" for="txtWarehouseImport"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:autoComplete id="txtWarehouseImport" required="true"
+                                                requiredMessage="#{lang['store.import.stock.not.blank']}"
+                                                styleClass="autoCpl"/>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['export.order.by.reason']}" for="cobReasonExport"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:selectOneMenu value="" id="cobReasonExport" required="true"
+                                                 requiredMessage="#{lang['export.order.by.reason.not.blank']}">
+                                    <f:selectItem itemValue="" itemLabel="#{lang['common.reason.placeholder']}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['export.order.day']}"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:calendar/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container15 Responsive ui-fluid mg-left-15 pd-top-7" style="width: 13.4%">
+                            <p:outputLabel value="#{lang['export.order.note']}"/>
+                        </div>
+                        <div class="Container85 Responsive ui-fluid" style="width: 86.6%">
+                            <p:inputText value=""/>
+                        </div>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel id="pnlDetailStock" styleClass="ContainerIndent">
+                <cbs:panel classForToggle="pnlDetailStock" titleHeader="#{lang['create.note.detail.stock']}"/>
+
+                <div class="Container100 pnlDetailStock paddingTopBottom10">
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['export.order.type.product']}"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:selectOneMenu value="">
+                                    <f:selectItem itemLabel="#{lang['export.order.name.product.type.select']}" escape="true"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['export.order.name.product.type']}"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:selectOneMenu value="">
+                                    <f:selectItem itemLabel="#{lang['export.order.name.product.select']}" escape="true"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['mn.stock.track.status.stock']}"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:selectOneMenu value="">
+                                    <f:selectItem itemLabel="#{lang['mn.stock.recover']}" escape="true"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive50">
+                            <div class="Container40 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['common.number']}"/>
+                            </div>
+                            <div class="Container60 Responsive ui-fluid">
+                                <p:inputText/>
+                            </div>
+                        </div>
+                        <div class="Container66 Responsive">
+                            <div class="Container20 Responsive ui-fluid mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['export.order.note']}"/>
+                            </div>
+                            <div class="Container80 Responsive ui-fluid">
+                                <p:inputText />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0 TexAlCenter">
+                        <p:commandButton value="#{lang['common.add']}"/>
+                        <p:commandButton styleClass="mg-left-5" value="#{lang['common.edit']}"/>
+                        <p:commandButton styleClass="mg-left-5" value="#{lang['common.next']}"/>
+                        <p:commandButton styleClass="mg-left-5" value="#{lang['mn.stock.utilities.view.ware.house']}"/>
+                        <p:commandButton styleClass="mg-left-5" value="#{lang['mn.stock.view.TTTK']}"/>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <p:dataTable
+                                id="tblListDetail"
+                                var=""
+                                rowKey=""
+                                resizableColumns="true"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage=""
+                                value="">
+                            <p:column headerText="#{lang['export.order.type.product.name']}">
+                                <p:outputLabel value="Điện thoại"
+                                        />
+                            </p:column>
+                            <p:column headerText="#{lang['export.order.name.product']}">
+                                <p:outputLabel value="IP-3GS" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.stock.track.status.stock']}">
+                                <p:outputLabel value="Còn mới" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['common.unit']}">
+                                <p:outputLabel value="Chiếc" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['common.number']}">
+                                <p:outputLabel value="1" styleClass="Fright"/>
+                            </p:column>
+                            <p:column headerText="#{lang['create.note.detail.serial']}">
+                                <p:outputLabel value="" title=""/>
+                            </p:column>
+                            <p:column headerText="#{lang['common.edit.delete']}">
+
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                    <div class="Container100 TexAlCenter">
+                        <p:commandButton value="#{lang['mn.stock.underlying.export.stock']}"/>
+                        <p:commandButton styleClass="mg-left-5" value="#{lang['export.order.btn.print.field']}"/>
+                        <p:commandButton styleClass="mg-left-5" value="#{lang['create.note.print.BBBG.detail']}"/>
+                        <p:commandButton styleClass="mg-left-5" value="#{lang['common.reset']}"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>

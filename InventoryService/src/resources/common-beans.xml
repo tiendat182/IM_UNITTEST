@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+    <bean id="vOfficeVer3" class="com.viettel.voffice.autosign.Ver3AutoSign">
+        <property name="address" value="${voffice.client.address}"/>
+        <property name="appCode" value="${voffice.client.appCode}"/>
+        <property name="appPass" value="${voffice.client.appPass}"/>
+        <property name="sender" value="${voffice.client.sender}"/>
+        <property name="timeOut" value="${voffice.client.timeOut}"/>
+        <property name="registerCode" value="${voffice.client.registerCode}"/>
+    </bean>
+    <bean id="smsClient" class="com.viettel.bccs.inventory.common.SmsClient">
+        <property name="url" value="${im.smsconfig.url}"/>
+        <property name="xmlns" value="${im.smsconfig.xmlns}"/>
+        <property name="user" value="${im.smsconfig.user}"/>
+        <property name="password" value="${im.smsconfig.password}"/>
+        <property name="sessionId" value="${im.smsconfig.sessionId}"/>
+        <property name="serviceId" value="${im.smsconfig.serviceId}"/>
+        <property name="sender" value="${im.smsconfig.sender}"/>
+    </bean>
+
+    <bean name="ver3AutoSign" class="com.viettel.voffice.autosign.Ver3AutoSign">
+        <property name="address" value="${voffice.client.address}"/>
+        <property name="appCode" value="${voffice.client.appCode}"/>
+        <property name="appPass" value="${voffice.client.appPass}"/>
+        <property name="timeOut" value="${voffice.client.timeOut}"/>
+        <property name="sender" value="${voffice.client.sender}"/>
+    </bean>
+    <bean name="reportUtil" class="com.viettel.bccs.inventory.common.ReportUtil">
+        <property name="templatePath" value="${report.template}"/>
+        <property name="outPath" value="${report.out}"/>
+        <property name="temp" value="${report.temp}"/>
+        <property name="imCode" value="${im.voffice.code}"/>
+        <property name="keyAddAnnotations">
+            <array value-type="java.lang.String">
+                <value>${sign.annotation1}</value>
+                <value>${sign.annotation2}</value>
+                <value>${sign.annotation3}</value>
+                <value>${sign.annotation4}</value>
+                <value>${sign.annotation5}</value>
+            </array>
+        </property>
+    </bean>
+</beans>

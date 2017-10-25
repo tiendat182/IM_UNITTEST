@@ -1,0 +1,308 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+      xmlns:composite="http://java.sun.com/jsf/composite" xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:of="http://omnifaces.org/functions">
+<composite:interface>
+</composite:interface>
+<composite:implementation>
+    <!--vung nhap thong tin apn-->
+    <p:outputPanel styleClass="Container100">
+        <p:outputPanel id="apnInfo" styleClass="Container100">
+            <div class="ContainerIndent mg-left-5">
+                <p:messages id="messages" showSummary="false" showDetail="true" closable="true"/>
+                <p:focus for="pnInfoSearch"/>
+                <cbs:panel classForToggle="panelInforAPN"
+                           toggle="true"
+                           titleHeader="#{lang['mn.stock.limit.info.range.time.promotion']}"/>
+
+
+                <p:outputPanel id="pnInfoSearch" class="Container100 panelInforAPN"
+                               style="margin-bottom: 10px;margin-top: 10px;">
+
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel"
+                                               value="#{lang['mn.import.apn.code']}"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="apnCodeTxt"
+                                             maxlength="50"
+                                             requiredMessage="#{lang['mn.import.apn.code.require']}"
+                                             placeholder="#{lang['mn.import.apn.code.holder']}"
+                                             onchange="this.value=this.value.trim()"
+                                             value="#{importApnController.inputAPN.apnCode}">
+                                    <pe:keyFilter regEx="/[a-zA-Z0-9_\.\-*?\s/]/i" preventPaste="false"/>
+                                </p:inputText>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel"
+                                               value="#{lang['mn.import.apn.name']}"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="apnNameTxt"
+                                             maxlength="100"
+                                             requiredMessage="#{lang['mn.import.apn.name.require']}"
+                                             onchange="this.value=this.value.trim()"
+                                             placeholder="#{lang['mn.import.apn.name.holder']}"
+                                             value="#{importApnController.inputAPN.apnName}">
+                                    <pe:keyFilter regEx="/[a-zA-Z0-9_\.\-*?\s/]/i" preventPaste="false"/>
+
+                                </p:inputText>
+                            </div>
+                        </div>
+
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel"
+                                               value="#{lang['common.status']}"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu value="#{importApnController.apnStatus}">
+                                    <f:selectItem itemLabel="#{lang['common.selectOneMenu.select']}"
+                                                  noSelectionOption="true"/>
+                                    <f:selectItem itemValue="1" itemLabel="#{lang['list.import.apn.status.renew']}"/>
+                                    <f:selectItem itemValue="0" itemLabel="#{lang['list.import.apn.status.used']}"/>
+                                    <p:ajax event="change" process="@this"
+                                            listener="#{importApnController.onChangeStatusAPN()}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ContainerIndent mg-top-0">
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel centerCode"
+                                               value="#{lang['mn.import.apn.center.code']}"
+                                               for="centerCode"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="centerCode"
+                                             styleClass="centerCode"
+                                             onchange="this.value=this.value.trim()"
+                                             maxlength="50"
+                                             requiredMessage="#{lang['mn.import.apn.center.code.require']}"
+                                             placeholder="#{lang['mn.import.apn.center.code.holder']}"
+                                             value="#{importApnController.inputAPN.centerCode}">
+                                    <!--<pe:keyFilter regEx="/[a-zA-Z0-9_\.\-*?\s/]/i" preventPaste="false"/>-->
+                                </p:inputText>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel styleClass="lb-sentinel decscription"
+                                               value="#{lang['mn.import.apn.description']}"
+                                               for="decscription"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="decscription"
+                                             styleClass="decscription"
+                                             onchange="this.value=this.value.trim()"
+                                             maxlength="500"
+                                             placeholder="#{lang['mn.import.apn.description.holder']}"
+                                             value="#{importApnController.inputAPN.description}">
+                                    <!--<pe:keyFilter regEx="/[a-zA-Z0-9_\.\-*?\s/]/i" preventPaste="false"/>-->
+                                </p:inputText>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive"></div>
+                    </div>
+                    <div class="ContainerIndent TexAlCenter mg-top-0">
+                        <p:commandButton
+                                value="#{lang['range.time.promotion.btn.search']}"
+                                process="@this,@([id$=pnInfoSearch])"
+                                update="@this,@([id$=pnInfoSearch]),@([id$=pnLstAPN]), @([id$=messages])"
+                                actionListener="#{importApnController.searchApn()}"
+                                />
+
+                        <p:commandButton
+                                title="#{lang['reset.selected']}"
+                                value="#{lang['reset.selected']}"
+                                process="@this"
+                                resetValues="true"
+                                action="#{importApnController.btnResetAPN()}"
+                                update="@([id$=pnInfoSearch]),@([id$=pnLstAPN]),@([id$=apnInfo])"
+                                styleClass="fa Fs14 blue md-link mg-left-5">
+                        </p:commandButton>
+                    </div>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+        <!--danh sach apn-->
+        <p:outputPanel id="pnLstAPN">
+            <div class="ContainerIndent mg-left-5">
+
+                <cbs:panel classForToggle="panelListAPN"
+                           toggle="true"
+                           titleHeader="#{lang['im.import.apn.list.apn']}"/>
+
+                <div class="Container100 panelListAPN">
+                    <p:commandLink title="#{lang['common.add']}"
+                                   process="@this"
+                                   resetValues="true"
+                                   action="#{importApnController.prepareData(null,false)}"
+                                   update="@([id$=pnInfoSearch]),@([id$=pnLstAPN]),@([id$=dlgAddEditApn])"
+                                   oncomplete="PF('dlgAddEditApn').show();"
+                                   styleClass="fa icon-plus Fs14 blue md-link mg-left-5">
+                        <h:outputText value="#{lang['common.add']}"/>
+                    </p:commandLink>
+
+                    <p:dataTable
+                            id="dataListApn"
+                            var="item"
+                            resizableColumns="true"
+                            paginator="#{lang['common.paging.paginator']}"
+                            rows="#{lang['common.paging.rows.default']}"
+                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                            emptyMessage="#{lang['common.empty.records']}"
+                            value="#{importApnController.listApn}"
+                            >
+
+                        <p:column headerText="#{lang['mn.import.apn.code']}"
+                                  sortBy="#{item.apnCode}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.import.apn.code']}"
+                                              title="#{lang['mn.import.apn.code']}"/>
+                            </f:facet>
+                            <p:outputLabel
+                                    value="#{item.apnCode}"
+                                    title="#{item.apnCode}"
+                                    />
+                        </p:column>
+                        <p:column headerText="#{lang['mn.import.apn.name']}"
+                                  sortBy="#{item.apnName}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.import.apn.name']}"
+                                              title="#{lang['mn.import.apn.name']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{item.apnName}" title="#{item.apnName}"
+                                    />
+                        </p:column>
+                        <p:column headerText="#{lang['common.status']}" sortBy="#{item.status}"
+                                  style="text-align: left">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.status']}"
+                                              title="#{lang['common.status']}"/>
+                            </f:facet>
+                            <p:outputLabel
+                                    value="#{item.status eq 1 ? lang['list.import.apn.status.renew']:(item.status eq 0?lang['list.import.apn.status.used']:'')}"
+                                    title="#{item.status eq 1 ? lang['list.import.apn.status.renew']:(item.status eq 0?lang['list.import.apn.status.used']:'')}"
+                                    style="text-align: left"/>
+                        </p:column>
+                        <p:column headerText="#{lang['mn.apnip.text.centerCode']}"
+                                  sortBy="#{item.centerCode}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.apnip.text.centerCode']}"
+                                              title="#{lang['mn.apnip.text.centerCode']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{item.centerCode}"
+                                           title="#{item.centerCode}"/>
+                        </p:column>
+                        <p:column headerText="#{lang['mn.import.apn.description']}"
+                                  sortBy="#{item.description}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.import.apn.description']}"
+                                              title="#{lang['mn.import.apn.description']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{item.description}"
+                                           title="#{item.description}"/>
+
+                        </p:column>
+
+                        <p:column headerText="#{lang['mn.invoice.invoiceType.userCreate']}"
+                                  sortBy="#{item.createUser}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.invoice.invoiceType.userCreate']}"
+                                              title="#{lang['mn.invoice.invoiceType.userCreate']}"/>
+                            </f:facet>
+                            <p:outputLabel
+                                    value="#{item.createUser}"
+                                    title="#{item.createUser}"/>
+                        </p:column>
+                        <p:column headerText="#{lang['mn.invoice.invoiceType.dateCreate']}"
+                                  sortBy="#{item.createTime}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.invoice.invoiceType.dateCreate']}"
+                                              title="#{lang['mn.invoice.invoiceType.dateCreate']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{item.createTime}"
+                                           title="#{of:formatDate(item.createTime, 'dd/MM/yyyy')}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="#{lang['common.edit.delete']}" style="width: 7%;" styleClass="col-left">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.edit.delete']}"
+                                              title="#{lang['common.edit.delete']}"/>
+                            </f:facet>
+                            <p:commandLink title="#{lang['common.edit']}"
+                                           styleClass="fa icon-edit"
+                                           disabled="#{not (item.status eq 1)}"
+                                           process="@this"
+                                           actionListener="#{importApnController.prepareData(item,true)}"
+                                           update="@([id$=dlgAddEditApn])"
+                                           oncomplete="if(!args.validationFailed){PF('dlgAddEditApn').show()}"/>
+                            <!--<cbs:confirmDialog-->
+                            <!--idComponent="btnConfirm"-->
+                            <!--valueButton=""-->
+                            <!--disableButton="#{not (item.status eq 1)}"-->
+                            <!--titleButton="#{lang['common.delete']}"-->
+                            <!--styleClassButton="fa icon-trash Fs14 blue"-->
+                            <!--headerConfirm="#{lang['mn.import.apn.delete']}"-->
+                            <!--messageConfirm="#{lang['mn.import.apn.delete.msg']} #{item.apnCode} ?"-->
+                            <!--actionOK="#{importApnController.doAddApn(null)}"-->
+                            <!--process="@this"-->
+                            <!--updateArea="@this,@([id$=pnLstAPN]),@([id$=messages])"-->
+                            <!--processOK="@this"-->
+                            <!--updateOK="@this, @([id$=pnLstAPN]),@([id$=messages])"-->
+                            <!--actionValidate="#{importApnController.prepareData(item,true)}"-->
+                            <!--focusCancel="false"-->
+                            <!--isButton="false"-->
+                            <!--/>-->
+                            <cbs:confirmButton dlgWidgetVar="btnConfirm"
+                                               disableButton="#{not (item.status eq 1)}"
+                                               valueButton=""
+                                               title="#{lang['common.delete']}"
+                                               styleClassButton="fa icon-trash Fs14 blue"
+                                               isButton="false"
+                                               focusCancel="false"
+                                               actionValidate="#{importApnController.prepareData(item,true)}"
+                                               action="#{importApnController.doAddApn(null)}"
+                                               messageConfirm="#{lang['mn.import.apn.delete.msg']} #{importApnController.inputAPNAdd.apnCode} ?"
+                                               headerConfirm="#{lang['mn.import.apn.delete']}"
+                                               process="@this"
+                                               updateArea="@this,@([id$=pnLstAPN]),@([id$=messages])"
+                                    ></cbs:confirmButton>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+    <p:dialog widgetVar="dlgAddEditApn" id="dlgAddEditApn" appendTo="@(body)" closable="true"
+              closeOnEscape="true" dynamic="true" resizable="false" maximizable="true"
+              header="#{importApnController.isEdit ?lang['mn.import.apn.code.edit'] :lang['mn.import.apn.code.add']}"
+              width="60%"
+              onShow="reloadMess()"
+              modal="true" position="center" minWidth="700">
+        <ui:include src="dlgAddEditApn.xhtml"/>
+        <p:remoteCommand name="reloadMess"
+                         update="@([id$=messages])"/>
+    </p:dialog>
+    <!--<ui:define name="script">-->
+
+    <!--</ui:define>-->
+
+</composite:implementation>
+
+</html>

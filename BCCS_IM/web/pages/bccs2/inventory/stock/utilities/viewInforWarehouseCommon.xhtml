@@ -1,0 +1,364 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h:form id="frmViewInforWarehouse" styleClass="Container100">
+        <p:focus for="@form"/>
+        <style type="text/css">
+            .ui-treetable .ui-treetable-indent {
+                height: 0px;
+                width: 0px;
+            }
+        </style>
+
+        <div class="ContainerIndent mg-top-0 mg-bottom-0">
+            <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"/>
+        </div>
+        <p:outputPanel styleClass="ContainerIndent" id="pnlInforWarehouse">
+            <p:focus for="pnlInforWarehouse"/>
+            <cbs:panel classForToggle="pnlInforWarehouse" toggle="true"
+                       titleHeader="#{lang['mn.stock.utilities.infor.ware.house']}"/>
+
+            <div class="pnlInforWarehouse Container100 marginTopBottom10 ">
+                <div class="ContainerIndent mg-top-0">
+                    <div class="Container100 Responsive ">
+                        <div class="Container66 Responsive66">
+                            <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                                <p:outputLabel value="Loại kho" for="cbxTypeInput" styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container80 Responsive75 ui-fluid">
+                                <p:selectOneRadio id="cbxTypeInput"
+                                                  value="#{viewInforWarehouseController.typeProductOffering}"
+                                                  required="true"
+                                                  disabled="#{viewInforWarehouseController.disableUnit}">
+                                    <f:selectItem itemLabel="#{lang['stock.trans.ui.stocktype.unit']}"
+                                                  itemValue="1"/>
+                                    <f:selectItem itemLabel="#{lang['stock.trans.ui.stocktype.staff']}"
+                                                  itemValue="2"/>
+                                    <p:ajax event="change" process="@this"
+                                            listener="#{viewInforWarehouseController.change}"
+                                            update="@([id$=pnlInforWarehouse]), @([id$=msgSearch])"
+                                            />
+                                </p:selectOneRadio>
+                            </div>
+                        </div>
+                        <div class="Container33 Responsive33">
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="ContainerIndent mg-top-0">
+                    <div class="Container33 Responsive33">
+                        <cbs:inputShop value="#{viewInforWarehouseController.shopInfoTag}"
+                                       id="inputStore"
+                                       idComponent="inputStore"
+                                       methodName="receiveShop"
+                                       update="@this"
+                                       label="#{lang['invoice.type.shop']}"
+                                       require="true"
+                                       forceSelection="false"
+                                       clearMethodName="clearShop"
+                                       classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                       classDivInput="Container60 Responsive50 ui-fluid"
+                                       requiredMessage="#{lang['stock.rescueInformation.required.unit']}"
+                                       placeholder="#{lang['mn.stock.limit.store.code.placeholder']}">
+                        </cbs:inputShop>
+                    </div>
+                    <p:outputPanel styleClass="Container33 Responsive33" id="pnStaff">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel value="#{lang['view.warehouse.staff.info']}" for="inputStaff"
+                                           styleClass="lb-sentinel"
+                                           rendered="#{viewInforWarehouseController.showStaff}"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid ui-relative">
+                            <p:autoComplete id="inputStaff"
+                                            value="#{viewInforWarehouseController.curStaff}"
+                                            forceSelection="true"
+                                            disabled="#{viewInforWarehouseController.curStaff != null}"
+                                            completeMethod="#{viewInforWarehouseController.doChangeStaffNew}"
+                                            placeholder="#{lang['mn.invoice.staff.placeholder']}"
+                                            onfocus="this.setSelectionRange(0, this.value.length)"
+                                            var="vShopStaffDTO"
+                                            maxResults="100"
+                                            itemLabel="#{vShopStaffDTO.itemLabel}"
+                                            itemValue="#{vShopStaffDTO}"
+                                            styleClass="autoCpl"
+                                            required="true"
+                                            requiredMessage="#{lang['mn.invoice.info.require.staff']}"
+                                            maxlength="100" scrollHeight="300"
+                                            rendered="#{viewInforWarehouseController.showStaff}">
+                                <f:attribute name="index" value="#{index}"/>
+                                <o:converter converterId="VShopStaffConverter"
+                                             list="#{viewInforWarehouseController.lsCurStaff}"/>
+                                <p:ajax event="itemSelect"
+                                        listener="#{viewInforWarehouseController.receiveStaff}"
+                                        update="@([id$=inputStaff])" process="@this"/>
+                                <p:column headerText="#{lang['common.lb.code']}"><h:outputText escape="true"
+                                                                                               value="#{vShopStaffDTO.ownerCode}"/></p:column>
+                                <p:column headerText="#{lang['common.lb.name']}"><h:outputText escape="true"
+                                                                                               value="#{vShopStaffDTO.ownerName}"/></p:column>
+                                <p:ajax event="query" global="false"/>
+                            </p:autoComplete>
+                            <p:commandLink id="btnStaffClear"
+                                           styleClass="ui-link-right"
+                                           update="@([id$=inputStaff])"
+                                           actionListener="#{viewInforWarehouseController.clearStaff()}"
+                                           process="@this">
+                                <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                            </p:commandLink>
+                            <p:message for="inputStaff"/>
+                        </div>
+                    </p:outputPanel>
+                    <p:outputPanel styleClass="Container33 Responsive33" id="pnProduct">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel value="#{lang['create.order.file.stock.model']}"
+                                           for="productOfferTotal" styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid ui-relative">
+                            <p:autoComplete id="productOfferTotal"
+                                            value="#{viewInforWarehouseController.productOfferingTotalNewDTO}"
+                                            forceSelection="true"
+                                            completeMethod="#{viewInforWarehouseController.doChangeOfferingNew}"
+                                            placeholder="#{lang['view.warehouse.product.info.holder']}"
+                                            onfocus="this.setSelectionRange(0, this.value.length)"
+                                            var="productOfferingTotalNewDTO"
+                                            maxResults="100"
+                                            styleClass="ignore-confirm"
+                                            inputStyleClass="ignore-confirm"
+                                            itemLabel="#{productOfferingTotalNewDTO.itemLabel}"
+                                            itemValue="#{productOfferingTotalNewDTO}"
+                                            required="false"
+                                            requiredMessage="#{lang['export.order.stock.inputText.require.msg']}"
+                                            maxlength="100" scrollHeight="300">
+                                <o:converter converterId="productOfferingConverter"
+                                             list="#{viewInforWarehouseController.lsProductOfferingTotalNewDTO}"/>
+                                <p:ajax event="itemSelect" listener="#{viewInforWarehouseController.receiveProduct}"
+                                        update="@([id$=pnProduct])" process="@this"/>
+                                <p:column headerText="#{lang['common.lb.code']}"><h:outputText escape="true"
+                                                                                               value="#{productOfferingTotalNewDTO.code}"/></p:column>
+                                <p:column headerText="#{lang['common.lb.name']}"><h:outputText escape="true"
+                                                                                               value="#{productOfferingTotalNewDTO.name}"/></p:column>
+                                <p:ajax event="query" global="false"/>
+                            </p:autoComplete>
+                            <p:commandLink styleClass="ui-link-right"
+                                           update="@([id$=pnProduct])"
+                                           actionListener="#{viewInforWarehouseController.resetProduct}"
+                                           process="@this">
+                                <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                            </p:commandLink>
+                            <p:message for="productOfferTotal"/>
+                        </div>
+
+                    </p:outputPanel>
+                    <p:outputPanel id="pnUpdateKcs" rendered="#{viewInforWarehouseController.showKcs}">
+                        <div class="Container100" style="margin-bottom: 10px;">
+                            <div class="Container66 Responsive66" style="margin-top: 10px!important;">
+                                <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel"
+                                                   value="#{lang['create.order.file.data']}"/>
+                                </div>
+                                <div class="Container80 Responsive75 ui-fluid">
+                                    <p:inputText id="outputAttachFile"
+                                                 styleClass="outputAttachFile"
+                                                 maxlength="100"
+                                                 required="true"
+                                                 placeholder="#{lang['search.number.range.input.fileName']}"
+                                                 value="#{viewInforWarehouseController.fileName}"
+                                                 readonly="true"/>
+                                </div>
+                            </div>
+                            <div class="Container33 Responsive">
+                                <div class="Container100">
+                                    <p:fileUpload id="fileAttach"
+                                                  process="@this"
+                                                  label="#{lang['mn.stock.limit.createFile']}"
+                                                  update="@this, @([id$=outputAttachFile]),@([id$=msgSearch]),@([id$=pnDown]),@([id$=frmViewInforWarehouse])"
+                                                  dragDropSupport="true" required="true" mode="advanced"
+                                                  auto="true"
+                                                  allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                                  invalidFileMessage="#{lang['mn.isdn.rule.invalid.file.type']}"
+                                                  value="#{viewInforWarehouseController.uploadedFile}"
+                                                  fileUploadListener="#{viewInforWarehouseController.fileUploadAction}">
+                                    </p:fileUpload>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Container100">
+                            <p:outputPanel id="pnDown" style="margin-left: 20px">
+                                <p:commandLink
+                                        id="btnDownloadTemplate"
+                                        value="#{lang['mn.stock.status.isdn.update.status.file_template']}"
+                                        rendered="#{empty viewInforWarehouseController.listError}"
+                                        title="#{lang['create.note.download.file.title']}"
+                                        ajax="false"
+                                        immediate="true"
+                                        style="text-decoration: none!important;">
+                                    <p:fileDownload
+                                            value="#{viewInforWarehouseController.downloadFileTemplate()}"/>
+                                </p:commandLink>
+                                <p:commandLink
+                                        id="bthDownloadError"
+                                        value="#{lang['button.export.excel.error']}"
+                                        rendered="#{not empty viewInforWarehouseController.listError}"
+                                        title="#{lang['create.note.download.file.title']}"
+                                        ajax="false"
+                                        immediate="true"
+                                        style="text-decoration: none!important;color: red !important;">
+                                    <p:fileDownload
+                                            value="#{viewInforWarehouseController.downloadFileError()}"/>
+                                </p:commandLink>
+                            </p:outputPanel>
+                        </div>
+                        <div class="Container100 TexAlCenter" style="margin-bottom: 10px !important;">
+                            <cbs:confirmDialog
+                                    idComponent="import"
+                                    id="import"
+                                    valueButton="Import"
+                                    headerConfirm="#{lang['import.apn.apnip.confirm.import.header']}"
+                                    messageConfirm="#{lang['import.apn.apnip.confirm.import.body']}"
+                                    actionOK="#{viewInforWarehouseController.importData()}"
+                                    resetValueButton="true"
+                                    process="@this,@([id$=pnlInforWarehouse])"
+                                    updateArea="@this,@([id$=pnlInforWarehouse]),@([id$=frmViewInforWarehouse])"
+                                    processOK="@this,@([id$=pnlInforWarehouse])"
+                                    updateOK="@([id$=pnlInforWarehouse]),@([id$=frmViewInforWarehouse])"
+                                    actionValidate="#{viewInforWarehouseController.validateImport()}"
+                                    focusCancel="true"
+                                    isButton="true"/>
+                        </div>
+                    </p:outputPanel>
+                </div>
+
+                <div class="ContainerIndent TexAlCenter">
+                    <p:commandButton value="#{lang['mn.stock.utilities.view.ware.house']}" process="@form" id="btnView"
+                                     update="@form" actionListener="#{viewInforWarehouseController.searchStock}"/>
+                    <p:commandButton styleClass="mg-left-5"
+                                     value="#{lang['mn.stock.utilities.export.detail']}"
+                                     process="@form"
+                                     update="@form"
+                                     oncomplete="if(!args.validationFailed){clickLinkByClass('downloadFile');}"
+                            >
+                    </p:commandButton>
+                    <p:commandLink value="#{lang['MSG.download2.file.here']}" immediate="true"
+                                   ajax="false" styleClass="mg-top-4 downloadFile" style="display: none;"
+                            >
+                        <p:fileDownload value="#{viewInforWarehouseController.exportFileDetail()}"/>
+                    </p:commandLink>
+                </div>
+            </div>
+        </p:outputPanel>
+
+        <p:outputPanel styleClass="ContainerIndent" id="pnlListStock">
+            <cbs:panel classForToggle="pnlListStock"
+                       titleHeader="#{lang['export.order.view.list.product']}"/>
+
+            <div class="pnlListStock Container100" style="margin-bottom: 10px;margin-top: 10px;">
+                <p:outputPanel styleClass="ContainerIndent mg-top-0">
+                    <p:treeTable id="treeTblListStock"
+                                 selectionMode="single"
+                                 emptyMessage="#{lang['common.empty.records']}"
+                                 var="item"
+                                 value="#{viewInforWarehouseController.rootStock}">
+                        <p:column styleClass="col-left" style="width: 15%;">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['agent.sale.table.productOffering.code']}"
+                                              title="#{lang['agent.sale.table.productOffering.code']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{item.name}" title="#{item.name}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" sortBy="#{item.productName}" style="width: 25%;">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['export.order.name.product']}"
+                                              title="#{lang['export.order.name.product']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{item.productName}" title="#{item.productName}"/>
+                        </p:column>
+                        <p:column styleClass="col-left">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.status']}" title="#{lang['common.status']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{item.stateName}"/>
+                        </p:column>
+                        <p:column styleClass="col-left">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['export.order.code.TC']}"
+                                              title="#{lang['export.order.code.TC']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{item.accountingModelCode}"/>
+                        </p:column>
+                        <p:column styleClass="col-left">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.utilities.unit']}"
+                                              title="#{lang['mn.stock.utilities.unit']}"/>
+                            </f:facet>
+                            <p:outputLabel value="#{item.unit}" title="#{item.unit}"/>
+                        </p:column>
+                        <p:column styleClass="TexAlRight" sortBy="#{item.requirementQuanlity}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.utilities.quality.request']}"
+                                              title="#{lang['mn.stock.utilities.quality.request']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.requirementQuanlity}" title="#{item.requirementQuanlity}"
+                                          converter="currencyFormat" escape="true"/>
+                        </p:column>
+                        <p:column styleClass="TexAlRight" sortBy="#{item.availableQuanlity}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.utilities.quality.responsive']}"
+                                              title="#{lang['mn.stock.utilities.quality.responsive']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.availableQuanlity}" title="#{item.availableQuanlity}"
+                                          converter="currencyFormat" escape="true"/>
+                        </p:column>
+                        <p:column styleClass="TexAlRight" sortBy="#{item.currentQuanlity}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.utilities.quality.real']}"
+                                              title="#{lang['mn.stock.utilities.quality.real']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.currentQuanlity}" title="#{item.currentQuanlity}"
+                                          converter="currencyFormat" escape="true"/>
+                        </p:column>
+
+                        <p:column headerText="#{lang['mn.stock.liquidate.approve.impacts']}"
+                                  style="text-align: center">
+                            <p:commandLink styleClass="fa icon-zoom-in Fs16 blue" title="#{lang['mn.stock.utilities.view.detail.serial.imei']}"
+                                           oncomplete="if(!args.validationFailed){PF('dlgDetaiSerial').show()}"
+                                           process="@this" update="@([id$=frmViewDetailSerial])"
+                                           rendered="#{item.checkSerial == '1'}"
+                                           actionListener="#{viewInforWarehouseController.showDialogSerial
+                                               (item)}"/>
+                            <p:commandLink styleClass="fa icon-link Fs16 blue"
+                                           title="#{lang['mn.stock.view.sale.trans.dlg.title']}"
+                                           oncomplete="if(!args.validationFailed){PF('dlgViewTransSale').show()}"
+                                           process="@this" update="@([id$=dlgViewTransSale]),@([id$=msgSearch])"
+                                           rendered="#{item.showInfo}"
+                                           actionListener="#{viewInforWarehouseController.showDialogViewTransSale(item)}"/>
+                        </p:column>
+
+                    </p:treeTable>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+    </h:form>
+    <p:dialog id="dlgAddInvoice" widgetVar="dlgDetaiSerial"
+              appendTo="@(body)" closable="true" closeOnEscape="true" maximizable="true"
+              position="center" dynamic="true" modal="true" resizable="false"
+              minWidth="700"
+              width="60%"
+              header="#{lang['mn.stock.utilities.view.detail.serial.imei']}">
+        <ui:include src="dialog/dlgDetailSerial.xhtml"/>
+    </p:dialog>
+    <p:dialog id="dlgViewTransSale" widgetVar="dlgViewTransSale"
+              appendTo="@(body)" closable="true" closeOnEscape="true" maximizable="true"
+              position="center" dynamic="true" modal="true" resizable="false"
+              minWidth="700"
+              width="60%"
+              header="#{lang['mn.stock.view.sale.trans.dlg.zoom']}">
+        <ui:include src="dialog/dlgViewTransSale.xhtml"/>
+    </p:dialog>
+</ui:composition>

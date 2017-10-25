@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <!--<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} [%x] - %msg%n"/>-->
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="|%X{kpi}|%msg%n"/>
+        </Console>
+        <Socket name="Remote" host="10.60.99.218" port="9704" protocol="UDP">
+            <PatternLayout pattern="%p %c [%M:%L][%X{server.name}][%X{remoteip}]|%X{kpi}|%msg%n"/>
+        </Socket>
+        <RollingFile name="performance" fileName="${sys:catalina.home}/logs/performance/performance.log" filePattern="${sys:catalina.home}/logs/performance/performance-%d{yyMMddHH}.log.gz">
+            <PatternLayout pattern="%d{dd/MM/yy HH:mm:ss}|%X{kpi}|%m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+        <RollingFile name="kpi" fileName="${sys:catalina.home}/logs/kpi/kpi.log" filePattern="${sys:catalina.home}/logs/kpi/kpi-%d{yyMMddHH}.log.gz">
+            <PatternLayout pattern="%d{dd/MM/yy HH:mm:ss}|%X{kpi}|%m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+        <RollingFile name="error" fileName="${sys:catalina.home}/logs/error/error.log" filePattern="${sys:catalina.home}/error/error-%d{yyMMddHH}.log.gz">
+            <PatternLayout pattern="%d{dd/MM/yy HH:mm:ss}|%X{kpi}|%m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+        <RollingFile name="errorBusiness" fileName="${sys:catalina.home}/logs/error/error-business.log" filePattern="${sys:catalina.home}/error/error-business-%d{yyMMddHH}.log.gz">
+            <PatternLayout pattern="%d{dd/MM/yy HH:mm:ss}|%X{kpi}|%m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <AsyncRoot level="info" includeLocation="true">
+            <AppenderRef ref="Console" level="info"/>
+            <AppenderRef ref="Remote" level="info"/>
+            <AppenderRef ref="error" level="error"/>
+        </AsyncRoot>
+        <Logger name="performanceLogger">
+            <AppenderRef ref="performance"/>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Remote"/>
+        </Logger>
+        <Logger name="KPI_LOGGER">
+            <AppenderRef ref="kpi"/>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Remote"/>
+        </Logger>
+        <Logger name="errorLogger">
+            <AppenderRef ref="error"/>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Remote"/>
+        </Logger>
+        <Logger name="errBusinessLogger">
+            <AppenderRef ref="errorBusiness"/>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Remote"/>
+        </Logger>
+    </Loggers>
+</Configuration>

@@ -1,0 +1,211 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.stock.rescue.information.retrieve']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.stock.rescue.information.retrieve']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmExportNote">
+            <p:outputPanel styleClass="container100">
+                <p:outputPanel id="pnUnderExportNote">
+                    <div class="ContainerIndent mg-top-0">
+                        <p:messages id="retrieveStock" showSummary="false" showDetail="true" closable="true"/>
+                    </div>
+                    <!--Start vung thong tin giao dich-->
+                    <p:outputPanel id="pnInfoExportNote" styleClass="ContainerIndent">
+                        <p:focus for="pnInfoExportNote"/>
+                        <cbs:panel classForToggle="panelInforExportNote"
+                                   toggle="true"
+                                   titleHeader="#{lang['information.transaction']}"/>
+                        <p:remoteCommand name="updateControls" update="@form" process="@this"/>
+
+                        <div class="Container100 panelInforExportNote" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['order.code.field']}"
+                                                       for="codeExportTxt"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:inputText id="codeExportTxt"
+                                                     required="true"
+                                                     maxlength="50"
+                                                     onblur="this.value = this.value.trim();"
+                                                     requiredMessage="#{lang['stock.rescueInformation.required.actionCode']}"
+                                                     value="#{rescueInforRetrieveStockController.transInputDTO.actionCode}"
+                                                     placeholder="#{lang['stock.rescueInformation.input.stockTrans.actionCode']}"/>
+                                        <pe:keyFilter for="codeExportTxt" regEx="/^[0-9a-zA-Z_]+$/i"  preventPaste="false"/>
+                                        <p:message for="codeExportTxt"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15  pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['list.order.import.people.arrive']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ">
+                                        <p:outputLabel escape="true"
+                                                       value="#{rescueInforRetrieveStockController.transInputDTO.createUser}"
+                                                       styleClass="lb-sentinel-bold"></p:outputLabel>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['mn.stock.agency.retrieve.day']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ">
+                                        <h:outputText
+                                                value="#{rescueInforRetrieveStockController.transInputDTO.createDatetime}"
+                                                escape="true"
+                                                styleClass="lb-sentinel-bold">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel"
+                                                       value="#{lang['export.order.stock.receive.product']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid ">
+                                        <p:outputLabel escape="true"
+                                                       value="#{rescueInforRetrieveStockController.codeAndName}"
+                                                       styleClass="lb-sentinel-bold"></p:outputLabel>
+                                    </div>
+                                </div>
+
+                                <div class="Container33 Responsive">
+                                    <cbs:inputStaff value="#{rescueInforRetrieveStockController.staffInfoReceiveTag}"
+                                                    id="ipReceiveStaff"
+                                                    methodName="receiveStaff"
+                                                    update="@this, @([id$=pnlProductXXX])"
+                                                    label="#{lang['mn.stock.staff.stock']}"
+                                                    require="false"
+                                                    forceSelection="false"
+                                                    classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                    classDivInput="Container60 Responsive50 ui-fluid"
+                                                    requiredMessage="#{lang['mn.stock.ware.house.recovery.not.blank']}"
+                                                    placeholder="#{lang['mn.stock.staff.receive.staff.placehoder']}"
+                                                    clearMethodName="clearCurrentStaff">
+                                    </cbs:inputStaff>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" for="cbxReason"
+                                                       value="#{lang['agency.deposit.reason']}"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid">
+                                        <p:selectOneMenu id="cbxReason"
+                                                         required="true"
+                                                         requiredMessage="#{lang['stock.rescueInformation.require.stockTrans.reason']}"
+                                                         value="#{rescueInforRetrieveStockController.transInputDTO.reasonId}">
+                                            <f:selectItem itemLabel="#{lang['common.reason.placeholder']}"/>
+                                            <f:selectItems value="#{rescueInforRetrieveStockController.reasonList}"
+                                                           itemLabel="#{item.reasonName}" var="item"
+                                                           itemValue="#{item.reasonId}"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="cbxReason"/>
+                                    </div>
+                                </div>
+                                </div>
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container66 Responsive50">
+                                    <div class="Container20 Responsive25 mg-left-15 pd-top-4">
+                                        <p:outputLabel styleClass="lb-sentinel" value="#{lang['export.order.note']}"/>
+                                    </div>
+                                    <div class="Container80 Responsive75 ui-fluid">
+                                        <p:inputText placeholder="#{lang['export.order.note.placehoder']}"
+                                                     maxlength="500"
+                                                     onblur="this.value = this.value.trim();"
+                                                     value="#{rescueInforRetrieveStockController.transInputDTO.note}"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin giao dich-->
+
+                    <!--Start vung thong tin Danh sach hang hoa-->
+                    <p:outputPanel id="pnlProductXXX" styleClass="Container100">
+                    <div class="Container100">
+                        <cbs:inputListProduct idMessage="retrieveStock" idComponent="inputListProduct" id="listProduct"
+                                              value="#{rescueInforRetrieveStockController.listProductTag}" extraValue="false" renderRetrieveStock="false"
+                                              updateCheckSerial="@([id$=dlgDetailSerial]),@([id$=retrieveStock])"
+                                              onCompleteCheckSerial="if(!args.validationFailed){PF('dlgDetailSerial').show()}" />
+                    </div>
+                    </p:outputPanel>
+                    <!--End vung thong tin danh sach hang hoa-->
+                    <!--Start Vung data button-->
+                    <div class="Container100">
+                        <div class="ContainerIndent TexAlCenter mg-top-0">
+                            <!--<p:commandButton value="#{lang['mn.stock.export']}"/>-->
+                            <cbs:confirmDialog
+                                    idComponent="submitOrder"
+                                    id="createOrder"
+                                    valueButton="#{lang['mn.invoice.retrieve']}"
+                                    headerConfirm="#{lang['retrieve.order.btn.submit.header.confirm']}"
+                                    messageConfirm="#{lang['retrieve.order.btn.submit.header.msg']}"
+                                    actionOK="#{rescueInforRetrieveStockController.addRetrieveStock}"
+                                    resetValueButton="true"
+                                    process="@form"
+                                    updateArea="@form"
+                                    processOK="@form"
+                                    updateOK="@form"
+                                    disableButton="#{rescueInforRetrieveStockController.created}"
+                                    actionValidate="#{rescueInforRetrieveStockController.validateRetrieveStock}"
+                                    focusCancel="false"
+                                    isButton="true"
+                                    />
+                            <p:commandButton value="#{lang['common.reset']}" styleClass="mrg-left-5"
+                                             actionListener="#{rescueInforRetrieveStockController.resetForm}"
+                                             update="@form"
+                                             resetValues="true"
+                                             process="@this"/>
+
+                        </div>
+                    </div>
+                    <!--End Vung data button-->
+                </p:outputPanel>
+            </p:outputPanel>
+            <script type="text/javascript">
+                document.getElementById('frmExportNote').onkeypress = function (event) {
+//                    if (event.keyCode == 119 &amp;&amp; document.getElementById('frmExportOrder:createOrder:submitOrderbtn') != null) {
+//                        document.getElementById("frmExportOrder:createOrder:submitOrderbtn").click();
+//                        return false;
+//                    }
+                    if (event.keyCode == 120 &amp;&amp; document.getElementById('frmExportNote:listProduct:inputListProductAddNew') != null) {
+                        document.getElementById("frmExportNote:listProduct:inputListProductAddNew").click();
+                        return false;
+                    }
+                }
+            </script>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailSerial"
+                  widgetVar="dlgDetailSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <ui:include src="../../../../../resources/tags/dlgDetailSerial.xhtml">
+                <ui:param name="controller" value="#{rescueInforRetrieveStockController.listProductTag}" />
+                <ui:param name="idComponent" value="inputListProduct" />
+            </ui:include>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

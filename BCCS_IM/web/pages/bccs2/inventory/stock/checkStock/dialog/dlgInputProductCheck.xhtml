@@ -1,0 +1,106 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:form id="frmDlgDetailStockInput" styleClass="Container">
+        <div class="Container" >
+            <p:messages id="msgSearchDlg" showSummary="false" showDetail="true" closable="true" />
+        </div>
+        <p:outputPanel styleClass="ContainerIndent">
+            <div class="ContainerIndent">
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 mg-left-15">
+                        <p:outputLabel value="#{lang['type.product']}" for="cbxProdOfferType" styleClass="lb-sentinel"/>
+                    </div>
+                    <div class="Container60 Responsive50">
+                        <p:selectOneMenu id="cbxProdOfferType"
+                                         required="true"
+                                         styleClass="Wid100"
+                                         disabled="true"
+                                         filter="true" filterMatchMode="contains"
+                                         value="#{stockInspectController.stockTransFullDTODlg.productOfferTypeId}"
+                                         requiredMessage="#{lang['mn.stock.branch.type.product.msg.require']}">
+                            <f:selectItem itemValue="" itemLabel="#{lang['common.selectOneMenu.select']}" noSelectionOption="true"/>
+                            <f:selectItems value="#{stockInspectController.lstProductOfferTypeDTODlg}"
+                                           var="item" itemValue="#{item.productOfferTypeId}" itemLabel="#{item.name}"/>
+                            <p:ajax event="change" process="@this" update="@([id$=pnProduct])"
+                                    listener="#{stockInspectController.onChangeOfferType()}"/>
+                        </p:selectOneMenu>
+                        <p:message for="cbxProdOfferType"/>
+                    </div>
+                </div>
+                <div class="Container33 Responsive">
+                    <div class="Container40 Responsive50 mg-left-15">
+                        <p:outputLabel value="#{lang['mn.stock.track.status.stock']}" for="cbxProductStatus" styleClass="lb-sentinel"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid">
+                        <p:selectOneMenu id="cbxProductStatus"
+                                         required="true"
+                                         styleClass="Wid100"
+                                         filter="true" filterMatchMode="contains"
+                                         disabled="true"
+                                         value="#{stockInspectController.stockTransFullDTODlg.stateId}"
+                                         requiredMessage="#{lang['mn.stock.branch.stock.status.msg.require']}">
+                            <f:selectItem itemValue="1" itemLabel="#{lang['create.request.import.product.status1']}"/>
+                            <f:selectItem itemValue="3" itemLabel="#{lang['create.request.import.product.status3']}"/>
+                            <p:ajax event="change" process="@this" update="@this"
+                                    listener="#{stockInspectController.onChangeOfferType()}"/>
+                        </p:selectOneMenu>
+                        <p:message for="cbxProductStatus"/>
+                    </div>
+                </div>
+                <p:outputPanel styleClass="Container33 Responsive" id="pnProduct">
+                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                        <p:outputLabel value="#{lang['mn.stock.liquidate.model']}" for="cplProductOfferDlg" styleClass="lb-sentinel"/>
+                    </div>
+                    <div class="Container60 Responsive50 ui-fluid ui-relative">
+                        <p:autoComplete id="cplProductOfferDlg"
+                                        required="true"
+                                        requiredMessage="#{lang['mn.stock.liquidate.model.required']}"
+                                        value="#{stockInspectController.productOfferingTotalDTODlg}"
+                                        completeMethod="#{stockInspectController.searchListProductOffering}"
+                                        placeholder="#{lang['mn.stock.liquidate.model.placeholder']}"
+                                        var="productOfferingTotalDTO"
+                                        itemValue="#{productOfferingTotalDTO}"
+                                        itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                        autoHighlight="true"
+                                        maxResults="10"
+                                        forceSelection="true">
+                            <o:converter converterId="productOfferingConverter"
+                                         list="#{stockInspectController.lstProductOfferingTotalDTODlg}"/>
+                            <p:ajax event="itemSelect"
+                                    listener="#{stockInspectController.doSelectProductOffering}"
+                                    process="@([id$=cplProductOfferDlg])"
+                                    update="@([id$=cplProductOfferDlg])"/>
+                            <p:column style="width: 40%" headerText="#{lang['common.lb.code']}" filterable="true">
+                                <p:outputLabel value="#{productOfferingTotalDTO.code}"/>
+                            </p:column>
+                            <p:column style="width: 60%" headerText="#{lang['common.lb.name']}" filterable="true">
+                                <p:outputLabel value="#{productOfferingTotalDTO.name}"/>
+                            </p:column>
+                            <p:ajax event="query" global="false"/>
+                        </p:autoComplete>
+                        <p:commandLink id="btnResetLstProduct" styleClass="ui-link-right" update="@this, @([id$=cplProductOfferDlg])"
+                                       actionListener="#{stockInspectController.resetLstProductOfferingTotal}" process="@this">
+                            <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                        </p:commandLink>
+                        <p:message for="cplProductOfferDlg"/>
+                    </div>
+                </p:outputPanel>
+            </div>
+            <div class="Container TexAlCenter">
+                <p:commandButton value="#{lang['common.add']}"
+                                 process="@form"
+                                 styleClass="mg-left-5"
+                                 oncomplete="if(!args.validationFailed){PF('dlgInputProductCheck').hide();}"
+                                 action="#{stockInspectController.doAddProduct}"
+                                 resetValues="false"
+                                 update="@form"/>
+            </div>
+        </p:outputPanel>
+    </h:form>
+</ui:composition>

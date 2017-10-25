@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+      xmlns:h="http://java.sun.com/jsf/html"
+        >
+<composite:interface>
+    <composite:attribute name="inputList" shortDescription="List of ObjectExtattrAssignDTO"/>
+    <composite:attribute name="outputList" shortDescription="List of ExtensionAttribute with code and value"/>
+    <composite:attribute name="optionSetCode" shortDescription="Option set code"/>
+    <composite:attribute name="header" default="" shortDescription="Header text"/>
+    <composite:attribute name="styleClass" default="" shortDescription="Css style class"/>
+    <composite:attribute name="columnClasses" default="oddCol,evenCol" shortDescription="Css column style class"/>
+    <composite:attribute name="id" required="true" default="dynaFormDef" shortDescription="Id of dynaform"/>
+</composite:interface>
+<composite:implementation>
+    <style type="text/css">
+        .ext-width {
+            width: 71.3% !important;
+        }
+
+        .pe-dynaform-label .pe-dynaform-label-rfi {
+            margin-left: 0.4em;
+            color: red;
+        }
+    </style>
+    <h:panelGroup id="#{cc.attrs.id}" style="width: 100%">
+
+        <p:remoteCommand autoRun="true"
+                         process="@this"
+                         global="false"
+                         action="#{extAttrComponentController.genModel(cc.attrs.inputList, cc.attrs.outputList, cc.clientId)}"
+                         update="dynaForm"/>
+
+        <pe:dynaForm id="dynaForm" varContainerId="test"
+                     value="#{extAttrComponentController.getModel(cc.clientId)}"
+                     var="input" styleClass="#{cc.attrs.styleClass}" style="width: 100%"
+                >
+            <f:facet name="headerRegular">
+                <p:outputLabel value="#{cc.attrs.header}" style="font-weight: bold;"/>
+            </f:facet>
+            <p:focus context="dynaForm"/>
+            <pe:dynaFormControl type="textRaw" for="txtRaw">
+                <p:inputText id="txtRaw" value="#{input.attrValue}" style="width: 71.3% !important"
+                             required="#{input.require}" maxlength="150"/>
+            </pe:dynaFormControl>
+            <pe:dynaFormControl type="number" for="txtNumber">
+                <p:inputMask id="txtNumber" value="#{input.attrValue}"
+                             style="width: 71.3% !important" mask="#{input.dataFormat}"
+                             required="#{input.require}" maxlength="150"/>
+            </pe:dynaFormControl>
+            <pe:dynaFormControl type="textFormat" for="txtFormat">
+                <p:inputMask id="txtFormat" value="#{input.attrValue}"
+                             style="width: 71.3% !important"
+                             validatorMessage="#{lang['common.vaild.name']}"
+                             mask="#{input.dataFormat}"
+                             required="#{input.require}" maxlength="150"
+                        >
+                </p:inputMask>
+            </pe:dynaFormControl>
+            <pe:dynaFormControl type="optionSetCbx" for="optionSetCbx">
+                <p:selectOneMenu id="optionSetCbx" value="#{input.attrValue}" style="width: 72.4% !important;">
+                    <f:selectItem itemValue="" itemLabel="#{lang['common.select.one']}"/>
+                    <f:selectItems value="#{input.optionSetValueList}"
+                                   var="item" itemValue="#{item.value}" itemLabel="#{item.name}"
+                                   itemLabelEscaped="true"/>
+                </p:selectOneMenu>
+            </pe:dynaFormControl>
+            <pe:dynaFormControl type="optionSetLookup" for="extOptionSetlkup" id="aa3">
+                <!--input text is not actually used-->
+                <!--Can not set value="#{input.attrValue}" here because it will reset whatever choice chose in look up-->
+                <p:inputText type="hidden" id="extOptionSetlkup"/>
+
+                <cbs:lookUpLazyTextboxWrapper
+                        idComponent="b"
+                        selectMode="single"
+                        objectName="#{input.srcRefKey}"
+                        serviceName="optionSetValueServiceImpl"
+                        displayColumnList="id,name,value "
+                        controller="#{extAttrComponentController}"
+                        setDataMethod="setLookupData"
+                        displayInputTextColumnList="name,value"
+                        filterKeyList="OPTIONSETCODE"
+                        filterValueList="#{input.srcRefKey}"
+                        passIdComponent="true"
+                        modifier="#{input.idComponent}"
+                        currentObjectIdList="#{input.attrValue}"
+                        label="#{input.label}"
+                        styleClass="lookupDynamic"
+                        updateAddArea="@(.lookupDynamic)"
+                        resetAllCurrMap="false"/>
+
+            </pe:dynaFormControl>
+            <pe:dynaFormControl type="calendar" for="controlCalendar">
+                <p:calendar styleClass="iconInline col1 calendar-ex" id="controlCalendar"
+                            navigator="true" showButtonPanel="true" pattern="dd/MM/yyyy"
+                            value="#{input.attrValue}"
+                            converter="extAttrDateConverter"
+                            mask="99/99/9999"
+                            readonlyInput="true"
+                            required="#{input.require}"
+                        >
+                </p:calendar>
+            </pe:dynaFormControl>
+
+            <pe:dynaFormControl type="lookup" for="extLkup">
+                <p:inputText id="extLkup" type="hidden"/>
+                <cbs:lookUpLazyTextboxWrapper
+                        selectMode="single"
+                        serviceName="#{input.serviceName}"
+                        displayColumnList="#{input.displayColumnList}"
+                        controller="#{extAttrComponentController}"
+                        displayInputTextColumnList="#{input.displayInputTextColumnList}"
+                        label="#{input.label}"
+                        idComponent="a"
+                        setDataMethod="setLookupData"
+                        objectName="#{input.objectName}"
+                        styleClass="lookupDynamic"
+                        updateAddArea="@(.lookupDynamic)"
+                        currentObjectIdList="#{input.attrValue}"
+                        modifier="#{input.idComponent}"
+                        passIdComponent="true"
+                        resetAllCurrMap="false"
+                        />
+            </pe:dynaFormControl>
+        </pe:dynaForm>
+    </h:panelGroup>
+</composite:implementation>
+</html>
+

@@ -1,0 +1,230 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+<ui:composition template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.list.role.voffice']}</ui:define>
+    <ui:define name="featureName">#{lang['mn.invoice.VofficeRole']}</ui:define>
+    <ui:define name="content">
+
+        <h:form id="frmVofficeRole">
+            <p:outputPanel id="pnlVofficeRole">
+
+                <div class="ContainerIndent">
+                    <p:messages id="msgVofficeRole" showSummary="false" showDetail="true" closable="true"/>
+                </div>
+                <p:outputPanel id="pnlVofficeRoleInfor" styleClass="ContainerIndent">
+                    <p:focus for="pnlVofficeRoleInfor"/>
+                    <cbs:panel classForToggle="pnlVofficeRoleInfor"
+                               toggle="true"
+                               titleHeader="#{lang['mn.invoice.VofficeRole.infor']}"/>
+                    <p:remoteCommand name="updateControls" update="@form" process="@this"/>
+                    <div class="pnlVofficeRoleInfor Container100 marginTopBottom10 ">
+
+                        <div class="ContainerIndent ">
+                            <div class="Container50 Responsive50">
+                                <div class="Container20 Responsive25 ui-fluid mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" for="txtRoleCode"
+                                                   value="#{lang['signRoleVoffice.voficeRole.roleCode']}"/>
+                                </div>
+                                <div class="Container80 Responsive75 ui-fluid">
+                                    <p:inputText id="txtRoleCode"
+                                                 maxlength="20"
+                                                 onblur="this.value = this.value.trim();"
+                                                 placeholder="#{lang['signRoleVoffice.code.placeholder']}"
+                                                 value="#{vofficeRoleController.forSearchVofficeRole.roleCode}"
+                                                 title="#{vofficeRoleController.forSearchVofficeRole.roleCode}"/>
+                                    <pe:keyFilter for="txtRoleCode" regEx="/^[0-9a-zA-Z_]+$/i" preventPaste="false"/>
+                                </div>
+                            </div>
+                            <div class="Container50 Responsive50">
+                                <div class="Container20 Responsive25 ui-fluid mg-left-15 pd-top-7">
+                                    <p:outputLabel styleClass="lb-sentinel" for="txtRoleName"
+                                                   value="#{lang['signRoleVoffice.voficeRole.roleName']}"/>
+                                </div>
+                                <div class="Container80 Responsive75 ui-fluid">
+                                    <p:inputText id="txtRoleName"
+                                                 maxlength="100"
+                                                 onblur="this.value = this.value.trim();"
+                                                 placeholder="#{lang['signRoleVoffice.name.placeholder']}"
+                                                 value="#{vofficeRoleController.forSearchVofficeRole.roleName}"
+                                                 title="#{vofficeRoleController.forSearchVofficeRole.roleName}"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="Container100 TexAlCenter pd-top-10">
+
+                            <p:commandButton value="#{lang['create.note.search']}"
+                                             actionListener="#{vofficeRoleController.searchVofficeRole}"
+                                             update="@([id$=pnlVofficeRoleList]),@([id$=msgVofficeRole])"
+                                             resetValues="true"
+                                             process="@this,@([id$=pnlVofficeRoleInfor])"/>
+                            <p:commandButton value="#{lang['common.reset']}" styleClass="mrg-left-5"
+                                             actionListener="#{vofficeRoleController.resetForm}"
+                                             update="@form"
+                                             resetValues="true"
+                                             process="@this"/>
+
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel id="pnlVofficeRoleList" styleClass="ContainerIndent">
+                    <cbs:panel classForToggle="pnlVofficeRoleList"
+                               toggle="true"
+                               titleHeader="#{lang['signRoleVoffice.listRoleVoffice']}"/>
+
+                    <div class="Container100 TexAlLeft">
+                        <p:commandLink title="#{lang['common.add']}"
+                                       process="@this"
+                                       resetValues="true"
+                                       action="#{vofficeRoleController.preAddVofficeRole}"
+                                       update="@([id$=frmAddRoleVoffice]),@([id$=msgVofficeRole])"
+                                       oncomplete="if(!args.validationFailed){PF('dlgAddRoleVoffice').show();}"
+                                       styleClass="fa icon-plus Fs14 blue md-link mg-left-5">
+                            <h:outputText value="#{lang['common.add']}"/>
+                        </p:commandLink>
+                        <cbs:confirmDialog
+                                idComponent="btnDeleteVofficeRole"
+                                valueButton="#{lang['common.delete']}"
+                                titleButton="#{lang['common.delete']}"
+                                headerConfirm="#{lang['common.confirm']}"
+                                messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                actionOK="#{vofficeRoleController.deleteVofficeRole}"
+                                resetValueButton="false"
+                                process="@([id$=lstVofficeRole]), @this"
+                                actionValidate="#{vofficeRoleController.validateDeleteVofficeRole}"
+                                updateArea="@([id$=lstVofficeRole]), @([id$=msgVofficeRole])"
+                                updateOK="@form"
+                                styleClassButton="fa icon-trash Fs14 blue md-link mg-left-5"
+                                focusCancel="true"
+                                oncompleteOK=""
+                                isButton="false"
+                                />
+                    </div>
+                    <div class="pnlVofficeRoleList Container100">
+                        <p:dataTable
+                                id="lstVofficeRole"
+                                var="vofficeRole"
+                                value="#{vofficeRoleController.vofficeRoleList}"
+                                rowIndexVar="index"
+                                rowKey="#{vofficeRole.vofficeRoleId}"
+                                selection="#{vofficeRoleController.vofficeRoleSelection}"
+                                resizableColumns="true"
+                                sortMode="single"
+                                paginator="#{lang['common.paging.paginator']}"
+                                rows="#{lang['common.paging.rows.default']}"
+                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                emptyMessage="#{lang['common.empty.records']}">
+                            <p:column selectionMode="multiple" styleClass="width5 TexAlCenter"/>
+
+                            <p:column headerText="#{lang['signRoleVoffice.voficeRole.roleCode']}"
+                                      sortBy="#{vofficeRole.roleCode}"
+                                      style="width: 15%;">
+                                <p:outputLabel
+                                        value="#{vofficeRole.roleCode}"
+                                        title="#{vofficeRole.roleCode}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['signRoleVoffice.voficeRole.roleName']}"
+                                      sortBy="#{vofficeRole.roleName}"
+                                      style="width: 20%;">
+                                <p:outputLabel
+                                        value="#{vofficeRole.roleName}"
+                                        title="#{vofficeRole.roleName}"/>
+                            </p:column>
+
+                            <p:column headerText="#{lang['mn.invoice.invoiceType.userCreate']}"
+                                      sortBy="#{vofficeRole.createUser}" style="width: 15%;">
+                                <p:outputLabel value="#{vofficeRole.createUser}"
+                                               title="#{vofficeRole.createUser}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.invoice.invoiceType.dateCreate']}"
+                                      sortBy="#{vofficeRole.createDate}" style="width: 15%;">
+
+                                <p:outputLabel value="#{vofficeRole.createDate}"
+                                               title="#{vofficeRole.createDate}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.infrastructure.date.update']}"
+                                      sortBy="#{vofficeRole.lastUpdateTime}" style="width: 15%;">
+
+                                <p:outputLabel value="#{vofficeRole.lastUpdateTime}"
+                                               title="#{vofficeRole.lastUpdateTime}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="#{lang['common.edit.delete']}" style="width: 8%;"
+                                      styleClass="col-left">
+                                <p:commandLink title="#{lang['common.edit']}"
+                                               styleClass="icon-edit"
+                                               process="@this"
+                                               resetValues="true"
+                                               disabled="#{vofficeRole.status eq '0'}"
+                                               actionListener="#{vofficeRoleController.prepareEdit(vofficeRole)}"
+                                               update="@([id$=frmEditVofficeRole]),@([id$=msgVofficeRole])"
+                                               style="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                               oncomplete="if(!args.validationFailed){PF('dlgEditRoleVoffice').show()}"/>
+                                <cbs:confirmDialog
+                                        idComponent="btnDeleteOnePackageGoods#{index}"
+                                        disableButton="#{vofficeRole.status == '0'}"
+                                        valueButton=""
+                                        headerConfirm="#{lang['common.confirm']}"
+                                        messageConfirm="#{lang['common.msg.delete.confirm']}"
+                                        actionOK="#{vofficeRoleController.deleteOneVofficeRole}"
+                                        resetValueButton="true"
+                                        process="@this"
+                                        titleButton="#{lang['common.delete']}"
+                                        actionValidate="#{vofficeRoleController.preDeleteOneVofficeRole(vofficeRole)}"
+                                        updateArea="@this,@([id$=msgVofficeRole])"
+                                        updateOK="@([id$=lstVofficeRole]),@([id$=msgVofficeRole])"
+                                        styleClassButton="fa icon-trash Fs14 blue #{index}"
+                                        styleButton="text-decoration: none;font-size: 16px!important;padding-top: 4px;"
+                                        focusCancel="true"
+                                        oncompleteOK=""
+                                        isButton="false"
+                                        />
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog widgetVar="dlgAddRoleVoffice"
+                  appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  dynamic="true"
+                  resizable="false"
+                  maximizable="true"
+                  header="#{lang['signRoleVoffice.add.roleVoffice']}"
+                  width="500"
+                  modal="true" position="center">
+            <ui:include src="dlgAddVofficeRole.xhtml"/>
+            <f:param name="dlg"/>
+        </p:dialog>
+        <p:dialog widgetVar="dlgEditRoleVoffice"
+                  appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  dynamic="true"
+                  resizable="false"
+                  maximizable="true"
+                  header="#{lang['signRoleVoffice.edit.roleVoffice']}"
+                  width="500"
+                  modal="true" position="center" minWidth="500">
+            <ui:include src="dlgEditVofficeRole.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
+</html>

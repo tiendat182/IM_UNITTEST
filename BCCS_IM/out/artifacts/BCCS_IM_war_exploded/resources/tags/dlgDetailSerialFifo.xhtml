@@ -1,0 +1,346 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:form id="frmDlgDetailSerial">
+        <p:outputPanel id="pnDlgSerial" styleClass="Container">
+            <div class="Container">
+                <p:messages id="msgDialog" showSummary="false" showDetail="true" closable="true"/>
+            </div>
+            <p:outputPanel id="pnDetailSerial" styleClass="Container">
+                <div class="ContainerIndent mg-top-0">
+                    <div class="Container50 Responsive">
+                        <cbs:inputShop value="#{controller.shopInfoTagExportDlg}"
+                                       idComponent="ipReceiveShopDlg"
+                                       methodName="doReceiveShop"
+                                       update="@this"
+                                       limit="#{controller.limitAutoComplete}"
+                                       label="#{lang['mn.stock.name']}"
+                                       require="false"
+                                       classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                       classDivInput="Container60 Responsive50"
+                                       requiredMessage="#{lang['export.order.stock.require.msg']}"
+                                       placeholder="#{lang['export.order.stock.receive.product']}"
+                        >
+                        </cbs:inputShop>
+                    </div>
+                    <div class="Container50 Responsive">
+                        <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                            <p:outputLabel value="#{lang['export.order.name']}" for="ipExportOrder"
+                                           styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container60 Responsive50 pd-top-4">
+                            <p:outputLabel id="ipExportOrder" value="#{controller.stockTransDetail.prodOfferName}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="ContainerIndent">
+                    <div class="Container50 Responsive">
+                        <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                            <p:outputLabel value="#{lang['common.status']}" for="ipStatus" styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container60 Responsive50 pd-top-4">
+                            <p:outputLabel id="ipStatus" value="#{controller.stockTransDetail.stateName}"/>
+                        </div>
+                    </div>
+                    <div class="Container50 Responsive">
+                        <div class="Container40 mg-left-15 Responsive50 pd-top-4">
+                            <p:outputLabel value="#{lang['common.number']}" for="ipNumber" styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container60 Responsive50 pd-top-4">
+                            <h:outputText escape="false" converter="currencyFormat" id="ipNumber"
+                                          value="#{controller.stockTransDetail.quantity}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="ContainerIndent">
+                    <div class="Container20 mg-left-15 Responsive50 pd-top-7">
+                        <p:outputLabel value="#{lang['common.type.input']}" for="cbxTypeInput"
+                                       styleClass="lb-sentinel"/>
+                    </div>
+                    <div class="Container80 Responsive50 ui-fluid pd-top-4">
+                        <p:selectOneRadio id="cbxTypeInput" value="#{controller.typePrint}">
+                            <f:selectItem itemLabel="#{lang['entered.from.digital.ranges']}" itemValue="2"/>
+                            <f:selectItem itemLabel="#{lang['im.number.assign.status.by.file']}" itemValue="1"/>
+                            <p:ajax event="click" process="@this" update="@form" resetValues="true"
+                                    listener="#{controller.doChangeTypePrint}"></p:ajax>
+                        </p:selectOneRadio>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel id="pnViewFileDetail" styleClass="Container">
+                <!-- start vung thong tin list serial-->
+                <p:outputPanel styleClass="Container" rendered="#{controller.typePrint eq '1'}">
+                    <div class="ContainerIndent mg-top-0 pd-bottom-0">
+                        <p:outputPanel styleClass="Container50 Responsive outputAttach_col" id="pnUpload">
+                            <div class="Container40 mg-left-15 Responsive50 pd-top-4 lb-sentinel">
+                                <p:outputLabel value="#{lang['mn.stock.import.with.file']}" for="outputAttach"
+                                               styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid outputAttach">
+                                <p:inputText id="outputAttach" maxlength="100" required="true"
+                                             value="#{controller.attachFileName}" readonly="true"/>
+                                <p:message id="messageAttach" for="upLoadFile"/>
+                                <p:commandLink value="#{lang['create.order.file.download.file.template']}"
+                                               styleClass="Fleft mg-top-4" ajax="false"
+                                               rendered="#{!controller.errorImport}">
+                                    <p:fileDownload value="#{controller.addTemplateFile}"/>
+                                </p:commandLink>
+                                <p:commandLink value="#{lang['button.export.excel.error']}"
+                                               ajax="false" style="color: #e90c45!important;"
+                                               rendered="#{controller.errorImport}">
+                                    <p:fileDownload value="#{controller.exportImportErrorFile()}"/>
+                                </p:commandLink>
+                            </div>
+                        </p:outputPanel>
+
+                        <div class="Container50 Responsive">
+                            <div class="Container mg-left-15">
+                                <p:fileUpload id="upLoadFile"
+                                              styleClass="Fleft"
+                                              label="#{lang['select.file']}"
+                                              invalidFileMessage="#{lang['mn.stock.limit.importFile.msg.format']}"
+                                              requiredMessage="#{lang['mn.stock.limit.attachFile.msg.require']}"
+                                              invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                              fileLimitMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                              update="@this,@([id$=pnUpload]), @([id$=msgDialog]), @([id$=pnSelectSerialRange])"
+                                              dragDropSupport="true" required="true" mode="advanced"
+                                              auto="true"
+                                              process="@this"
+                                              widgetVar="wgUploadFile"
+                                              allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                              sizeLimit="5242880"
+                                              value="#{controller.fileUpload}"
+                                              fileUploadListener="#{controller.handleFileUpload}">
+                                </p:fileUpload>
+                            </div>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel styleClass="Container" rendered="#{controller.typePrint eq '2'}">
+                    <p:outputPanel styleClass="ContainerIndent" id="pnSelectSerial">
+                        <div class="Container50 Responsive">
+                            <div class="Container40 mg-left-15 Responsive50 pd-top-7 fromSerial_col">
+                                <p:outputLabel value="#{lang['mn.stock.fromSerial']}" for="fromSerial"
+                                               styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid pd-top-4 fromSerial">
+                                <p:outputLabel  value="#{controller.handset}" id="handset" style="display: none;" ></p:outputLabel>
+                                <p:inputText id="fromSerial" value="#{controller.stockTransDetail.fromSerial}"
+                                             styleClass="#{idComponent}fromSerial mavachFromSerial"
+                                             required="true"
+                                             requiredMessage="#{lang['mn.stock.partner.serial.valid.start.require']}"
+                                             onblur="this.value=this.value.trim()"
+                                             onkeypress="if (event.keyCode == 13) {setValueToSerial(this.value);return false;}"/>
+                                <pe:keyFilter for="fromSerial" regEx="/[a-z0-9A-Z]+/i"
+                                              rendered="#{controller.handset}" preventPaste="false"/>
+                                <p:message for="fromSerial"/>
+                                <script type="text/javascript">
+                                    function setValueToSerial(value) {
+                                        if (value == null) {
+                                            value = '';
+                                        }
+                                        var input = document.getElementById('frmDlgDetailSerial:toSerial');
+                                        if (document.getElementById('frmDlgDetailSerial:handset').textContent == 'true') {
+                                            input.value = value;
+                                            setTimeout('rmcToSerial()',250);
+                                            setTimeout('focusFromSerial()',250);
+                                        } else {
+                                            setTimeout(input.focus(), 350);
+                                            //setTimeout(input.setSelectionRange(0, value.trim().length), 500);
+                                        }
+                                    }
+                                    function focusFromSerial() {
+                                        setFocusByClass("mavachFromSerial");
+                                    }
+                                    function focusBtnSerial() {
+                                        setFocusByClass('btnSelectSerial');
+                                    }
+                                </script>
+                            </div>
+                        </div>
+                        <div class="Container50 Responsive">
+                            <div class="Container40 mg-left-15 Responsive50 pd-top-7 toSerial_col">
+                                <p:outputLabel value="#{lang['mn.stock.ToSerial']}" for="toSerial"
+                                               styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid pd-top-4 toSerial">
+                                <p:remoteCommand name="rmcToSerial"
+                                                 update="@([id$=msgDialog]),@([id$=pnDlgSerial])"
+                                                 actionListener="#{controller.addListSerialAuto}"/>
+                                <p:inputText id="toSerial" value="#{controller.stockTransDetail.toSerial}"
+                                             required="true" styleClass="mavachToSerial"
+                                             requiredMessage="#{lang['mn.stock.partner.serial.valid.end.require']}"
+                                             onblur="this.value=this.value.trim()"
+                                             onkeypress="if (event.keyCode == 13) { setTimeout('rmcToSerial()',250);setTimeout('focusFromSerial()',250);return false;}"/>
+                                <pe:keyFilter for="toSerial" regEx="/[a-z0-9A-Z]+/i" rendered="#{controller.handset}"
+                                              preventPaste="false"/>
+                                <p:message for="toSerial"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ContainerIndent TexAlCenter" id="pnBtnSelectSerial">
+                    <p:commandButton value="#{lang['mn.stock.partner.serial.select']}"
+                                     process="@this,@([id$=pnUpload])"
+                                     update="@([id$=pnDlgSerial])" styleClass="btnSelectSerial"
+                                     actionListener="#{controller.doSelectSerial}"
+                                     oncomplete="if(!args.validationFailed){setFocusByClass('btnConfirmExport');}"
+                                     rendered="#{controller.typePrint eq '1'}"/>
+                    <p:commandButton value="#{lang['mn.stock.partner.serial.select']}"
+                                     process="@this,@([id$=pnSelectSerial])" styleClass="btnSelectSerial"
+                                     update="@([id$=pnDlgSerial])"
+                                     oncomplete="if(!args.validationFailed){setFocusByClass('btnConfirmExport');}"
+                                     id="btnSelectSerial"
+                                     actionListener="#{controller.doSelectSerial}"
+                                     rendered="#{controller.typePrint eq '2'}"
+                                     resetValues="false"/>
+                    <p:commandButton value="#{lang['mn.stock.partner.serial.view']}" styleClass="mg-left-5"
+                                     id="btnViewSerial" rendered="#{controller.typePrint eq '2'}"
+                                     oncomplete="PF('dlgDetailSerialList').show()" update="@([id$=pnViewListSerial])"
+                                     process="@this" actionListener="#{controller.doShowHideListSerial}"/>
+                </p:outputPanel>
+                <p:outputPanel styleClass="tblViewSerial ContainerIndent mg-top-0" id="pnSelectSerialRange">
+                    <div class="Container">
+                        <span class="ui-panel-title">
+                            <h:outputText styleClass="ui-panel-title" value="#{lang['mn.invoice.invoiceSerial.view']}" style="font-weight: bold" />
+                            <h:outputText styleClass="ui-panel-title" value="#{controller.totalSerialSelect} #{lang['mn.stock.utilities.look.serial.lb']}"
+                                          style="font-weight: bold;color: red;" rendered="#{not empty controller.totalSerialSelect}" />
+                        </span>
+                    </div>
+
+                    <div class="Container tblSelectSerialRange">
+                        <p:dataTable
+                                id="tblSelectSerialRange"
+                                value="#{controller.listSerialRangeSelect}"
+                                var="serialDetail"
+                                resizableColumns="true"
+                                paginator="false"
+                                rowIndexVar="index"
+                                scrollable="true"
+                                scrollHeight="150"
+                                emptyMessage="#{lang['common.empty.records']}">
+                            <p:column headerText="#{lang['mn.stock.fromSerial']}" styleClass="col-left" style="#{serialDetail.notRule eq 1 ? 'background:orange' : ''}"
+                                      sortBy="#{serialDetail.fromSerial}">
+                                <p:outputLabel value="#{serialDetail.fromSerial}" title="#{serialDetail.fromSerial}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['mn.stock.ToSerial']}" styleClass="col-left" style="#{serialDetail.notRule eq 1 ? 'background:orange' : ''}"
+                                      sortBy="#{serialDetail.toSerial}">
+                                <p:outputLabel value="#{serialDetail.toSerial}" title="#{serialDetail.toSerial}"/>
+                            </p:column>
+                            <p:column headerText="#{lang['common.number']}" styleClass="col-right" style="#{serialDetail.notRule eq 1 ? 'background:orange' : ''}" >
+                                <h:outputText escape="true" value="#{serialDetail.quantity}"
+                                              title="#{serialDetail.quantity}" converter="currencyFormat"/>
+                            </p:column>
+                            <p:column headerText="#{lang['common.cancel']}" styleClass="col-right" style="#{serialDetail.notRule eq 1 ? 'background:orange' : ''}">
+                                <p:commandLink styleClass="fa icon-trash Fs14 blue" process="@this"
+                                               update="@([id$=pnSelectSerialRange]),@([id$=pnSubmit])"
+                                               title="#{lang['common.delete']}"
+                                               actionListener="#{controller.doRemoveSerial(index)}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ContainerIndent TexAlCenter" id="pnSubmit">
+                    <p:commandButton value="#{lang['mn.stock.export.submit.export']}" process="@this"
+                                     styleClass="btnConfirmExport"
+                                     oncomplete="if(!args.validationFailed){ PF('dlgDetailSerial').hide() }"
+                                     update="@([id$=#{idComponent}_tbl]),@([id$=#{idComponent}tblLsProduct]),@([id$=#{idComponent}pnUploadList])"
+                                     actionListener="#{controller.doConfirmSerial}"
+                                     rendered="#{controller.viewBtnExportStock}"/>
+                    <p:commandButton value="#{lang['mn.stock.export.excel']}" process="@this" immediate="true"
+                                     styleClass="mg-left-5" ajax="false"
+                                     rendered="#{controller.viewBtnExportStock}">
+                        <p:fileDownload value="#{controller.exportSerialsDlg()}"/>
+                    </p:commandButton>
+                </p:outputPanel>
+            </p:outputPanel>
+        </p:outputPanel>
+    </h:form>
+    <p:dialog appendTo="@(body)"
+              closable="true"
+              closeOnEscape="true"
+              maximizable="true"
+              position="center"
+              id="dlgDetailSerialList"
+              widgetVar="dlgDetailSerialList"
+              header="#{lang['stock.trans.search.serial.stock.export']}"
+              modal="true" resizable="false"
+              dynamic="true"
+              styleClass="sale"
+              width="900">
+        <h:form>
+            <p:outputPanel styleClass="Container" id="pnViewListSerial">
+                <cbs:panel classForToggle="lstOrderExport" titleHeader="#{controller.titleSerialProduct}"
+                           toggle="false"/>
+
+                <div class="Container lstDataExport">
+                    <p:dataTable
+                            id="lstDataExport"
+                            value="#{controller.listSerialView}"
+                            selectionMode="single"
+                            selection="#{controller.serialViewSelected}"
+                            rowKey="#{serialDetail.index}"
+                            var="serialDetail"
+                            resizableColumns="true"
+                            paginator="false"
+                            scrollable="true"
+                            scrollHeight="150"
+                            emptyMessage="#{lang['common.empty.records']}">
+                        <p:ajax event="rowSelect" listener="#{controller.onRowSelect}" update="@([id$=pnSelectSerial])"
+                                oncomplete="PF('dlgDetailSerialList').hide();setFocusByClass('btnSelectSerial');"/>
+                        <p:column styleClass="col-left" sortBy="#{serialDetail.fromSerial}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.fromSerial']}"
+                                              title="#{lang['mn.stock.fromSerial']}"/>
+                            </f:facet>
+                            <h:outputText escape="true" value="#{serialDetail.fromSerial}"
+                                          title="#{serialDetail.fromSerial}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" sortBy="#{serialDetail.toSerial}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.ToSerial']}"
+                                              title="#{lang['mn.stock.ToSerial']}"/>
+                            </f:facet>
+                            <h:outputText escape="true" value="#{serialDetail.toSerial}"
+                                          title="#{serialDetail.toSerial}"/>
+                        </p:column>
+                        <p:column styleClass="col-right">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.number']}" title="#{lang['common.number']}"/>
+                            </f:facet>
+                            <h:outputText escape="true" value="#{serialDetail.quantity}"
+                                          title="#{serialDetail.quantity}" converter="currencyFormat"/>
+                        </p:column>
+                        <p:column styleClass="col-left" sortBy="#{serialDetail.createDatetime}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['date.enter']}"
+                                              title="#{lang['date.enter']}"/>
+                            </f:facet>
+                            <h:outputText escape="true" value="#{serialDetail.strCreateDatetime}"
+                                          title="#{serialDetail.strCreateDatetime}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </p:outputPanel>
+            <div class="ContainerIndent TexAlCenter">
+                <p:commandButton value="#{lang['notification.close']}"
+                                 immediate="true"
+                                 styleClass="btnCloseView"
+                                 oncomplete="PF('dlgDetailSerialList').hide()"/>
+                <p:commandButton value="#{lang['mn.stock.export.excel']}" disabled="#{empty controller.listSerialView}"
+                                 styleClass="mg-left-5"
+                                 immediate="true"
+                                 process="@this"
+                                 ajax="false"
+                >
+                    <p:fileDownload value="#{controller.exportSerialsDlgViewStock()}"/>
+                </p:commandButton>
+            </div>
+        </h:form>
+    </p:dialog>
+</ui:composition>

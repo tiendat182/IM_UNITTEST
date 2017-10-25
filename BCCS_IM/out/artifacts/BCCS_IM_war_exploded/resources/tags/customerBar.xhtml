@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+<composite:interface>
+    <composite:attribute name="icon" default="profile" shortDescription="css class"/>
+    <composite:attribute name="customerName" shortDescription="Name"/>
+    <composite:attribute name="gender" shortDescription="gender"/>
+    <composite:attribute name="cmt" shortDescription="CMT"/>
+    <composite:attribute name="address" shortDescription="address"/>
+    <composite:attribute name="dob" shortDescription="date of birth"/>
+    <composite:attribute name="contact" shortDescription="tel, mobile"/>
+</composite:interface>
+<composite:implementation>
+    <p:outputPanel styleClass="ui-grid-col-12">
+        <div class="ui-grid ui-grid-responsive">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-1" align="center">
+                    <p:graphicImage name="themes/images/#{cc.attrs.icon}.png" width="55"/>
+                </div>
+                <div class="ui-grid-col-11">
+                    <div class="ui-grid ui-grid-responsive">
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-4">
+                                <p:outputLabel value="#{lang['lb.customer']}" styleClass="text-bold"></p:outputLabel>
+                            </div>
+
+                            <div class="ui-grid-col-1">
+                                <p:outputLabel value="#{lang['lb.identify.cmt']}"></p:outputLabel>
+                            </div>
+                            <div class="ui-grid-col-4">
+                                <p:outputLabel value="#{cc.attrs.cmt}" style="color: red;"/>
+                            </div>
+                            <div class="ui-grid-col-1">
+                                <p:outputLabel value="#{lang['lb.customer.dob']}"></p:outputLabel>
+                            </div>
+                            <div class="ui-grid-col-2">
+                                <p:outputLabel value="#{cc.attrs.dob}"/>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-4">
+                                <p:outputLabel value="#{cc.attrs.customerName}" styleClass="title-fieldset blueText"></p:outputLabel>
+                                (<p:outputLabel value="#{cc.attrs.gender}" style="color:red"></p:outputLabel>)
+                            </div>
+
+                            <div class="ui-grid-col-1">
+                                <p:outputLabel value="#{lang['lb.address']}"></p:outputLabel>
+                            </div>
+                            <div class="ui-grid-col-4">
+                                <p:outputLabel value="#{cc.attrs.address}"/>
+                            </div>
+                            <div class="ui-grid-col-1">
+                                <p:outputLabel value="#{lang['lb.contact']}"></p:outputLabel>
+                            </div>
+                            <div class="ui-grid-col-2">
+                                <p:outputLabel value="#{cc.attrs.contact}" styleClass="blueText"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p:outputPanel>
+</composite:implementation>
+</html>
+

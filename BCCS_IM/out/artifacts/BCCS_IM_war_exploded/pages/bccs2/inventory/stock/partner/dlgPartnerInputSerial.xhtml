@@ -1,0 +1,258 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:form id="frmDlgDetailSerial">
+        <div class="Container">
+            <p:messages id="msgDlg" showSummary="false" showDetail="true" closable="true"/>
+        </div>
+        <div class="Container">
+            <div class="Container pnlInfoDetailImport">
+                <div class="ContainerIndent">
+                    <div class="Container50 Responsive50">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel value="#{lang['common.number']}" for="ipNumber" styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container60 Responsive50 pd-top-7">
+                            <h:outputText escape="false" converter="currencyFormat" id="ipNumber"
+                                          value="#{partnerCreateUnderlyingController.prodOfferDTOSelected.availableQuantity}"/>
+                        </div>
+                    </div>
+                    <div class="Container50 Responsive50">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel value="#{lang['mn.stock.partner.template']}"
+                                           styleClass="lb-sentinel" for="txtProfile"/>
+                        </div>
+                        <div class="Container60 Responsive50 pd-top-7">
+                            <h:outputText id="txtProfile" styleClass="break-all"
+                                         value="#{partnerCreateUnderlyingController.prodOfferDTOSelected.profile}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="ContainerIndent">
+                    <div class="Container50 Responsive50">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel value="#{lang['common.type.input']}"
+                                           styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container60 Responsive50 pd-top-7">
+                            <p:selectOneMenu id="cbxInputType"
+                                             styleClass="Wid100"
+                                             value="#{partnerCreateUnderlyingController.prodOfferDTOSelected.impType}">
+                                <f:selectItems
+                                        value="#{partnerCreateUnderlyingController.lstImportType}"
+                                        var="item"
+                                        itemLabelEscaped="true"
+                                        itemValue="#{item.value}" itemLabel="#{item.name}"/>
+                                <p:ajax process="@this" event="change"
+                                        listener="#{partnerCreateUnderlyingController.doChangeImportType}"
+                                        update="@form"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+                    <p:outputPanel styleClass="Container50 Responsive50" rendered="#{partnerCreateUnderlyingController.prodOfferDTOSelected.impType eq 2}">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel value="#{lang['import.parter.request.rank']}"
+                                           styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid pd-top-7">
+                            <p:selectOneMenu id="cbxRank" styleClass="Wid100" value="#{partnerCreateUnderlyingController.rank}">
+                                <f:selectItem itemValue="1"
+                                              itemLabel="#{lang['import.partner.request.rank.default']}"/>
+                                <f:selectItem itemValue="50000"
+                                              itemLabel="#{lang['import.partner.request.rank50000']}"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </p:outputPanel>
+                </div>
+                <p:outputPanel class="ContainerIndent" id="pnlInputByRange" rendered="#{partnerCreateUnderlyingController.prodOfferDTOSelected.impType eq 2}">
+                    <div class="Container50 Responsive50 ">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel value="#{lang['mn.stock.fromSerial']}"
+                                           styleClass="lb-sentinel" for="fromSerial"/>
+                        </div>
+                        <div class="Container60 Responsive50 pd-top-7 ui-fluid">
+                            <p:inputText id="fromSerial" required="true"
+                                         maxlength="30"
+                                         placeholder="#{lang['mn.stock.fromSerial.placeholder']}"
+                                         requiredMessage="#{lang['mn.stock.partner.serial.valid.start.require']}"
+                                         value="#{partnerCreateUnderlyingController.prodOfferDTOSelected.stockTransSerialDTO.fromSerial}">
+                                <pe:keyFilter for="fromSerial"
+                                              regEx="/[0-9]+/i"
+                                              preventPaste="false"/>
+                            </p:inputText>
+                            <p:message for="fromSerial"/>
+                        </div>
+                    </div>
+                    <div class="Container50 Responsive50 ui-fluid">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel value="#{lang['mn.stock.ToSerial']}"
+                                           styleClass="lb-sentinel" for="toSerial"/>
+                        </div>
+                        <div class="Container60 Responsive50 pd-top-7 ui-fluid">
+                            <p:inputText id="toSerial" required="true"
+                                         maxlength="30"
+                                         placeholder="#{lang['mn.stock.ToSerial.placeholder']}"
+                                         requiredMessage="#{lang['mn.stock.partner.serial.valid.end.require']}"
+                                         value="#{partnerCreateUnderlyingController.prodOfferDTOSelected.stockTransSerialDTO.toSerial}">
+                                <pe:keyFilter for="toSerial" regEx="/[0-9]+/i" preventPaste="false"/>
+                            </p:inputText>
+                            <p:message for="toSerial"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel class="Container" id="pnlInputByFile" rendered="#{partnerCreateUnderlyingController.prodOfferDTOSelected.impType eq 1}">
+                    <div class="ContainerIndent">
+                        <p:outputPanel styleClass="Container50 Responsive50 ui-fluid" id="pnTemplate">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7 outputAttach_col">
+                                <p:outputLabel value="#{lang['create.order.file.data']}" for="outputAttach"
+                                               styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 pd-top-7 ui-fluid outputAttach">
+                                <p:inputText id="outputAttach" maxlength="100" required="true"
+                                             value="#{partnerCreateUnderlyingController.uploadedFile.fileName}"
+                                             readonly="true"/>
+                            </div>
+                        </p:outputPanel>
+                        <div class="Container50 Responsive50">
+                            <p:fileUpload id="fileDataUpload"
+                                          styleClass="fileDataUpload Fleft"
+                                          label="#{lang['select.file']}"
+                                          invalidFileMessage="#{lang['import.partner.valid.fileDataFormat']}"
+                                          requiredMessage="#{lang['mn.stock.limit.attachFile.msg.require']}"
+                                          invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                          fileLimitMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                          update="@form"
+                                          dragDropSupport="true" required="true" mode="advanced"
+                                          auto="true"
+                                          process="@this"
+                                          widgetVar="wgUploadFile"
+                                          allowTypes="/(\.|\/)(txt)$/"
+                                          sizeLimit="5242880"
+                                          value="#{partnerCreateUnderlyingController.uploadedFile}"
+                                          fileUploadListener="#{partnerCreateUnderlyingController.handlFileUpload}">
+                            </p:fileUpload>
+                            <p:message for="fileDataUpload"/>
+                        </div>
+                    </div>
+                    <p:outputPanel styleClass="Container TexAlCenter" id="pnlErrorFile">
+                        <p:commandLink value="#{lang['mn.stock.status.isdn.update.status.file_error']}"
+                                       ajax="false"
+                                       process="@this"
+                                       immediate="true"
+                                       styleClass="break-word" style="color:red!important;"
+                                       rendered="#{partnerCreateUnderlyingController.showDownloadFileError}">
+                            <p:fileDownload value="#{partnerCreateUnderlyingController.exportErrorFile()}"/>
+                        </p:commandLink>
+                    </p:outputPanel>
+                </p:outputPanel>
+                <p:outputPanel styleClass="Container TexAlCenter" id="pnlCallAction">
+                    <p:commandButton value="#{lang['mn.stock.track.pass']}"
+                                     process="@this, @([id$=pnlInputByRange]),@([id$=cbxRank])"
+                                     update="@form" rendered="#{!isImportFile}"
+                                     action="#{partnerCreateUnderlyingController.doCheckSerial}"/>
+                    <p:commandButton value="#{lang['mn.stock.track.pass']}"
+                                     process="@this" rendered="#{isImportFile}"
+                                     update="@form"
+                                     action="#{partnerCreateUnderlyingController.doCheckSerial}"/>
+                    <p:commandButton value="#{lang['mn.balance.stock.request.serial']}" styleClass="mg-left-5"
+                                     process="@this" disabled="#{empty partnerCreateUnderlyingController.readerData}"
+                                     rendered="#{partnerCreateUnderlyingController.prodOfferDTOSelected.impType eq 1}"
+                                     update="@form,@([id$=pnListProduct])" oncomplete="if(!args.validationFailed){PF('dlgPartnerInputSerial').hide()};"
+                                     action="#{partnerCreateUnderlyingController.doImport}"/>
+                    <p:commandButton value="#{lang['mn.balance.stock.request.serial']}" styleClass="mg-left-5"
+                                     rendered="#{partnerCreateUnderlyingController.prodOfferDTOSelected.impType eq 2}"
+                                     process="@this" disabled="#{empty partnerCreateUnderlyingController.lsSerialTmp}"
+                                     update="@form,@([id$=pnListProduct])" oncomplete="if(!args.validationFailed){PF('dlgPartnerInputSerial').hide()};"
+                                     action="#{partnerCreateUnderlyingController.doImport}"/>
+                    <p:commandButton value="#{lang['reset.selected']}" styleClass="mg-left-5"
+                                     process="@this"
+                                     update="@form"
+                                     action="#{partnerCreateUnderlyingController.doResetDlg}"/>
+                </p:outputPanel>
+                <div class="Container">
+                    <p:dataTable
+                            id="tbl1"
+                            rendered="#{partnerCreateUnderlyingController.prodOfferDTOSelected.impType eq 1}"
+                            value="#{partnerCreateUnderlyingController.readerData}"
+                            var="serial"
+                            resizableColumns="true"
+                            paginator="false"
+                            scrollable="true"
+                            rowIndexVar="index"
+                            scrollHeight="200"
+                            emptyMessage="#{lang['common.empty.records']}">
+                        <p:column styleClass="col-left" sortBy="#{serial}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['partner.number.serial.view.input']}" title="#{lang['partner.number.serial.view.input']}"/>
+                            </f:facet>
+                            <h:outputText escape="true" value="#{serial}" title="#{serial}"/>
+                        </p:column>
+                        <p:column styleClass="col-right">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['rule.group.delete']}" title="#{lang['rule.group.delete']}"/>
+                            </f:facet>
+                            <p:commandLink styleClass="fa  ui-icon-delete Fs14 blue" style="text-decoration: none;font-size: 16px!important;"
+                                           title="#{lang['rule.group.delete']}" update="@([id$=tbl1])"
+                                           actionListener="#{partnerCreateUnderlyingController.doRemoveItemFile(index)}" process="@this"/>
+                        </p:column>
+                    </p:dataTable>
+                    <p:dataTable
+                            id="tbl2"
+                            rendered="#{partnerCreateUnderlyingController.prodOfferDTOSelected.impType eq 2}"
+                            value="#{partnerCreateUnderlyingController.lsSerialTmp}"
+                            var="serialDetail"
+                            rowIndexVar="index"
+                            resizableColumns="true"
+                            paginator="false"
+                            scrollable="true"
+                            scrollHeight="200"
+                            emptyMessage="#{lang['common.empty.records']}">
+                        <p:column styleClass="col-left" sortBy="#{serialDetail.fromSerial}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.fromSerial']}" title="#{lang['mn.stock.fromSerial']}"/>
+                            </f:facet>
+                            <h:outputText escape="true" value="#{serialDetail.fromSerial}" title="#{serialDetail.fromSerial}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" sortBy="#{serialDetail.toSerial}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.ToSerial']}" title="#{lang['mn.stock.ToSerial']}"/>
+                            </f:facet>
+                            <h:outputText escape="true" value="#{serialDetail.toSerial}" title="#{serialDetail.toSerial}"/>
+                        </p:column>
+                        <p:column styleClass="col-right">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.number']}" title="#{lang['common.number']}"/>
+                            </f:facet>
+                            <h:outputText escape="true" value="#{serialDetail.quantity}"
+                                          title="#{serialDetail.quantity}" converter="currencyFormat"/>
+                        </p:column>
+                        <p:column styleClass="col-right">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['rule.group.delete']}" title="#{lang['rule.group.delete']}"/>
+                            </f:facet>
+                            <p:commandLink styleClass="fa  ui-icon-delete Fs14 blue" style="text-decoration: none;font-size: 16px!important;"
+                                           title="#{lang['rule.group.delete']}" update="@([id$=tbl2])"
+                                           actionListener="#{partnerCreateUnderlyingController.doRemoveItem(index)}" process="@this"/>
+
+                        </p:column>
+                        <f:facet name="footer">
+                            <div class="ContainerIndent ">
+                                <div class="Container80 Responsive50 TexAlRight">
+                                    <p:outputLabel value="#{lang['partner.number.serial.input']}" styleClass="lb-sentinel-bold" />
+                                </div>
+                                <div class="Container20 Responsive50 TexAlLeft">
+                                    <p:outputLabel value="#{partnerCreateUnderlyingController.totalSerialSelect}" styleClass="lb-sentinel-red" />
+                                </div>
+                            </div>
+                        </f:facet>
+                    </p:dataTable>
+                </div>
+            </div>
+        </div>
+    </h:form>
+</ui:composition>

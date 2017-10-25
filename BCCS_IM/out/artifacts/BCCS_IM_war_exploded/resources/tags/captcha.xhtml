@@ -1,0 +1,79 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:cc="http://java.sun.com/jsf/composite"
+        xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+    <cc:interface>
+        <cc:attribute name="requiredMessage" default="#{lang['validate.capcha.require']}"
+                      shortDescription="message bat buoc cua capcha"/>
+        <cc:attribute name="validatorMessage" default="#{lang['validate.capcha.validatorMessage']}"
+                      shortDescription="message validate loi capcha"/>
+        <cc:attribute name="id" required="true" shortDescription="id component cua capcha"/>
+        <cc:attribute name="capChaValue" required="true" shortDescription="gia tri capCha"/>
+        <cc:attribute name="validateClient" required="false" default="true"
+                      shortDescription="co validate client hay khong (neu bat thi co the co loi khi dung chung voi cbs:message"/>
+    </cc:interface>
+
+    <cc:implementation>
+        <script type="text/javascript">
+            function f#{cc.attrs.id}() {
+                var timestamp = (new Date()).getTime();
+                var newSrc = $(".#{cc.attrs.id}CaptchaImgID").attr("src").split("?");
+                newSrc = newSrc[0] + "?" + timestamp;
+                $(".#{cc.attrs.id}CaptchaImgID").attr("src", newSrc);
+                $(".#{cc.attrs.id}CaptchaImgID").slideDown("fast");
+            }
+            function resetCapcha() {
+                f#{cc.attrs.id}();
+                $('.a#{cc.attrs.id}pinputCaptcha').val('');
+            }
+        </script>
+        <div class="Container100" align="center">
+            <table>
+                <tr>
+                    <td align="left">
+                        <p:outputLabel value="#{lang['lb.captcha']}" for="#{cc.attrs.id}">
+
+                        </p:outputLabel>
+                    </td>
+                    <td align="left">
+                        <c:if test="#{cc.attrs.validateClient}">
+                            <p:inputText required="true" requiredMessage="#{cc.attrs.requiredMessage}"
+                                         value="#{cc.attrs.capChaValue}"
+                                         validator="capchaValidator"
+                                         styleClass="a#{cc.attrs.id}pinputCaptcha"
+                                         id="#{cc.attrs.id}" style="width: 142px;"
+                                         validatorMessage="#{cc.attrs.validatorMessage}"
+                                         immediate="true">
+                            </p:inputText>
+                        </c:if>
+                        <c:if test="#{!cc.attrs.validateClient}">
+                            <p:inputText value="#{cc.attrs.capChaValue}"
+                                         styleClass="a#{cc.attrs.id}pinputCaptcha"
+                                         id="#{cc.attrs.id}" style="width: 142px;"
+                                         immediate="true">
+                            </p:inputText>
+                        </c:if>
+                    </td>
+                    <td align="left">
+                        <h:graphicImage styleClass="#{cc.attrs.id}CaptchaImgID" value="/simpleCaptcha.png"
+                                        style="float: left;height: 36px;"/>
+                    </td>
+                    <td align="left">
+                        <p:commandLink styleClass="fa icon-ccw Fs18 f#{cc.attrs.id}" process="@none"
+                                       onclick="f#{cc.attrs.id}();$('.a#{cc.attrs.id}pinputCaptcha').val('');"
+                                       style="text-decoration: none;" immediate="true"></p:commandLink>
+                    </td>
+                </tr>
+            </table>
+
+            <!--<a onclick="f#{cc.attrs.id}()" class="fa icon-arrows-cw fs40" style="float: left;margin-top: 10px;text-decoration: none;"></a>-->
+        </div>
+        <div class="Container100" style="text-align: left;">
+
+        </div>
+    </cc:implementation>
+</ui:composition>

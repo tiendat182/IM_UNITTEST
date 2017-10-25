@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<configuration>
+
+    <!--huong dan su dung:-->
+    <!--danh sach cac file config duoc cau hinh trong tag <file></file> nhu vi du duoi day-->
+    <!-- luu y copy noi dung cua file wsconfig.xml vao package default cua project chinh-->
+    <files>
+        wsconfig.xml
+    </files>
+    <!--id cua object duoc cau hinh nhu sau-->
+    <!--menuDomain config-class="com.viettel.ws.common.utils.WsRequestCreator"
+                wsAddress="http://10.58.71.129:9020/SaleWebservice/bpm/saleService?wsdl"
+                targetNameSpace ="http://webservice.sale.viettel.com/"
+                serviceName="findListObjectContextPathAssign"
+            >
+    </menuDomain -->
+
+    <!--khuyen cao moi nguoi su dung phuong thuc moi cho viec goi webservice-->
+    <!--public static String webServiceCaller(String wsConfigKey,-->
+    <!--List<Object> wsParameters) throws Exception {-->
+    <!--return webServiceCaller.webServiceCaller( configLoader.getWsConfig(wsConfigKey), wsParameters);-->
+    <!--}-->
+</configuration>

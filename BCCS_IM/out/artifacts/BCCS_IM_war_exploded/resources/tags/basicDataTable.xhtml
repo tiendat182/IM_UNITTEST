@@ -1,0 +1,346 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+<composite:interface>
+    <composite:attribute name="idComponent" shortDescription="id of form" required="true"/>
+    <composite:attribute name="resetValuesAdd" shortDescription="reset value add" required="false"/>
+    <composite:attribute name="selectMode" shortDescription="status is single or multiple," required="true"/>
+    <composite:attribute name="objectName" shortDescription="model object name" required="true"/>
+    <composite:attribute name="serviceName" shortDescription="interface service name" required="true"/>
+    <composite:attribute name="displayColumnList" shortDescription="display column list" required="true"/>
+    <composite:attribute name="searchColumnList" shortDescription="condition search" required="true"/>
+    <composite:attribute name="displayColumnWidthList"
+                         shortDescription="width column %, note: don't set width for column id" required="true"/>
+    <composite:attribute name="layerNumberColumn" default="1"
+                         shortDescription="show number column in area search, default 1"/>
+    <composite:attribute name="oncompleteUpdateLink" default="" shortDescription="oncomplete update link"
+                         required="true"/>
+    <composite:attribute name="controller" shortDescription="controller object" required="true"/>
+    <composite:attribute name="actionUpdateLinkName" shortDescription="action method when click update"
+                         required="true"/>
+    <composite:attribute name="updateAreaLink" shortDescription="area render after click link in table"/>
+
+    <composite:attribute name="isCrossLink" default="false"
+                         shortDescription="default = false, true if update area is cross link"/>
+
+    <!--start component fo basic common button tag-->
+
+
+    <composite:attribute name="actionAddName" shortDescription="action name method Add"/>
+    <composite:attribute name="actionDeleteName" shortDescription="action name method delete"/>
+    <composite:attribute name="actionReportName" shortDescription="action name method report"/>
+    <composite:attribute name="updateAdd" default="" shortDescription="update after click Add"/>
+    <composite:attribute name="updateDelete" default="" shortDescription="update after click delete"/>
+    <composite:attribute name="updateReport" default="" shortDescription="update after click report"/>
+    <composite:attribute name="oncompleteAdd" shortDescription="oncomplete for button add"/>
+    <composite:attribute name="oncompleteDelete" shortDescription="oncomplete for button delete"/>
+    <composite:attribute name="oncompleteReport" shortDescription="oncomplete for button report"/>
+    <composite:attribute name="styleClassAdd" default="ui-icon-add" shortDescription="class css action add"/>
+    <composite:attribute name="styleClassDelete" default="ui-icon-trash" shortDescription="class css action report"/>
+    <composite:attribute name="styleClassReport" default="ui-icon-report" shortDescription="class css action report"/>
+    <composite:attribute name="styleAdd" default="" shortDescription="style css action add"/>
+    <composite:attribute name="styleDelete" default="" shortDescription="style css action report"/>
+    <composite:attribute name="styleReport" default="" shortDescription="style css action report"/>
+    <composite:attribute name="renderedAdd" shortDescription="renderer action add" required="true"/>
+    <composite:attribute name="renderedDelete" shortDescription="renderer action delete" required="true"/>
+    <composite:attribute name="renderedReport" shortDescription="renderer action report" required="true"/>
+
+    <!--Attribute for criteria search-->
+    <composite:attribute name="formCode" shortDescription="renderer action report" required="true"/>
+
+    <!--Attribute for creating prototype-->
+    <composite:attribute name="mockup" default="false" shortDescription="using as a prototype without real db"/>
+    <composite:attribute name="mockupList" default="" shortDescription="fake list for prototype"/>
+
+
+</composite:interface>
+<composite:implementation>
+    <p:remoteCommand
+            action="#{basicDatatableController.init(cc.attrs.objectName, cc.attrs.serviceName,
+             cc.attrs.displayColumnList, cc.attrs.searchColumnList, cc.attrs.displayColumnWidthList)}"
+            update="@([id$=#{cc.attrs.idComponent}])"
+            autoRun="true"
+            global="false"
+            />
+    <style type="text/css">
+        .gridCell div {
+            border: 0 !important;
+        }
+    </style>
+    <script type="text/javascript">
+        //<![CDATA[
+        $(document).ready(function () {
+            $(document).on("keyup", ".input_search_gridCell", function () {
+                delay(function () {
+                    window['remoteGridCellSearch#{cc.attrs.idComponent}test']();
+                }, 500);
+            });
+        });
+        var delay = (function () {
+            var timer = 0;
+            return function (callback, ms) {
+                clearTimeout(timer);
+                timer = setTimeout(callback, ms);
+            };
+        })();
+        //]]>
+    </script>
+    <p:outputPanel id="#{cc.attrs.idComponent}" styleClass="ui-grid ui-grid-responsive">
+        <p:outputPanel rendered="#{basicDatatableController.firstInitBasicTable}">
+            <p:outputPanel styleClass="w100">
+                <p:messages id="#{cc.attrs.idComponent}msgbasicTable" showSummary="false" showDetail="true"
+                            closable="true"/>
+                <p:panelGrid styleClass="w100 filterPanel">
+                    <p:row>
+                        <p:column style="padding-left: 0;">
+                            <span class="vt-button sale" style="float:left;height: 20px;padding-left: 0;">
+                                <p:commandLink
+                                        ajax="true"
+                                        disabled="#{cc.attrs.disabledAdd}"
+                                        global="#{cc.attrs.globalAdd}"
+                                        process="@this"
+                                        resetValues="#{cc.attrs.resetValuesAdd}"
+                                        actionListener="#{basicDatatableController.doAddBasicCommandAction(cc.attrs.controller, cc.attrs.actionAddName)}"
+                                        update="#{cc.attrs.updateAdd}"
+                                        oncomplete="#{cc.attrs.oncompleteAdd}"
+                                        style="color:black;#{cc.attrs.styleAdd}"
+                                        rendered="#{cc.attrs.renderedAdd}"
+                                        >
+                                    <p:graphicImage style="float: left;margin-right: 5px;"
+                                                    styleClass="ui-icon ui-icon-add"/>
+                                    <span style="font-weight: bold;"><h:outputText
+                                            value="#{lang['common.add']}"/></span>
+                                </p:commandLink>
+                            </span>
+                            <span class="vt-button sale" style="float:left;">
+                                <p:commandLink
+                                        ajax="true"
+                                        disabled="#{cc.attrs.disableDelete}"
+                                        global="#{cc.attrs.globalDelete}"
+                                        process="@this,#{cc.attrs.idComponent}areaDataSearch"
+                                        resetValues="#{cc.attrs.resetValuesDelete}"
+                                        actionListener="#{basicDatatableController.doDeleteOrReportBasicCommandAction(cc.attrs.controller, cc.attrs.actionDeleteName, cc.attrs.selectMode)}"
+                                        update="@([id$=#{cc.attrs.idComponent}areaDataSearch]),@([id$=#{cc.attrs.idComponent}msgbasicTable]),@([id$=#{cc.attrs.idComponent}areaInputSearch])"
+                                        oncomplete="#{cc.attrs.oncompleteDelete}"
+                                        style="color:black;#{cc.attrs.styleDelete}"
+                                        rendered="#{cc.attrs.renderedDelete}"
+                                        >
+                                    <p:graphicImage style="float: left;margin-right: 5px;"
+                                                    styleClass="ui-icon ui-icon-trash"/>
+                                    <span style="font-weight: bold;"><h:outputText
+                                            value="#{lang['common.delete']}"/></span>
+                                </p:commandLink>
+                            </span>
+                            <span class="vt-button sale" style="float:left;">
+                                <p:commandLink
+                                        ajax="true"
+                                        disabled="#{cc.attrs.disabledReport}"
+                                        global="#{cc.attrs.globalReport}"
+                                        process="#{cc.attrs.processReport}"
+                                        resetValues="#{cc.attrs.resetValuesReport}"
+                                        actionListener="#{basicDatatableController.doDeleteOrReportBasicCommandAction(cc.attrs.controller, cc.attrs.actionReportName, cc.attrs.selectMode)}"
+                                        update="#{cc.attrs.updateReport}"
+                                        oncomplete="#{cc.attrs.oncompleteReport}"
+                                        style="color:black;#{cc.attrs.styleReport};"
+                                        rendered="#{cc.attrs.renderedReport}"
+                                        >
+                                    <p:graphicImage style="float: left;margin-right: 5px;"
+                                                    styleClass="ui-icon ui-icon-report"/>
+                                    <span style="font-weight: bold;"><h:outputText
+                                            value="#{lang['common.report']}"/></span>
+                                </p:commandLink>
+                            </span>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:outputPanel>
+            <p:outputPanel styleClass="w100" id="#{cc.attrs.idComponent}areaInputSearch">
+                <!--<testBasicTableareaDataSearchs context="#{cc.attrs.idComponent}areaInputSearch"/>-->
+                <p:remoteCommand name="remoteGridCellSearch#{cc.attrs.idComponent}test"
+                                 action="#{basicDatatableController.doSearchBasicTable()}"
+                                 update="@([id$=#{cc.attrs.idComponent}areaDataSearch])"
+                                 process="@([id$=#{cc.attrs.idComponent}])"
+                                 global="false"
+                                 resetValues="true"
+                        />
+                <p:outputPanel rendered="#{!basicDatatableController.searchAdvance}">
+                    <div align="left">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="text-align: right;vertical-align: middle;width: 10%;">
+                                    <p:outputLabel value="#{basicDatatableController.simpleSearchField.label}"/>
+                                </td>
+                                <td style="text-align: left;vertical-align: middle;width: 70%;">
+                                    <span style="display:block;float:left;width: 30%;">
+                                        <p:inputText styleClass="form-control input_search_gridCell w100"
+                                                     placeholder="#{lang['common.button.search']}"
+                                                     onblur="this.value = this.value.trim();"
+                                                     value="#{basicDatatableController.simpleSearchField.value}"/>
+                                    </span>
+                                    <span class="sale"
+                                          style="display:block;float:left;margin-left: 7px;margin-top: 1px; margin-right: 10px;">
+                                        <p:commandButton styleClass="input-group-addon bg-button"
+                                                         actionListener="#{basicDatatableController.doSearchBasicTable}"
+                                                         update="@([id$=#{cc.attrs.idComponent}areaDataSearch])"
+                                                         process="@([id$=#{cc.attrs.idComponent}])"
+                                                         resetValues="true"
+                                                         ajax="true"
+                                                         global="false"
+                                                         icon="ui-icon-search">
+                                        </p:commandButton>
+                                    </span>
+                                    <span style="display: block;float:left;margin-top: 12px;">
+                                        <p:commandLink action="#{basicDatatableController.doClickModeSearch()}"
+                                                       update="@([id$=#{cc.attrs.idComponent}areaInputSearch])"
+                                                       process="@this"
+                                                       resetValues="true"
+                                                       ajax="true"
+                                                       global="false"
+                                                >
+                                            <h:outputText value="#{lang['common.link.advanceSearch']}"/>
+                                        </p:commandLink>
+                                    </span>
+                                </td>
+                                <td style="width: auto"/>
+                            </tr>
+                        </table>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel rendered="#{basicDatatableController.searchAdvance}">
+                    <div class="gridCell">
+                        <cbs:criteriaSearch
+                                idMessage="#{cc.attrs.idComponent}msgbasicTable"
+                                controller="#{lookUpLazyController}"
+                                searchFunction="doSearchCriteria"
+                                formCode="#{cc.attrs.formCode}"
+                                update="@([id$=#{cc.attrs.idComponent}areaDataSearch])"
+                                idComponent="#{cc.attrs.idComponent}"
+                                useWithBasicDataTable="true"/>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+            <p:outputPanel id="#{cc.attrs.idComponent}areaDataSearch" styleClass="ui-grid-row w100"
+                           style="margin-top: 20px;">
+                <p:dataTable
+                        paginator="#{lang['common.paging.paginator']}"
+                        rows="#{lang['common.paging.rows.default']}"
+                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                        id="singleBasicTable#{cc.attrs.idComponent}"
+                        resizableColumns="true"
+                        rowStyleClass="h25"
+                        rowKey="#{data.id}"
+                        value="#{basicDatatableController.detailDataAllList}"
+                        selection="#{basicDatatableController.selectedSingle}"
+                        var="data"
+                        lazy="true"
+                        rendered="#{cc.attrs.selectMode eq 'single'}"
+                        >
+                    <p:column selectionMode="single" style="width:16px;"/>
+                    <p:columns value="#{basicDatatableController.tmpDisplayColumnList}" var="columnName"
+                               width="#{basicDatatableController.columnWidths.get(columnName)}">
+
+                        <f:facet name="header">
+                            <p:outputLabel value="#{basicDatatableController.mapNames.get(columnName)}"/>
+                        </f:facet>
+                        <h:outputText escape="true" value="#{data.mapData.get(columnName)}" id="tl1"
+                                      rendered="#{columnName != basicDatatableController.columnLink}"
+                                      title="#{data.mapData.get(columnName)}"/>
+                        <p:commandLink
+                                ajax="true"
+                                global="false"
+                                resetValues="true"
+                                action="#{basicDatatableController.doUpdateBasicTable(cc.attrs.controller, cc.attrs.actionUpdateLinkName, data)}"
+                                update="#{cc.attrs.updateAreaLink}"
+                                oncomplete="#{cc.attrs.oncompleteUpdateLink}"
+                                rendered="#{columnName == basicDatatableController.columnLink and !cc.attrs.isCrossLink}"
+                                process="@this"
+                                id="tl2"
+                                title="#{data.mapData.get(columnName)}">
+                            <h:outputText escape="true" value="#{data.mapData.get(columnName)}"/>
+                        </p:commandLink>
+                        <p:commandLink
+                                ajax="false"
+                                action="#{basicDatatableController.doForwardBasicTable(cc.attrs.controller, cc.attrs.actionUpdateLinkName, data)}"
+                                rendered="#{columnName == basicDatatableController.columnLink and cc.attrs.isCrossLink}"
+                                immediate="true"
+                                process="@this"
+                                id="tl3"
+                                title="#{data.mapData.get(columnName)}">
+                            <h:outputText escape="true" value="#{data.mapData.get(columnName)}"/>
+                        </p:commandLink>
+                    </p:columns>
+                    <p:column width="auto;"/>
+                </p:dataTable>
+                <p:dataTable
+                        paginator="#{lang['common.paging.paginator']}"
+                        rows="#{lang['common.paging.rows.default']}"
+                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                        resizableColumns="true"
+                        id="multipleBasicTable#{cc.attrs.idComponent}"
+                        rowStyleClass="h25"
+                        rowKey="#{data.id}"
+                        value="#{basicDatatableController.detailDataAllList}"
+                        selection="#{basicDatatableController.selectedMulti}"
+                        var="data"
+                        lazy="true"
+                        rendered="#{cc.attrs.selectMode eq 'multiple'}"
+                        draggableColumns="true"
+                        rowIndexVar="index"
+                        >
+                    <p:column selectionMode="multiple" style="width:16px"/>
+                    <p:columns value="#{basicDatatableController.tmpDisplayColumnList}" var="columnName"
+                               width="#{basicDatatableController.columnWidths.get(columnName)}">
+                        <f:facet name="header">
+                            <p:outputLabel value="#{basicDatatableController.mapNames.get(columnName)}"/>
+                        </f:facet>
+
+                        <h:outputText escape="true" value="#{data.mapData.get(columnName)}" id="lb1"
+                                      rendered="#{columnName != basicDatatableController.columnLink}"
+                                      title="#{data.mapData.get(columnName)}"/>
+                        <p:commandLink
+                                ajax="true"
+                                global="false"
+                                resetValues="true"
+                                action="#{basicDatatableController.doUpdateBasicTable(cc.attrs.controller, cc.attrs.actionUpdateLinkName, data)}"
+                                update="#{cc.attrs.updateAreaLink}"
+                                oncomplete="#{cc.attrs.oncompleteUpdateLink}"
+                                rendered="#{columnName == basicDatatableController.columnLink and !cc.attrs.isCrossLink}"
+                                process="@this"
+                                id="lb2"
+                                title="#{data.mapData.get(columnName)}">
+                            <h:outputText escape="true" value="#{data.mapData.get(columnName)}"/>
+                        </p:commandLink>
+                        <p:commandLink
+                                ajax="false"
+                                action="#{basicDatatableController.doForwardBasicTable(cc.attrs.controller, cc.attrs.actionUpdateLinkName, data)}"
+                                rendered="#{columnName == basicDatatableController.columnLink and cc.attrs.isCrossLink}"
+                                immediate="true"
+                                oncomplete="PF('stlb3').hide();"
+                                process="@this"
+                                id="lb3"
+                                title="#{data.mapData.get(columnName)}">
+                            <h:outputText escape="true" value="#{data.mapData.get(columnName)}"/>
+                        </p:commandLink>
+                    </p:columns>
+                    <p:column width="auto;"/>
+                </p:dataTable>
+            </p:outputPanel>
+        </p:outputPanel>
+    </p:outputPanel>
+</composite:implementation>
+</html>
+

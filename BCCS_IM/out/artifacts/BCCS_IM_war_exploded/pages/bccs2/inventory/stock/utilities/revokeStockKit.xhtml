@@ -1,0 +1,561 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:of="http://omnifaces.org/functions"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['BCCS2_IM_QLKHO_THU_HOI_KIT']}</ui:define>
+    <ui:define name="featureName">#{lang['BCCS2_IM_QLKHO_THU_HOI_KIT']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmRevoketKit">
+            <p:tabView id="numberTabView" dynamic="true" tabindex="#{revokeKitController.tabIndex}">
+                <p:ajax event="tabChange" listener="#{revokeKitController.onTabChange}" resetValues="true"
+                        update="@([id$=msgExport]), @([id$=tab1]), @([id$=tab2])"/>
+                <p:tab id="tabSearch" title="#{lang['revoke.kit.search.title']}">
+                    <p:outputPanel styleClass="Container100" id="tab1">
+                        <div class="Container pd-bottom-0 mg-bottom-0">
+                            <div class="ContainerIndent mg-top-0">
+                                <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"/>
+                            </div>
+                            <div class="ContainerIndent">
+                                <cbs:panel classForToggle="pnSearchKit" toggle="true"
+                                           titleHeader="#{lang['revoke.kit.revoketype.title.input.search']}"/>
+                                <p:outputPanel styleClass="Container pnSearchKit">
+                                    <div class="ContainerIndent">
+                                        <div class="Container66 Responsive66">
+                                            <div class="Container20 Responsive25 mg-left-15 pd-top-7">
+                                                <p:outputLabel
+                                                        value="#{lang['mn.stock.utilities.look.serial.type.search.history']}"
+                                                        styleClass="lb-sentinel"/>
+                                            </div>
+                                            <div class="Container80 Responsive75 ui-fluid">
+                                                <p:selectOneRadio value="#{revokeKitController.typeSearch}">
+                                                    <f:selectItem itemValue="1"
+                                                                  itemLabel="#{lang['revoke.kit.search.by.serial.isdn']}"/>
+                                                    <f:selectItem itemValue="2"
+                                                                  itemLabel="#{lang['revoke.kit.search.by.file']}"/>
+                                                    <p:ajax event="change" process="@this"
+                                                            listener="#{revokeKitController.initTab1}"
+                                                            update="@([id$=tab1])"/>
+                                                </p:selectOneRadio>
+                                            </div>
+                                        </div>
+                                        <div class="Container33 Responsive"/>
+                                    </div>
+                                    <p:outputPanel class="Container" id="pnSearchKitArea">
+                                        <p:outputPanel styleClass="ContainerIndent"
+                                                       rendered="#{revokeKitController.typeSearch eq '1'}"
+                                                       id="pnInputSearchIsdn">
+                                            <div class="Container33 Responsive">
+                                                <div class="Container40 mg-left-15 Responsive50 pd-top-7 fromSerial_col">
+                                                    <p:outputLabel value="#{lang['subscriber.number']}" for="serial"
+                                                                   styleClass="lb-sentinel"/>
+                                                </div>
+                                                <div class="Container60 Responsive50 ui-fluid pd-top-4 fromSerial">
+                                                    <p:inputText id="isdn" value="#{revokeKitController.strIsdnInput}"
+                                                                 onblur="this.value=this.value.trim()"
+                                                            />
+                                                    <pe:keyFilter for="isdn" regEx="/[0-9]+/i"
+                                                                  preventPaste="false"/>
+                                                </div>
+                                            </div>
+                                            <div class="Container33 Responsive">
+                                                <div class="Container40 mg-left-15 Responsive50 pd-top-7 fromSerial_col">
+                                                    <p:outputLabel value="#{lang['col.serial']}" for="serial"
+                                                                   styleClass="lb-sentinel"/>
+                                                </div>
+                                                <div class="Container60 Responsive50 ui-fluid pd-top-4 fromSerial">
+                                                    <p:inputText id="serial" value="#{revokeKitController.serialInput}"
+                                                                 onblur="this.value=this.value.trim()"
+                                                            />
+                                                    <pe:keyFilter for="serial" regEx="/[0-9]+/i"
+                                                                  preventPaste="false"/>
+                                                </div>
+                                            </div>
+                                            <div class="Container33 Responsive"/>
+                                        </p:outputPanel>
+                                        <p:outputPanel styleClass="ContainerIndent"
+                                                       rendered="#{revokeKitController.typeSearch eq '2'}">
+                                            <div class="Container">
+                                                <p:outputPanel styleClass="Container33 Responsive"
+                                                               id="divFileNameSearch">
+                                                    <div class="Container40 mg-left-15 Responsive50 pd-top-7 ">
+                                                        <p:outputLabel for="outputAttachFileSearch"
+                                                                       value="#{lang['attach.file']}"
+                                                                       styleClass="lb-sentinel"/>
+                                                    </div>
+                                                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                                        <p:inputText id="outputAttachFileSearch"
+                                                                     styleClass="outputAttachFile"
+                                                                     maxlength="100" required="true"
+                                                                     placeholder="#{lang['search.number.range.input.fileName']}"
+                                                                     value="#{revokeKitController.attachFileNameSearch}"
+                                                                     readonly="true"/>
+                                                    </div>
+                                                </p:outputPanel>
+
+                                                <div class="Container33 Responsive">
+                                                    <p:fileUpload id="upLoadFileSearch"
+
+                                                                  styleClass="Fleft"
+                                                                  label="#{lang['select.file']}"
+                                                                  invalidFileMessage="#{lang['mn.stock.limit.importFile.msg.format']}"
+                                                                  requiredMessage="#{lang['mn.stock.limit.attachFile.msg.require']}"
+                                                                  invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                                  fileLimitMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                                  update="@([id$=divFileNameSearch]),@([id$=divDownloadFileSearch]),@([id$=msgSearch])"
+                                                                  dragDropSupport="true" required="true" mode="advanced"
+                                                                  auto="true"
+                                                                  process="@this"
+                                                                  allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                                                  sizeLimit="5242880"
+                                                                  value="#{revokeKitController.fileUploadSearch}"
+                                                                  fileUploadListener="#{revokeKitController.handleFileUploadSearch}">
+                                                    </p:fileUpload>
+                                                </div>
+                                                <div class="Container33 Responsive"/>
+                                            </div>
+                                            <p:outputPanel id="divDownloadFileSearch" class="Container">
+                                                <p:commandLink
+
+                                                        value="#{lang['mn.stock.status.isdn.update.status.file_template']}"
+                                                        title="#{lang['create.note.download.file.title']}"
+                                                        ajax="false"
+                                                        immediate="true">
+                                                    <p:fileDownload
+                                                            value="#{revokeKitController.downloadFileTemplateSearch()}"/>
+                                                </p:commandLink>
+                                                <p:commandLink
+                                                        styleClass="mg-left-5" style="color: #e90c45!important;"
+                                                        value="#{lang['mn.stock.status.isdn.downfile_result']}"
+                                                        rendered="#{revokeKitController.showErrorKitSearch}"
+                                                        title="#{lang['create.note.download.file.title']}"
+                                                        ajax="false"
+                                                        immediate="true">
+                                                    <p:fileDownload
+                                                            value="#{revokeKitController.exportImportErrorFileSearch()}"/>
+                                                </p:commandLink>
+                                            </p:outputPanel>
+                                        </p:outputPanel>
+
+                                        <div class="ContainerIndent TexAlCenter">
+                                            <p:commandButton
+                                                    value="#{lang['mn.stock.utilities.look.serial.action.viewHis.btn']}"
+                                                    process="@this,@([id$=pnInputSearchIsdn])"
+                                                    style="margin-right: 5px;"
+                                                    update="@([id$=tab1])"
+                                                    actionListener="#{revokeKitController.doSearchIsdnSerial}"/>
+                                            <p:commandButton value="#{lang['mn.stock.export.excel']}"
+                                                             process="@this"
+                                                             style="margin-right: 5px;"
+                                                             update="@this"
+                                                             ajax="false"
+                                                    >
+                                                <p:fileDownload
+                                                        value="#{revokeKitController.doExportExcelLookKit()}"/>
+                                            </p:commandButton>
+                                        </div>
+
+                                    </p:outputPanel>
+                                </p:outputPanel>
+                            </div>
+                            <p:outputPanel id="pnSearchSearialIsdn" styleClass="ContainerIndent">
+                                <cbs:panel classForToggle="pnSearchSearialIsdn" toggle="true"
+                                           titleHeader="#{lang['mn.stock.list.result.search']}"/>
+
+                                <div class="ContainerIndent  pnSearchSearialIsdn">
+                                    <p:dataTable
+                                            id="tblSearchSearialIsdn"
+                                            var="revokeKit"
+                                            resizableColumns="true"
+                                            reflow="false"
+                                            rowIndexVar="index"
+                                            paginator="#{lang['common.paging.paginator']}"
+                                            rows="#{lang['common.paging.rows.default']}"
+                                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                            emptyMessage="#{lang['common.empty.records']}"
+                                            value="#{revokeKitController.lsRevokeKitDetailSearch}">
+                                        <p:column styleClass="col-left" sortBy="#{revokeKit.orgOwnerCode}">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['revoke.kit.orgOwnerCode']}"
+                                                              title="#{lang['revoke.kit.orgOwnerCode']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{revokeKit.orgOwnerCode}"
+                                                           title="#{revokeKit.orgOwnerCode}"/>
+                                        </p:column>
+                                        <p:column sortBy="#{revokeKit.isdn}" styleClass="col-left">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['subscriber.number']}"
+                                                              title="#{lang['subscriber.number']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{revokeKit.isdn}" title="#{revokeKit.isdn}"/>
+                                        </p:column>
+                                        <p:column sortBy="#{revokeKit.serial}" styleClass="col-left">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['mn.stock.utilities.look.serial.lb']}"
+                                                              title="#{lang['mn.stock.utilities.look.serial.lb']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{revokeKit.serial}" title="#{revokeKit.serial}"/>
+                                        </p:column>
+                                        <p:column styleClass="col-right">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['export.order.deposit.price']}"
+                                                              title="#{lang['export.order.deposit.price']}"/>
+                                            </f:facet>
+                                            <h:outputText converter="currencyFormat" value="#{revokeKit.price}"
+                                                          title="#{revokeKit.price}"/>
+                                        </p:column>
+
+                                        <!--<p:column sortBy="#{revokeKit.strVerifyStatusName}" styleClass="col-left">-->
+                                        <!--<f:facet name="header">-->
+                                        <!--<h:outputText value="#{lang['revoke.kit.verifystatus']}"-->
+                                        <!--title="#{lang['revoke.kit.verifystatus']}"/>-->
+                                        <!--</f:facet>-->
+                                        <!--<h:outputText title="#{revokeKit.strVerifyStatusName}" value="#{revokeKit.strVerifyStatusName}" styleClass="lb-sentinel" />-->
+                                        <!--</p:column>-->
+                                        <p:column sortBy="#{revokeKit.verifyDescription}" styleClass="col-left">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['revoke.kit.verifyDescription']}"
+                                                              title="#{lang['revoke.kit.verifyDescription']}"/>
+                                            </f:facet>
+                                            <h:outputText title="#{revokeKit.verifyDescription}"
+                                                          value="#{revokeKit.verifyDescription}"
+                                                          styleClass="lb-sentinel"/>
+                                        </p:column>
+                                        <!--<p:column sortBy="#{revokeKit.verifyDate}" styleClass="col-left">-->
+                                        <!--<f:facet name="header">-->
+                                        <!--<h:outputText value="#{lang['revoke.kit.verifyDate']}"-->
+                                        <!--title="#{lang['revoke.kit.verifyDate']}"/>-->
+                                        <!--</f:facet>-->
+                                        <!--<h:outputText title="#{revokeKit.verifyDate}"-->
+                                        <!--value="#{revokeKit.verifyDate}" styleClass="lb-sentinel"/>-->
+                                        <!--</p:column>-->
+                                        <p:column sortBy="#{revokeKit.verifyDate}" styleClass="col-left">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['revoke.kit.verifyDate']}"
+                                                              title="#{lang['revoke.kit.verifyDate']}"/>
+                                            </f:facet>
+                                            <p:outputLabel styleClass="lb-sentinel-bold"
+                                                           title="#{of:formatDate(revokeKit.verifyDate, 'dd/MM/yyyy HH:mm:ss')}"
+                                                           value="#{of:formatDate(revokeKit.verifyDate, 'dd/MM/yyyy HH:mm:ss')}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                            </p:outputPanel>
+                        </div>
+                    </p:outputPanel>
+                </p:tab>
+                <p:tab id="tabRevoke" title="#{lang['BCCS2_IM_QLKHO_THU_HOI_KIT']}"
+                       rendered="#{revokeKitController.hasRoleRevoke}">
+                    <p:outputPanel styleClass="Container100" id="tab2">
+                        <div class="Container mg-top-0 pd-top-0 pd-bottom-0">
+                            <div class="ContainerIndent mg-top-0 pd-top-0 pd-bottom-0">
+                                <p:messages id="message" showSummary="false" showDetail="true" closable="true"/>
+                            </div>
+                            <p:outputPanel id="pnImport" styleClass="ContainerIndent">
+                                <cbs:panel classForToggle="panelImport"
+                                           toggle="true"
+                                           titleHeader="#{lang['revoke.kit.revoketype.title.input']}"/>
+
+                                <div class="Container panelImport" style="margin-bottom: 10px;margin-top: 10px;">
+                                    <p:outputPanel styleClass="ContainerIndent" id="pnShop">
+                                        <div class="Container33 Responsive">
+                                            <cbs:inputShop value="#{revokeKitController.shopInfoTag}"
+                                                           idComponent="inputStore"
+                                                           methodName="receiveShop"
+                                                           clearMethodName="clearShop"
+                                                           update="@this,@([id$=pnStaff])"
+                                                           label="#{lang['mn.stock.utilities.unit.code']}"
+                                                           requiredMessage="#{lang['mn.stock.limit.store.code.require.msg']}"
+                                                           placeholder="#{lang['mn.stock.utilities.unit.code.placehoder']}"
+                                                           classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                           classDivInput="Container60 Responsive50 ui-fluid"
+                                                           require="true"
+                                                           forceSelection="false"
+                                                           limit="#{revokeKitController.limitAutoComplete}">
+
+                                            </cbs:inputShop>
+                                        </div>
+                                        <p:outputPanel class="Container33 Responsive" id="pnStaff">
+                                            <cbs:inputStaff value="#{revokeKitController.staffInfoTag}"
+                                                            id="staffId"
+                                                            methodName="receiveStaff"
+                                                            clearMethodName="clearStaff"
+                                                            update="@this"
+                                                            limit="#{revokeKitController.limitAutoComplete}"
+                                                            label="#{lang['mn.stock.limit.staff.code']}"
+                                                            require="false"
+                                                            forceSelection="false"
+                                                            classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                            classDivInput="Container60 Responsive50 ui-fluid"
+                                                            placeholder="#{lang['mn.stock.limit.staff.code.placeholder']}">
+                                            </cbs:inputStaff>
+                                        </p:outputPanel>
+
+                                        <div class="Container33 Responsive">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <p:outputLabel value="#{lang['create.note.from.date']}" for="fromDate"
+                                                               styleClass="lb-sentinel"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:calendar id="fromDate"
+                                                            value="#{revokeKitController.fromDate}"
+                                                            placeholder="#{lang['create.note.from.date.placeholder']}"
+                                                            converterMessage="#{lang['mn.stock.from.date.not.format']}"
+                                                            requiredMessage="#{lang['mn.stock.from.date.not.blank']}"/>
+                                            </div>
+                                        </div>
+                                    </p:outputPanel>
+
+                                    <div class="ContainerIndent">
+                                        <p:outputPanel styleClass="Container33 Responsive" id="pnToDate">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <p:outputLabel value="#{lang['create.note.to.date']}" for="toDate"
+                                                               styleClass="lb-sentinel"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:calendar id="toDate"
+                                                            value="#{revokeKitController.toDate}"
+                                                            converterMessage="#{lang['mn.stock.to.date.not.format']}"
+                                                            placeholder="#{lang['create.note.to.date.placeholder']}"
+                                                            requiredMessage="#{lang['mn.stock.to.date.not.blank']}"/>
+                                            </div>
+                                        </p:outputPanel>
+                                        <p:outputPanel styleClass="Container33 Responsive" id="divFileName">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7"
+                                                    >
+                                                <p:outputLabel styleClass="lb-sentinel" for="outputAttachFile"
+                                                               value="#{lang['attach.file']}"/>
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid">
+                                                <p:inputText id="outputAttachFile" styleClass="outputAttachFile"
+                                                             maxlength="100" required="true"
+                                                             placeholder="#{lang['search.number.range.input.fileName']}"
+                                                             value="#{revokeKitController.attachFileName}"
+                                                             readonly="true"/>
+                                            </div>
+                                        </p:outputPanel>
+
+                                        <div class="Container33 Responsive">
+                                            <p:fileUpload id="upLoadFile"
+                                                          styleClass="Fleft"
+                                                          label="#{lang['select.file']}"
+                                                          invalidFileMessage="#{lang['mn.stock.limit.importFile.msg.format']}"
+                                                          requiredMessage="#{lang['mn.stock.limit.attachFile.msg.require']}"
+                                                          invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                          fileLimitMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                          update="@([id$=divFileName]),@([id$=message]),@([id$=divDownloadFile])"
+                                                          dragDropSupport="true" required="true" mode="advanced"
+                                                          auto="true"
+                                                          process="@this"
+                                                          allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                                          sizeLimit="5242880"
+                                                          value="#{revokeKitController.fileUpload}"
+                                                          fileUploadListener="#{revokeKitController.handleFileUpload}">
+                                            </p:fileUpload>
+                                        </div>
+                                    </div>
+                                    <div class="ContainerIndent">
+                                        <p:outputPanel id="divDownloadFile" class="Container33 Responsive mg-left-15 ">
+                                            <p:commandLink
+                                                    id="downloadTemplateBtn"
+
+                                                    value="#{lang['mn.stock.status.isdn.update.status.file_template']}"
+                                                    title="#{lang['create.note.download.file.title']}"
+                                                    ajax="false"
+                                                    immediate="true">
+                                                <p:fileDownload value="#{revokeKitController.downloadFileTemplate()}"/>
+                                            </p:commandLink>
+                                            <p:commandLink
+                                                    styleClass="mg-left-5" style="color: #e90c45!important;"
+                                                    value="#{lang['mn.stock.status.isdn.downfile_result']}"
+                                                    rendered="#{revokeKitController.showErrorKit}"
+                                                    title="#{lang['create.note.download.file.title']}"
+                                                    ajax="false"
+                                                    immediate="true">
+                                                <p:fileDownload
+                                                        value="#{revokeKitController.exportImportErrorFile()}"/>
+                                            </p:commandLink>
+                                        </p:outputPanel>
+                                    </div>
+                                </div>
+                                <div class="ContainerIndent TexAlCenter">
+                                    <p:commandButton
+                                            value="#{lang['revoke.kit.search.kit.revoked']}"
+                                            process="@this,@([id$=pnToDate]),@([id$=pnShop])"
+                                            style="margin-right: 5px;"
+                                            update="@form"
+                                            actionListener="#{revokeKitController.doSearch}"/>
+                                    <p:commandButton value="#{lang['mn.stock.export.excel']}"
+                                                     process="@this"
+                                                     style="margin-right: 5px;"
+                                                     update="@this"
+                                                     ajax="false"
+                                            >
+                                        <p:fileDownload
+                                                value="#{revokeKitController.doExportExcelKit()}"/>
+                                    </p:commandButton>
+                                    <cbs:confirmDialog
+                                            idComponent="revokeKit"
+                                            id="revokeKit"
+                                            styleButton="mg-left-5"
+                                            valueButton="#{lang['revoke.kit.revoketype.btn']}"
+                                            headerConfirm="#{lang['revoke.kit.revoketype.btn']}"
+                                            messageConfirm="#{lang['revoke.kit.header.confirm']}"
+                                            actionOK="#{revokeKitController.doRevokeKit()}"
+                                            resetValueButton="true"
+                                            process="@this"
+                                            updateArea="@form"
+                                            processOK="@this"
+                                            updateOK="@form"
+                                            actionValidate="#{revokeKitController.validateRevoke}"
+                                            focusCancel="false"
+                                            isButton="true"/>
+                                </div>
+                            </p:outputPanel>
+                        </div>
+
+                        <p:outputPanel id="pnLstExportOrder" styleClass="ContainerIndent pd-top-0 mg-top-0">
+                            <cbs:panel classForToggle="panelListOrderExport" toggle="true"
+                                       titleHeader="#{lang['mn.stock.list.result.search']}"/>
+
+                            <div class="Container panelListOrderExport">
+                                <p:dataTable
+                                        id="lstOrderExport"
+                                        var="revokeKit"
+                                        resizableColumns="true"
+                                        reflow="false"
+                                        rowIndexVar="index"
+                                        paginator="#{lang['common.paging.paginator']}"
+                                        rows="#{lang['common.paging.rows.default']}"
+                                        rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                        paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                        paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                        paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                        currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                        emptyMessage="#{lang['common.empty.records']}"
+                                        value="#{revokeKitController.lsRevokeKitDetail}">
+                                    <p:column styleClass="col-left" sortBy="#{revokeKit.orgOwnerCode}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['revoke.kit.orgOwnerCode']}"
+                                                          title="#{lang['revoke.kit.orgOwnerCode']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{revokeKit.orgOwnerCode}"
+                                                       title="#{revokeKit.orgOwnerCode}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{revokeKit.isdn}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['subscriber.number']}"
+                                                          title="#{lang['subscriber.number']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{revokeKit.isdn}" title="#{revokeKit.isdn}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{revokeKit.serial}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['mn.stock.utilities.look.serial.lb']}"
+                                                          title="#{lang['mn.stock.utilities.look.serial.lb']}"/>
+                                        </f:facet>
+                                        <p:outputLabel value="#{revokeKit.serial}" title="#{revokeKit.serial}"/>
+                                    </p:column>
+                                    <!-- KQ kiem tra -->
+                                    <p:column sortBy="#{revokeKit.verifyDescription}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['revoke.kit.verifyDescription']}"
+                                                          title="#{lang['revoke.kit.verifyDescription']}"/>
+                                        </f:facet>
+                                        <h:outputText title="#{revokeKit.verifyDescription}"
+                                                      value="#{revokeKit.verifyDescription}" styleClass="lb-sentinel"/>
+                                    </p:column>
+                                    <!-- ngay kiem tra -->
+                                    <p:column sortBy="#{revokeKit.verifyDate}" styleClass="col-left">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['revoke.kit.verifyDate']}"
+                                                          title="#{lang['revoke.kit.verifyDate']}"/>
+                                        </f:facet>
+                                        <p:outputLabel styleClass="lb-sentinel-bold"
+                                                       title="#{of:formatDate(revokeKit.verifyDate, 'dd/MM/yyyy HH:mm:ss')}"
+                                                       value="#{of:formatDate(revokeKit.verifyDate, 'dd/MM/yyyy HH:mm:ss')}"/>
+                                    </p:column>
+                                    <!-- trang thai thu hoi -->
+                                    <!--<p:column sortBy="#{revokeKit.revokeStatusName}">-->
+                                    <!--<f:facet name="header">-->
+                                    <!--<h:outputText value="#{lang['revoke.kit.revokeState']}"-->
+                                    <!--title="#{lang['revoke.kit.revokeState']}"/>-->
+                                    <!--</f:facet>-->
+                                    <!--<h:outputText title="#{revokeKit.revokeStatusName}"-->
+                                    <!--value="#{revokeKit.revokeStatusName}" styleClass="lb-sentinel"/>-->
+                                    <!--</p:column>-->
+                                    <!-- KQ thu hoi -->
+                                    <p:column sortBy="#{revokeKit.revokeDescription}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['revoke.kit.revokeDesc']}"
+                                                          title="#{lang['revoke.kit.revokeDesc']}"/>
+                                        </f:facet>
+                                        <h:outputText title="#{revokeKit.revokeDescription}"
+                                                      value="#{revokeKit.revokeDescription}" styleClass="lb-sentinel"/>
+                                    </p:column>
+                                    <!-- ngay thu hoi -->
+                                    <p:column sortBy="#{revokeKit.revokeDate}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['revoke.kit.revokeDate']}"
+                                                          title="#{lang['revoke.kit.revokeDate']}"/>
+                                        </f:facet>
+                                        <p:outputLabel styleClass="lb-sentinel-bold"
+                                                       title="#{of:formatDate(revokeKit.revokeDate, 'dd/MM/yyyy HH:mm:ss')}"
+                                                       value="#{of:formatDate(revokeKit.revokeDate, 'dd/MM/yyyy HH:mm:ss')}"/>
+                                    </p:column>
+                                    <!-- loai thu hoi -->
+                                    <p:column sortBy="#{revokeKit.revokeTypeName}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['revoke.kit.revokeType']}"
+                                                          title="#{lang['revoke.kit.revokeType']}"/>
+                                        </f:facet>
+                                        <h:outputText title="#{revokeKit.revokeTypeName}"
+                                                      value="#{revokeKit.revokeTypeName}" styleClass="lb-sentinel"/>
+                                    </p:column>
+                                    <!-- KQ cong tien -->
+                                    <p:column sortBy="#{revokeKit.addMoneyResult}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['revoke.kit.moneyStatus']}"
+                                                          title="#{lang['revoke.kit.moneyStatus']}"/>
+                                        </f:facet>
+                                        <h:outputText title="#{revokeKit.addMoneyResult}"
+                                                      value="#{revokeKit.addMoneyResult}" styleClass="lb-sentinel"/>
+                                    </p:column>
+                                    <!-- ngay cong tien -->
+                                    <p:column sortBy="#{revokeKit.lastModify}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{lang['revoke.kit.lastModify.addMoneyDate']}"
+                                                          title="#{lang['revoke.kit.lastModify.addMoneyDate']}"/>
+                                        </f:facet>
+                                        <p:outputLabel styleClass="lb-sentinel-bold"
+                                                       title="#{of:formatDate(revokeKit.lastModify, 'dd/MM/yyyy HH:mm:ss')}"
+                                                       value="#{of:formatDate(revokeKit.lastModify, 'dd/MM/yyyy HH:mm:ss')}"/>
+                                    </p:column>
+                                    <!-- so tien cong -->
+                                    <p:column sortBy="#{revokeKit.price}">
+                                        <f:facet name="header">
+                                            <h:outputText converter="currencyFormat" value="#{lang['revoke.kit.price']}"
+                                                          title="#{lang['revoke.kit.price']}"/>
+                                        </f:facet>
+                                        <p:outputLabel
+                                                title="#{of:formatNumber(revokeKit.price, lang['common.currency.format'])}"
+                                                value="#{of:formatNumber(revokeKit.price, lang['common.currency.format'])}"/>
+                                    </p:column>
+
+                                </p:dataTable>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                </p:tab>
+            </p:tabView>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean class="com.viettel.process.ProcessConfiguration"/>
+
+    <bean id="baseThread" class="com.viettel.process.BaseThread">
+        <constructor-arg value="process_sample:type=process_type,name=process_name"/>
+    </bean>
+
+    <bean class="com.viettel.process.CmdBusActor" name="cmdBusBean" init-method="init" scope="prototype">
+        <property name="commands">
+            <list>
+                <!--<ref bean="updateVOfficeDebit"/>-->
+                <!--<ref bean="updateVOfficeDevice"/>-->
+                <!--<ref bean="deleteStockThread"/>-->
+                <!--<ref bean="updateVOfficeDeliver"/>-->
+                <!--<ref bean="goodRevokeImport"/>-->
+                <!--<ref bean="goodRevokeCreateNote"/>-->
+                <!--<ref bean="approveToolkitThread"/>-->
+                <!--<ref bean="releaseNiceNumberThread"/>-->
+                <!--<ref bean="releaseNumberThread"/>-->
+                <!--<ref bean="releaseNormalNumberThread"/>-->
+                <!--<ref bean="updateVOfficeDOA"/>-->
+                <!--<ref bean="UnlockUserThread"/>-->
+                <!--<ref bean="LockUserThread"/>-->
+                <!--<ref bean="LogisticsThread"/>-->
+                <!--<ref bean="CancelRequestVTShopThread"/>-->
+                <!--<ref bean="CloseStockThread"/>-->
+                <!--<ref bean="RevokeNumberOwnerThread"/>-->
+                <!--<ref bean="RevokeNumberThread"/>-->
+                <ref bean="SignVofficeThread"/>
+                <!--<ref bean="SendSmsThread"/>-->
+                <!--<ref bean="StockBalanceThread"/>-->
+                <!--<ref bean="UpdateImsiInfoThread"/>-->
+            </list>
+        </property>
+    </bean>
+    <bean id="updateVOfficeDebit" class="com.viettel.bccs.processIM.process.UpdateVofficeDebitThread">
+        <constructor-arg value="Warning:type=updateVOfficeDebit,name=updateVOfficeDebitCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="schedule" value="0 */1 * * * ?"/>
+    </bean>
+    <bean id="lockUserDamageThread" class="com.viettel.bccs.processIM.process.LockUserDamageThread">
+        <constructor-arg value="Warning:type=goodRevokeImport,name=lockUserDamageCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="schedule" value="0 */1 * * * ?"/>
+    </bean>
+    <bean id="unLockUserDamageThread" class="com.viettel.bccs.processIM.process.UnLockUserDamageThread">
+        <constructor-arg value="Warning:type=goodRevokeImport,name=unLockUserDamageCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="schedule" value="0 */1 * * * ?"/>
+    </bean>
+    <bean id="updateVOfficeDevice" class="com.viettel.bccs.processIM.process.UpdateVofficeDeviceThread">
+        <constructor-arg value="Warning:type=updateVOfficeDevice,name=updateVOfficeDeviceCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="schedule" value="0 */1 * * * ?"/>
+    </bean>
+    <bean id="updateVOfficeDeliver" class="com.viettel.bccs.processIM.process.UpdateVofficeDeliverThread">
+        <constructor-arg value="Warning:type=updateVOfficeDeliver,name=updateVOfficeDeliverCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="schedule" value="0 */1 * * * ?"/>
+    </bean>
+    <bean id="deleteStockThread" class="com.viettel.bccs.processIM.process.DeleteStockThread">
+        <constructor-arg value="Warning:type=deleteStock,name=deleteStockCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="schedule" value="0 */1 * * * ?"/>
+    </bean>
+    <bean id="goodRevokeImport" class="com.viettel.bccs.processIM.process.GoodRevokeImportThread">
+        <constructor-arg value="Warning:type=goodRevokeImport,name=goodRevokeImportCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="schedule" value="0 */1 * * * ?"/>
+    </bean>
+    <bean id="goodRevokeCreateNote" class="com.viettel.bccs.processIM.process.GoodRevokeCreateNoteThread">
+        <constructor-arg value="Warning:type=goodRevokeCreateNote,name=goodRevokeCreateNoteCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="schedule" value="0 */1 * * * ?"/>
+    </bean>
+    <bean id="approveToolkitThread" class="com.viettel.bccs.processIM.process.ApproveToolkitThread">
+        <constructor-arg value="Warning:type=approveToolkit,name=approveToolkitCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="schedule" value="0 */1 * * * ?"/>
+    </bean>
+    <bean id="releaseNumberThread" class="com.viettel.bccs.processIM.process.ReleaseNumberThread">
+        <constructor-arg value="Warning:type=releaseNumber,name=releaseNumberCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="batch" value="1000"/>
+        <property name="schedule" value="0 */15 * * * ?"/>
+    </bean>
+    <bean id="releaseNormalNumberThread" class="com.viettel.bccs.processIM.process.ReleaseNormalNumberThread">
+        <constructor-arg value="Warning:type=ReleaseNormalNumberThread,name=ReleaseNormalNumberThread"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="batch" value="1000"/>
+        <property name="schedule" value="0 */5 * * * ?"/>
+    </bean>
+    <bean id="releaseNiceNumberThread" class="com.viettel.bccs.processIM.process.ReleaseNiceNumberThread">
+        <constructor-arg value="Warning:type=releaseNiceNumber,name=releaseNiceNumberCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="batch" value="1000"/>
+        <property name="schedule" value="0 */1 * * * ?"/>
+    </bean>
+    <bean id="updateVOfficeDOA" class="com.viettel.bccs.processIM.process.UpdateVofficeDOAThread">
+        <constructor-arg value="Warning:type=updateVOfficeDOA,name=updateVOfficeDOACommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="schedule" value="0 */5 * * * ?"/>
+    </bean>
+    <bean id="UnlockUserThread" class="com.viettel.bccs.processIM.process.UnlockUserThread">
+        <constructor-arg value="Warning:type=UnlockUser,name=UnlockUserCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+    </bean>
+    <bean id="LockUserThread" class="com.viettel.bccs.processIM.process.LockUserThread">
+        <constructor-arg value="Warning:type=LockUser,name=LockUserCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+    </bean>
+     <bean id="UnlockUserStockInspectThread" class="com.viettel.bccs.processIM.process.UnlockUserStockInspectThread">
+        <constructor-arg value="Warning:type=UnlockUserStockInspect,name=UnlockUserStockInspectCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="schedule" value="0 */1 * * * ?"/>
+    </bean>
+    <bean id="LogisticsThread" class="com.viettel.bccs.processIM.process.LogisticManager">
+        <constructor-arg value="Warning:type=Logistics,name=LogisticsCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="sleepTime" value="6000"/>
+        <property name="maxDay" value="0"/>
+        <property name="maxRetry" value="4"/>
+        <property name="numberThread" value="10"/>
+    </bean>
+    <bean id="CloseStockThread" class="com.viettel.bccs.processIM.process.CloseStockExecutor">
+        <constructor-arg value="process:type=CloseStock,name=CloseStockManager"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="sleepTime" value="100"/>
+        <property name="schedule" value="0 0 1 * * ?"/>
+        <!--<property name="schedule" value="0 */5 * * * ?"/>-->
+    </bean>
+    <bean id="SignVofficeThread" class="com.viettel.bccs.processIM.process.SignVofficeManager">
+        <constructor-arg value="Warning:type=SignVOffice,name=SignVofficeCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="1"/>
+        <property name="maxDay" value="10"/>
+        <property name="maxRetry" value="5"/>
+        <property name="numberThread" value="10"/>
+        <property name="allowList">
+            <list value-type="java.lang.Long">
+                <value>0</value>
+                <value>4</value>
+            </list>
+        </property>
+        <property name="schedule" value="0 */1 * * * ?"/>
+
+    </bean>
+
+    <bean id="CancelRequestVTShopThread" class="com.viettel.bccs.processIM.process.CancelRequestVTShopThread">
+        <constructor-arg value="Warning:type=CancelRequestVtshop,name=CancelRequestVtshopCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="batch" value="1000"/>
+        <property name="schedule" value="0 */5 * * * ?"/>
+    </bean>
+
+    <bean id="RevokeNumberOwnerThread" class="com.viettel.bccs.processIM.process.RevokeNumberOwnerThread">
+        <constructor-arg value="Warning:type=RevokeNumberOwner,name=RevokeNumberOwnerCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="day" value="30"/>
+        <property name="batch" value="1000"/>
+        <property name="sleepTime" value="6000"/>
+    </bean>
+
+    <bean id="RevokeNumberThread" class="com.viettel.bccs.processIM.process.RevokeNumberThread">
+        <constructor-arg value="Warning:type=RevokeNumber,name=RevokeNumberCommand"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="day" value="60"/>
+        <property name="schedule" value="0 0 1 * * ?"/>
+    </bean>
+
+    <bean id="SendSmsThread" class="com.viettel.bccs.processIM.process.SendSmsThread">
+        <constructor-arg value="Warning:type=SendSmsThread,name=SendSmsThread"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+    </bean>
+    <bean id="StockBalanceThread" class="com.viettel.bccs.processIM.process.StockBalanceThread">
+        <constructor-arg value="Warning:type=StockBalanceThread,name=StockBalanceThread"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+    </bean>
+    <bean id="UpdateImsiInfoThread" class="com.viettel.bccs.processIM.process.UpdateImsiInfoThread">
+        <constructor-arg value="Warning:type=UpdateImsiInfoThread,name=UpdateImsiInfoThread"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <property name="schedule" value="0 */1 * * * ?"/>
+    </bean>
+</beans>

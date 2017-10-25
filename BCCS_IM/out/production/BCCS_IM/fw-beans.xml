@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="bundleUtil" class="com.viettel.fw.common.util.BundleUtil"
+          init-method="init">
+        <!--runEnvirement co 2 gtr {web: chay ung dung web, service: chay ung dung service}-->
+        <property name="runEnvironment" value="web"/>
+        <property name="languageLocation" value="com.viettel.language.root"/>
+        <property name="supportedLanguages" ref="supportedLanguages"/>
+        <property name="sortCode" value="vietnamese"/>
+    </bean>
+
+    <bean id="supportedLanguages" class="org.springframework.beans.factory.config.ListFactoryBean">
+        <property name="sourceList">
+            <list>
+                <bean class="com.viettel.ws.common.utils.Locate">
+                    <constructor-arg name="language" value="en"/>
+                    <constructor-arg name="country" value="US"/>
+                </bean>
+                <bean class="com.viettel.ws.common.utils.Locate">
+                    <constructor-arg name="language" value="vi"/>
+                    <constructor-arg name="country" value="VN"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+</beans>

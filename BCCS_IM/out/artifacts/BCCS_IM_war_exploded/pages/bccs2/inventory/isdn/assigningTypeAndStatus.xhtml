@@ -1,0 +1,530 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        template="../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['mn.isdn.assigning.type.and.status']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmAssignStatus">
+
+            <h:panelGrid styleClass="Container100">
+                <!-- message thong bao -->
+                <p:tabView id="numberTabView" dynamic="true"
+                           tabindex="#{assignStatusController.tabIndex}">
+                    <p:ajax event="tabChange" listener="#{assignStatusController.onTabChange}"
+                            update="@([id$=assIsdn]),@([id$=assIsdnFile])"/>
+                    <p:tab id="defineSpaceTab" title="#{lang['im.number.assign.status.by.range']}">
+                        <!--End vung chon kieu nhap du lieu-->
+                        <p:outputPanel styleClass="ContainerIndent" id="pnlRange" rendered="true">
+                            <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                                <p:messages id="assignTypeMsgs" showDetail="true" showSummary="false" closable="true"/>
+                            </div>
+                            <!--Start vung nhap du lieu chi tiet-->
+                            <p:outputPanel id="pnlEnterFromRange" styleClass="ContainerIndent">
+                                <cbs:panel classForToggle="panelInforExport"
+                                           toggle="true"
+                                           titleHeader="#{lang['entered.data.detail']}"/>
+
+                                <div class="Container100 panelInforExport"
+                                     style="margin-bottom: 10px;margin-top: 10px;">
+                                    <p:outputPanel id="renderTypeService" styleClass="Container100">
+                                        <!-- nhap tu file-->
+                                        <!-- nhap theo dai-->
+                                        <p:outputPanel>
+                                            <div class="ContainerIndent mg-top-0">
+                                                <div class="Container33 Responsive">
+                                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                        <p:outputLabel styleClass="lb-sentinel"
+                                                                       value="#{lang['mn.stock.type.service']}"
+                                                                       for="assignStatusServiceType"/>
+                                                    </div>
+                                                    <div class="Container60 Responsive50 ui-fluid">
+                                                        <p:selectOneMenu id="assignStatusServiceType"
+                                                                         required="true"
+                                                                         requiredMessage="#{lang['mn.stock.status.service.noselect']}"
+                                                                         value="#{assignStatusController.searchStockNumberDTO.serviceType}">
+                                                            <f:selectItems
+                                                                    value="#{assignStatusController.optionSetValueDTOs}"
+                                                                    var="item"
+                                                                    itemValue="#{item.value}"
+                                                                    itemLabel="#{item.name}"
+                                                                    itemLabelEscaped="true"
+                                                                    />
+                                                        </p:selectOneMenu>
+                                                        <p:message for="assignStatusServiceType"/>
+                                                    </div>
+                                                </div>
+                                                <div class="Container33 Responsive">
+                                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                        <p:outputLabel styleClass="lb-sentinel clFromTo"
+                                                                       value="#{lang['from.number']}"
+                                                                       for="fromNumberTxt"/>
+                                                    </div>
+                                                    <pe:keyFilter mask="num" preventPaste="false"
+                                                                  for="fromNumberTxt,toNumberTxt"/>
+
+                                                    <div class="Container60 Responsive50 ui-fluid">
+                                                        <p:inputText id="fromNumberTxt"
+                                                                     styleClass="clFromTo"
+                                                                     required="true"
+                                                                     onblur="this.value=this.value.trim()"
+                                                                     requiredMessage="#{lang['start.range.require']}"
+                                                                     validatorMessage="#{lang['mn.stock.status.isdn.from.length']}"
+                                                                     value="#{assignStatusController.searchStockNumberDTO.startRange}">
+                                                            <f:validateRegex pattern="[0-9]{8,11}"/>
+                                                        </p:inputText>
+                                                        <p:message for="fromNumberTxt"/>
+                                                    </div>
+                                                </div>
+                                                <div class="Container33 Responsive">
+                                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                        <p:outputLabel styleClass="lb-sentinel clFromTo"
+                                                                       value="#{lang['to.number']}"
+                                                                       for="toNumberTxt"/>
+                                                    </div>
+                                                    <div class="Container60 Responsive50 ui-fluid">
+                                                        <p:inputText id="toNumberTxt"
+                                                                     styleClass="clFromTo"
+                                                                     required="true"
+                                                                     onblur="this.value=this.value.trim()"
+                                                                     requiredMessage="#{lang['end.range.require']}"
+                                                                     validatorMessage="#{lang['mn.stock.status.isdn.to.length']}"
+                                                                     value="#{assignStatusController.searchStockNumberDTO.endRange}">
+                                                            <f:validateRegex pattern="[0-9]{8,11}"/>
+                                                        </p:inputText>
+                                                        <p:message for="toNumberTxt"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="ContainerIndent mg-top-0">
+                                                <div class="Container33 Responsive">
+                                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                        <p:outputLabel styleClass="lb-sentinel"
+                                                                       value="#{lang['old.status']}"
+                                                                       for="cbxOldStatus"/>
+                                                    </div>
+                                                    <div class="Container60 Responsive50 ui-fluid">
+                                                        <p:selectOneMenu id="cbxOldStatus"
+                                                                         value="#{assignStatusController.searchStockNumberDTO.oldStatus}">
+                                                            <f:selectItem itemLabel="#{lang['mn.isdn.status.default']}"
+                                                                          itemValue="0"/>
+                                                            <f:selectItem itemLabel="#{lang['new.digital']}"
+                                                                          itemValue="1"/>
+                                                            <f:selectItem itemLabel="#{lang['suspend.digital']}"
+                                                                          itemValue="3"/>
+                                                        </p:selectOneMenu>
+                                                    </div>
+                                                </div>
+                                                <!--<div class="Container33 Responsive">-->
+                                                    <!--<div class="Container40 Responsive50 mg-left-15 pd-top-7">-->
+                                                        <!--<p:outputLabel styleClass="lb-sentinel"-->
+                                                                       <!--value="#{lang['new.status']}"-->
+                                                                       <!--for="cbxNewStatus"/>-->
+                                                    <!--</div>-->
+                                                    <!--<div class="Container60 Responsive50 ui-fluid">-->
+                                                        <!--<p:selectOneMenu id="cbxNewStatus"-->
+                                                                         <!--required="true"-->
+                                                                         <!--requiredMessage=""-->
+                                                                         <!--value="#{assignStatusController.searchStockNumberDTO.status}">-->
+                                                            <!--<f:selectItem itemLabel="#{lang['new.digital']}"-->
+                                                                          <!--itemValue="1"/>-->
+                                                            <!--<f:selectItem itemLabel="#{lang['suspend.digital']}"-->
+                                                                          <!--itemValue="3"/>-->
+                                                        <!--</p:selectOneMenu>-->
+                                                    <!--</div>-->
+                                                <!--</div>-->
+                                                <div class="Container33 Responsive">
+                                                    <div class="Container100 ui-fluid ui-relative">
+                                                        <cbs:inputShop value="#{assignStatusController.shopInfoTag}"
+                                                                       idComponent="inputStore"
+                                                                       methodName="receiveShop"
+                                                                       update="@this"
+                                                                       label="#{lang['stock.get.digital']}"
+                                                                       placeholder="#{lang['search.number.range.shop.placehoder']}"
+                                                                       classDivLabel="Container40 mg-left-15 Responsive50 pd-top-4"
+                                                                       classDivInput="Container60 Responsive50 ui-fluid"
+                                                                       forceSelection="false"
+                                                                       clearMethodName="clearCurrentShop"
+                                                                       require="false">
+                                                        </cbs:inputShop>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </p:outputPanel>
+                                    </p:outputPanel>
+
+                                    <div class="Container100 TexAlCenter mg-top-0">
+                                        <p:commandButton value="#{lang['create.list']}"
+                                                         process="@this, @([id$=pnlRange])"
+                                                         actionListener="#{assignStatusController.previewStatus(assignStatusController.renderedFromFile)}"
+                                                         update="@this, @([id$=pnlRange])"/>
+                                        <p:commandButton value="#{lang['common.reset']}"
+                                                         actionListener="#{assignStatusController.doReset}"
+                                                         process="@this"
+                                                         resetValues="true"
+                                                         update="@form" validateClient="true" styleClass="mg-left-5"/>
+                                    </div>
+                                </div>
+                            </p:outputPanel>
+                            <!--End vung nhap du lieu chi tiet-->
+
+                            <!--Start danh sách dải số cần gán loại số-->
+                            <p:outputPanel id="pnlListRange" styleClass="ContainerIndent">
+                                <cbs:panel classForToggle="panelListOrderExport"
+                                           toggle="true"
+                                           titleHeader="#{lang['list.need.assigning.type.digital']}"/>
+
+                                <div class="Container100 panelListOrderExport">
+
+                                    <p:commandLink value="#{lang['mn.stock.status.update']}"
+                                                   resetValues="true"
+                                                   actionListener="#{assignStatusController.doConfirmStatusUpdate}"
+                                                   update="assignTypeMsgs, @([id$=dlgAssignStatus])"
+                                                   styleClass="fa icon-plus Fs14 blue md-link"
+                                                   oncomplete="if(!args.validationFailed){PF('dlgAssignStatus').show();}"
+                                                   process="@this, @([id$=tblListRange])">
+                                    </p:commandLink>
+
+                                    <!--<div class="Container TexAlLeft">-->
+                                        <!--<cbs:confirmDialog-->
+                                                <!--idComponent="btnUpdateStatus"-->
+                                                <!--valueButton="#{lang['mn.stock.status.update']}"-->
+                                                <!--headerConfirm="#{lang['mn.stock.status.update.confirm']}"-->
+                                                <!--messageConfirm="#{lang['mn.stock.status.update.confirm.msg']}"-->
+                                                <!--actionOK="#{assignStatusController.doUpdateStatus}"-->
+                                                <!--resetValueButton="false"-->
+                                                <!--process="@this,@([id$=tblListRange])"-->
+                                                <!--updateArea="@form"-->
+                                                <!--updateOK="@form, @([id$=frmAssignStatus]"-->
+                                                <!--titleButton="#{lang['mn.stock.status.update']}"-->
+                                                <!--actionValidate="#{assignStatusController.doConfirmStatusUpdate}"-->
+                                                <!--styleClassButton="fa icon-plus Fs14 blue md-link mg-left-5"-->
+                                                <!--focusCancel="false"-->
+                                                <!--isButton="false"-->
+                                                <!--/>-->
+                                    <!--</div>-->
+
+                                    <div class="ContainerIndent">
+                                        <p:dataTable
+                                                id="tblListRange"
+                                                paginator="#{lang['common.paging.paginator']}"
+                                                rows="#{lang['common.paging.rows.default']}"
+                                                rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                                paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                                paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                                paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                                currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                                emptyMessage="#{lang['common.empty.records']}"
+                                                value="#{assignStatusController.listRangeGrant}"
+                                                selection="#{assignStatusController.listRangeGrantSelected}"
+                                                rowIndexVar="index"
+                                                rowKey="#{item.rowKey}"
+                                                var="item">
+
+                                            <p:column selectionMode="multiple" style="width:5%; text-align:center"/>
+                                            <p:column headerText="#{lang['mn.stock.utilities.code.ware.house']}"
+                                                      visible="false" sortBy="#{item.shopId}">
+                                                <p:outputLabel value="#{item.shopId}" title="#{item.shopId}"/>
+                                            </p:column>
+                                            <p:column headerText="#{lang['mn.stock.utilities.code.ware.house']}"
+                                                      style="width: 12%" sortBy="#{item.shopCode}">
+                                                <p:outputLabel value="#{item.shopCode}" title="#{item.shopCode}"/>
+                                            </p:column>
+                                            <p:column headerText="#{lang['mn.stock.name']}" sortBy="#{item.shopName}"
+                                                      style="width: 18%">
+                                                <p:outputLabel value="#{item.shopName}" title="#{item.shopName}"/>
+                                            </p:column>
+                                            <p:column headerText="#{lang['mn.stock.type.service']}"
+                                                      style="width: 16%"
+                                                      sortBy="#{assignStatusController.getTelecomServiceName(item.telecomService)}">
+                                                <p:outputLabel
+                                                        value="#{assignStatusController.getTelecomServiceName(item.telecomService)}"
+                                                        title="#{assignStatusController.getTelecomServiceName(item.telecomService)}"/>
+                                            </p:column>
+                                            <p:column headerText="#{lang['from.number']}"
+                                                      style="width: 13%"
+                                                      sortBy="#{item.fromISDN}">
+                                                <p:outputLabel value="#{item.fromISDN}" title="#{item.fromISDN}"/>
+                                            </p:column>
+                                            <p:column headerText="#{lang['to.number']}"
+                                                      style="width: 13%"
+                                                      sortBy="#{item.toISDN}">
+                                                <p:outputLabel value="#{item.toISDN}" title="#{item.toISDN}"/>
+                                            </p:column>
+                                            <p:column headerText="#{lang['common.number']}"
+                                                      style="width: 10%; text-align: right"
+                                                      sortBy="#{item.total}">
+                                                <h:outputLabel value="#{(item.total)}" styleClass="lb-sentinel-bold"
+                                                               style="text-align: right"
+                                                               title="#{(item.total)}"
+                                                               converter="currencyFormat"></h:outputLabel>
+                                            </p:column>
+                                            <p:column headerText="#{lang['mn.stock.status.isdn.status.old']}"
+                                                      style="width: 16%"
+                                                      sortBy="#{item.status}">
+                                                <p:outputLabel
+                                                        value="#{lang[assignStatusController.getStrStatus(item.oldStatus)]}"
+                                                        title="#{lang[assignStatusController.getStrStatus(item.oldStatus)]}"/>
+                                            </p:column>
+                                            <!--<p:column headerText="#{lang['mn.stock.status.isdn.status.new']}"-->
+                                                      <!--styleClass="col-left"-->
+                                                      <!--style="width: 14%"-->
+                                                      <!--sortBy="#{item.status}">-->
+                                                <!--<p:outputLabel-->
+                                                        <!--value="#{lang[assignStatusController.getStrStatus(item.status)]}"-->
+                                                        <!--title="#{lang[assignStatusController.getStrStatus(item.status)]}"/>-->
+                                            <!--</p:column>-->
+                                        </p:dataTable>
+                                    </div>
+                                </div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                    </p:tab>
+                    <p:tab id="openSpaceTab" title="#{lang['im.number.assign.status.by.file']}">
+                        <!--Start vung nhap du lieu chi tiet-->
+                        <p:outputPanel styleClass="ContainerIndent" id="pnlFile">
+                            <div class="ContainerIndent pd-bottom-0 mg-bottom-0">
+                                <p:messages id="assignTypeMsgs1" showDetail="true" showSummary="false" closable="true"/>
+                            </div>
+                            <p:outputPanel id="pnlEnterFromRange1" styleClass="ContainerIndent">
+                                <cbs:panel classForToggle="panelInforExport1"
+                                           toggle="true"
+                                           titleHeader="#{lang['entered.data.detail']}"/>
+
+                                <div class="Container100 panelInforExport1"
+                                     style="margin-bottom: 10px;margin-top: 10px;">
+                                    <p:outputPanel id="renderTypeService1" styleClass="Container100">
+                                        <p:outputPanel>
+                                            <div class="ContainerIndent mg-top-0">
+                                                <div class="Container50 Responsive50">
+                                                    <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                        <p:outputLabel styleClass="lb-sentinel"
+                                                                       value="#{lang['mn.stock.type.service']}"
+                                                                       for="assignStatusServiceType1"/>
+                                                    </div>
+                                                    <div class="Container60 Responsive50 ui-fluid">
+                                                        <p:selectOneMenu id="assignStatusServiceType1"
+                                                                         required="true"
+                                                                         requiredMessage="#{lang['mn.stock.status.service.noselect']}"
+                                                                         value="#{assignStatusController.searchStockNumberDTO.serviceType}">
+                                                            <f:selectItems
+                                                                    value="#{assignStatusController.optionSetValueDTOs}"
+                                                                    var="item"
+                                                                    itemValue="#{item.value}"
+                                                                    itemLabel="#{item.name}"
+                                                                    itemLabelEscaped="true"
+                                                                    />
+                                                        </p:selectOneMenu>
+                                                        <p:message for="assignStatusServiceType1"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="ContainerIndent mg-top-0">
+                                                <div class="Container100">
+                                                    <div class="Container50 Responsive50"
+                                                         style="margin-top: 10px!important;">
+                                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                            <p:outputLabel styleClass="lb-sentinel" for="fileAttach"
+                                                                           value="#{lang['attach.file']}"/>
+                                                        </div>
+                                                        <div class="Container60 Responsive50 ui-fluid">
+                                                            <p:inputText id="outputAttachFile"
+                                                                         maxlength="100"
+                                                                         placeholder="#{lang['search.number.range.input.fileName']}"
+                                                                         value="#{assignStatusController.attachFileName}"
+                                                                         title="#{assignStatusController.attachFileName}"
+                                                                         readonly="true"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="Container50 Responsive17 mg-left-50">
+                                                        <p:fileUpload id="fileAttach"
+                                                                      update="@this, @([id$=outputAttachFile]),@([id$=assignTypeMsgs1])"
+                                                                      dragDropSupport="true" required="true"
+                                                                      mode="advanced"
+                                                                      auto="true"
+                                                                      allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                                                      invalidFileMessage="#{lang['mn.isdn.rule.invalid.file.type']}"
+                                                                      value="#{assignStatusController.uploadedFile}"
+                                                                      fileUploadListener="#{assignStatusController.fileUploadAction}">
+                                                        </p:fileUpload>
+                                                    </div>
+                                                </div>
+                                                <div class="Container100">
+                                                    <div class="Container33 Responsive"
+                                                         style="margin-top: 20px!important;">
+                                                        <p:commandLink
+                                                                value="#{lang['mn.stock.status.isdn.update.status.file_template']}"
+                                                                rendered="#{!assignStatusController.hasFileError}"
+                                                                title="#{lang['create.note.download.file.title']}"
+                                                                ajax="false"
+                                                                immediate="true"
+                                                                style="text-decoration: none!important;">
+                                                            <p:fileDownload
+                                                                    value="#{assignStatusController.downloadFileTemplate()}"/>
+                                                        </p:commandLink>
+                                                        <p:commandLink
+                                                                id="bthDownloadError"
+                                                                value="#{lang['mn.stock.status.isdn.update.status.file_error']}"
+                                                                rendered="#{assignStatusController.hasFileError}"
+                                                                title="#{lang['create.note.download.file.title']}"
+                                                                ajax="false"
+                                                                immediate="true"
+                                                                style="text-decoration: none!important;">
+                                                            <p:fileDownload
+                                                                    value="#{assignStatusController.downloadFileError()}"/>
+                                                        </p:commandLink>
+                                                    </div>
+                                                </div>
+                                                <!--<div class="Container30 Responsive">-->
+                                                <!-- -->
+                                                <!--</div>-->
+                                            </div>
+
+                                        </p:outputPanel>
+                                    </p:outputPanel>
+                                </div>
+                                <div class="Container100 TexAlCenter mg-top-0">
+                                    <p:commandButton value="#{lang['create.list']}"
+                                                     process="@this, @([id$=pnlFile])"
+                                                     actionListener="#{assignStatusController.previewStatus(assignStatusController.renderedFromFile)}"
+                                                     update="@this, @([id$=pnlFile]), @([id$=tblListRange1])"/>
+                                    <p:commandButton value="#{lang['common.reset']}"
+                                                     actionListener="#{assignStatusController.doReset}"
+                                                     process="@this"
+                                                     resetValues="true"
+                                                     update="@form" validateClient="true" styleClass="mg-left-5"/>
+                                </div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                        <!--End vung nhap du lieu chi tiet-->
+
+                        <!--Start danh sách dải số cần gán loại số-->
+                        <p:outputPanel id="pnlListRange1" styleClass="ContainerIndent">
+                            <cbs:panel classForToggle="panelListOrderExport"
+                                       toggle="true"
+                                       titleHeader="#{lang['list.need.assigning.type.digital']}"/>
+
+                            <div class="Container100 panelListOrderExport">
+
+                                <div class="Container TexAlLeft">
+                                    <cbs:confirmDialog
+                                            idComponent="btnUpdateStatus"
+                                            valueButton="#{lang['mn.stock.status.update']}"
+                                            headerConfirm="#{lang['mn.stock.status.update.confirm']}"
+                                            messageConfirm="#{assignStatusController.messageConfirm}"
+                                            actionOK="#{assignStatusController.doUpdateStatusFromFile}"
+                                            resetValueButton="false"
+                                            process="@this,@([id$=tblListRange1])"
+                                            updateArea="@form"
+                                            updateOK="@form, @([id$=frmAssignStatus]"
+                                            titleButton="#{lang['mn.stock.status.update']}"
+                                            actionValidate="#{assignStatusController.doConfirmStatusUpdate}"
+                                            styleClassButton="fa icon-plus Fs14 blue md-link mg-left-5"
+                                            focusCancel="false"
+                                            isButton="false"
+                                            />
+                                </div>
+
+                                <div class="ContainerIndent">
+                                    <p:dataTable
+                                            id="tblListRange1"
+                                            paginator="#{lang['common.paging.paginator']}"
+                                            rows="#{lang['common.paging.rows.default']}"
+                                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                            emptyMessage="#{lang['common.empty.records']}"
+                                            value="#{assignStatusController.listRangeGrant}"
+                                            selection="#{assignStatusController.listRangeGrantSelected}"
+                                            rowIndexVar="index"
+                                            rowKey="#{item.rowKey}"
+                                            var="item">
+
+                                        <p:column selectionMode="multiple" style="width:5%; text-align:center"/>
+                                        <p:column headerText="#{lang['mn.stock.utilities.code.ware.house']}"
+                                                  visible="false" sortBy="#{item.shopId}">
+                                            <p:outputLabel value="#{item.shopId}" title="#{item.shopId}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.stock.utilities.code.ware.house']}"
+                                                  style="width: 10%" sortBy="#{item.shopCode}">
+                                            <p:outputLabel value="#{item.shopCode}" title="#{item.shopCode}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.stock.name']}" sortBy="#{item.shopName}"
+                                                  style="width: 10%">
+                                            <p:outputLabel value="#{item.shopName}" title="#{item.shopName}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.stock.type.service']}"
+                                                  style="width: 14%"
+                                                  sortBy="#{assignStatusController.getTelecomServiceName(item.telecomService)}">
+                                            <p:outputLabel
+                                                    value="#{assignStatusController.getTelecomServiceName(item.telecomService)}"
+                                                    title="#{assignStatusController.getTelecomServiceName(item.telecomService)}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['from.number']}"
+                                                  style="width: 11%"
+                                                  sortBy="#{item.fromISDN}">
+                                            <p:outputLabel value="#{item.fromISDN}" title="#{item.fromISDN}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['to.number']}"
+                                                  style="width: 11%"
+                                                  sortBy="#{item.toISDN}">
+                                            <p:outputLabel value="#{item.toISDN}" title="#{item.toISDN}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['common.number']}"
+                                                  style="width: 11%; text-align: right"
+                                                  sortBy="#{item.total}">
+                                            <h:outputLabel value="#{(item.total)}" styleClass="lb-sentinel-bold"
+                                                           style="text-align: right"
+                                                           title="#{(item.total)}"
+                                                           converter="currencyFormat"></h:outputLabel>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.stock.status.isdn.status.old']}"
+                                                  style="width: 15%"
+                                                  sortBy="#{item.status}">
+                                            <p:outputLabel
+                                                    value="#{lang[assignStatusController.getStrStatus(item.oldStatus)]}"
+                                                    title="#{lang[assignStatusController.getStrStatus(item.oldStatus)]}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['mn.stock.status.isdn.status.new']}"
+                                                  style="width: 15%"
+                                                  sortBy="#{item.status}">
+                                            <p:outputLabel
+                                                    value="#{lang[assignStatusController.getStrStatus(item.status)]}"
+                                                    title="#{lang[assignStatusController.getStrStatus(item.status)]}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </p:tab>
+                </p:tabView>
+            </h:panelGrid>
+
+
+        </h:form>
+        <p:dialog width="40%"
+                  appendTo="@(body)"
+                  closable="true"
+                  dynamic="true"
+                  id="dlgAssignStatus"
+                  minWidth="900"
+                  widgetVar="dlgAssignStatus"
+                  closeOnEscape="true"
+                  position="center"
+                  header="#{lang['mn.stock.status.update.confirm']}"
+                  resizable="false"
+                  maximizable="true"
+                  modal="true"
+                  styleClass="sale">
+            <ui:include src="dlgAssignStatus.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

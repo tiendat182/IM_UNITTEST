@@ -1,0 +1,635 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        template="../../../sentinel/template.xhtml">
+    <ui:define name="title">#{lang['BCCS2_IM_QLKHO_TIENICH_XUAT_VAT_TU']}</ui:define>
+    <ui:define name="featureName">#{lang['BCCS2_IM_QLKHO_TIENICH_XUAT_VAT_TU']}</ui:define>
+    <ui:define name="content">
+        <h:form id="frmChangeDOA">
+            <p:outputPanel styleClass="Container" rendered="#{exportStockMaterialController.showSearch}">
+                <!--Start tim kiem-->
+                <p:outputPanel styleClass="Container" id="pnSearch">
+                    <div class="ContainerIndent mg-top-0">
+                        <p:messages id="mesages" showSummary="false" showDetail="true" closable="true"/>
+                    </div>
+                    <p:outputPanel styleClass="Container" rendered="#{!exportStockMaterialController.viewMaterial}">
+                        <p:outputPanel styleClass="ContainerIndent">
+                            <p:focus for="pnSearch"/>
+                            <cbs:panel classForToggle="pnSearch" toggle="true"
+                                       titleHeader="#{lang['mn.stock.limit.info.range.time.promotion']}"/>
+                            <p:outputPanel styleClass="Container pnSearch" id="pnViewData">
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel value="#{lang['mn.stock.change.product.offering.create.note.actionCode']}" for="codeExportTxt" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:inputText id="codeExportTxt" placeholder="#{lang['mn.stock.change.product.offering.create.note.actionCode.placeholder']}"
+                                                         value="#{exportStockMaterialController.forSearch.actionCode}" styleClass="codeExportTxt" onblur="this.value=this.value.trim();"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel styleClass="lb-sentinel" value="#{lang['stock.export.material.stockbase']}" for="requestCodeTxt"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:inputText id="requestCodeTxt"
+                                                         maxlength="50"
+                                                         onblur="this.value = this.value.trim();"
+                                                         value="#{exportStockMaterialController.forSearch.stockBase}"
+                                                         placeholder="#{lang['stock.export.material.stockbase.placehoder']}"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <p:outputPanel id="pnPro" styleClass="Container pnPro" >
+                                            <p:outputPanel styleClass="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <p:outputLabel value="#{lang['export.order.stock']}" styleClass="lb-sentinel" for="ipShopSearch" />
+                                            </p:outputPanel>
+                                            <p:outputPanel styleClass="Container60 Responsive50 ui-fluid ui-relative" id="pnInputSearch">
+                                                <p:outputLabel id="ipShopSearch_hidden" style="display:none;" value="#{exportStockMaterialController.forSearch.fromOwnerName}" />
+                                                <pe:keyFilter for="ipShopSearch" preventPaste="false" 
+                                                              regEx="/[a-z0-9A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\._\-+]/i"/>
+                                                <p:tooltip for="ipShopSearch" showEvent="focus" hideEvent="blur" />
+                                                <p:autoComplete id="ipShopSearch" value="#{exportStockMaterialController.shopDTOSearch}" forceSelection="true"
+                                                                completeMethod="#{exportStockMaterialController.doSelectShop}"
+                                                                placeholder="#{lang['stock.rescue.warranty.create.fromStock.placehoder']}"
+                                                                onfocus="this.setSelectionRange(0, this.value.length)"
+                                                                var="vShopStaffDTO" required="true"
+                                                                maxResults="#{exportStockMaterialController.limitAutoComplete}"
+                                                                itemLabel="#{vShopStaffDTO.itemLabel}"
+                                                                title="#{vShopStaffDTO.itemLabel}"
+                                                                label="#{vShopStaffDTO.itemLabel}"
+                                                                itemValue="#{vShopStaffDTO}"
+                                                                styleClass="autoCpl"
+                                                                disabled="#{exportStockMaterialController.disabledShopSearch}"
+                                                                requiredMessage="#{lang['mn.isdn.manage.create.field.validate.fromOwner']}" maxlength="100" scrollHeight="300"
+                                                >
+                                                    <o:converter converterId="VShopStaffConverter" list="#{exportStockMaterialController.lsShop}"/>
+                                                    <p:ajax event="itemSelect" listener="#{exportStockMaterialController.receiveSearchShop}"
+                                                            update="@([id$=pnInputSearch])" process="@this"/>
+                                                    <p:column headerText="#{lang['common.lb.code']}"><h:outputLabel escape="true" value="#{vShopStaffDTO.ownerCode}"/></p:column>
+                                                    <p:column headerText="#{lang['common.lb.name']}"><h:outputLabel escape="true" value="#{vShopStaffDTO.ownerName}"/></p:column>
+                                                    <p:ajax event="query" global="false"/>
+                                                </p:autoComplete>
+                                                <p:commandLink id="btnClear"
+                                                               styleClass="ui-link-right"
+                                                               update="@([id$=pnInputSearch])"
+                                                               actionListener="#{exportStockMaterialController.clearSearchShop}"
+                                                               process="@this">
+                                                    <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                                </p:commandLink>
+                                                <p:message for="ipShopSearch" />
+                                            </p:outputPanel>
+                                        </p:outputPanel>
+                                    </div>
+                                </div>
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50  mg-left-15 pd-top-7">
+                                            <p:outputLabel value="#{lang['create.note.from.date']}" styleClass="lb-sentinel" for="fromDate"/>
+                                        </div>
+                                        <div class="Container60 Responsive50  ui-fluid">
+                                            <p:calendar
+                                                    mask="true"
+                                                    pattern="#{lang['common.datetime.format']}"
+                                                    converterMessage="#{lang['invalid.date.message']}"
+                                                    validatorMessage="#{lang['start.date.validate.message']}"
+                                                    value="#{exportStockMaterialController.forSearch.startDate}"
+                                                    placeholder="#{lang['common.datetime.format']}"
+                                                    required="true"
+                                                    requiredMessage="#{lang['mn.stock.from.date.not.blank']}"
+                                                    styleClass="fromDate"
+                                                    id="fromDate">
+                                                <f:convertDateTime type="date"
+                                                                   pattern="#{lang['common.datetime.format']}"/>
+                                            </p:calendar>
+                                            <p:message for="fromDate"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                            <p:outputLabel value="#{lang['create.note.to.date']}" for="toDate" styleClass="lb-sentinel"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:calendar id="toDate"
+                                                        mask="true"
+                                                        pattern="#{lang['common.datetime.format']}"
+                                                        converterMessage="#{lang['invalid.date.message']}"
+                                                        validatorMessage="#{lang['start.date.validate.message']}"
+                                                        value="#{exportStockMaterialController.forSearch.endDate}"
+                                                        required="true"
+                                                        styleClass="toDate"
+                                                        placeholder="#{lang['create.note.to.date.placeholder']}"
+                                                        requiredMessage="#{lang['mn.stock.to.date.not.blank']}">
+                                                <f:convertDateTime type="date"
+                                                                   pattern="#{lang['common.datetime.format']}"/>
+                                            </p:calendar>
+                                            <p:message for="toDate"/>
+                                        </div>
+                                    </div>
+                                    <div class="Container33 Responsive">
+                                        
+                                    </div>
+                                </div>
+                                <div class="Conatiner TexAlCenter">
+                                    <p:commandButton value="#{lang['create.note.search']}"
+                                                     process="@this,@([id$=pnSearch])"
+                                                     actionListener="#{exportStockMaterialController.doSearch}"
+                                                     update="@form"/>
+                                    <p:commandButton value="#{lang['common.reset']}" process="@this" update="@form"
+                                                     styleClass="mg-left-5"
+                                                     actionListener="#{exportStockMaterialController.doResetSearch}"/>
+                                    <p:commandButton value="#{lang['mn.stock.branch.btn.create.request']}"
+                                                     actionListener="#{exportStockMaterialController.doCreateRequest}"
+                                                     process="@this" resetValues="true" update="@form"
+                                                     validateClient="true" styleClass="mg-left-5"/>
+                                </div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                        <p:outputPanel id="pnListSearch" styleClass="ContainerIndent">
+                            <cbs:panel classForToggle="pViewSeach" toggle="true"
+                                       titleHeader="#{lang['mn.stock.list.result.search']}"/>
+                                <div class="Container">
+                                    <p:dataTable
+                                            id="lstOrderExport"
+                                            var="stockTrans"
+                                            rowKey="#{stockTrans.stockTransID}"
+                                            resizableColumns="true"
+                                            reflow="false"
+                                            rowIndexVar="index"
+                                            paginator="#{lang['common.paging.paginator']}"
+                                            rows="#{lang['common.paging.rows.default']}"
+                                            rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                            paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                            paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                            paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                            currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                            emptyMessage="#{lang['common.empty.records']}"
+                                            value="#{exportStockMaterialController.vStockTransDTOList}">
+                                        <p:column styleClass="col-left" sortBy="#{stockTrans.actionCode}">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['export.stock.code.export.note']}"
+                                                              title="#{lang['export.stock.code.export.note']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{stockTrans.actionCode}" title="#{stockTrans.actionCode}"/>
+                                        </p:column>
+                                        <p:column sortBy="#{stockTrans.stockBase}">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['stock.export.material.stockbase']}"
+                                                              title="#{lang['stock.export.material.stockbase']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{stockTrans.stockBase}" title="#{stockTrans.stockBase}"/>
+                                        </p:column>
+                                        <p:column sortBy="#{stockTrans.createDateTrans}">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['create.note.create.date']}"
+                                                              title="#{lang['create.note.create.date']}"/>
+                                            </f:facet>
+                                            <h:outputText escape="true" value="#{stockTrans.strCreateDateTrans}"
+                                                          styleClass="lb-sentinel-bold"
+                                                          title="#{stockTrans.strCreateDateTrans}">
+                                                <f:convertDateTime pattern="#{lang['common.datetime.format']}"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column sortBy="#{stockTrans.fromOwnerName}">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['create.note.warehouse.export']}"
+                                                              title="#{lang['create.note.warehouse.export']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{stockTrans.fromOwnerName}"
+                                                           title="#{stockTrans.fromOwnerName}"/>
+                                        </p:column>
+                                        <p:column sortBy="#{stockTrans.reasonName}">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['create.note.reason.export']}"
+                                                              title="#{lang['create.note.reason.export']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{stockTrans.reasonName}" title="#{stockTrans.reasonName}"/>
+                                        </p:column>
+                                        <p:column sortBy="#{stockTrans.statusName}">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['common.status']}"
+                                                              title="#{lang['common.status']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{stockTrans.statusName}" title="#{stockTrans.statusName}"/>
+                                        </p:column>
+                                        <p:column sortBy="#{stockTrans.hisAction}">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['create.note.history.effect']}"
+                                                              title="#{lang['create.note.history.effect']}"/>
+                                            </f:facet>
+                                            <p:outputLabel value="#{stockTrans.hisAction}" title="#{stockTrans.hisAction}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center">
+                                            <f:facet name="header">
+                                                <h:outputText value="#{lang['common.detail.trans']}"
+                                                              title="#{lang['common.detail.trans']}"/>
+                                            </f:facet>
+                                            <p:commandLink styleClass="fa icon-zoom-in Fs16 blue icon-link" resetValues="true"
+                                                           update="@form" process="@this"
+                                                           title="#{lang['common.view.detail.trans']}"
+                                                           actionListener="#{exportStockMaterialController.doShowInfoOrderDetail(stockTrans)}"/>
+                                        </p:column>
+                                        <p:column headerText="#{lang['range.time.promotion.uploadfile']}"
+                                                  style="width: 7%;"
+                                                  styleClass="TexAlCenter">
+                                            <p:commandLink styleClass="fa icon-download Fs12 black"
+                                                           title="#{lang['stock.export.material.filename.title']}"
+                                                           ajax="false"
+                                                           disabled="#{item.disableDowload}"
+                                                           style="text-decoration: none!important;">
+                                                <p:fileDownload
+                                                        value="#{exportStockMaterialController.downloadFileAttach(stockTrans)}"/>
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <p:outputPanel id="viewInfor" styleClass="ContainerIndent" rendered="#{exportStockMaterialController.viewMaterial}">
+                        <cbs:panel classForToggle="panelInforRequest" toggle="true" titleHeader="#{lang['mn.balance.stock.request.search']}"/>
+                        <div class="Container panelInforRequest" style="margin-bottom: 10px;margin-top: 10px;">
+                            <div class="ContainerIndent mg-top-0">
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                        <p:outputLabel value="#{lang['stock.export.material.stockbase']}" styleClass="lb-sentinel"/>
+                                    </div>
+                                    <div class="Container60 Responsive50 pd-top-4">
+                                        <p:outputLabel value="#{exportStockMaterialController.forSearchSelectView.stockBase}" styleClass="lb-sentinel-bold" title="#{exportStockMaterialController.forSearchSelectView.stockBase}" />
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                    <div class="Container40 Responsive50 pd-top-4">
+                                        <p:outputLabel value="#{lang['export.order.stock']}" styleClass="lb-sentinel" />
+                                    </div>
+                                    <div class="Container60 Responsive50 ui-fluid pd-top-4">
+                                        <p:outputLabel value="#{exportStockMaterialController.forSearchSelectView.fromOwnerName}" styleClass="lb-sentinel-bold"/>
+                                    </div>
+                                </div>
+                                <div class="Container33 Responsive">
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <!--Start vung thong tin chi tiet hang hoa-->
+                    <p:outputPanel id="pnlInfoDetailStockModel" styleClass="ContainerIndent" rendered="#{exportStockMaterialController.viewMaterial}">
+                        <cbs:panel classForToggle="panelDetailStock" toggle="true"
+                                   titleHeader="#{lang['create.note.detail.stock']}"/>
+
+                        <div class="Container100 panelDetailStock" style="margin-bottom: 10px;margin-top: 10px;">
+                            <p:dataTable id="lstDetailStock"
+                                         var="stockTransFull"
+                                         resizableColumns="true"
+                                         paginator="#{lang['common.paging.paginator']}"
+                                         rows="5"
+                                         rowsPerPageTemplate="#{lang['common.paging.rowsPerPageTemplate']}"
+                                         paginatorAlwaysVisible="#{lang['common.paging.paginatorAlwaysVisible']}"
+                                         paginatorPosition="#{lang['common.paging.paginatorPosition']}"
+                                         paginatorTemplate="#{lang['common.paging.paginatorTemplate']}"
+                                         currentPageReportTemplate="#{lang['common.paging.currentPageReportTemplate']}"
+                                         emptyMessage="#{lang['common.empty.records']}"
+                                         value="#{exportStockMaterialController.lsStockTransFull}">
+                                <p:column style="width: 20%" styleClass="col-left"
+                                          sortBy="#{stockTransFull.productOfferTypeName}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['mn.stock.utilities.view.prod.offer.type']}"
+                                                      title="#{lang['mn.stock.utilities.view.prod.offer.type']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockTransFull.productOfferTypeName}"
+                                                   title="#{stockTransFull.productOfferTypeId}"/>
+                                </p:column>
+                                <p:column style="width: 15%" styleClass="col-left"
+                                          sortBy="#{stockTransFull.prodOfferName}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['export.order.name.product.type']}"
+                                                      title="#{lang['export.order.name.product.type']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockTransFull.prodOfferName}"
+                                                   title="#{stockTransFull.prodOfferName}"/>
+                                </p:column>
+                                <p:column styleClass="col-left" sortBy="#{stockTransFull.stateName}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['common.status']}"
+                                                      title="#{lang['common.status']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockTransFull.stateName}"
+                                                   title="#{stockTransFull.stateName}"/>
+                                </p:column>
+                                <p:column styleClass="col-left" sortBy="#{stockTransFull.unit}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['mn.stock.utilities.unit']}" title="#{lang['mn.stock.utilities.unit']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockTransFull.unit}" title="#{stockTransFull.unit}"/>
+                                </p:column>
+                                <p:column style="text-align: right" sortBy="#{stockTransFull.sourcePrice}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['export.order.price']}"
+                                                      title="#{lang['export.order.price']}"/>
+                                    </f:facet>
+                                    <h:outputText escape="true" converter="currencyFormat"
+                                                  value="#{stockTransFull.sourcePrice}" title=""/>
+                                </p:column>
+                                <p:column styleClass="col-left" style=""
+                                          sortBy="#{stockTransFull.accountingModelCode}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['create.order.file.code.TC']}"
+                                                      title="#{lang['create.order.file.code.TC']}"/>
+                                    </f:facet>
+                                    <p:outputLabel value="#{stockTransFull.accountingModelCode}"
+                                                   title="#{stockTransFull.accountingModelCode}"/>
+                                </p:column>
+                                <p:column style="text-align: right" sortBy="#{stockTransFull.quantity}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['common.number']}"
+                                                      title="#{lang['common.number']}"/>
+                                    </f:facet>
+                                    <h:outputText escape="true" converter="currencyFormat"
+                                                  value="#{stockTransFull.quantity}"
+                                                  title="#{stockTransFull.quantity}"/>
+                                </p:column>
+                                <!--<p:column style="text-align: center;">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{lang['create.note.effect']}"
+                                                      title="#{lang['create.note.effect']}"/>
+                                    </f:facet>
+                                    <p:commandLink styleClass="fa icon-zoom-in Fs16 blue icon-link" resetValues="true"
+                                                   rendered="#{stockTransFull.checkSerial eq '1'}"
+                                                   update="@([id$=dlgSerialView])" process="@this"
+                                                   oncomplete="PF('dlgSerialView').show();"
+                                                   title="#{lang['create.note.detail.serial']}"
+                                                   actionListener="#{exportStockMaterialController.doShowViewSerial(stockTransFull.stockTransDetailId)}"/>
+
+                                </p:column>-->
+                            </p:dataTable>
+                        </div>
+                    </p:outputPanel>
+                    <p:outputPanel styleClass="ContainerIndent TexAlCenter mg-top-0" rendered="#{exportStockMaterialController.viewMaterial}">
+                        <p:commandButton value="#{lang['common.back.page']}"
+                                         process="@this"
+                                         update="@form"
+                                         actionListener="#{exportStockMaterialController.doBackPage}">
+                        </p:commandButton>
+                    </p:outputPanel>
+                    <!--End vung thong tin chi tiet hang hoa-->
+                </p:outputPanel>
+                <!--End vung thong tin giao dich-->
+            </p:outputPanel>
+            <!--Start vung thong tin lap yeu cau-->
+            <p:outputPanel rendered="#{!exportStockMaterialController.showSearch}" id="pnCreateRequest">
+                <p:outputPanel styleClass="Container" id="pnlRequestBalance">
+                    <div class="ContainerIndent mg-top-0 mg-bottom-0">
+                        <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"/>
+                    </div>
+                    <p:outputPanel styleClass="Container">
+                        <p:focus for="pnCreateRequest"/>
+                        <!--Start vung thong tin don vi-->
+                        <p:outputPanel id="pnInfoRequestBalance" styleClass="ContainerIndent">
+                            <cbs:panel classForToggle="panelInforRequest" toggle="true"
+                                       titleHeader="#{lang['mn.balance.stock.request.search']}"/>
+
+                            <div class="Container panelInforRequest" style="margin-bottom: 10px;margin-top: 10px;">
+                                <div class="ContainerIndent mg-top-0">
+                                    <div class="Container33 Responsive">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel styleClass="lb-sentinel"
+                                                           value="#{lang['stock.export.material.stockbase']}"
+                                                           for="iprequestCodeTxt"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <pe:keyFilter for="iprequestCodeTxt" regEx="/[0-9a-zA-Z_-]{1,50}/i"
+                                                          preventPaste="false"/>
+                                            <p:inputText id="iprequestCodeTxt" required="true"
+                                                         maxlength="50"
+                                                         requiredMessage="#{lang['stock.export.material.stockbase.require']}"
+                                                         onblur="this.value = this.value.trim();"
+                                                         value="#{exportStockMaterialController.forSearchSelect.stockBase}"
+                                                         placeholder="#{lang['stock.export.material.stockbase.placehoder']}">
+                                            </p:inputText>
+                                        </div>
+                                    </div>
+                                    <p:outputPanel styleClass="Container33 Responsive" id="divFileName">
+                                        <div class="Container40 Responsive50 mg-left-15 pd-top-4">
+                                            <p:outputLabel styleClass="lb-sentinel" for="outputAttachFile"
+                                                           value="#{lang['stock.export.material.filename']}"/>
+                                        </div>
+                                        <div class="Container60 Responsive50 ui-fluid">
+                                            <p:inputText id="outputAttachFile" styleClass="outputAttachFile"
+                                                         maxlength="100" required="true"
+                                                         requiredMessage="#{lang['mn.stock.limit.attachFile.msg.require']}"
+                                                         placeholder="#{lang['search.number.range.input.fileName']}"
+                                                         value="#{exportStockMaterialController.attachFileName}"
+                                                         readonly="true"/>
+                                        </div>
+                                    </p:outputPanel>
+                                    <div class="Container33 Responsive">
+                                        <p:fileUpload id="upLoadFile"
+
+                                                      styleClass="fileDataUpload Fleft"
+                                                      label="#{lang['select.file']}"
+                                                      invalidFileMessage="#{lang['mn.stock.utilities.invalid.file.type']}"
+                                                      requiredMessage="#{lang['mn.stock.limit.attachFile.msg.require']}"
+                                                      invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                      fileLimitMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                                      update="@([id$=divFileName]),@([id$=msgSearch])"
+                                                      dragDropSupport="true" required="true" mode="advanced"
+                                                      auto="true"
+                                                      process="@this"
+                                                      allowTypes="/(\.|\/)(pdf)$/"
+                                                      sizeLimit="5242880"
+                                                      value="#{exportStockMaterialController.uploadedFile}"
+                                                      fileUploadListener="#{exportStockMaterialController.doFileUploadAction}">
+                                        </p:fileUpload>
+                                    </div>
+                                </div>
+                                <div class="ContainerIndent" >
+                                    <div class="Container33 Responsive">
+                                        <p:outputPanel styleClass="Container pnPro"  id="pnShopCreate">
+                                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                                <p:outputLabel value="#{lang['export.order.stock']}" styleClass="lb-sentinel" for="ipShopCreate" />
+                                            </div>
+                                            <div class="Container60 Responsive50 ui-fluid ui-relative">
+                                                <p:outputLabel id="ipShopCreate_hidden" style="display:none;" value="#{exportStockMaterialController.forSearchSelect.fromOwnerName}" />
+                                                <pe:keyFilter for="ipShopCreate" preventPaste="false" 
+                                                              regEx="/[a-z0-9A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\._\-+]/i"/>
+                                                <p:tooltip for="ipShopCreate" showEvent="focus" hideEvent="blur" />
+                                                <p:autoComplete id="ipShopCreate" value="#{exportStockMaterialController.shopDTOCreate}" forceSelection="true"
+                                                                completeMethod="#{exportStockMaterialController.doSelectShop}"
+                                                                placeholder="#{lang['stock.rescue.warranty.create.fromStock.placehoder']}"
+                                                                onfocus="this.setSelectionRange(0, this.value.length)"
+                                                                var="vShopStaffDTO2" required="true"
+                                                                maxResults="#{exportStockMaterialController.limitAutoComplete}"
+                                                                itemLabel="#{vShopStaffDTO2.itemLabel}"
+                                                                title="#{vShopStaffDTO2.itemLabel}"
+                                                                label="#{vShopStaffDTO2.itemLabel}"
+                                                                itemValue="#{vShopStaffDTO2}"
+                                                                styleClass="autoCpl"
+                                                                disabled="#{exportStockMaterialController.disabledShopCreate}"
+                                                                requiredMessage="#{lang['mn.isdn.manage.create.field.validate.fromOwner']}" maxlength="100" scrollHeight="300"
+                                                >
+                                                    <o:converter converterId="VShopStaffConverter" list="#{exportStockMaterialController.lsShop}"/>
+                                                    <p:ajax event="itemSelect" listener="#{exportStockMaterialController.receiveInput}"
+                                                            update="@([id$=pnShopCreate]), @([id$=pnlListProduct])" process="@this"/>
+                                                    <p:column headerText="#{lang['common.lb.code']}"><h:outputLabel escape="true" value="#{vShopStaffDTO2.ownerCode}"/></p:column>
+                                                    <p:column headerText="#{lang['common.lb.name']}"><h:outputLabel escape="true" value="#{vShopStaffDTO2.ownerName}"/></p:column>
+                                                    <p:ajax event="query" global="false"/>
+                                                </p:autoComplete>
+                                                <p:commandLink
+                                                        
+                                                        styleClass="ui-link-right"
+                                                        update="@([id$=pnShopCreate]), @([id$=pnlListProduct])"
+                                                        actionListener="#{exportStockMaterialController.clearInputShop}"
+                                                        process="@this">
+                                                    <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                                </p:commandLink>
+                                                <p:message for="ipShopCreate" />
+                                            </div>
+                                        </p:outputPanel>
+                                    </div>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                        <!--End vung thong tin don vi-->
+                        <!--Start vung thong tin mat hang-->
+                        <p:outputPanel id="pnlListProduct">
+                            <p:outputPanel class="Container" rendered="#{exportStockMaterialController.showListProduct}">
+                                <cbs:inputListProduct idComponent="listProduct"
+                                                      id="listProduct"
+                                                      value="#{exportStockMaterialController.listProductTag}"
+                                                      idMessage="msgValidate"
+                                                      updateCheckSerial="@([id$=dlgDetailSerial]), @([id$=msgSearch])"
+                                                      onCompleteCheckSerial="if(!args.validationFailed){PF('dlgDetailSerial').show()}"/>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                        <!--End vung thong tin mat hang-->
+
+                        <!--Start Vung data button-->
+                        <div class="Container">
+                            <div class="ContainerIndent TexAlCenter mg-top-0">
+                                <cbs:confirmDialog
+                                        idComponent="btnSend"
+                                        disableButton="#{exportStockMaterialController.disableChangeMaterial}"
+                                        id="btnSendRequest"
+                                        valueButton="#{lang['mn.stock.underlying.export.stock']}"
+                                        headerConfirm="#{lang['BCCS2_IM_QLKHO_TIENICH_XUAT_VAT_TU']}"
+                                        messageConfirm="#{lang['stock.export.material.confirm']}"
+                                        actionOK="#{exportStockMaterialController.doExportMaterial}"
+                                        resetValueButton="false"
+                                        process="@(frmChangeDOA:not(.fileDataUpload))"
+                                        updateArea="@form"
+                                        updateOK="@form"
+                                        focusCancel="false"
+                                        actionValidate="#{exportStockMaterialController.doValidRequest}"
+                                        oncompleteOK=""
+                                        isButton="true"
+                                        />
+                                <p:commandButton value="#{lang['reset.selected']}"
+                                                 process="@this"
+                                                 update="@form"
+                                                 actionListener="#{exportStockMaterialController.doResetRequest}">
+                                </p:commandButton>
+                                <p:commandButton value="#{lang['common.back.page']}"
+                                                 process="@this"
+                                                 update="@form"
+                                                 styleClass="mg-left-5"
+                                                 actionListener="#{exportStockMaterialController.doBackPage}">
+                                </p:commandButton>
+                            </div>
+                        </div>
+                        <!--End Vung data button-->
+                    </p:outputPanel>
+                </p:outputPanel>
+
+            </p:outputPanel>
+            <!--End vung thong tin danh sach hang hoa-->
+            <script type="text/javascript">
+                document.getElementById('frmChangeDOA').onkeypress = function (event) {
+                    if (event.keyCode == 120 &amp;&amp; document.getElementById('frmChangeDOA:listProduct:listProductAddNew') != null) {
+                        document.getElementById("frmChangeDOA:listProduct:listProductAddNew").click();
+                        return false;
+                    }
+                }
+            </script>
+        </h:form>
+        <p:dialog appendTo="@(body)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  position="center"
+                  id="dlgDetailSerial"
+                  widgetVar="dlgDetailSerial"
+                  header="#{lang['create.note.detail.serial']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <ui:include src="../../../../../resources/tags/dlgDetailSerial.xhtml">
+                <ui:param name="controller" value="#{exportStockMaterialController.listProductTag}"/>
+                <ui:param name="idComponent" value="listProduct"/>
+            </ui:include>
+        </p:dialog>
+        <!--<p:dialog appendTo="@(parent)"
+                  closable="true"
+                  closeOnEscape="true"
+                  maximizable="true"
+                  onShow="setFocusByClass('btnCloseView')"
+                  position="center"
+                  id="dlgSerialView"
+                  widgetVar="dlgSerialView"
+                  header="#{lang['stock.trans.search.serial.stock']}"
+                  modal="true" resizable="false"
+                  dynamic="true"
+                  styleClass="sale"
+                  width="900">
+            <p:outputPanel styleClass="ContainerIndent" id="pnViewListSerial">
+                <cbs:panel classForToggle="lstOrderExport" titleHeader="#{lang['mn.stock.ToSerial']}" toggle="false"/>
+
+                <div class="Container100 lstDataExport">
+                    <p:dataTable
+                            value="#{exportStockMaterialController.lsSerial}"
+                            var="serialDetail"
+                            resizableColumns="true"
+                            paginator="false"
+                            rowIndexVar="index"
+                            scrollable="true"
+                            scrollHeight="150"
+                            emptyMessage="#{lang['common.empty.records']}">
+                        <p:column styleClass="col-left" sortBy="#{lang['mn.stock.fromSerial']}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.fromSerial']}"
+                                              title="#{lang['mn.stock.fromSerial']}"/>
+                            </f:facet>
+                            <h:outputText escape="true" value="#{serialDetail.fromSerial}"
+                                          title="#{serialDetail.fromSerial}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" sortBy="#{lang['mn.stock.ToSerial']}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['mn.stock.ToSerial']}"
+                                              title="#{lang['mn.stock.ToSerial']}"/>
+                            </f:facet>
+                            <h:outputText escape="true" value="#{serialDetail.toSerial}"
+                                          title="#{serialDetail.toSerial}"/>
+                        </p:column>
+                        <p:column styleClass="col-left" sortBy="#{serialDetail.quantity}">
+                            <f:facet name="header">
+                                <h:outputText value="#{lang['common.number']}" title="#{lang['common.number']}"/>
+                            </f:facet>
+                            <h:outputText escape="true" value="#{serialDetail.quantity}"
+                                          title="#{serialDetail.quantity}" converter="currencyFormat"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </p:outputPanel>
+
+            <div class="ContainerIndent TexAlCenter">
+                <p:commandButton value="#{lang['notification.close']}" immediate="true" styleClass="btnCloseView"
+                                 oncomplete="PF('dlgSerialView').hide()"/>
+            </div>
+        </p:dialog>-->
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,329 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <p:outputPanel styleClass="Container" id="pnlChangeDamagedProduct">
+        <p:focus for="frmChangeDamagedProduct"/>
+
+        <div class="ContainerIndent mg-top-0 mg-bottom-0">
+            <p:messages id="msgSearch" showSummary="false" showDetail="true" closable="true"/>
+        </div>
+        <p:outputPanel styleClass="ContainerIndent" id="pnlInforChangeDamagedProduct">
+            <cbs:panel classForToggle="pannelChangeDamagedProduct"
+                       titleHeader="#{lang['panel.info.stock.change.damaged.product']}"/>
+
+            <div class="Container100 pannelChangeDamagedProduct" style="margin-bottom: 10px;margin-top: 10px;">
+                <div class="ContainerIndent mg-top-0">
+                    <div class="Container50 Responsive50">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel value="#{lang['stock.change.damaged.importType']}" for="cbxImportType"
+                                           styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:selectOneRadio id="cbxImportType"
+                                              value="#{changeDamagedProductController.changeDamagedProductDTO.typeImport}"
+                                              required="true">
+                                <f:selectItem itemLabel="#{lang['stock.change.damaged.importType.single']}"
+                                              itemValue="1"/>
+                                <f:selectItem itemLabel="#{lang['stock.change.damaged.importType.file']}"
+                                              itemValue="2"/>
+                                <p:ajax event="change" process="@this"
+                                        listener="#{changeDamagedProductController.changeTypeImport}"
+                                        update="@([id$=frmChangeDamagedProduct])"
+                                        />
+                            </p:selectOneRadio>
+                        </div>
+                    </div>
+                    <div class="Container50 Responsive50">
+                    </div>
+                </div>
+                <div class="ContainerIndent">
+                    <div class="Container50 Responsive50">
+                        <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                            <p:outputLabel value="#{lang['type.product']}" for="cobProductOfferType"
+                                           styleClass="lb-sentinel"/>
+                        </div>
+
+                        <p:inputText
+                                value="#{changeDamagedProductController.productOfferTypeId}"
+                                styleClass="txtProductOfferType" style="display: none;"
+                                id="inputProductOfferType"/>
+
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:selectOneMenu filter="true" filterMatchMode="contains"
+                                             id="cobProductOfferType"
+                                             required="true"
+                                             onchange="$('.txtProductOfferType').val(this.value);clickLinkByClass('cmdProductOfferType');"
+                                             requiredMessage="#{lang['export.order.type.product.not.blank']}"
+                                             value="#{changeDamagedProductController.changeDamagedProductDTO.productOfferTypeId}">
+                                <f:selectItem itemEscaped="true"
+                                              itemValue=""
+                                              itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                <f:selectItems
+                                        value="#{changeDamagedProductController.listProductOfferType}"
+                                        itemLabelEscaped="true"
+                                        var="productOfferType"
+                                        itemValue="#{productOfferType.productOfferTypeId}"
+                                        itemLabel="#{productOfferType.name}"/>
+                            </p:selectOneMenu>
+                            <p:message for="cobProductOfferType"/>
+                        </div>
+                    </div>
+                    <div class="Container50 Responsive50">
+                        <p:outputPanel styleClass="Container40 mg-left-15 Responsive50 pd-top-4">
+                            <p:outputLabel value="#{lang['export.order.name']}" for="productOffer"
+                                           styleClass="lb-sentinel"/>
+                        </p:outputPanel>
+
+                        <div class="Container60 Responsive50 ui-fluid">
+                            <p:outputPanel styleClass="ui-fluid ui-relative" id="pnlProductOffer">
+                                <p:outputLabel id="productOffer_hidden" style="display:none;"
+                                               value="#{changeDamagedProductController.productOfferingTotalDTO.itemLabel}"/>
+                                <pe:keyFilter for="productOffer" preventPaste="false"
+                                              regEx="/[a-z0-9A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\._\-+]/i"/>
+                                <!--<p:inputText-->
+                                <!--value="#{changeDamagedProductController.productOfferingTotalDTO.itemLabel}"-->
+                                <!--disabled="true"-->
+                                <!--rendered="#{changeDamagedProductController.singleType}"/>-->
+                                <p:autoComplete id="productOffer"
+                                                value="#{changeDamagedProductController.productOfferingTotalDTO}"
+                                                forceSelection="true"
+                                                completeMethod="#{changeDamagedProductController.doChangeOffering}"
+                                                placeholder="#{lang['export.stock.product.inputText.search']}"
+                                                onfocus="this.setSelectionRange(0, this.value.length)"
+                                                var="productOfferingTotalDTO"
+                                                maxResults="#{changeDamagedProductController.limitAutoComplete}"
+                                                itemLabel="#{productOfferingTotalDTO.itemLabel}"
+                                                itemValue="#{productOfferingTotalDTO}"
+                                                inputStyleClass="txtProductName#{index}"
+                                                required="true"
+                                                requiredMessage="#{lang['export.order.stock.inputText.require.msg']}"
+                                                maxlength="100" scrollHeight="300"
+                                                disabled="#{changeDamagedProductController.disabledState()}">
+                                    <f:attribute name="index" value="#{index}"/>
+                                    <o:converter converterId="productOfferingConverter"
+                                                 list="#{changeDamagedProductController.lsProductOfferingTotalDTO}"/>
+                                    <p:ajax event="itemSelect"
+                                            listener="#{changeDamagedProductController.doSelectProductOffering}"
+                                            process="@([id$=pnlProductOffer])"
+                                            update="@([id$=pnlProductOffer])"/>
+                                    <p:column headerText="#{lang['common.lb.code']}">
+                                        <h:outputText
+                                                escape="true"
+                                                value="#{productOfferingTotalDTO.code}"/>
+                                    </p:column>
+                                    <p:column headerText="#{lang['common.lb.name']}">
+                                        <h:outputText
+                                                escape="true"
+                                                value="#{productOfferingTotalDTO.name}"/>
+                                    </p:column>
+                                    <p:ajax event="query" global="false"/>
+                                </p:autoComplete>
+                                <p:commandLink id="btnProductOfferClear"
+                                               styleClass="ui-link-right"
+                                               update="productOffer_hidden, pnlProductOffer"
+                                               actionListener="#{changeDamagedProductController.clearProduct}"
+                                               process="@this">
+                                    <span class="ui-icon ui-c fa icon-ccw Fs12"/>
+                                </p:commandLink>
+                            </p:outputPanel>
+                            <p:message for="productOffer"/>
+                        </div>
+                    </div>
+                </div>
+                <p:outputPanel styleClass="ContainerIndent" rendered="#{changeDamagedProductController.singleType}">
+                    <div class="Container50 Responsive50">
+                        <div class="Container40 mg-left-15 Responsive50 pd-top-7 oldSerial_col">
+                            <p:outputLabel value="#{lang['stock.change.damaged.old.serial']}"
+                                           for="oldSerial"
+                                           styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid pd-top-4 oldSerial">
+                            <p:inputText id="oldSerial"
+                                         value="#{changeDamagedProductController.changeDamagedProductDTO.oldSerial}"
+                                         styleClass="oldSerial mavachOldSerial"
+                                         maxlength="30"
+                                         required="true"
+                                         requiredMessage="#{lang['stock.change.damaged.oldSerial.isNull']}"
+                                         onblur="this.value=this.value.trim();setFocusByClass('mavachNewSerial')"/>
+                            <pe:keyFilter for="oldSerial" preventPaste="false"
+                                          regEx="/[a-z0-9A-Z\s\._\-+]/i"/>
+
+                        </div>
+                    </div>
+                    <div class="Container50 Responsive50">
+                        <div class="Container40 mg-left-15 Responsive50 pd-top-7 newSerial_col">
+                            <p:outputLabel value="#{lang['stock.change.damaged.new.serial']}"
+                                           for="newSerial"
+                                           styleClass="lb-sentinel"/>
+                        </div>
+                        <div class="Container60 Responsive50 ui-fluid pd-top-4 newSerial">
+                            <p:inputText id="newSerial"
+                                         value="#{changeDamagedProductController.changeDamagedProductDTO.newSerial}"
+                                         styleClass="newSerial mavachNewSerial"
+                                         maxlength="30"
+                                         required="true"
+                                         requiredMessage="#{lang['stock.change.damaged.newSerial.isNull']}"
+                                         onblur="this.value=this.value.trim();newSerialCm();">
+                            </p:inputText>
+                            <p:remoteCommand actionListener="#{changeDamagedProductController.doInputNewSerial}"
+                                             name="newSerialCm"
+                                             process="@this,@([id$=newSerial]), @([id$=oldSerial])"
+                                             update="@([id$=frmChangeDamagedProduct])"/>
+                            <pe:keyFilter for="newSerial" preventPaste="false"
+                                          regEx="/[a-z0-9A-Z\s\._\-+]/i"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ContainerIndent" id="pnlReason">
+                    <p:outputPanel rendered="#{changeDamagedProductController.showReason}">
+                        <div class="Container50 Responsive50">
+                            <div class="Container40 Responsive50 mg-left-15 pd-top-7">
+                                <p:outputLabel value="#{lang['common.reason']}" for="cobReason"
+                                               styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:selectOneMenu filter="true" filterMatchMode="contains"
+                                                 id="cobReason"
+                                                 rendered="true"
+                                                 required="true"
+                                                 requiredMessage="#{lang['stock.change.damaged.choose.reason.require']}"
+                                                 value="#{changeDamagedProductController.changeDamagedProductDTO.reasonId}">
+                                    <f:selectItem itemEscaped="true"
+                                                  itemValue=""
+                                                  itemLabel="#{lang['common.selectOneMenu.select']}"/>
+                                    <f:selectItems
+                                            value="#{changeDamagedProductController.listReason}"
+                                            itemLabelEscaped="true"
+                                            var="reason" itemValue="#{reason.reasonId}"
+                                            itemLabel="#{reason.reasonName}"/>
+                                </p:selectOneMenu>
+                                <p:message for="cobReason"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+                <!--Hien thi vung nhap file-->
+                <p:outputPanel styleClass="ContainerIndent" id="pnUploadList">
+                    <p:outputPanel styleClass="Container100"
+                                   rendered="#{!changeDamagedProductController.singleType}">
+                        <div class="Container50 Responsive50">
+                            <div class="Container40 mg-left-15 Responsive50 pd-top-4 lb-sentinel">
+                                <p:outputLabel value="#{lang['mn.stock.import.with.file']}" for="outputAttachByProd"
+                                               styleClass="lb-sentinel"/>
+                            </div>
+                            <div class="Container60 Responsive50 ui-fluid">
+                                <p:inputText id="outputAttachByProd"
+                                             maxlength="100"
+                                             requiredMessage="#{lang['stock.change.damaged.file.not.found']}"
+                                             required="true"
+                                             value="#{changeDamagedProductController.attachFileName}"
+                                             title="#{changeDamagedProductController.attachFileName}"
+                                             readonly="true"/>
+                            </div>
+                        </div>
+                        <div class="Container50 Responsive50">
+                            <div class="Container100">
+                                <p:fileUpload id="upLoadFileByProd"
+                                              styleClass="Fleft"
+                                              label="#{lang['select.file']}"
+                                              validatorMessage="abc"
+                                              invalidFileMessage="#{lang['mn.stock.limit.importFile.msg.format']}"
+                                              requiredMessage="#{lang['mn.stock.limit.attachFile.msg.require']}"
+                                              invalidSizeMessage="#{lang['common.file.allow.excel.max.size.desc']}"
+                                              update="@this, @([id$=messageAttachProd]), @([id$=outputAttachByProd]),@([id$=msgSearch]), @([id$=pnTemplate]), @([id$=pnUploadList])"
+                                              dragDropSupport="true" required="true" mode="advanced"
+                                              auto="true"
+                                              allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                              sizeLimit="5242880"
+                                              value="#{changeDamagedProductController.fileUpload}"
+                                              fileUploadListener="#{changeDamagedProductController.handleFileUpload}">
+                                </p:fileUpload>
+                                <!--<p:commandButton value="#{lang['stock.change.damaged.stock.uploadFile']}"-->
+                                <!--styleClass="Fleft"-->
+                                <!--process="@this" style="margin-top: 3px;"-->
+                                <!--update="@([id$=msgSearch]),@([id$=pnUploadList])"-->
+                                <!--disabled="#{changeDamagedProductController.importFileSucess}"-->
+                                <!--actionListener="#{changeDamagedProductController.doUploadFile}"-->
+                                <!--/>-->
+                            </div>
+                            <p:message id="messageAttachProd" for="upLoadFileByProd"/>
+                        </div>
+                    </p:outputPanel>
+                    <p:outputPanel styleClass="Container100"
+                                   rendered="#{!changeDamagedProductController.singleType}">
+                        <div class="Container100" style="margin-left: 14px!important;">
+                            <p:outputPanel styleClass="Container33 Responsive" id="pnTemplate" style="">
+                                <p:commandLink value="#{lang['create.order.file.download.file.template']}"
+                                               immediate="true"
+                                               styleClass="Fleft mg-top-4" ajax="false">
+                                    <p:fileDownload value="#{changeDamagedProductController.addTemplateFileByProd}"/>
+                                </p:commandLink>
+                                <p:commandLink value="#{lang['button.export.excel.error']}" immediate="true"
+                                               ajax="false" styleClass="Fleft mg-top-4 downloadError"
+                                               style="color: #e90c45!important;"
+                                               rendered="#{changeDamagedProductController.showErrorFile}">
+                                    <p:fileDownload
+                                            value="#{changeDamagedProductController.exportImportListErrorFile()}"/>
+                                </p:commandLink>
+                            </p:outputPanel>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+                <!--end hien thi vung nhap file-->
+                <div class="Container100 TexAlCenter mg-top-0">
+                    <!--button doi hang don le-->
+                    <p:outputPanel rendered="#{changeDamagedProductController.singleType}">
+                        <cbs:confirmDialog
+                                idComponent="btnChangeDamagedProduct"
+                                id="btnChangeDamagedProduct"
+                                valueButton="#{lang['stock.change.damaged.button']}"
+                                headerConfirm="#{lang['stock.change.damaged.confirm.header']}"
+                                messageConfirm="#{lang['stock.change.damaged.dialog.confirm.content']}"
+                                actionOK="#{changeDamagedProductController.doChangeDamagedProduct}"
+                                resetValueButton="false"
+                                process="@([id$=pnlInforChangeDamagedProduct])"
+                                updateArea="@([id$=frmChangeDamagedProduct])"
+                                updateOK="@([id$=frmChangeDamagedProduct])"
+                                actionValidate="#{changeDamagedProductController.doValidateChangeDamagedProduct}"
+                                focusCancel="false"
+                                oncompleteOK=""
+                                isButton="true"
+                                />
+                    </p:outputPanel>
+                    <!--button doi hang theo file-->
+                    <p:outputPanel rendered="#{!changeDamagedProductController.singleType}">
+                        <cbs:confirmDialog
+                                idComponent="btnChangeDamagedProductFile"
+                                id="btnChangeDamagedProductFile"
+                                valueButton="#{lang['stock.change.damaged.button']}"
+                                headerConfirm="#{lang['stock.change.damaged.confirm.header']}"
+                                messageConfirm="#{lang['stock.change.damaged.dialog.confirm.content']}"
+                                actionOK="#{changeDamagedProductController.doChangeDamagedProductFile}"
+                                resetValueButton="false"
+                                process="@([id$=pnlInforChangeDamagedProduct])"
+                                updateArea="@([id$=frmChangeDamagedProduct])"
+                                updateOK="@([id$=frmChangeDamagedProduct])"
+                                actionValidate="#{changeDamagedProductController.doValidateChangeDamagedProductFile}"
+                                focusCancel="false"
+                                oncompleteOK=""
+                                isButton="true"
+                                />
+                    </p:outputPanel>
+                </div>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+    <p:commandButton id="cmdProductOfferType" styleClass="cmdProductOfferType"
+                     style="display: none;"
+                     action="#{changeDamagedProductController.onChangeProductOfferType}"
+                     process="@this,@([id$=inputProductOfferType])"
+                     update="@this,@([id$=pnlProductOffer]),@([id$=pnlReason])">
+    </p:commandButton>
+</ui:composition>

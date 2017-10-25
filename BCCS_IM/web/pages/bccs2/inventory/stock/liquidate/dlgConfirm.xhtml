@@ -1,0 +1,50 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:cbs="http://java.sun.com/jsf/composite/tags"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:o="http://java.sun.com/jsf/core">
+    <h:form id="frmDlgConfirm">
+        <p:focus for="dlgInputText"/>
+        <p:outputPanel id="pnInsertFinance" styleClass="Containe100">
+            <div class="ContainerIndent">
+                <p:messages id="dlgMessage" showSummary="false" showDetail="true"
+                            closable="true"/>
+            </div>
+            <div class="ContainerIndent TexAlLeft mg-left-15">
+                <div class="Container20 Responsive25 TexAlLeft">
+                    <p:outputLabel styleClass="lb-sentinel" value="#{lang['common.reason']}"
+                                   for="dlgInputText"/>
+                </div>
+                <div class="Container80 Responsive75">
+                    <p:inputText styleClass="Container100" required="true" id="dlgInputText"
+                                 requiredMessage="#{lang['reason.reject.validate']}"
+                                 placeholder="#{lang['reason.reject.placeholder']}"
+                                 maxlength="1000"
+                                 value="#{liquidateApproveController.selectedRequestLiquidateDTO.rejectNote}"/>
+                    <p:message for="dlgInputText"/>
+                </div>
+            </div>
+            <div class="Container100 TexAlCenter marT10">
+                <cbs:confirmDialog
+                        idComponent="btnConfirmReject"
+                        valueButton="#{lang['common.reject']}"
+                        headerConfirm="#{lang['common.reject']}"
+                        messageConfirm="#{liquidateApproveController.getConfirmMessage('REJECT')}"
+                        resetValueButton="true"
+                        process="@([id$=frmDlgConfirm])"
+                        updateArea="@form"
+                        updateOK="@form"
+                        actionValidate="#{liquidateApproveController.doValidate()}"
+                        oncompleteOK="if(!args.validationFailed) {PF('dlgConfirm').hide();}"
+                        actionOK="#{liquidateApproveController.doRejectRequest()}"
+                        focusCancel="false"
+                        isButton="true"/>
+            </div>
+        </p:outputPanel>
+    </h:form>
+
+</ui:composition>
